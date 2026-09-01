@@ -1,5 +1,5 @@
-// Public key only. Never put sb_secret / service_role here.
+// Public publishable key — safe in the browser.
 window.KHATER = {
   url: "https://jlaqotegkeszuyqzdham.supabase.co",
-  key: ""
+  key: "sb_publishable_QhfpfXkmTOZMZNIF2NJLoQ__ul_nVSK"
 };
