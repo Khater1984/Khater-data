@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ماذا حدث للفلوس؟</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/app.css"/>
+<script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+  <div class="logo">خريطة الفلوس<span>محرّك المقارنة</span></div>
+  <nav>
+    <a href="./index.html">البداية</a>
+    <a class="active" href="./map.html">ماذا حدث للفلوس؟</a>
+    <a href="./funds.html">الصناديق</a>
+    <a href="./macro.html">الاقتصاد</a>
+    <a href="./why.html">المنهج</a>
+  </nav>
+</div></header>
+<div class="controls wrap" style="max-width:none">
+  <div><label class="muted">المبلغ</label><br/><input id="amount" type="number" value="1000"/></div>
+  <div><label class="muted">من</label><br/><input id="start" type="date" value="2016-01-04"/></div>
+  <div><label class="muted">&nbsp;</label><br/><button class="primary" id="run">احسب</button></div>
+  <div>
+    <label class="muted">العرض</label><br/>
+    <select id="mode"><option value="level">قيمة بالجنيه</option><option value="rebased">أساس 100</option><option value="log">لوغاريتم</option></select>
+  </div>
+</div>
+<div class="layout">
+  <div class="pane"><div class="h">المسارات</div><div id="list"></div></div>
+  <div class="pane" style="display:flex;flex-direction:column"><div id="chart"></div></div>
+  <div class="pane"><div class="h">الملخص</div><div id="sum"></div><div class="story" id="story"></div></div>
+</div>
+<script type="module">
+import { PATHS, fmt, en, toLine, rebase } from "./js/engine.js";
+let DATA, chart, seriesMap={}, active="usd_egp_mid";
+const el=document.getElementById("chart");
+chart=LightweightCharts.createChart(el,{layout:{background:{color:"#0b100e"},textColor:"#8b9a90"},grid:{vertLines:{color:"#1c2622"},horzLines:{color:"#1c2622"}},rightPriceScale:{borderColor:"#2a362f"},timeScale:{borderColor:"#2a362f"}});
+new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth,height:el.clientHeight})).observe(el);
+function draw(){
+  const amount=+document.getElementById("amount").value||1000;
+  const start=document.getElementById("start").value||"2016-01-04";
+  const mode=document.getElementById("mode").value;
+  Object.values(seriesMap).forEach(s=>chart.removeSeries(s)); seriesMap={}; const rows=[];
+  Object.keys(PATHS).forEach(key=>{
+    let line=toLine(DATA.series,start,amount,key); if(!line.length)return;
+    if(mode==="rebased") line=rebase(line);
+    const s=chart.addLineSeries({color:PATHS[key].color,lineWidth:key===active?3:1.15,priceLineVisible:false,lastValueVisible:true,title:PATHS[key].name});
+    s.setData(line); seriesMap[key]=s;
+    rows.push({key,last:line.at(-1).value,mult:line.at(-1).value/line[0].value,asOf:line.at(-1).time});
+  });
+  chart.priceScale("right").applyOptions({mode:mode==="log"?1:0});
+  chart.timeScale().fitContent();
+  document.getElementById("list").innerHTML=rows.map(r=>{
+    const chg=(r.mult-1)*100;
+    return `<div class="item ${r.key===active?"on":""}" data-k="${r.key}"><b>${PATHS[r.key].name}</b><span class="${chg>=0?"up":"dn"}">${chg>=0?"+":""}${en(chg)}%</span></div>`;
+  }).join("");
+  document.querySelectorAll(".item").forEach(n=>n.onclick=()=>{active=n.dataset.k;draw()});
+  const r=rows.find(x=>x.key===active)||rows[0];
+  document.getElementById("sum").innerHTML=`<div class="stat"><em>${PATHS[r.key].name}</em><strong>${fmt(r.last)}</strong></div>
+    <div class="stat"><em>المضاعف</em><strong>${en(r.mult)}×</strong></div>
+    <div class="stat"><em>حتى</em><strong>${r.asOf}</strong></div>`;
+  const usd=rows.find(x=>x.key==="usd_egp_mid"), gold=rows.find(x=>x.key==="gold_egp_oz"), cpi=rows.find(x=>x.key==="purchasing");
+  document.getElementById("story").textContent=`من ${fmt(amount)} جنيه في ${start}: القوة الشرائية ≈ ${cpi?fmt(cpi.last):"—"} · الدولار ≈ ${usd?fmt(usd.last):"—"} · الذهب ≈ ${gold?fmt(gold.last):"—"} جنيه.`;
+}
+document.getElementById("run").onclick=draw;
+document.getElementById("mode").onchange=draw;
+DATA=await (await fetch("data/engine_data.json")).json();
+chart.applyOptions({width:el.clientWidth,height:el.clientHeight});
+draw();
+</script>
+</body></html>
