@@ -2,14 +2,16 @@ name: Daily NAV + macro ingest (16:00 Egypt)
 
 on:
   schedule:
-    # 16:00 Africa/Cairo while offset is UTC+3
     - cron: "0 13 * * *"
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   ingest:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -26,3 +28,15 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python scripts/ingest_macro.py
+      - name: Export public snapshots
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scripts/export_public.py
+      - name: Commit snapshots
+        run: |
+          git config user.name "khater-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/data/engine_data.json web/data/funds_dna.json
+          git diff --cached --quiet || git commit -m "chore: refresh public snapshots"
+          git push
