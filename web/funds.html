@@ -4,120 +4,150 @@
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>الصناديق — خريطة الفلوس</title>
 <script src="config.js"></script>
-<link rel="stylesheet" href="css/app.css"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/app.css"/>
 <style>
-:root{--bg:#0f1412;--card:#171e1b;--line:#2c3832;--text:#eef3ef;--mute:#8fa198;--good:#5ecf8a;--bad:#e07a6e;--acc:#c9a45c}
-*{box-sizing:border-box} html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:"IBM Plex Sans Arabic",sans-serif}
-body{display:grid;grid-template-rows:auto auto 1fr}
-header{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--line)}
-.brand{font-weight:700} .brand small{display:block;color:var(--mute);font-weight:400;font-size:12px}
-a{color:var(--acc);text-decoration:none}
-.filters{display:flex;gap:8px;flex-wrap:wrap;padding:12px 22px;border-bottom:1px solid var(--line);background:#141a18}
-input,select{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:8px;height:36px;padding:0 10px;font:inherit}
-.ws{display:grid;grid-template-columns:1fr 340px;min-height:0}
+body{display:grid;grid-template-rows:62px auto auto 1fr}
+.num{font-family:"IBM Plex Sans",sans-serif;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;text-align:left}
+.filters{background:var(--bg2);border-bottom:1px solid var(--line);padding:12px 18px}
+.filters .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0}
+.chip{border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:13px;cursor:pointer;color:var(--mute)}
+.chip.on{border-color:var(--gold);color:var(--ink);background:#1c1810}
+.beat{color:var(--good)} .lose{color:var(--bad)}
+.dna{border-inline-start:1px solid var(--line);overflow:auto;background:var(--bg2)}
+.ws{display:grid;grid-template-columns:1fr 360px;min-height:0}
 @media(max-width:1000px){.ws{grid-template-columns:1fr}}
-.list{overflow:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{position:sticky;top:0;background:#171e1b;color:var(--mute);font-weight:500;text-align:right;padding:10px;border-bottom:1px solid var(--line)}
-td{padding:9px 10px;border-bottom:1px solid #22302a;cursor:pointer}
-tr:hover td{background:#1b2420} tr.on td{background:#24332c}
-.dna{border-inline-start:1px solid var(--line);overflow:auto;background:#141a18}
-.h{padding:12px 14px;border-bottom:1px solid var(--line);color:var(--mute);font-size:12px}
-.box{padding:12px 14px;border-bottom:1px solid #22302a}
-.box em{display:block;color:var(--mute);font-style:normal;font-size:11px}
-.box b{font-weight:600}
-.up{color:var(--good)} .dn{color:var(--bad)}
-.bar{display:grid;grid-template-columns:72px 1fr 64px;gap:8px;align-items:center;margin:7px 0;font-size:12px}
-.track{height:7px;background:#22302a;border-radius:99px;overflow:hidden}
-.fill{height:7px}
-</style></head>
+label.l{font-size:12px;color:var(--mute);margin-inline-end:4px}
+</style>
+</head>
 <body>
-<header>
-  <div class="brand">سجل الصناديق<small>فلاتر + البصمة الكاملة للصندوق</small></div>
+<header class="site-header"><div class="wrap">
+  <div class="logo">خريطة الفلوس<span>هل الصندوق تغلّب على المرجع؟</span></div>
   <nav>
-      <a href="./index.html">البداية</a>
-      <a href="./map.html">ماذا حدث للفلوس؟</a>
-      <a class="active" href="./funds.html">الصناديق</a>
-      <a href="./macro.html">الاقتصاد</a>
-      <a href="./why.html">المنهج</a>
-    </nav>
-</header>
-<div class="filters">
-  <input id="q" placeholder="ابحث بالاسم أو المدير"/>
-  <select id="bucket"><option value="">كل الأنواع</option></select>
-  <select id="mgr"><option value="">كل المديرين</option></select>
-  <select id="priced"><option value="">السعر</option><option value="1">NAV حي</option><option value="0">بدون سعر</option></select>
-  <select id="sort"><option value="last12m">ترتيب: 12 شهراً</option><option value="ytd">YTD</option><option value="3y">3 سنوات</option><option value="nav">NAV</option><option value="name">الاسم</option></select>
-  <span id="count" style="color:var(--mute);align-self:center"></span>
-</div>
-<div class="ws">
-  <div class="list">
-    <table><thead><tr><th>الصندوق</th><th>النوع</th><th>NAV</th><th>YTD</th><th>12M</th><th>3Y</th></tr></thead><tbody id="tb"></tbody></table>
+    <a href="./index.html">البداية</a>
+    <a href="./map.html">ماذا حدث للفلوس؟</a>
+    <a class="active" href="./funds.html">الصناديق</a>
+    <a href="./macro.html">الاقتصاد</a>
+    <a href="./why.html">المنهج</a>
+  </nav>
+</div></header>
+<section class="filters">
+  <div class="row">
+    <input id="q" placeholder="ابحث بالاسم أو المدير" style="min-width:220px"/>
+    <select id="bucket"><option value="">كل الأنواع</option></select>
+    <select id="mgr"><option value="">كل المديرين</option></select>
+    <select id="priced"><option value="">السعر: الكل</option><option value="1">NAV حي</option><option value="0">بدون سعر</option></select>
+    <select id="horizon">
+      <option value="last12m">أفق المقارنة: 12 شهراً</option>
+      <option value="ytd">منذ بداية العام</option>
+      <option value="3y">3 سنوات</option>
+    </select>
+    <span class="muted" id="count"></span>
   </div>
-  <aside class="dna" id="dna"><div class="h">اختر صندوقاً لعرض بصمته</div></aside>
+  <div class="row">
+    <span class="l">قارن مقابل</span>
+    <span class="chip on" data-ref="cpi">التضخم</span>
+    <span class="chip on" data-ref="usd">الدولار</span>
+    <span class="chip on" data-ref="gold">الذهب</span>
+    <span class="chip on" data-ref="egx30">EGX30</span>
+    <span class="chip" data-ref="spy">SPY</span>
+    <span class="chip" data-ref="deposit">وديعة</span>
+    <span class="chip" data-ref="tbill">أذون 91</span>
+  </div>
+</section>
+<div class="ws">
+  <div class="list" style="overflow:auto">
+    <table>
+      <thead><tr id="thead"></tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+  <aside class="dna" id="dna"><div class="h">اختر صندوقاً</div></aside>
 </div>
 <script type="module">
-const H=[["weekly","أسبوع"],["4weeks","4 أسابيع"],["ytd","منذ بداية العام"],["last12m","12 شهراً"],["2y","سنتان"],["3y","3 سنوات"],["4y","4 سنوات"],["5y","5 سنوات"],["6y","6 سنوات"]];
-const bucket=c=>{c=(c||"").toLowerCase();
- if(c.includes("gold"))return "ذهب"; if(c.includes("equity")||c.includes("index")||c.includes("thematic")||c.includes("sector"))return "أسهم";
- if(c.includes("money market"))return "نقدي"; if(c.includes("fixed income"))return "دخل ثابت";
- if(c.includes("balanced")||c.includes("mixed")||c.includes("allocator"))return "متوازن";
- if(c.includes("etf")||c.includes("traded"))return "متداول"; if(c.includes("protected")||c.includes("guaranteed"))return "محمي";
- if(c.includes("charitable"))return "خيري"; return "أخرى";};
-const fmt=(n,d=2)=>n==null?"—":Number(n).toLocaleString("ar-EG",{maximumFractionDigits:d});
-const cls=n=>n==null?"":(n>=0?"up":"dn");
-const ret=(f,h)=>f.eima&&f.eima[h]&&f.eima[h].ret!=null?f.eima[h].ret:null;
-let ALL=[],SEL=null;
+import { loadFundBook } from "./js/live.js";
+import { bucket as buck } from "./js/engine.js";
+const NAMES={cpi:"التضخم",usd:"الدولار",gold:"الذهب",egx30:"EGX30",spy:"SPY",deposit:"وديعة",tbill:"أذون 91"};
+const HLAB={weekly:"أسبوع", "4weeks":"4 أسابيع", ytd:"YTD", last12m:"12M", "2y":"2Y", "3y":"3Y", "4y":"4Y", "5y":"5Y", "6y":"6Y"};
+const pct=v=>v==null?"—":(Number(v).toLocaleString("en-US",{maximumFractionDigits:1})+"%");
+const num=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:2});
+const ret=(f,h)=>f.eima&&f.eima[h]&&f.eima[h].ret!=null?Number(f.eima[h].ret):null;
+let ALL=[], BENCH=null, SEL=null, REFS=new Set(["cpi","usd","gold","egx30"]);
+
+const packed=await loadFundBook();
+ALL=packed.funds;
+try{ BENCH=await (await fetch("data/benchmarks.json")).json(); }catch(e){ BENCH={horizons:{}}; }
+
+[...new Set(ALL.map(f=>buck(f.category)))].sort().forEach(b=>document.getElementById("bucket").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
+[...new Set(ALL.map(f=>f.manager).filter(Boolean))].sort().forEach(b=>document.getElementById("mgr").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
+
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{c.classList.toggle("on");REFS=new Set([...document.querySelectorAll(".chip.on")].map(x=>x.dataset.ref));apply();});
+["q","bucket","mgr","priced","horizon"].forEach(id=>document.getElementById(id).oninput=apply);
+
 function apply(){
-  const q=qel("q").value.trim(),b=qel("bucket").value,m=qel("mgr").value,p=qel("priced").value,s=qel("sort").value;
+  const q=document.getElementById("q").value.trim();
+  const b=document.getElementById("bucket").value;
+  const m=document.getElementById("mgr").value;
+  const p=document.getElementById("priced").value;
+  const h=document.getElementById("horizon").value;
+  const bm=(BENCH.horizons||{})[h]||{};
   let rows=ALL.filter(f=>
-    (!q||(f.name+(f.manager||"")).includes(q)) && (!b||bucket(f.category)===b) && (!m||f.manager===m) &&
+    (!q||(f.name+(f.manager||"")).includes(q)) &&
+    (!b||buck(f.category)===b) && (!m||f.manager===m) &&
     (p!=="1"||f.nav!=null) && (p!=="0"||f.nav==null)
   );
-  rows.sort((a,c)=>{
-    if(s==="name") return a.name.localeCompare(c.name,"ar");
-    const av=s==="nav"?a.nav:ret(a,s), cv=s==="nav"?c.nav:ret(c,s);
-    return (cv??-1e9)-(av??-1e9);
-  });
-  qel("count").textContent=rows.length+" صندوقاً";
-  qel("tb").innerHTML=rows.map(f=>`<tr data-id="${f.id}" class="${SEL&&SEL.id===f.id?"on":""}">
-    <td>${f.name}<div style="color:var(--mute);font-size:11px">${f.manager||""}</div></td>
-    <td>${bucket(f.category)}</td><td>${fmt(f.nav)}</td>
-    <td class="${cls(ret(f,"ytd"))}">${fmt(ret(f,"ytd"),1)}</td>
-    <td class="${cls(ret(f,"last12m"))}">${fmt(ret(f,"last12m"),1)}</td>
-    <td class="${cls(ret(f,"3y"))}">${fmt(ret(f,"3y"),1)}</td></tr>`).join("");
-  qel("tb").querySelectorAll("tr").forEach(tr=>tr.onclick=()=>{SEL=ALL.find(x=>x.id===tr.dataset.id);paint();apply();});
+  rows.sort((a,c)=>(ret(c,h)??-1e9)-(ret(a,h)??-1e9));
+  document.getElementById("count").textContent=rows.length+" صندوق";
+  const refCols=[...REFS];
+  document.getElementById("thead").innerHTML=`<th>الصندوق</th><th>النوع</th><th>NAV</th><th>عائد ${HLAB[h]||h}</th>`+refCols.map(r=>`<th>مقابل ${NAMES[r]}</th>`).join("");
+  document.getElementById("tb").innerHTML=rows.map(f=>{
+    const r=ret(f,h);
+    const cells=refCols.map(k=>{
+      const bench=bm[k];
+      if(r==null||bench==null) return `<td class="num">—</td>`;
+      const diff=r-bench;
+      const ok=diff>=0;
+      return `<td class="num ${ok?"beat":"lose"}">${ok?"+":""}${diff.toLocaleString("en-US",{maximumFractionDigits:1})} نقطة</td>`;
+    }).join("");
+    return `<tr data-id="${f.id}" class="${SEL&&SEL.id===f.id?"on":""}">
+      <td>${f.name}<div class="muted">${f.manager||""}</div></td>
+      <td>${buck(f.category)}</td>
+      <td class="num">${num(f.nav)}</td>
+      <td class="num ${r==null?"":(r>=0?"beat":"lose")}">${pct(r)}</td>
+      ${cells}
+    </tr>`;
+  }).join("");
+  document.querySelectorAll("#tb tr").forEach(tr=>tr.onclick=()=>{SEL=ALL.find(x=>x.id===tr.dataset.id);paint();apply();});
 }
+
 function paint(){
   const f=SEL; if(!f)return;
-  const vs=f.nav!=null&&f.initial?f.nav/f.initial:null;
-  const bars=H.map(([h,lab])=>{
-    const v=ret(f,h); if(v==null)return "";
-    const w=Math.min(100,Math.abs(v)/3);
-    return `<div class="bar"><span>${lab}</span><div class="track"><div class="fill" style="width:${Math.max(w,3)}%;background:${v>=0?"var(--good)":"var(--bad)"}"></div></div><span class="${cls(v)}">${fmt(v,1)}%</span></div>`;
+  const h=document.getElementById("horizon").value;
+  const r=ret(f,h);
+  const bm=(BENCH.horizons||{})[h]||{};
+  const cmp=Object.keys(NAMES).map(k=>{
+    const bench=bm[k];
+    if(r==null||bench==null) return "";
+    const diff=r-bench; const ok=diff>=0;
+    return `<div class="box"><em>${NAMES[k]} (${pct(bench)})</em><b class="${ok?"beat":"lose"}">${ok?"تفوّق":"تخلّف"} ${Math.abs(diff).toLocaleString("en-US",{maximumFractionDigits:1})} نقطة</b></div>`;
   }).join("");
-  qel("dna").innerHTML=`<div class="h">بصمة الصندوق</div>
+  const bars=Object.keys(HLAB).map(k=>{
+    const v=ret(f,k); if(v==null)return "";
+    return `<div class="bar"><span>${HLAB[k]}</span><div class="track"><div class="fill" style="width:${Math.min(100,Math.abs(v)/3)}%;background:${v>=0?"var(--good)":"var(--bad)"}"></div></div><span class="num">${pct(v)}</span></div>`;
+  }).join("");
+  document.getElementById("dna").innerHTML=`
+    <div class="h">بصمة الصندوق</div>
     <div class="box"><em>الاسم</em><b>${f.name}</b></div>
     <div class="box"><em>مدير الاستثمار</em><b>${f.manager||"—"}</b></div>
-    <div class="box"><em>النوع</em><b>${bucket(f.category)}</b></div>
-    <div class="box"><em>آخر سعر</em><b>${fmt(f.nav)} ${f.currency||""}</b><em>${f.nav_asof||""}</em></div>
-    <div class="box"><em>التأسيس / الاسمية</em><b>${f.inception||"—"} · ${fmt(f.initial)}</b></div>
-    <div class="box"><em>مقابل الاسمية</em><b class="${cls((vs||1)-1)}">${vs?fmt(vs,2)+"×":"—"}</b></div>
+    <div class="box"><em>النوع</em><b>${buck(f.category)}</b></div>
+    <div class="box"><em>آخر سعر</em><b class="num">${num(f.nav)} ${f.currency||""}</b><em>${f.nav_asof||""}</em></div>
     <div class="box"><em>تقرير EIMA</em><b>${f.eima_asof||"—"}</b></div>
+    <div class="h">مقابل المرجعيات — ${HLAB[h]}</div>
+    ${cmp||'<div class="box">لا عائد EIMA للمقارنة</div>'}
     <div class="h">آفاق العائد</div>
-    <div class="box">${bars||"لا بيانات آفاق"}</div>
-    <div class="box"><em>المصدر</em>${f.url?`<a href="${f.url}" target="_blank">رابط التحديث</a>`:"—"}<div style="color:var(--mute);font-size:11px;margin-top:6px">${f.category||""}</div></div>`;
+    <div class="box">${bars||"—"}</div>
+    <div class="box">${f.url?`<a href="${f.url}" target="_blank">المصدر</a>`:"—"}</div>`;
 }
-const qel=id=>document.getElementById(id);
-import { loadFundBook } from "./js/live.js";
-const packed = await loadFundBook();
-(()=>{ const d={funds:packed.funds};
-
-  ALL=d.funds;
-  [...new Set(ALL.map(f=>bucket(f.category)))].sort().forEach(b=>qel("bucket").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
-  [...new Set(ALL.map(f=>f.manager).filter(Boolean))].sort().forEach(b=>qel("mgr").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
-  ["q","bucket","mgr","priced","sort"].forEach(id=>qel(id).oninput=apply);
-  apply();
-})();
-</script></body></html>
+apply();
+</script>
+</body></html>
