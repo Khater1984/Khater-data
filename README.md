@@ -1,20 +1,24 @@
 # Khater-data
 
-Daily Egyptian mutual-fund NAV ingest into Supabase.
+Daily Egyptian mutual-fund NAV + macro reference ingest into Supabase.
 
 ## Schedule
 
-GitHub Action `daily-nav.yml` runs at **16:00 Egypt time** (`cron: 0 13 * * *` UTC while Cairo is UTC+3).
+- `daily-nav.yml` — **16:00 Egypt** (`cron: 0 13 * * *` UTC while Cairo is UTC+3)
+  - `scripts/ingest_nav.py` → `nav_staging` / `nav_official`
+  - `scripts/ingest_macro.py` → `macro_series` (EGX30, USD/EGP, SPY, QQQ, BTC, gold, silver + EGP conversions)
+- `monthly-macro.yml` — 8th of each month 09:00 Egypt
+  - prints last CPI / deposit / T-bill observation (pages are not reliably parseable)
 
-Manual run: Actions → Daily NAV ingest → Run workflow.
+Manual run: Actions → Run workflow.
 
-## Secrets (repo Settings → Secrets)
+## Secrets
 
-- `SUPABASE_URL` — `https://jlaqotegkeszuyqzdham.supabase.co`
-- `SUPABASE_SERVICE_KEY` — service role / secret key
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_KEY`
 
 Do not commit keys.
 
-## Flow
+## Macro conversion rule
 
-Manager pages / APIs → `nav_staging` → matched rows → `nav_official` (upsert by `fund_id`).
+`*_egp = *_usd × usd_egp_mid` on the same date, else last known mid (forward fill).
