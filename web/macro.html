@@ -22,8 +22,10 @@
     <p class="muted">آخر مشاهدة في اللقطة العامة. التحديث اليومي في القاعدة قد يكون أحدث من الملف الثابت.</p>
     <div class="grid3" id="cards"></div>
   </main>
-  <script type="module">
+  <script src="config.js"></script>
+<script type="module">
     import { fmt } from "./js/engine.js";
+import { loadEngine } from "./js/live.js";
     const keys = [
       ["usd_egp_mid","دولار / جنيه","EGP"],
       ["egx30_close","EGX30","نقطة"],
@@ -32,7 +34,8 @@
       ["btc_egp","بيتكوين بالجنيه","ج.م"],
       ["tbill_91_avg_yield_pct","عائد أذون 91 يوماً","%"],
     ];
-    const d = await (await fetch("data/engine_data.json")).json();
+    const packed = await loadEngine();
+    const d = { series: packed.series };
     document.getElementById("cards").innerHTML = keys.map(([k,t,u])=>{
       const pts=d.series[k]||[]; const last=pts[pts.length-1];
       return `<div class="card"><div class="kicker">${u}</div><h3>${t}</h3><p style="font-size:28px;color:#eef3ef;margin:8px 0">${last?fmt(last[1]):"—"}</p><p>${last?last[0]:""}</p></div>`;
