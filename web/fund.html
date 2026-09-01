@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>بصمة الصندوق</title>
+<script src="config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/app.css"/>
+<style>
+  .num{font-family:"IBM Plex Sans",sans-serif;direction:ltr;unicode-bidi:isolate}
+  .cmp{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:16px 0}
+  .ok{border-color:#2e6a48} .bad{border-color:#6a322c}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+  <div class="logo">خريطة الفلوس<span>بصمة الصندوق</span></div>
+  <nav><a href="./funds.html">عودة للصناديق</a></nav>
+</div></header>
+<main class="wrap page" id="app">جاري التحميل…</main>
+<script type="module">
+import { loadFundBook } from "./js/live.js";
+import { bucket } from "./js/engine.js";
+const params=new URLSearchParams(location.search);
+const id=params.get("id");
+const h=params.get("h")||"last12m";
+const packed=await loadFundBook();
+const BENCH=await (await fetch("data/benchmarks.json")).json();
+const f=packed.funds.find(x=>x.id===id);
+const pct=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:1})+"%";
+const num=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:2});
+const ret=(hh)=>f?.eima?.[hh]?.ret!=null?Number(f.eima[hh].ret):null;
+if(!f){document.getElementById("app").textContent="الصندوق غير موجود"; throw 0;}
+const names={cpi:"التضخم",usd:"الدولار",gold:"الذهب",egx30:"EGX30",spy:"SPY",deposit:"وديعة",tbill:"أذون 91"};
+const H=["weekly","4weeks","ytd","last12m","2y","3y","4y","5y","6y"];
+const HL={weekly:"أسبوع","4weeks":"4 أسابيع",ytd:"YTD",last12m:"12 شهراً","2y":"سنتان","3y":"3 سنوات","4y":"4 سنوات","5y":"5 سنوات","6y":"6 سنوات"};
+const r=ret(h);
+const cards=Object.entries(names).map(([k,n])=>{
+  const b=(BENCH.horizons[h]||{})[k];
+  if(r==null||b==null) return `<div class="card"><h3>${n}</h3><p>لا مقارنة</p></div>`;
+  const win=r>=b;
+  return `<div class="card ${win?"ok":"bad"}"><h3>${n}</h3><p class="num">${pct(b)}</p><p>${win?"تفوّق الصندوق":"المرجع أعلى"} بفارق ${Math.abs(r-b).toLocaleString("en-US",{maximumFractionDigits:1})} نقطة</p></div>`;
+}).join("");
+document.getElementById("app").innerHTML=`
+  <p><a href="./funds.html">كل الصناديق</a></p>
+  <h1>${f.name}</h1>
+  <p class="muted">${f.manager||""} · ${bucket(f.category)} · EIMA ${f.eima_asof||"—"}</p>
+  <div class="grid3">
+    <div class="card"><h3>NAV</h3><p class="num" style="font-size:28px;color:var(--ink)">${num(f.nav)} ${f.currency||""}</p><p>${f.nav_asof||""}</p></div>
+    <div class="card"><h3>عائد ${HL[h]}</h3><p class="num" style="font-size:28px;color:var(--ink)">${pct(r)}</p><p>كما نُشر في EIMA</p></div>
+    <div class="card"><h3>مقابل الاسمية</h3><p class="num" style="font-size:28px;color:var(--ink)">${f.nav&&f.initial?(f.nav/f.initial).toLocaleString("en-US",{maximumFractionDigits:2})+"x":"—"}</p><p>${f.inception||""}</p></div>
+  </div>
+  <h2>هل تفوّق على المراجع في ${HL[h]}؟</h2>
+  <div class="cmp">${cards}</div>
+  <h2>آفاق EIMA</h2>
+  <table><thead><tr><th>الأفق</th><th>العائد</th></tr></thead>
+  <tbody>${H.map(k=>`<tr><td>${HL[k]}</td><td class="num">${pct(ret(k))}</td></tr>`).join("")}</tbody></table>
+  <p>${f.url?`<a href="${f.url}" target="_blank">مصدر السعر</a>`:""}</p>
+`;
+</script>
+</body></html>
