@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>الصناديق — خريطة الفلوس</title>
+<script src="config.js"></script>
 <link rel="stylesheet" href="css/app.css"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <style>
@@ -56,7 +57,7 @@ tr:hover td{background:#1b2420} tr.on td{background:#24332c}
   </div>
   <aside class="dna" id="dna"><div class="h">اختر صندوقاً لعرض بصمته</div></aside>
 </div>
-<script>
+<script type="module">
 const H=[["weekly","أسبوع"],["4weeks","4 أسابيع"],["ytd","منذ بداية العام"],["last12m","12 شهراً"],["2y","سنتان"],["3y","3 سنوات"],["4y","4 سنوات"],["5y","5 سنوات"],["6y","6 سنوات"]];
 const bucket=c=>{c=(c||"").toLowerCase();
  if(c.includes("gold"))return "ذهب"; if(c.includes("equity")||c.includes("index")||c.includes("thematic")||c.includes("sector"))return "أسهم";
@@ -109,11 +110,14 @@ function paint(){
     <div class="box"><em>المصدر</em>${f.url?`<a href="${f.url}" target="_blank">رابط التحديث</a>`:"—"}<div style="color:var(--mute);font-size:11px;margin-top:6px">${f.category||""}</div></div>`;
 }
 const qel=id=>document.getElementById(id);
-fetch("data/funds_dna.json").then(r=>r.json()).then(d=>{
+import { loadFundBook } from "./js/live.js";
+const packed = await loadFundBook();
+(()=>{ const d={funds:packed.funds};
+
   ALL=d.funds;
   [...new Set(ALL.map(f=>bucket(f.category)))].sort().forEach(b=>qel("bucket").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
   [...new Set(ALL.map(f=>f.manager).filter(Boolean))].sort().forEach(b=>qel("mgr").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
   ["q","bucket","mgr","priced","sort"].forEach(id=>qel(id).oninput=apply);
   apply();
-});
+})();
 </script></body></html>
