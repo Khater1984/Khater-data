@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>الصناديق — خريطة الفلوس</title>
+<link rel="stylesheet" href="css/app.css"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{--bg:#0f1412;--card:#171e1b;--line:#2c3832;--text:#eef3ef;--mute:#8fa198;--good:#5ecf8a;--bad:#e07a6e;--acc:#c9a45c}
@@ -33,7 +34,13 @@ tr:hover td{background:#1b2420} tr.on td{background:#24332c}
 <body>
 <header>
   <div class="brand">سجل الصناديق<small>فلاتر + البصمة الكاملة للصندوق</small></div>
-  <a href="./index.html">خريطة الفلوس</a>
+  <nav>
+      <a href="./index.html">البداية</a>
+      <a href="./map.html">ماذا حدث للفلوس؟</a>
+      <a class="active" href="./funds.html">الصناديق</a>
+      <a href="./macro.html">الاقتصاد</a>
+      <a href="./why.html">المنهج</a>
+    </nav>
 </header>
 <div class="filters">
   <input id="q" placeholder="ابحث بالاسم أو المدير"/>
