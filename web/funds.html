@@ -1,178 +1,112 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KHATER FNDS — Fund DNA</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    :root { --bg:#0a0a0a; --panel:#121212; --line:#2a2a2a; --amber:#ff9f1a; --green:#3ddc84; --red:#ff5a4f; --text:#e8e4d9; --mute:#8b8778; }
-    * { box-sizing:border-box; }
-    html,body { height:100%; margin:0; background:var(--bg); color:var(--text); font-family:"IBM Plex Sans Arabic",sans-serif; }
-    body { display:grid; grid-template-rows:48px 1fr; }
-    .top { display:flex; align-items:center; gap:14px; padding:0 14px; border-bottom:1px solid var(--line); }
-    .logo { color:var(--amber); font-family:"IBM Plex Mono",monospace; font-weight:700; letter-spacing:.1em; font-size:13px; }
-    a { color:var(--amber); text-decoration:none; }
-    .ws { display:grid; grid-template-columns:1fr 380px; min-height:0; }
-    @media(max-width:1100px){ .ws { grid-template-columns:1fr; } }
-    .filters { display:flex; flex-wrap:wrap; gap:8px; padding:10px 12px; border-bottom:1px solid var(--line); background:#101010; }
-    .filters input, .filters select { background:#1a1a1a; color:var(--text); border:1px solid #333; height:30px; padding:0 8px; font:inherit; }
-    table { width:100%; border-collapse:collapse; font-size:13px; }
-    th { text-align:right; color:var(--mute); font-weight:500; padding:8px; border-bottom:1px solid var(--line); position:sticky; top:0; background:#121212; }
-    td { padding:7px 8px; border-bottom:1px solid #1c1c1c; cursor:pointer; }
-    tr.active td { background:#1b160c; }
-    tr:hover td { background:#181818; }
-    .mono { font-family:"IBM Plex Mono",monospace; }
-    .up { color:var(--green); } .dn { color:var(--red); }
-    .dna { background:#121212; border-right:1px solid var(--line); overflow:auto; }
-    .sec { padding:10px 12px; font-size:11px; color:var(--mute); letter-spacing:.12em; border-bottom:1px solid var(--line); }
-    .kv { display:grid; grid-template-columns:1fr 1fr; gap:0; }
-    .stat { padding:10px 12px; border-bottom:1px solid #1d1d1d; }
-    .stat .k { color:var(--mute); font-size:11px; }
-    .stat .v { font-family:"IBM Plex Mono",monospace; font-size:16px; }
-    .barwrap { padding:12px; }
-    .bar { display:flex; align-items:center; gap:8px; margin:6px 0; font-size:12px; }
-    .bar .lab { width:64px; color:var(--mute); }
-    .bar .track { flex:1; height:8px; background:#1c1c1c; position:relative; }
-    .bar .fill { height:8px; }
-    .listwrap { overflow:auto; min-height:0; }
-    .pill { font-size:11px; border:1px solid #333; padding:1px 6px; color:var(--mute); }
-  </style>
-</head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>الصناديق — خريطة الفلوس</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0f1412;--card:#171e1b;--line:#2c3832;--text:#eef3ef;--mute:#8fa198;--good:#5ecf8a;--bad:#e07a6e;--acc:#c9a45c}
+*{box-sizing:border-box} html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:"IBM Plex Sans Arabic",sans-serif}
+body{display:grid;grid-template-rows:auto auto 1fr}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--line)}
+.brand{font-weight:700} .brand small{display:block;color:var(--mute);font-weight:400;font-size:12px}
+a{color:var(--acc);text-decoration:none}
+.filters{display:flex;gap:8px;flex-wrap:wrap;padding:12px 22px;border-bottom:1px solid var(--line);background:#141a18}
+input,select{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:8px;height:36px;padding:0 10px;font:inherit}
+.ws{display:grid;grid-template-columns:1fr 340px;min-height:0}
+@media(max-width:1000px){.ws{grid-template-columns:1fr}}
+.list{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{position:sticky;top:0;background:#171e1b;color:var(--mute);font-weight:500;text-align:right;padding:10px;border-bottom:1px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid #22302a;cursor:pointer}
+tr:hover td{background:#1b2420} tr.on td{background:#24332c}
+.dna{border-inline-start:1px solid var(--line);overflow:auto;background:#141a18}
+.h{padding:12px 14px;border-bottom:1px solid var(--line);color:var(--mute);font-size:12px}
+.box{padding:12px 14px;border-bottom:1px solid #22302a}
+.box em{display:block;color:var(--mute);font-style:normal;font-size:11px}
+.box b{font-weight:600}
+.up{color:var(--good)} .dn{color:var(--bad)}
+.bar{display:grid;grid-template-columns:72px 1fr 64px;gap:8px;align-items:center;margin:7px 0;font-size:12px}
+.track{height:7px;background:#22302a;border-radius:99px;overflow:hidden}
+.fill{height:7px}
+</style></head>
 <body>
-  <div class="top">
-    <div class="logo">KHATER &lt;FNDS&gt;</div>
-    <a href="./index.html">MMAP</a>
-    <span style="color:var(--mute);font-size:12px" id="count"></span>
+<header>
+  <div class="brand">سجل الصناديق<small>فلاتر + البصمة الكاملة للصندوق</small></div>
+  <a href="./index.html">خريطة الفلوس</a>
+</header>
+<div class="filters">
+  <input id="q" placeholder="ابحث بالاسم أو المدير"/>
+  <select id="bucket"><option value="">كل الأنواع</option></select>
+  <select id="mgr"><option value="">كل المديرين</option></select>
+  <select id="priced"><option value="">السعر</option><option value="1">NAV حي</option><option value="0">بدون سعر</option></select>
+  <select id="sort"><option value="last12m">ترتيب: 12 شهراً</option><option value="ytd">YTD</option><option value="3y">3 سنوات</option><option value="nav">NAV</option><option value="name">الاسم</option></select>
+  <span id="count" style="color:var(--mute);align-self:center"></span>
+</div>
+<div class="ws">
+  <div class="list">
+    <table><thead><tr><th>الصندوق</th><th>النوع</th><th>NAV</th><th>YTD</th><th>12M</th><th>3Y</th></tr></thead><tbody id="tb"></tbody></table>
   </div>
-  <div class="ws">
-    <div style="display:flex;flex-direction:column;min-height:0">
-      <div class="filters">
-        <input id="q" placeholder="بحث اسم / مدير" />
-        <select id="bucket"><option value="">كل الأنواع</option></select>
-        <select id="mgr"><option value="">كل المديرين</option></select>
-        <select id="priced">
-          <option value="">السعر: الكل</option>
-          <option value="1">لديه NAV حي</option>
-          <option value="0">بدون NAV</option>
-        </select>
-        <select id="eima">
-          <option value="">EIMA: الكل</option>
-          <option value="1">له آفاق أداء</option>
-          <option value="0">بدون EIMA</option>
-        </select>
-        <select id="sort">
-          <option value="name">ترتيب: الاسم</option>
-          <option value="nav">NAV</option>
-          <option value="ytd">YTD</option>
-          <option value="last12m">آخر 12 شهر</option>
-          <option value="3y">3 سنوات</option>
-        </select>
-      </div>
-      <div class="listwrap">
-        <table>
-          <thead><tr><th>الصندوق</th><th>النوع</th><th>NAV</th><th>YTD</th><th>12M</th><th>3Y</th></tr></thead>
-          <tbody id="tb"></tbody>
-        </table>
-      </div>
-    </div>
-    <aside class="dna">
-      <div class="sec">FUND DNA</div>
-      <div id="dna"><div class="stat"><div class="k">اختر صندوقاً</div></div></div>
-    </aside>
-  </div>
+  <aside class="dna" id="dna"><div class="h">اختر صندوقاً لعرض بصمته</div></aside>
+</div>
 <script>
-const HORIZ = [["weekly","أسبوع"],["4weeks","4 أسابيع"],["ytd","YTD"],["last12m","12 شهر"],["2y","سنتان"],["3y","3 سنوات"],["4y","4 سنوات"],["5y","5 سنوات"],["6y","6 سنوات"]];
-const bucketOf = c => {
-  c = (c||"").toLowerCase();
-  if (c.includes("gold")) return "ذهب";
-  if (c.includes("equity") || c.includes("index") || c.includes("thematic") || c.includes("sector")) return "أسهم";
-  if (c.includes("money market")) return "نقدي";
-  if (c.includes("fixed income") || c.includes("bond")) return "دخل ثابت";
-  if (c.includes("balanced") || c.includes("mixed") || c.includes("allocator")) return "متوازن";
-  if (c.includes("etf") || c.includes("traded")) return "متداول";
-  if (c.includes("protected") || c.includes("guaranteed")) return "محمي";
-  if (c.includes("charitable")) return "خيري";
-  return "أخرى";
-};
-const fmt=(n,d=2)=>n==null||n===""?"—":Number(n).toLocaleString("en-US",{maximumFractionDigits:d});
+const H=[["weekly","أسبوع"],["4weeks","4 أسابيع"],["ytd","منذ بداية العام"],["last12m","12 شهراً"],["2y","سنتان"],["3y","3 سنوات"],["4y","4 سنوات"],["5y","5 سنوات"],["6y","6 سنوات"]];
+const bucket=c=>{c=(c||"").toLowerCase();
+ if(c.includes("gold"))return "ذهب"; if(c.includes("equity")||c.includes("index")||c.includes("thematic")||c.includes("sector"))return "أسهم";
+ if(c.includes("money market"))return "نقدي"; if(c.includes("fixed income"))return "دخل ثابت";
+ if(c.includes("balanced")||c.includes("mixed")||c.includes("allocator"))return "متوازن";
+ if(c.includes("etf")||c.includes("traded"))return "متداول"; if(c.includes("protected")||c.includes("guaranteed"))return "محمي";
+ if(c.includes("charitable"))return "خيري"; return "أخرى";};
+const fmt=(n,d=2)=>n==null?"—":Number(n).toLocaleString("ar-EG",{maximumFractionDigits:d});
 const cls=n=>n==null?"":(n>=0?"up":"dn");
-let ALL=[], SEL=null;
-
-function ret(f,h){ const x=f.eima&&f.eima[h]; return x&&x.ret!=null?x.ret:null; }
-
+const ret=(f,h)=>f.eima&&f.eima[h]&&f.eima[h].ret!=null?f.eima[h].ret:null;
+let ALL=[],SEL=null;
 function apply(){
-  const q=document.getElementById("q").value.trim();
-  const b=document.getElementById("bucket").value;
-  const m=document.getElementById("mgr").value;
-  const p=document.getElementById("priced").value;
-  const e=document.getElementById("eima").value;
-  const s=document.getElementById("sort").value;
-  let rows=ALL.filter(f=>{
-    if(q && !(f.name+(f.manager||"")).includes(q)) return false;
-    if(b && bucketOf(f.category)!==b) return false;
-    if(m && f.manager!==m) return false;
-    if(p==="1" && f.nav==null) return false;
-    if(p==="0" && f.nav!=null) return false;
-    if(e==="1" && !Object.keys(f.eima||{}).length) return false;
-    if(e==="0" && Object.keys(f.eima||{}).length) return false;
-    return true;
-  });
+  const q=qel("q").value.trim(),b=qel("bucket").value,m=qel("mgr").value,p=qel("priced").value,s=qel("sort").value;
+  let rows=ALL.filter(f=>
+    (!q||(f.name+(f.manager||"")).includes(q)) && (!b||bucket(f.category)===b) && (!m||f.manager===m) &&
+    (p!=="1"||f.nav!=null) && (p!=="0"||f.nav==null)
+  );
   rows.sort((a,c)=>{
     if(s==="name") return a.name.localeCompare(c.name,"ar");
-    const av=s==="nav"?a.nav:ret(a,s==="ytd"?"ytd":s);
-    const cv=s==="nav"?c.nav:ret(c,s==="ytd"?"ytd":s);
-    return (cv??-9999)-(av??-9999);
+    const av=s==="nav"?a.nav:ret(a,s), cv=s==="nav"?c.nav:ret(c,s);
+    return (cv??-1e9)-(av??-1e9);
   });
-  document.getElementById("count").textContent=rows.length+" / "+ALL.length;
-  document.getElementById("tb").innerHTML=rows.map(f=>`<tr data-id="${f.id}" class="${SEL&&SEL.id===f.id?"active":""}">
+  qel("count").textContent=rows.length+" صندوقاً";
+  qel("tb").innerHTML=rows.map(f=>`<tr data-id="${f.id}" class="${SEL&&SEL.id===f.id?"on":""}">
     <td>${f.name}<div style="color:var(--mute);font-size:11px">${f.manager||""}</div></td>
-    <td>${bucketOf(f.category)}</td>
-    <td class="mono">${fmt(f.nav)}</td>
-    <td class="mono ${cls(ret(f,"ytd"))}">${fmt(ret(f,"ytd"),1)}</td>
-    <td class="mono ${cls(ret(f,"last12m"))}">${fmt(ret(f,"last12m"),1)}</td>
-    <td class="mono ${cls(ret(f,"3y"))}">${fmt(ret(f,"3y"),1)}</td>
-  </tr>`).join("");
-  document.querySelectorAll("#tb tr").forEach(tr=>tr.onclick=()=>{SEL=ALL.find(x=>x.id===tr.dataset.id);dna();apply();});
+    <td>${bucket(f.category)}</td><td>${fmt(f.nav)}</td>
+    <td class="${cls(ret(f,"ytd"))}">${fmt(ret(f,"ytd"),1)}</td>
+    <td class="${cls(ret(f,"last12m"))}">${fmt(ret(f,"last12m"),1)}</td>
+    <td class="${cls(ret(f,"3y"))}">${fmt(ret(f,"3y"),1)}</td></tr>`).join("");
+  qel("tb").querySelectorAll("tr").forEach(tr=>tr.onclick=()=>{SEL=ALL.find(x=>x.id===tr.dataset.id);paint();apply();});
 }
-
-function dna(){
+function paint(){
   const f=SEL; if(!f)return;
-  const vs0 = f.nav!=null && f.initial ? f.nav/f.initial : null;
-  const bars=HORIZ.map(([h,lab])=>{
-    const v=ret(f,h); if(v==null) return "";
-    const w=Math.min(100,Math.abs(v));
-    const col=v>=0?"var(--green)":"var(--red)";
-    return `<div class="bar"><div class="lab">${lab}</div><div class="track"><div class="fill" style="width:${w}%;background:${col}"></div></div><div class="mono ${cls(v)}">${fmt(v,1)}%</div></div>`;
+  const vs=f.nav!=null&&f.initial?f.nav/f.initial:null;
+  const bars=H.map(([h,lab])=>{
+    const v=ret(f,h); if(v==null)return "";
+    const w=Math.min(100,Math.abs(v)/3);
+    return `<div class="bar"><span>${lab}</span><div class="track"><div class="fill" style="width:${Math.max(w,3)}%;background:${v>=0?"var(--good)":"var(--bad)"}"></div></div><span class="${cls(v)}">${fmt(v,1)}%</span></div>`;
   }).join("");
-  document.getElementById("dna").innerHTML=`
-    <div class="stat"><div class="k">NAME</div><div class="v" style="font-family:inherit;font-size:18px">${f.name}</div></div>
-    <div class="kv">
-      <div class="stat"><div class="k">MANAGER</div><div class="v" style="font-size:13px;font-family:inherit">${f.manager||"—"}</div></div>
-      <div class="stat"><div class="k">BUCKET</div><div class="v">${bucketOf(f.category)}</div></div>
-      <div class="stat"><div class="k">LIVE NAV</div><div class="v">${fmt(f.nav)} ${f.currency||""}</div></div>
-      <div class="stat"><div class="k">NAV AS OF</div><div class="v">${f.nav_asof||"—"}</div></div>
-      <div class="stat"><div class="k">INCEPTION</div><div class="v">${f.inception||"—"}</div></div>
-      <div class="stat"><div class="k">PAR / INITIAL</div><div class="v">${fmt(f.initial)}</div></div>
-      <div class="stat"><div class="k">VS PAR</div><div class="v ${cls((vs0||1)-1)}">${vs0?fmt(vs0,2)+"x":"—"}</div></div>
-      <div class="stat"><div class="k">EIMA AS OF</div><div class="v">${f.eima_asof||"—"}</div></div>
-    </div>
-    <div class="sec">RETURN DNA</div>
-    <div class="barwrap">${bars||'<div class="stat">لا آفاق EIMA بعد</div>'}</div>
-    <div class="sec">SOURCE</div>
-    <div class="stat"><div class="v" style="font-size:12px;word-break:break-all">${f.url?`<a href="${f.url}" target="_blank">رابط التحديث</a>`:"—"}</div>
-    <div class="k">${f.category||""}</div></div>`;
+  qel("dna").innerHTML=`<div class="h">بصمة الصندوق</div>
+    <div class="box"><em>الاسم</em><b>${f.name}</b></div>
+    <div class="box"><em>مدير الاستثمار</em><b>${f.manager||"—"}</b></div>
+    <div class="box"><em>النوع</em><b>${bucket(f.category)}</b></div>
+    <div class="box"><em>آخر سعر</em><b>${fmt(f.nav)} ${f.currency||""}</b><em>${f.nav_asof||""}</em></div>
+    <div class="box"><em>التأسيس / الاسمية</em><b>${f.inception||"—"} · ${fmt(f.initial)}</b></div>
+    <div class="box"><em>مقابل الاسمية</em><b class="${cls((vs||1)-1)}">${vs?fmt(vs,2)+"×":"—"}</b></div>
+    <div class="box"><em>تقرير EIMA</em><b>${f.eima_asof||"—"}</b></div>
+    <div class="h">آفاق العائد</div>
+    <div class="box">${bars||"لا بيانات آفاق"}</div>
+    <div class="box"><em>المصدر</em>${f.url?`<a href="${f.url}" target="_blank">رابط التحديث</a>`:"—"}<div style="color:var(--mute);font-size:11px;margin-top:6px">${f.category||""}</div></div>`;
 }
-
+const qel=id=>document.getElementById(id);
 fetch("data/funds_dna.json").then(r=>r.json()).then(d=>{
   ALL=d.funds;
-  const buckets=[...new Set(ALL.map(f=>bucketOf(f.category)))].sort();
-  const mgrs=[...new Set(ALL.map(f=>f.manager).filter(Boolean))].sort();
-  document.getElementById("bucket").innerHTML+=""+buckets.map(b=>`<option>${b}</option>`).join("");
-  document.getElementById("mgr").innerHTML+=""+mgrs.map(b=>`<option>${b}</option>`).join("");
-  ["q","bucket","mgr","priced","eima","sort"].forEach(id=>document.getElementById(id).oninput=apply);
+  [...new Set(ALL.map(f=>bucket(f.category)))].sort().forEach(b=>qel("bucket").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
+  [...new Set(ALL.map(f=>f.manager).filter(Boolean))].sort().forEach(b=>qel("mgr").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
+  ["q","bucket","mgr","priced","sort"].forEach(id=>qel(id).oninput=apply);
   apply();
 });
-</script>
-</body>
-</html>
+</script></body></html>
