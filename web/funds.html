@@ -2,27 +2,25 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>الصناديق — خريطة الفلوس</title>
+<title>الصناديق</title>
 <script src="config.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/app.css"/>
 <style>
-body{display:grid;grid-template-rows:62px auto auto 1fr}
-.num{font-family:"IBM Plex Sans",sans-serif;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;text-align:left}
-.filters{background:var(--bg2);border-bottom:1px solid var(--line);padding:12px 18px}
-.filters .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0}
-.chip{border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:13px;cursor:pointer;color:var(--mute)}
-.chip.on{border-color:var(--gold);color:var(--ink);background:#1c1810}
-.beat{color:var(--good)} .lose{color:var(--bad)}
-.dna{border-inline-start:1px solid var(--line);overflow:auto;background:var(--bg2)}
-.ws{display:grid;grid-template-columns:1fr 360px;min-height:0}
-@media(max-width:1000px){.ws{grid-template-columns:1fr}}
-label.l{font-size:12px;color:var(--mute);margin-inline-end:4px}
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--bg2)}
+  .bar input,.bar select{min-width:160px}
+  table td,table th{white-space:nowrap}
+  td.name,th.name{white-space:normal;min-width:220px}
+  .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
+  .tag.yes{background:#143324;color:var(--good)}
+  .tag.no{background:#3a1c18;color:var(--bad)}
+  .tag.na{background:#1c1c1c;color:var(--mute)}
+  .num{font-family:"IBM Plex Sans",sans-serif;direction:ltr;unicode-bidi:isolate}
 </style>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
-  <div class="logo">خريطة الفلوس<span>هل الصندوق تغلّب على المرجع؟</span></div>
+  <div class="logo">خريطة الفلوس<span>الصناديق مقابل مرجع واحد تختاره</span></div>
   <nav>
     <a href="./index.html">البداية</a>
     <a href="./map.html">ماذا حدث للفلوس؟</a>
@@ -31,123 +29,82 @@ label.l{font-size:12px;color:var(--mute);margin-inline-end:4px}
     <a href="./why.html">المنهج</a>
   </nav>
 </div></header>
-<section class="filters">
-  <div class="row">
-    <input id="q" placeholder="ابحث بالاسم أو المدير" style="min-width:220px"/>
-    <select id="bucket"><option value="">كل الأنواع</option></select>
-    <select id="mgr"><option value="">كل المديرين</option></select>
-    <select id="priced"><option value="">السعر: الكل</option><option value="1">NAV حي</option><option value="0">بدون سعر</option></select>
-    <select id="horizon">
-      <option value="last12m">أفق المقارنة: 12 شهراً</option>
-      <option value="ytd">منذ بداية العام</option>
-      <option value="3y">3 سنوات</option>
-    </select>
-    <span class="muted" id="count"></span>
-  </div>
-  <div class="row">
-    <span class="l">قارن مقابل</span>
-    <span class="chip on" data-ref="cpi">التضخم</span>
-    <span class="chip on" data-ref="usd">الدولار</span>
-    <span class="chip on" data-ref="gold">الذهب</span>
-    <span class="chip on" data-ref="egx30">EGX30</span>
-    <span class="chip" data-ref="spy">SPY</span>
-    <span class="chip" data-ref="deposit">وديعة</span>
-    <span class="chip" data-ref="tbill">أذون 91</span>
-  </div>
-</section>
-<div class="ws">
-  <div class="list" style="overflow:auto">
-    <table>
-      <thead><tr id="thead"></tr></thead>
-      <tbody id="tb"></tbody>
-    </table>
-  </div>
-  <aside class="dna" id="dna"><div class="h">اختر صندوقاً</div></aside>
+<div class="bar">
+  <input id="q" placeholder="اسم الصندوق أو المدير"/>
+  <select id="bucket"><option value="">النوع</option></select>
+  <select id="mgr"><option value="">المدير</option></select>
+  <select id="horizon">
+    <option value="last12m">آخر 12 شهراً</option>
+    <option value="ytd">منذ بداية العام</option>
+    <option value="3y">3 سنوات</option>
+  </select>
+  <select id="bench">
+    <option value="egx30">المرجع: EGX30</option>
+    <option value="cpi">المرجع: التضخم</option>
+    <option value="usd">المرجع: الدولار</option>
+    <option value="gold">المرجع: الذهب</option>
+    <option value="spy">المرجع: SPY</option>
+    <option value="deposit">المرجع: وديعة</option>
+    <option value="tbill">المرجع: أذون 91</option>
+  </select>
+  <span class="muted" id="meta"></span>
 </div>
+<div class="wrap" style="padding:0">
+<table>
+  <thead>
+    <tr>
+      <th class="name">الصندوق</th>
+      <th>النوع</th>
+      <th>NAV</th>
+      <th>عائد الصندوق</th>
+      <th>عائد المرجع</th>
+      <th>النتيجة</th>
+    </tr>
+  </thead>
+  <tbody id="tb"></tbody>
+</table>
+</div>
+<p class="wrap muted">العوائد من تقرير EIMA بتاريخ المرجع المعروض. اضغط الصف لفتح البصمة. بعض أرقام EIMA قد تكون شاذة ونظهرها كما نُشرت.</p>
 <script type="module">
 import { loadFundBook } from "./js/live.js";
-import { bucket as buck } from "./js/engine.js";
-const NAMES={cpi:"التضخم",usd:"الدولار",gold:"الذهب",egx30:"EGX30",spy:"SPY",deposit:"وديعة",tbill:"أذون 91"};
-const HLAB={weekly:"أسبوع", "4weeks":"4 أسابيع", ytd:"YTD", last12m:"12M", "2y":"2Y", "3y":"3Y", "4y":"4Y", "5y":"5Y", "6y":"6Y"};
-const pct=v=>v==null?"—":(Number(v).toLocaleString("en-US",{maximumFractionDigits:1})+"%");
+import { bucket } from "./js/engine.js";
+const LAB={cpi:"التضخم",usd:"الدولار",gold:"الذهب",egx30:"EGX30",spy:"SPY",deposit:"الوديعة",tbill:"أذون 91"};
+const pct=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:1})+"%";
 const num=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:2});
-const ret=(f,h)=>f.eima&&f.eima[h]&&f.eima[h].ret!=null?Number(f.eima[h].ret):null;
-let ALL=[], BENCH=null, SEL=null, REFS=new Set(["cpi","usd","gold","egx30"]);
-
+const ret=(f,h)=>f.eima?.[h]?.ret!=null?Number(f.eima[h].ret):null;
 const packed=await loadFundBook();
-ALL=packed.funds;
-try{ BENCH=await (await fetch("data/benchmarks.json")).json(); }catch(e){ BENCH={horizons:{}}; }
-
-[...new Set(ALL.map(f=>buck(f.category)))].sort().forEach(b=>document.getElementById("bucket").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
+const ALL=packed.funds;
+const BENCH=await (await fetch("data/benchmarks.json")).json();
+[...new Set(ALL.map(f=>bucket(f.category)))].sort().forEach(b=>document.getElementById("bucket").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
 [...new Set(ALL.map(f=>f.manager).filter(Boolean))].sort().forEach(b=>document.getElementById("mgr").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
-
-document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{c.classList.toggle("on");REFS=new Set([...document.querySelectorAll(".chip.on")].map(x=>x.dataset.ref));apply();});
-["q","bucket","mgr","priced","horizon"].forEach(id=>document.getElementById(id).oninput=apply);
-
-function apply(){
+function draw(){
   const q=document.getElementById("q").value.trim();
   const b=document.getElementById("bucket").value;
   const m=document.getElementById("mgr").value;
-  const p=document.getElementById("priced").value;
   const h=document.getElementById("horizon").value;
-  const bm=(BENCH.horizons||{})[h]||{};
+  const k=document.getElementById("bench").value;
+  const bench=(BENCH.horizons[h]||{})[k];
+  document.getElementById("meta").textContent=`${ALL.length} صندوق · المرجع حتى ${BENCH.as_of} = ${pct(bench)}`;
   let rows=ALL.filter(f=>
-    (!q||(f.name+(f.manager||"")).includes(q)) &&
-    (!b||buck(f.category)===b) && (!m||f.manager===m) &&
-    (p!=="1"||f.nav!=null) && (p!=="0"||f.nav==null)
+    (!q||(f.name+(f.manager||"")).toLowerCase().includes(q.toLowerCase())) &&
+    (!b||bucket(f.category)===b) && (!m||f.manager===m)
   );
   rows.sort((a,c)=>(ret(c,h)??-1e9)-(ret(a,h)??-1e9));
-  document.getElementById("count").textContent=rows.length+" صندوق";
-  const refCols=[...REFS];
-  document.getElementById("thead").innerHTML=`<th>الصندوق</th><th>النوع</th><th>NAV</th><th>عائد ${HLAB[h]||h}</th>`+refCols.map(r=>`<th>مقابل ${NAMES[r]}</th>`).join("");
   document.getElementById("tb").innerHTML=rows.map(f=>{
     const r=ret(f,h);
-    const cells=refCols.map(k=>{
-      const bench=bm[k];
-      if(r==null||bench==null) return `<td class="num">—</td>`;
-      const diff=r-bench;
-      const ok=diff>=0;
-      return `<td class="num ${ok?"beat":"lose"}">${ok?"+":""}${diff.toLocaleString("en-US",{maximumFractionDigits:1})} نقطة</td>`;
-    }).join("");
-    return `<tr data-id="${f.id}" class="${SEL&&SEL.id===f.id?"on":""}">
-      <td>${f.name}<div class="muted">${f.manager||""}</div></td>
-      <td>${buck(f.category)}</td>
+    let tag='<span class="tag na">لا بيانات</span>';
+    if(r!=null && bench!=null) tag = r>=bench ? '<span class="tag yes">تفوّق</span>' : '<span class="tag no">تخلّف</span>';
+    return `<tr onclick="location.href='fund.html?id=${encodeURIComponent(f.id)}&h=${h}&b=${k}'">
+      <td class="name">${f.name}<div class="muted">${f.manager||""}</div></td>
+      <td>${bucket(f.category)}</td>
       <td class="num">${num(f.nav)}</td>
-      <td class="num ${r==null?"":(r>=0?"beat":"lose")}">${pct(r)}</td>
-      ${cells}
+      <td class="num">${pct(r)}</td>
+      <td class="num">${pct(bench)}</td>
+      <td>${tag}</td>
     </tr>`;
   }).join("");
-  document.querySelectorAll("#tb tr").forEach(tr=>tr.onclick=()=>{SEL=ALL.find(x=>x.id===tr.dataset.id);paint();apply();});
 }
-
-function paint(){
-  const f=SEL; if(!f)return;
-  const h=document.getElementById("horizon").value;
-  const r=ret(f,h);
-  const bm=(BENCH.horizons||{})[h]||{};
-  const cmp=Object.keys(NAMES).map(k=>{
-    const bench=bm[k];
-    if(r==null||bench==null) return "";
-    const diff=r-bench; const ok=diff>=0;
-    return `<div class="box"><em>${NAMES[k]} (${pct(bench)})</em><b class="${ok?"beat":"lose"}">${ok?"تفوّق":"تخلّف"} ${Math.abs(diff).toLocaleString("en-US",{maximumFractionDigits:1})} نقطة</b></div>`;
-  }).join("");
-  const bars=Object.keys(HLAB).map(k=>{
-    const v=ret(f,k); if(v==null)return "";
-    return `<div class="bar"><span>${HLAB[k]}</span><div class="track"><div class="fill" style="width:${Math.min(100,Math.abs(v)/3)}%;background:${v>=0?"var(--good)":"var(--bad)"}"></div></div><span class="num">${pct(v)}</span></div>`;
-  }).join("");
-  document.getElementById("dna").innerHTML=`
-    <div class="h">بصمة الصندوق</div>
-    <div class="box"><em>الاسم</em><b>${f.name}</b></div>
-    <div class="box"><em>مدير الاستثمار</em><b>${f.manager||"—"}</b></div>
-    <div class="box"><em>النوع</em><b>${buck(f.category)}</b></div>
-    <div class="box"><em>آخر سعر</em><b class="num">${num(f.nav)} ${f.currency||""}</b><em>${f.nav_asof||""}</em></div>
-    <div class="box"><em>تقرير EIMA</em><b>${f.eima_asof||"—"}</b></div>
-    <div class="h">مقابل المرجعيات — ${HLAB[h]}</div>
-    ${cmp||'<div class="box">لا عائد EIMA للمقارنة</div>'}
-    <div class="h">آفاق العائد</div>
-    <div class="box">${bars||"—"}</div>
-    <div class="box">${f.url?`<a href="${f.url}" target="_blank">المصدر</a>`:"—"}</div>`;
-}
-apply();
+["q","bucket","mgr","horizon","bench"].forEach(id=>document.getElementById(id).oninput=draw);
+draw();
 </script>
 </body></html>
