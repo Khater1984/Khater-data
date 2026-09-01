@@ -7,104 +7,95 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/app.css"/>
 <style>
-  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--bg2)}
-  .bar input,.bar select{min-width:160px}
-  table td,table th{white-space:nowrap}
-  td.name,th.name{white-space:normal;min-width:220px}
-  .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
-  .tag.yes{background:#143324;color:var(--good)}
-  .tag.no{background:#3a1c18;color:var(--bad)}
-  .tag.na{background:#1c1c1c;color:var(--mute)}
-  .num{font-family:"IBM Plex Sans",sans-serif;direction:ltr;unicode-bidi:isolate}
+.toolbar{padding:16px 20px;border-bottom:1px solid var(--line)}
+.hint{color:var(--mute);font-size:13px;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid #3a4450;background:#12161c;color:#d7dde6;border-radius:999px;padding:8px 12px;cursor:pointer;font-size:13px}
+.chip.on{border-color:#d7b56a;color:#fff;background:#1b1710}
+.row2{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.num{font-family:"IBM Plex Sans",sans-serif;direction:ltr;unicode-bidi:isolate}
+.score{color:#b794f6;font-weight:600}
+.rate{border:1px solid #3a4450;padding:2px 8px;border-radius:6px;font-size:12px}
+table th{font-size:11px;letter-spacing:.08em;color:#8b93a0}
 </style>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
-  <div class="logo">خريطة الفلوس<span>الصناديق مقابل مرجع واحد تختاره</span></div>
+  <div class="logo">خريطة الفلوس<span>الصناديق</span></div>
   <nav>
     <a href="./index.html">البداية</a>
     <a href="./map.html">ماذا حدث للفلوس؟</a>
     <a class="active" href="./funds.html">الصناديق</a>
+    <a href="./categories.html">خريطة الفئات</a>
     <a href="./macro.html">الاقتصاد</a>
-    <a href="./why.html">المنهج</a>
   </nav>
 </div></header>
-<div class="bar">
-  <input id="q" placeholder="اسم الصندوق أو المدير"/>
-  <select id="bucket"><option value="">النوع</option></select>
-  <select id="mgr"><option value="">المدير</option></select>
-  <select id="horizon">
-    <option value="last12m">آخر 12 شهراً</option>
-    <option value="ytd">منذ بداية العام</option>
-    <option value="3y">3 سنوات</option>
-  </select>
-  <select id="bench">
-    <option value="egx30">المرجع: EGX30</option>
-    <option value="cpi">المرجع: التضخم</option>
-    <option value="usd">المرجع: الدولار</option>
-    <option value="gold">المرجع: الذهب</option>
-    <option value="spy">المرجع: SPY</option>
-    <option value="deposit">المرجع: وديعة</option>
-    <option value="tbill">المرجع: أذون 91</option>
-  </select>
-  <span class="muted" id="meta"></span>
+<div class="toolbar">
+  <div class="hint">اختر مقابل المعايير · منطق AND — الصندوق يظهر فقط إن تفوّق على كل ما تحدده</div>
+  <div class="chips" id="chips"></div>
+  <div class="row2">
+    <input id="q" placeholder="بحث"/>
+    <select id="bucket"><option value="">كل الفئات</option></select>
+    <select id="horizon">
+      <option value="last12m">12 شهراً</option>
+      <option value="ytd">YTD</option>
+      <option value="3y">3 سنوات</option>
+    </select>
+    <span class="muted" id="meta"></span>
+  </div>
 </div>
-<div class="wrap" style="padding:0">
 <table>
   <thead>
     <tr>
-      <th class="name">الصندوق</th>
-      <th>النوع</th>
-      <th>NAV</th>
-      <th>عائد الصندوق</th>
-      <th>عائد المرجع</th>
-      <th>النتيجة</th>
+      <th>#</th><th>FUND</th><th>CATEGORY</th><th>RETURN</th><th>SCORE</th><th>RATING</th><th>CONF</th>
     </tr>
   </thead>
   <tbody id="tb"></tbody>
 </table>
-</div>
-<p class="wrap muted">العوائد من تقرير EIMA بتاريخ المرجع المعروض. اضغط الصف لفتح البصمة. بعض أرقام EIMA قد تكون شاذة ونظهرها كما نُشرت.</p>
 <script type="module">
 import { loadFundBook } from "./js/live.js";
 import { bucket } from "./js/engine.js";
-const LAB={cpi:"التضخم",usd:"الدولار",gold:"الذهب",egx30:"EGX30",spy:"SPY",deposit:"الوديعة",tbill:"أذون 91"};
-const pct=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:1})+"%";
-const num=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:2});
-const ret=(f,h)=>f.eima?.[h]?.ret!=null?Number(f.eima[h].ret):null;
+import { BENCH_META, ret, rating, conf, parts } from "./js/score.js";
 const packed=await loadFundBook();
 const ALL=packed.funds;
 const BENCH=await (await fetch("data/benchmarks.json")).json();
+const chips=document.getElementById("chips");
+chips.innerHTML=BENCH_META.map(([k,l])=>`<button class="chip" data-k="${k}">${l}</button>`).join("");
+let SEL=new Set();
+chips.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{c.classList.toggle("on");SEL=new Set([...chips.querySelectorAll(".chip.on")].map(x=>x.dataset.k));draw();});
 [...new Set(ALL.map(f=>bucket(f.category)))].sort().forEach(b=>document.getElementById("bucket").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
-[...new Set(ALL.map(f=>f.manager).filter(Boolean))].sort().forEach(b=>document.getElementById("mgr").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
+
 function draw(){
-  const q=document.getElementById("q").value.trim();
+  const q=document.getElementById("q").value.trim().toLowerCase();
   const b=document.getElementById("bucket").value;
-  const m=document.getElementById("mgr").value;
   const h=document.getElementById("horizon").value;
-  const k=document.getElementById("bench").value;
-  const bench=(BENCH.horizons[h]||{})[k];
-  document.getElementById("meta").textContent=`${ALL.length} صندوق · المرجع حتى ${BENCH.as_of} = ${pct(bench)}`;
-  let rows=ALL.filter(f=>
-    (!q||(f.name+(f.manager||"")).toLowerCase().includes(q.toLowerCase())) &&
-    (!b||bucket(f.category)===b) && (!m||f.manager===m)
-  );
-  rows.sort((a,c)=>(ret(c,h)??-1e9)-(ret(a,h)??-1e9));
-  document.getElementById("tb").innerHTML=rows.map(f=>{
+  const vals=BENCH.horizons[h]||{};
+  const keys=[...SEL];
+  keys._vals=vals;
+  let rows=ALL.filter(f=>{
+    if(q && !(f.name+(f.manager||"")).toLowerCase().includes(q)) return false;
+    if(b && bucket(f.category)!==b) return false;
     const r=ret(f,h);
-    let tag='<span class="tag na">لا بيانات</span>';
-    if(r!=null && bench!=null) tag = r>=bench ? '<span class="tag yes">تفوّق</span>' : '<span class="tag no">تخلّف</span>';
-    return `<tr onclick="location.href='fund.html?id=${encodeURIComponent(f.id)}&h=${h}&b=${k}'">
-      <td class="name">${f.name}<div class="muted">${f.manager||""}</div></td>
+    return keys.every(k=>r!=null && vals[k]!=null && r>=vals[k]);
+  });
+  const peers=ALL.filter(f=>ret(f,h)!=null).map(f=>ret(f,h));
+  rows=rows.map(f=>({f,p:parts(f,h,keys,peers.filter((_,i)=>true))}))
+    .sort((a,c)=>(c.p.score??-1)-(a.p.score??-1));
+  document.getElementById("meta").textContent=`${rows.length} صندوق · EIMA ${BENCH.as_of}`;
+  document.getElementById("tb").innerHTML=rows.map((row,i)=>{
+    const f=row.f,p=row.p;
+    return `<tr onclick="location.href='fund.html?id=${encodeURIComponent(f.id)}&h=${h}'">
+      <td class="num">${i+1}</td>
+      <td>${f.name}<div class="muted">${f.manager||""}</div></td>
       <td>${bucket(f.category)}</td>
-      <td class="num">${num(f.nav)}</td>
-      <td class="num">${pct(r)}</td>
-      <td class="num">${pct(bench)}</td>
-      <td>${tag}</td>
+      <td class="num">${p.r==null?"—":p.r.toLocaleString("en-US",{maximumFractionDigits:1})+"%"}</td>
+      <td class="num score">${p.score==null?"—":p.score.toLocaleString("en-US",{maximumFractionDigits:1})}</td>
+      <td><span class="rate">${rating(p.score)}</span></td>
+      <td class="muted">${conf(f)}</td>
     </tr>`;
   }).join("");
 }
-["q","bucket","mgr","horizon","bench"].forEach(id=>document.getElementById(id).oninput=draw);
+["q","bucket","horizon"].forEach(id=>document.getElementById(id).oninput=draw);
 draw();
 </script>
 </body></html>
