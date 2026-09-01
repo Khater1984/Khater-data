@@ -2,60 +2,81 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>بصمة الصندوق</title>
+<title>Fund DNA</title>
 <script src="config.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/app.css"/>
 <style>
-  .num{font-family:"IBM Plex Sans",sans-serif;direction:ltr;unicode-bidi:isolate}
-  .cmp{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:16px 0}
-  .ok{border-color:#2e6a48} .bad{border-color:#6a322c}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:800px){.kpis{grid-template-columns:1fr 1fr}}
+.kpi{background:#14181f;border:1px solid #2a3140;border-radius:14px;padding:16px}
+.kpi b{display:block;font-size:32px;font-family:"IBM Plex Sans",sans-serif}
+.kpi em{color:var(--mute);font-style:normal;font-size:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media(max-width:800px){.grid2{grid-template-columns:1fr}}
+.why{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.barline{display:grid;grid-template-columns:90px 1fr 40px;gap:8px;align-items:center;margin:8px 0}
+.track{height:8px;background:#222836;border-radius:99px;overflow:hidden}
+.fill{height:8px;background:linear-gradient(90deg,#3ddc84,#7d9cff)}
+.tag{border:1px solid #355e4a;color:#7dcc8a;border-radius:999px;padding:4px 10px;font-size:12px;margin:4px}
 </style>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
-  <div class="logo">خريطة الفلوس<span>بصمة الصندوق</span></div>
-  <nav><a href="./funds.html">عودة للصناديق</a></nav>
+  <div class="logo">FUND DNA<span>Smart Score · ليست توصية</span></div>
+  <nav><a href="./funds.html">عودة</a></nav>
 </div></header>
-<main class="wrap page" id="app">جاري التحميل…</main>
+<main class="wrap page" id="app">...</main>
 <script type="module">
 import { loadFundBook } from "./js/live.js";
 import { bucket } from "./js/engine.js";
-const params=new URLSearchParams(location.search);
-const id=params.get("id");
-const h=params.get("h")||"last12m";
+import { BENCH_META, ret, rating, conf, tier, parts, label } from "./js/score.js";
+const id=new URLSearchParams(location.search).get("id");
+const h=new URLSearchParams(location.search).get("h")||"last12m";
 const packed=await loadFundBook();
 const BENCH=await (await fetch("data/benchmarks.json")).json();
 const f=packed.funds.find(x=>x.id===id);
-const pct=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:1})+"%";
-const num=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:2});
-const ret=(hh)=>f?.eima?.[hh]?.ret!=null?Number(f.eima[hh].ret):null;
-if(!f){document.getElementById("app").textContent="الصندوق غير موجود"; throw 0;}
-const names={cpi:"التضخم",usd:"الدولار",gold:"الذهب",egx30:"EGX30",spy:"SPY",deposit:"وديعة",tbill:"أذون 91"};
-const H=["weekly","4weeks","ytd","last12m","2y","3y","4y","5y","6y"];
-const HL={weekly:"أسبوع","4weeks":"4 أسابيع",ytd:"YTD",last12m:"12 شهراً","2y":"سنتان","3y":"3 سنوات","4y":"4 سنوات","5y":"5 سنوات","6y":"6 سنوات"};
-const r=ret(h);
-const cards=Object.entries(names).map(([k,n])=>{
-  const b=(BENCH.horizons[h]||{})[k];
-  if(r==null||b==null) return `<div class="card"><h3>${n}</h3><p>لا مقارنة</p></div>`;
-  const win=r>=b;
-  return `<div class="card ${win?"ok":"bad"}"><h3>${n}</h3><p class="num">${pct(b)}</p><p>${win?"تفوّق الصندوق":"المرجع أعلى"} بفارق ${Math.abs(r-b).toLocaleString("en-US",{maximumFractionDigits:1})} نقطة</p></div>`;
+if(!f){document.getElementById("app").textContent="غير موجود"; throw 0;}
+const vals=BENCH.horizons[h]||{};
+const keys=BENCH_META.map(x=>x[0]); keys._vals=vals;
+const peers=packed.funds.map(x=>ret(x,h)).filter(v=>v!=null);
+const p=parts(f,h,keys,peers);
+const pct=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:1});
+const bars=[
+ ["Performance",p.perf],["Benchmark",p.bench],["Inflation",p.inflation],
+ ["Consistency",p.consistency],["Evidence",p.evidence]
+].map(([n,v])=>`<div class="barline"><span>${n}</span><div class="track"><div class="fill" style="width:${v||0}%"></div></div><span>${pct(v)}</span></div>`).join("");
+const why=`
+  <div class="card"><em>PERFORMANCE</em><b>${label(p.perf)}</b></div>
+  <div class="card"><em>BENCHMARK</em><b>${label(p.bench)}</b></div>
+  <div class="card"><em>INFLATION</em><b>${p.inflation>=100?"Protected":"Exposed"}</b></div>
+  <div class="card"><em>CONSISTENCY</em><b>${label(p.consistency)}</b></div>
+  <div class="card"><em>EVIDENCE</em><b>${label(p.evidence)}</b></div>
+  <div class="card"><em>CONFIDENCE</em><b>${conf(f)}</b></div>`;
+const tags=[];
+if((p.r||0)>20) tags.push("HIGH RETURN");
+if((p.bench||0)>=60) tags.push("STRONG BENCHMARK");
+if((p.evidence||0)>=80) tags.push("HIGH EVIDENCE");
+if(tier(f)>=3) tags.push("LONG TRACK RECORD");
+const ev=["weekly","4weeks","ytd","last12m","2y","3y","4y","5y","6y"].map(k=>{
+  const v=ret(f,k); const w=v==null?0:Math.min(100,Math.abs(v));
+  return `<div class="barline"><span>${k}</span><div class="track"><div class="fill" style="width:${w}%;background:${v>=0?"#3ddc84":"#e07a6e"}"></div></div><span>${v==null?"—":v.toLocaleString("en-US",{maximumFractionDigits:1})+"%"}</span></div>`;
 }).join("");
 document.getElementById("app").innerHTML=`
-  <p><a href="./funds.html">كل الصناديق</a></p>
   <h1>${f.name}</h1>
-  <p class="muted">${f.manager||""} · ${bucket(f.category)} · EIMA ${f.eima_asof||"—"}</p>
-  <div class="grid3">
-    <div class="card"><h3>NAV</h3><p class="num" style="font-size:28px;color:var(--ink)">${num(f.nav)} ${f.currency||""}</p><p>${f.nav_asof||""}</p></div>
-    <div class="card"><h3>عائد ${HL[h]}</h3><p class="num" style="font-size:28px;color:var(--ink)">${pct(r)}</p><p>كما نُشر في EIMA</p></div>
-    <div class="card"><h3>مقابل الاسمية</h3><p class="num" style="font-size:28px;color:var(--ink)">${f.nav&&f.initial?(f.nav/f.initial).toLocaleString("en-US",{maximumFractionDigits:2})+"x":"—"}</p><p>${f.inception||""}</p></div>
+  <p class="muted">${f.manager||""} · ${bucket(f.category)} · ليست توصية شراء/بيع</p>
+  <div class="kpis">
+    <div class="kpi"><em>DATA TIER</em><b>${tier(f)}</b></div>
+    <div class="kpi"><em>CONFIDENCE</em><b>${conf(f)}</b></div>
+    <div class="kpi"><em>SMART SCORE</em><b>${pct(p.score)}</b></div>
+    <div class="kpi"><em>12M / الأفق</em><b>${p.r==null?"—":p.r.toLocaleString("en-US",{maximumFractionDigits:1})+"%"}</b></div>
   </div>
-  <h2>هل تفوّق على المراجع في ${HL[h]}؟</h2>
-  <div class="cmp">${cards}</div>
-  <h2>آفاق EIMA</h2>
-  <table><thead><tr><th>الأفق</th><th>العائد</th></tr></thead>
-  <tbody>${H.map(k=>`<tr><td>${HL[k]}</td><td class="num">${pct(ret(k))}</td></tr>`).join("")}</tbody></table>
-  <p>${f.url?`<a href="${f.url}" target="_blank">مصدر السعر</a>`:""}</p>
+  <div class="grid2">
+    <div class="card"><h3>WHY THIS SCORE</h3><div class="why">${why}</div></div>
+    <div class="card"><h3>DNA FINGERPRINT</h3>${bars}</div>
+    <div class="card"><h3>DECISION SIGNAL</h3>${tags.map(t=>`<span class="tag">${t}</span>`).join("")||"—"}</div>
+    <div class="card"><h3>EVIDENCE TIMELINE</h3>${ev}</div>
+  </div>
 `;
 </script>
 </body></html>
