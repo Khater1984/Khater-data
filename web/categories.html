@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>خريطة الفئات</title>
+<script src="config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/app.css"/>
+<style>
+.group{border:1px solid #2a3140;border-radius:14px;padding:14px;margin:12px 0}
+.cells{display:flex;flex-wrap:wrap;gap:8px}
+.cell{background:#14181f;border:1px solid #2a3140;border-radius:10px;padding:12px;min-width:140px;flex:1}
+.cell b{display:block;font-size:22px;font-family:"IBM Plex Sans",sans-serif}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+  <div class="logo">خريطة الفئات<span>متوسط العائد داخل كل مجموعة</span></div>
+  <nav><a href="./funds.html">الصناديق</a></nav>
+</div></header>
+<main class="wrap page" id="app"></main>
+<script type="module">
+import { loadFundBook } from "./js/live.js";
+import { bucket } from "./js/engine.js";
+const packed=await loadFundBook();
+const groups={
+ "أسهم":["أسهم","متداول"],
+ "نقدي":["نقدي"],
+ "دخل ثابت":["دخل ثابت"],
+ "متوازن / تخصيص":["متوازن"],
+ "ذهب":["ذهب"],
+ "أخرى":["خيري","محمي","أخرى"]
+};
+function avg(list){
+  const xs=list.map(f=>f.eima?.last12m?.ret).filter(v=>v!=null).map(Number);
+  if(!xs.length) return null;
+  return xs.reduce((a,b)=>a+b,0)/xs.length;
+}
+function block(title, funds){
+  const by={};
+  funds.forEach(f=>{const k=f.category||"Other"; (by[k]||=[]).push(f)});
+  const cells=Object.entries(by).map(([k,arr])=>{
+    const a=avg(arr);
+    return `<div class="cell"><b>${a==null?"—":a.toLocaleString("en-US",{maximumFractionDigits:1})+"%"}</b><span>${k}</span><div class="muted">${arr.length} صندوق</div></div>`;
+  }).join("");
+  const a=avg(funds);
+  return `<section class="group"><h2>${title} · المتوسط ${a==null?"—":a.toLocaleString("en-US",{maximumFractionDigits:1})+"%"} · ${funds.length}</h2><div class="cells">${cells}</div></section>`;
+}
+const html=Object.entries(groups).map(([t,keys])=>{
+  const funds=packed.funds.filter(f=>keys.includes(bucket(f.category)));
+  return block(t,funds);
+}).join("");
+document.getElementById("app").innerHTML="<p class='muted'>الرقم = متوسط عائد 12 شهراً حسب EIMA. اللون للتقسيم لا للتوصية.</p>"+html;
+</script>
+</body></html>
