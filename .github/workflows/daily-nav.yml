@@ -1,0 +1,23 @@
+name: Daily NAV ingest (16:00 Egypt)
+
+on:
+  schedule:
+    # 16:00 Africa/Cairo while offset is UTC+3 (current)
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Scrape and upsert nav_official
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scripts/ingest_nav.py
