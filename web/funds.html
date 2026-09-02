@@ -31,7 +31,7 @@ table th{font-size:11px;letter-spacing:.08em;color:#8b93a0}
   </nav>
 </div></header>
 <div class="toolbar">
-  <div class="hint">اختر مقابل المعايير · منطق AND — الصندوق يظهر فقط إن تفوّق على كل ما تحدده</div>
+  <div class="hint">AND على المراجع. آفاق 12 شهراً و2–6 سنوات من التقرير السنوي EIMA (1y)، لا من last12m الأسبوعي المتضخم.</div>
   <div class="chips" id="chips"></div>
   <div class="row2">
     <input id="q" placeholder="بحث"/>
@@ -112,7 +112,7 @@ function draw(){
       <td class="num">${i+1}</td>
       <td>${f.name}<div class="muted">${f.manager||""}</div></td>
       <td>${bucket(f.category)}</td>
-      <td class="num">${r==null?"—":Number(r).toLocaleString("en-US",{maximumFractionDigits:1})+"%"}</td>
+      <td class="num">${r==null?"—":Number(r).toLocaleString("en-US",{maximumFractionDigits:1})+"%"}<div class="muted">${s.source==="eima_annual"?"سنوي":(s.source==="eima_weekly"?"أسبوعي":"")}</div></td>
       <td class="num score">${s.score==null?"—":Number(s.score).toLocaleString("en-US",{maximumFractionDigits:1})}</td>
       <td><span class="rate">${s.rating||"—"}</span></td>
       <td class="muted">${s.conf||"—"}</td>
