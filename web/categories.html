@@ -259,31 +259,31 @@ function color(v){
         return "high";
       }
       const pool=rows.filter(f=>{const v=ret(f,h); return v!=null && v>=10;});
-      let html=`<div class="glass" style="padding:10px;overflow:auto"><table style="width:100%;border-collapse:separate;border-spacing:6px"><thead><tr><th></th>${RISKS.map(r=>`<th>${r[1]}</th>`).join("")}</tr></thead><tbody>`;
+      let treeHtml=`<div class="glass" style="padding:10px;overflow:auto"><table style="width:100%;border-collapse:separate;border-spacing:6px"><thead><tr><th></th>${RISKS.map(r=>`<th>${r[1]}</th>`).join("")}</tr></thead><tbody>`;
       BANDS.forEach(([,lab])=>{
-        html+=`<tr><th style="white-space:nowrap;color:#E5E7EB">${lab}</th>`;
+        treeHtml+=`<tr><th style="white-space:nowrap;color:#E5E7EB">${lab}</th>`;
         RISKS.forEach(([k])=>{
           const cell=pool.filter(f=>bandOf(ret(f,h))?.[1]===lab && riskOf(f.risk)===k)
             .sort((a,b)=>ret(b,h)-ret(a,h));
           const top=cell.slice(0,10);
           const more=cell.length-top.length;
-          html+=`<td style="vertical-align:top;background:#14151f;border-radius:10px;min-width:140px">`;
-          if(!top.length) html+=`<div class="sub" style="padding:8px">—</div>`;
+          treeHtml+=`<td style="vertical-align:top;background:#14151f;border-radius:10px;min-width:140px">`;
+          if(!top.length) treeHtml+=`<div class="sub" style="padding:8px">—</div>`;
           else{
             top.forEach(f=>{
-              html+=`<div class="fundchip" data-id="${f.id}" style="background:${CATCOL[f.bucket]||"#4B5563"};margin:4px;padding:8px;border-radius:8px;cursor:pointer;color:#fff">
+              treeHtml+=`<div class="fundchip" data-id="${f.id}" style="background:${CATCOL[f.bucket]||"#4B5563"};margin:4px;padding:8px;border-radius:8px;cursor:pointer;color:#fff">
                 <div style="font-size:12px;font-weight:700">${f.name}</div>
                 <div style="font-size:14px;font-weight:800;direction:ltr">+${num(ret(f,h))}%</div>
               </div>`;
             });
-            if(more>0) html+=`<div class="sub" style="padding:6px">أخرى (${more})</div>`;
+            if(more>0) treeHtml+=`<div class="sub" style="padding:6px">أخرى (${more})</div>`;
           }
-          html+=`</td>`;
+          treeHtml+=`</td>`;
         });
-        html+=`</tr>`;
+        treeHtml+=`</tr>`;
       });
-      html+=`</tbody></table></div>`;
-      host.innerHTML=html;
+      treeHtml+=`</tbody></table></div>`;
+      host.innerHTML=treeHtml;
       host.querySelectorAll("[data-id]").forEach(el=>el.onclick=()=>location.href="fund.html?id="+encodeURIComponent(el.dataset.id)+"&h="+h);
 
       document.getElementById("v-cards").innerHTML='<div class="grid">'+Object.entries(groups).map(([g,list])=>{
