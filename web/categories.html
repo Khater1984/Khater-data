@@ -270,15 +270,22 @@ function color(v){
       leaves.append("rect").attr("width",d=>Math.max(0,d.x1-d.x0)).attr("height",d=>Math.max(0,d.y1-d.y0))
         .attr("fill",d=>{const v=d.data.returns[h]; return v==null||isNaN(v)?"#1E1F2E":colorScale(v);})
         .attr("stroke","#0C0D14").attr("rx",2);
+      function shortName(s){s=(s||"").replace(/\s+/g," ").trim(); const cut=s.split(/[—(]/)[0].trim(); return cut.length>22?cut.slice(0,20)+"…":cut;}
       leaves.each(function(d){
         const tw=d.x1-d.x0, th=d.y1-d.y0, g=d3.select(this);
-        const rv=d.data.returns[h], retStr=rv==null?"—":num(rv)+"%";
-        if(tw>=88 && th>=42){
-          g.append("text").attr("x",4).attr("y",14).text(d.data.fund_name).attr("fill","#fff").attr("font-size","12px").attr("font-weight","600").style("pointer-events","none")
-            .each(function(){let txt=d.data.fund_name; while(this.getComputedTextLength()>tw-8 && txt.length){txt=txt.slice(0,-1); this.textContent=txt+"…";}});
-          g.append("text").attr("x",4).attr("y",28).text(retStr).attr("fill","rgba(255,255,255,.9)").attr("font-size","15px").attr("font-weight","800").style("pointer-events","none");
-         } else if(tw>=80 && th>=28){
-          g.append("text").attr("x",4).attr("y",Math.min(16,th-4)).text(retStr).attr("fill","rgba(255,255,255,.9)").attr("font-size","10px").attr("font-weight","bold").style("pointer-events","none");
+        const rv=d.data.returns[h], retStr=rv==null?"—":((rv>0?"+":"")+num(rv)+"%");
+        const fs=Math.max(11, Math.min(26, Math.min(tw/5.6, th/3.1)));
+        if(tw>=72 && th>=50){
+          g.append("text").attr("x",tw/2).attr("y",th/2-fs*0.38).attr("text-anchor","middle")
+            .attr("fill","#fff").attr("font-size",fs*0.7).attr("font-weight","700").style("pointer-events","none")
+            .text(shortName(d.data.fund_name));
+          g.append("text").attr("x",tw/2).attr("y",th/2+fs*0.72).attr("text-anchor","middle")
+            .attr("fill","#fff").attr("font-size",fs).attr("font-weight","800").style("pointer-events","none")
+            .text(retStr);
+        } else if(tw>=34 && th>=20){
+          g.append("text").attr("x",tw/2).attr("y",th/2+4).attr("text-anchor","middle")
+            .attr("fill","#fff").attr("font-size",Math.min(13,th-5)).attr("font-weight","800").style("pointer-events","none")
+            .text(retStr);
         }
       });
 
