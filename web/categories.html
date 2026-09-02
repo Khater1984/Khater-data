@@ -70,7 +70,6 @@ td.pos{background:#065F46;cursor:pointer} td.neg{background:#7f1d1d;cursor:point
     <select id="ft"><option value="">كل مستويات البيانات</option></select>
     <button type="button" id="reset">إعادة ضبط الفلاتر</button>
   </div>
-  <div class="grid" id="cats"></div>
   <div class="two">
     <div>
       <h3>مصفوفة الوسيط المتاح</h3>
@@ -87,6 +86,8 @@ td.pos{background:#065F46;cursor:pointer} td.neg{background:#7f1d1d;cursor:point
   <p class="sub">من fund_smartscore_latest.final_score — اضغط الشريحة للتصفية.</p>
   <div class="dist" id="distbar"></div>
   <p class="sub" id="distlab"></p>
+  <h3>الفئات</h3>
+  <div class="grid" id="cats"></div>
 </main>
 <div class="mask" id="mask"></div>
 <aside class="drawer" id="drawer"></aside>
@@ -180,13 +181,18 @@ function inRange(score,sel){
         <div class="kpi">الصناديق<b>${rows.length}</b></div>
         <div class="kpi">الفئات<b>${Object.keys(groups).length}</b></div>
         <div class="kpi">التصنيف الخام<b>${[...new Set(rows.map(f=>f.raw))].length}</b></div>`;
-      document.getElementById("cats").innerHTML=Object.entries(groups).map(([g,list])=>`<article class="cat" data-g="${g}">
-        <h3>${g}</h3>
-        <div>${list.length} صندوق</div>
-        <div class="sub">${list.filter(f=>f.final!=null).length} بدرجة V3</div>
-        <div class="sub">أداء الفئة الرسمي: غير متاح</div>
-        <div class="sub">آخر تحديث ${[...list.map(f=>f.asof).filter(Boolean)].sort().at(-1)||"—"}</div>
-      </article>`).join("")||"<p>لا توجد بيانات متاحة</p>";
+      document.getElementById("cats").innerHTML=Object.entries(groups).map(([g,list])=>{
+        const scored=list.filter(f=>f.final!=null);
+        const top=scored.slice().sort((a,b)=>b.final-a.final)[0];
+        const rets=list.map(f=>cell(f,"last12m").return_pct).filter(v=>v!=null);
+        return `<article class="cat" data-g="${g}">
+          <h3>${g}</h3>
+          <div>${list.length} صندوق · ${scored.length} مقيّم V3 · ${list.filter(f=>f.risk!=null).length} لهم درجة مخاطرة</div>
+          <div>أعلى Smart Score: ${top?Number(top.final).toFixed(1)+" — "+top.name:"لا توجد بيانات متاحة"}</div>
+          <div class="sub">وسيط العائد السنوي المتاح: ${rets.length?num(median(rets))+"% ("+rets.length+" صندوق)":"غير متاح"} — ليس مؤشر فئة</div>
+          <div class="sub">آخر تقييم ${[...list.map(f=>f.asof).filter(Boolean)].sort().at(-1)||"—"}</div>
+        </article>`;
+      }).join("")||"<p>لا توجد بيانات متاحة</p>";
       document.querySelectorAll(".cat").forEach(c=>c.onclick=()=>openDrawer(c.dataset.g,groups[c.dataset.g]));
 
       let html=`<thead><tr><th>الفئة</th>${HS.map(([,l])=>`<th>${l}</th>`).join("")}</tr></thead><tbody>`;
