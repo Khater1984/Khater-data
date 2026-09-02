@@ -1,469 +1,1210 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>خريطة فئات الصناديق</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>خريطة فئات الصناديق | Khater Funds Radar</title>
+
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+
 <style>
-:root{--bg:#0C0D14;--card:rgba(30,31,46,.80);--line:rgba(255,255,255,.08);--ink:#F3F4F6;--mute:#9CA3AF;--ok:#10B981;--bad:#EF4444}
+:root{
+  --bg:#080b11;
+  --panel:#10141c;
+  --panel2:#141923;
+  --panel3:#181e29;
+  --line:rgba(255,255,255,.075);
+  --line2:rgba(255,255,255,.12);
+  --text:#f3f5f7;
+  --muted:#8c96a6;
+  --green:#10b981;
+  --green2:#34d399;
+  --red:#ef4444;
+  --amber:#f59e0b;
+  --blue:#60a5fa;
+  --shadow:0 16px 50px rgba(0,0,0,.28);
+}
+
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",sans-serif}
-body{min-height:100vh;background:
-  radial-gradient(900px 400px at 10% -10%, rgba(16,185,129,.12), transparent 50%),
-  radial-gradient(800px 400px at 90% 0%, rgba(59,130,246,.10), transparent 45%),
-  #0C0D14}
-a{color:var(--ok);text-decoration:none}
-header.top{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line);position:sticky;top:0;backdrop-filter:blur(12px);z-index:20}
-nav a{color:var(--mute);margin-inline-start:12px;font-size:13px}
-nav a.on{color:#fff}
-.page{padding:16px 18px 48px;max-width:1180px;margin:0 auto}
-.glass{background:var(--card);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(12px)}
-.float{position:sticky;top:60px;z-index:15;display:flex;flex-wrap:wrap;gap:8px;padding:10px;margin-bottom:12px}
-select,input,button{background:#161821;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
-button.on{background:#10B981;color:#04110b;border:0}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.kpi{padding:12px}.kpi b{display:block;font-size:20px;margin-top:4px}
-.views{display:flex;gap:8px;margin:8px 0}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.cat,.champ,.tile{padding:12px;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s}
-.cat:hover,.tile:hover,.champ:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(16,185,129,.12)}
-.cat{cursor:pointer;min-height:120px}
-#treemap-canvas{position:relative;width:100%;background:#0c0d14;overflow:visible}
-.tm-lab{position:absolute;z-index:10;background:rgba(12,13,20,.85);padding:4px 8px;border-radius:4px;font-size:12px;font-weight:700;pointer-events:none}
-.tm-tile{position:absolute;border:1px solid #0c0d14;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;color:#fff;padding:2px}
-.tm-tile .nm,.tm-tile .rv{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(9px,1vw,13px)}
-.tm-tile .rv{font-weight:600}
-#tipf{display:none;position:fixed;z-index:60;background:#161821;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 10px;font-size:12px;max-width:260px;pointer-events:none}
-.sub{color:var(--mute);font-size:12px;margin:4px 0}
-.two{display:grid;grid-template-columns:1.1fr .9fr;gap:10px}
-table{width:100%;border-collapse:separate;border-spacing:2px;font-size:12px}
-th,td{padding:7px;border-bottom:1px solid var(--line);text-align:center}
-th.active,td.active{border:2px solid #10B981;background:rgba(16,185,129,.12)}
-th.active::after{content:" الأفق النشط";color:#10B981;font-size:10px}
-td.pos{background:#065F46} td.neg{background:#7f1d1d} td.na{background:#1F2937;color:#6B7280}
-td.pos.active{background:#047857} td.neg.active{background:#991b1b}
-.champs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;width:100%;margin:12px 0}
-.dist{display:flex;height:16px;border-radius:99px;overflow:hidden;background:#1F2937}
-.dist i{height:16px;cursor:pointer}
-.drawer{position:fixed;top:0;bottom:0;right:0;width:min(460px,100%);background:rgba(12,13,20,.96);
-  border-left:1px solid var(--line);transform:translateX(110%);transition:.3s;z-index:50;overflow:auto;padding:16px}
-.drawer.on{transform:none}
-.mask{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:40}
-.mask.on{display:block}
-.frow{border-bottom:1px solid var(--line);padding:8px 0}
-#sc{height:260px}
-.legend{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-left:6px}
-@media(max-width:900px){.grid,.kpis,.two,.champs{grid-template-columns:1fr 1fr}}
-@media(max-width:620px){.grid,.kpis,.two,.champs{grid-template-columns:1fr}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
-#v-heat{margin-top:12px}
-#v-heat .heatmap-shell{background:rgba(17,19,29,.92);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden}
-#v-heat .heatmap-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07)}
-#v-heat .heatmap-title{font-size:15px;font-weight:700}
-#v-heat .heatmap-desc{margin-top:3px;color:#8f98a8;font-size:11px}
-#v-heat .heatmap-scroll{overflow-x:auto;overflow-y:hidden;padding:10px}
-#v-heat .heatmap-grid{min-width:850px;display:grid;grid-template-columns:220px repeat(5,minmax(115px,1fr));gap:3px}
-#v-heat .hm-head{height:38px;display:flex;align-items:center;justify-content:center;color:#8f98a8;font-size:11px;font-weight:600;background:#11141c;border-radius:6px}
-#v-heat .hm-category{min-height:78px;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;background:#151923;border:1px solid rgba(255,255,255,.04);border-radius:7px}
-#v-heat .hm-category strong{font-size:12px;color:#f3f4f6}
-#v-heat .hm-category span{margin-top:3px;color:#737d8d;font-size:9px}
-#v-heat .hm-cell{min-height:78px;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;transition:transform .15s ease,filter .15s ease,box-shadow .15s ease}
-#v-heat .hm-cell:hover{transform:scale(1.025);filter:brightness(1.12);box-shadow:0 8px 25px rgba(0,0,0,.3);z-index:3}
-#v-heat .hm-value{direction:ltr;font-family:"IBM Plex Sans",sans-serif;font-size:18px;font-weight:700;letter-spacing:-.02em}
-#v-heat .hm-count{margin-top:4px;color:rgba(255,255,255,.62);font-size:9px}
-#v-heat .hm-positive-1{background:#063d32}
-#v-heat .hm-positive-2{background:#075b47}
-#v-heat .hm-positive-3{background:#07805f}
-#v-heat .hm-positive-4{background:#0aa978;color:#03130e}
-#v-heat .hm-positive-5{background:#36d399;color:#03130e}
-#v-heat .hm-negative-1{background:#461b20}
-#v-heat .hm-negative-2{background:#681b22}
-#v-heat .hm-negative-3{background:#8b1e27}
-#v-heat .hm-negative-4{background:#b4232d}
-#v-heat .hm-neutral{background:#252b35;color:#c4c9d1}
-#v-heat .hm-na{background:#171b23;color:#697383}
-#v-heat .hm-active{outline:2px solid #10b981;outline-offset:-2px}
-#v-heat .heatmap-legend{display:flex;flex-wrap:wrap;gap:12px;padding:10px 16px 14px;color:#8f98a8;font-size:10px}
-#v-heat .heatmap-legend span{display:flex;align-items:center;gap:5px}
-#v-heat .heatmap-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
-#v-heat .hm-tooltip{position:fixed;z-index:9999;min-width:190px;max-width:260px;padding:11px 13px;background:#10131b;border:1px solid rgba(255,255,255,.12);border-radius:10px;box-shadow:0 15px 45px rgba(0,0,0,.45);pointer-events:none;display:none;font-size:11px;line-height:1.7}
-#v-heat .hm-tooltip b{color:#fff}
-@media(max-width:700px){#v-heat .heatmap-grid{min-width:790px;grid-template-columns:170px repeat(5,105px)}#v-heat .hm-category,#v-heat .hm-cell{min-height:70px}#v-heat .hm-value{font-size:16px}}
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:"IBM Plex Sans Arabic",sans-serif;
+}
 
+body{
+  background:
+    radial-gradient(900px 450px at 0% -10%,rgba(16,185,129,.10),transparent 60%),
+    radial-gradient(800px 450px at 100% 0%,rgba(59,130,246,.08),transparent 60%),
+    var(--bg);
+}
 
-#v-heat{width:100%;margin-top:12px}
-.fund-heatmap{width:100%;background:#0f1219;border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden}
-.fund-heatmap-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
-.fund-heatmap-title{font-size:16px;font-weight:700;color:#f3f4f6}
-.fund-heatmap-sub{margin-top:4px;color:#8992a2;font-size:11px}
-.fund-heatmap-sub strong{color:#10b981}
-.fund-heatmap-count{color:#9ca3af;font-size:12px}
-.fund-heatmap-body{padding:12px}
-.fund-heat-category{margin-bottom:14px}
-.fund-heat-category:last-child{margin-bottom:0}
-.fund-heat-category-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;padding:0 3px}
-.fund-heat-category-name{color:#f3f4f6;font-size:12px;font-weight:700}
-.fund-heat-category-meta{color:#697383;font-size:10px}
-.fund-heat-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:3px}
-.fund-heat-tile{min-height:78px;padding:9px 10px;border-radius:5px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;transition:transform .12s ease,filter .12s ease,box-shadow .12s ease}
-.fund-heat-tile:hover{transform:scale(1.025);filter:brightness(1.12);box-shadow:0 8px 25px rgba(0,0,0,.35);position:relative;z-index:5}
-.fund-heat-name{font-size:11px;line-height:1.35;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fund-heat-return{margin-top:5px;direction:ltr;text-align:right;font-family:"IBM Plex Sans",sans-serif;font-size:19px;font-weight:700;letter-spacing:-.03em}
-.fund-heat-score{margin-top:3px;opacity:.65;direction:ltr;text-align:right;font-family:"IBM Plex Sans",sans-serif;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fund-heatmap-legend{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:11px 16px 14px;border-top:1px solid rgba(255,255,255,.06);color:#8b94a4;font-size:10px}
-.fund-heatmap-legend span{display:flex;align-items:center;gap:5px}
-.fund-heatmap-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
-.fund-heat-tooltip{position:fixed;display:none;z-index:9999;min-width:220px;max-width:300px;padding:12px 14px;background:#151923;border:1px solid rgba(255,255,255,.13);border-radius:10px;box-shadow:0 18px 50px rgba(0,0,0,.5);color:#cbd1db;font-size:10px;line-height:1.9;pointer-events:none}
-.fund-heat-tooltip strong{color:#fff}
-.fh-tip-name{color:#fff;font-size:12px;font-weight:700;margin-bottom:5px}
-@media(max-width:700px){.fund-heatmap-head{align-items:flex-start;gap:10px}.fund-heat-tiles{grid-template-columns:repeat(auto-fill,minmax(125px,1fr))}.fund-heat-tile{min-height:72px}.fund-heat-return{font-size:17px}}
+button,input,select{
+  font:inherit;
+}
 
+button{
+  cursor:pointer;
+}
+
+a{
+  color:var(--green2);
+  text-decoration:none;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar{
+  height:58px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px;
+  background:rgba(8,11,17,.84);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(18px);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.brand-dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 18px rgba(16,185,129,.7);
+}
+
+.nav{
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+.nav a{
+  color:var(--muted);
+  padding:8px 11px;
+  border-radius:8px;
+  font-size:12px;
+}
+
+.nav a:hover,
+.nav a.active{
+  color:#fff;
+  background:rgba(255,255,255,.055);
+}
+
+/* =========================
+   PAGE
+========================= */
+
+.page{
+  width:min(1440px,100%);
+  margin:auto;
+  padding:28px 22px 60px;
+}
+
+.hero{
+  margin-bottom:20px;
+}
+
+.eyebrow{
+  color:var(--green2);
+  font-family:"IBM Plex Sans",sans-serif;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+h1{
+  margin:6px 0 5px;
+  font-size:28px;
+  line-height:1.25;
+}
+
+.hero p{
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* =========================
+   FILTER BAR
+========================= */
+
+.filter-shell{
+  position:sticky;
+  top:68px;
+  z-index:50;
+  padding:10px;
+  margin-bottom:16px;
+  background:rgba(16,20,28,.90);
+  border:1px solid var(--line);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(18px);
+}
+
+.filters{
+  display:grid;
+  grid-template-columns:
+    minmax(150px,1fr)
+    minmax(150px,1fr)
+    minmax(150px,1fr)
+    minmax(130px,.8fr)
+    minmax(130px,.8fr)
+    minmax(100px,.6fr)
+    auto;
+  gap:7px;
+}
+
+.field{
+  position:relative;
+}
+
+.field label{
+  display:block;
+  color:#687384;
+  font-size:9px;
+  margin:0 0 3px 3px;
+}
+
+select,
+input{
+  width:100%;
+  height:38px;
+  padding:0 10px;
+  color:var(--text);
+  background:#0c1017;
+  border:1px solid var(--line2);
+  border-radius:9px;
+  outline:none;
+  font-size:11px;
+}
+
+select:focus,
+input:focus{
+  border-color:rgba(16,185,129,.55);
+  box-shadow:0 0 0 3px rgba(16,185,129,.08);
+}
+
+.reset{
+  height:38px;
+  align-self:end;
+  border:1px solid var(--line2);
+  border-radius:9px;
+  background:#151a23;
+  color:#c8ced7;
+  padding:0 13px;
+  font-size:11px;
+}
+
+.reset:hover{
+  color:#fff;
+  border-color:rgba(16,185,129,.35);
+}
+
+/* =========================
+   KPI
+========================= */
+
+.kpis{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+  margin-bottom:15px;
+}
+
+.kpi{
+  position:relative;
+  overflow:hidden;
+  padding:15px 16px;
+  min-height:92px;
+  background:linear-gradient(145deg,rgba(20,25,35,.95),rgba(13,17,24,.95));
+  border:1px solid var(--line);
+  border-radius:13px;
+}
+
+.kpi:after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  opacity:.35;
+}
+
+.kpi-label{
+  color:var(--muted);
+  font-size:10px;
+}
+
+.kpi-value{
+  margin-top:6px;
+  font-family:"IBM Plex Sans",sans-serif;
+  font-size:22px;
+  font-weight:700;
+  direction:ltr;
+  text-align:right;
+}
+
+.kpi-note{
+  margin-top:3px;
+  color:#687384;
+  font-size:9px;
+}
+
+/* =========================
+   VIEW SWITCH
+========================= */
+
+.viewbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.views{
+  display:flex;
+  gap:4px;
+  padding:4px;
+  background:#0d1118;
+  border:1px solid var(--line);
+  border-radius:10px;
+}
+
+.views button{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  border-radius:7px;
+  padding:7px 12px;
+  font-size:10px;
+}
+
+.views button.active{
+  background:#1b2530;
+  color:#fff;
+  box-shadow:0 3px 12px rgba(0,0,0,.25);
+}
+
+.status{
+  color:#697586;
+  font-size:10px;
+}
+
+/* =========================
+   CATEGORY CHIPS
+========================= */
+
+.chips{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+
+.chip{
+  border:1px solid var(--line2);
+  background:transparent;
+  color:#8e98a8;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:10px;
+}
+
+.chip:hover{
+  color:#fff;
+}
+
+.chip.active{
+  color:#fff;
+  border-color:rgba(16,185,129,.7);
+  background:rgba(16,185,129,.15);
+}
+
+/* =========================
+   HEATMAP
+========================= */
+
+.heatmap-shell{
+  background:#0f141c;
+  border:1px solid var(--line);
+  border-radius:15px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+
+.heat-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:15px 17px;
+  border-bottom:1px solid var(--line);
+}
+
+.heat-title{
+  font-size:15px;
+  font-weight:700;
+}
+
+.heat-sub{
+  margin-top:3px;
+  color:#717c8d;
+  font-size:10px;
+}
+
+.heat-count{
+  color:#8b95a4;
+  font-family:"IBM Plex Sans",sans-serif;
+  font-size:11px;
+  direction:ltr;
+}
+
+.heat-body{
+  padding:12px;
+}
+
+.category-block{
+  margin-bottom:15px;
+}
+
+.category-block:last-child{
+  margin-bottom:0;
+}
+
+.category-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 3px 6px;
+}
+
+.category-title{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:11px;
+  font-weight:700;
+}
+
+.category-marker{
+  width:7px;
+  height:7px;
+  border-radius:2px;
+}
+
+.category-meta{
+  color:#697484;
+  font-size:9px;
+}
+
+.tiles{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:3px;
+}
+
+.tile{
+  position:relative;
+  min-height:82px;
+  padding:10px;
+  border-radius:5px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:
+    transform .12s ease,
+    filter .12s ease,
+    box-shadow .12s ease;
+}
+
+.tile:hover{
+  transform:scale(1.018);
+  filter:brightness(1.1);
+  box-shadow:0 10px 28px rgba(0,0,0,.4);
+  z-index:5;
+}
+
+.tile-name{
+  font-size:10px;
+  line-height:1.4;
+  font-weight:600;
+  max-width:100%;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.tile-return{
+  margin-top:6px;
+  font-family:"IBM Plex Sans",sans-serif;
+  font-size:19px;
+  font-weight:700;
+  direction:ltr;
+  text-align:right;
+  letter-spacing:-.03em;
+}
+
+.tile-score{
+  margin-top:3px;
+  font-family:"IBM Plex Sans",sans-serif;
+  font-size:9px;
+  opacity:.72;
+  direction:ltr;
+  text-align:right;
+}
+
+.tile-manager{
+  margin-top:2px;
+  color:rgba(255,255,255,.55);
+  font-size:8px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.tile-na{
+  background:#1b2029!important;
+  color:#737d8d!important;
+}
+
+/* =========================
+   HEATMAP LEGEND
+========================= */
+
+.legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:13px;
+  padding:11px 16px 14px;
+  border-top:1px solid var(--line);
+  color:#737d8d;
+  font-size:9px;
+}
+
+.legend span{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.legend i{
+  width:10px;
+  height:10px;
+  border-radius:3px;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.category-card{
+  padding:16px;
+  min-height:165px;
+  background:linear-gradient(145deg,#131923,#0f141c);
+  border:1px solid var(--line);
+  border-radius:14px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.category-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(16,185,129,.22);
+  box-shadow:var(--shadow);
+}
+
+.category-card h3{
+  margin:0 0 8px;
+  font-size:14px;
+}
+
+.category-count{
+  color:#697484;
+  font-size:10px;
+}
+
+.card-stat{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:15px;
+  padding-top:10px;
+  border-top:1px solid var(--line);
+}
+
+.card-stat label{
+  color:#687384;
+  font-size:9px;
+}
+
+.card-stat strong{
+  font-family:"IBM Plex Sans",sans-serif;
+  font-size:15px;
+  direction:ltr;
+}
+
+.card-fund{
+  margin-top:3px;
+  color:#aeb6c2;
+  font-size:9px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* =========================
+   TREEMAP
+========================= */
+
+.tree-shell{
+  background:#0f141c;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:8px;
+  overflow:auto;
+}
+
+#treemap{
+  min-width:900px;
+  min-height:650px;
+  position:relative;
+}
+
+.tree-cell{
+  position:absolute;
+  border:2px solid #0b0f15;
+  overflow:hidden;
+  cursor:pointer;
+  border-radius:3px;
+  transition:.15s;
+}
+
+.tree-cell:hover{
+  filter:brightness(1.15);
+  z-index:10;
+}
+
+.tree-name{
+  position:absolute;
+  left:4px;
+  right:4px;
+  top:4px;
+  font-size:9px;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.tree-return{
+  position:absolute;
+  left:4px;
+  right:4px;
+  bottom:5px;
+  font-family:"IBM Plex Sans",sans-serif;
+  font-size:13px;
+  font-weight:700;
+  direction:ltr;
+  text-align:right;
+}
+
+/* =========================
+   ANALYTICS
+========================= */
+
+.analytics{
+  margin-top:15px;
+  display:grid;
+  grid-template-columns:1.25fr .75fr;
+  gap:10px;
+}
+
+.panel{
+  padding:15px;
+  background:#10151d;
+  border:1px solid var(--line);
+  border-radius:14px;
+}
+
+.panel-title{
+  font-size:13px;
+  font-weight:700;
+}
+
+.panel-sub{
+  margin-top:3px;
+  color:#687384;
+  font-size:9px;
+}
+
+.chart-wrap{
+  height:280px;
+  margin-top:12px;
+}
+
+.axes{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:5px;
+  margin-top:12px;
+}
+
+.axis{
+  padding:12px 8px;
+  text-align:center;
+  background:#141a23;
+  border:1px solid var(--line);
+  border-radius:9px;
+}
+
+.axis-label{
+  color:#707b8c;
+  font-size:9px;
+}
+
+.axis-value{
+  margin-top:5px;
+  font-family:"IBM Plex Sans",sans-serif;
+  font-size:17px;
+  font-weight:700;
+}
+
+.axis-fund{
+  margin-top:3px;
+  color:#7d8796;
+  font-size:8px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* =========================
+   SCORE DISTRIBUTION
+========================= */
+
+.dist{
+  display:flex;
+  height:18px;
+  overflow:hidden;
+  margin:22px 0 12px;
+  border-radius:999px;
+  background:#202631;
+}
+
+.dist span{
+  height:100%;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.dist span:hover{
+  filter:brightness(1.2);
+}
+
+.dist-labels{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:5px;
+}
+
+.dist-item{
+  padding:8px;
+  background:#141a23;
+  border-radius:7px;
+  text-align:center;
+}
+
+.dist-item strong{
+  display:block;
+  font-family:"IBM Plex Sans",sans-serif;
+  font-size:15px;
+}
+
+.dist-item small{
+  color:#697484;
+  font-size:8px;
+}
+
+/* =========================
+   DRAWER
+========================= */
+
+.mask{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:150;
+  background:rgba(0,0,0,.68);
+  backdrop-filter:blur(5px);
+}
+
+.mask.show{
+  display:block;
+}
+
+.drawer{
+  position:fixed;
+  z-index:160;
+  top:0;
+  bottom:0;
+  right:0;
+  width:min(470px,100%);
+  padding:18px;
+  overflow:auto;
+  background:#0d1118;
+  border-left:1px solid var(--line2);
+  box-shadow:-20px 0 70px rgba(0,0,0,.5);
+  transform:translateX(110%);
+  transition:.25s ease;
+}
+
+.drawer.show{
+  transform:none;
+}
+
+.drawer-close{
+  border:1px solid var(--line);
+  background:#151a23;
+  color:#aab3bf;
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:10px;
+}
+
+.drawer h2{
+  margin:18px 0 4px;
+  font-size:20px;
+}
+
+.drawer-sub{
+  color:#717c8d;
+  font-size:10px;
+}
+
+.fund-row{
+  margin-top:12px;
+  padding:13px;
+  background:#131923;
+  border:1px solid var(--line);
+  border-radius:10px;
+}
+
+.fund-row-name{
+  font-size:12px;
+  font-weight:700;
+}
+
+.fund-row-meta{
+  margin-top:3px;
+  color:#717c8d;
+  font-size:9px;
+}
+
+.fund-metrics{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:4px;
+  margin-top:10px;
+}
+
+.metric{
+  padding:8px 5px;
+  text-align:center;
+  background:#0e131a;
+  border-radius:6px;
+}
+
+.metric label{
+  display:block;
+  color:#697484;
+  font-size:8px;
+}
+
+.metric strong{
+  display:block;
+  margin-top:3px;
+  font-family:"IBM Plex Sans",sans-serif;
+  font-size:12px;
+  direction:ltr;
+}
+
+.fund-link{
+  display:inline-block;
+  margin-top:9px;
+  font-size:9px;
+}
+
+/* =========================
+   STATES
+========================= */
+
+.loading{
+  padding:50px;
+  text-align:center;
+  color:#788393;
+  font-size:11px;
+}
+
+.error{
+  padding:18px;
+  background:rgba(239,68,68,.08);
+  border:1px solid rgba(239,68,68,.2);
+  color:#fca5a5;
+  border-radius:10px;
+  font-size:11px;
+}
+
+.empty{
+  padding:50px;
+  text-align:center;
+  color:#697484;
+  font-size:11px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1100px){
+  .filters{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .kpis{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .cards{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .analytics{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:700px){
+  .topbar{
+    padding:0 12px;
+  }
+
+  .brand{
+    font-size:12px;
+  }
+
+  .nav{
+    display:none;
+  }
+
+  .page{
+    padding:20px 11px 40px;
+  }
+
+  h1{
+    font-size:22px;
+  }
+
+  .filter-shell{
+    position:relative;
+    top:auto;
+  }
+
+  .filters{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .filters .wide{
+    grid-column:1/-1;
+  }
+
+  .kpis{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .kpi{
+    min-height:85px;
+    padding:12px;
+  }
+
+  .kpi-value{
+    font-size:18px;
+  }
+
+  .viewbar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .tiles{
+    grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+  }
+
+  .tile{
+    min-height:72px;
+  }
+
+  .tile-return{
+    font-size:16px;
+  }
+
+  .cards{
+    grid-template-columns:1fr;
+  }
+
+  .axes{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:430px){
+  .filters{
+    grid-template-columns:1fr;
+  }
+
+  .filters .wide{
+    grid-column:auto;
+  }
+
+  .kpis{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .kpi-value{
+    font-size:16px;
+  }
+
+  .tiles{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .tile{
+    min-height:76px;
+  }
+
+  .dist-labels{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
 </style>
 </head>
+
 <body>
-<header class="top">
-  <strong>خريطة فئات الصناديق</strong>
-  <nav>
-    <a href="./index.html">البداية</a><a href="./map.html">البوصلة</a>
-    <a href="./funds.html">الصناديق</a><a class="on" href="./categories.html">الفئات</a>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-dot"></span>
+    <span>Khater Funds Radar</span>
+  </div>
+
+  <nav class="nav">
+    <a href="./index.html">البداية</a>
+    <a href="./map.html">البوصلة</a>
+    <a href="./funds.html">الصناديق</a>
+    <a class="active" href="./categories.html">الفئات</a>
     <a href="./macro.html">الاقتصاد</a>
   </nav>
 </header>
+
 <main class="page">
-  <h1>مقارنة أداء ومخاطر الصناديق حسب الفئة</h1>
-  <p class="sub">قراءة فقط من funds + nav_official + fund_smartscore_latest. بلا اختراع أرقام.</p>
-  <div class="glass float" id="bar">
-    <select id="fb"><option value="">كل الفئات</option></select>
-    <select id="fs"><option value="">كل التصنيفات</option></select>
-    <input id="fm" placeholder="مدير الاستثمار"/>
-    <select id="fr"><option value="">كل الدرجات</option><option value="90">90–100</option><option value="75">75–89</option><option value="50">50–74</option><option value="0">&lt;50</option><option value="na">بلا درجة</option></select>
-    <select id="ft"><option value="">كل مستويات البيانات</option></select>
-    <select id="hz"></select>
-    <button type="button" id="reset">إعادة ضبط الفلاتر</button>
-  </div>
-  <div class="kpis" id="kpis">جاري تحميل البيانات...</div>
-  <div class="views">
-    <button data-v="tree" type="button">خريطة Treemap</button>
-    <button data-v="cards" type="button">شبكة البطاقات</button>
-    <button class="on" data-v="heat" type="button">مصفوفة الأداء</button>
-  </div>
-  <div id="cat-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px"></div>
-  <section id="v-tree" hidden></section>
-  <section id="v-cards" hidden></section>
-  <section id="v-heat"></section>
-  <div id="extra">
-  <h3>أعلى قيمة لكل محور Smart Score</h3>
-  <p class="sub">ترتيب حسب القيمة المخزّنة فقط بين من لهم رقم. ليست منهجية بطل مستقلة.</p>
-  <div class="champs" id="champs"></div>
-  <div class="two">
-    <div class="glass" style="padding:12px">
-      <h3>المخاطرة مقابل العائد</h3>
-      <p class="sub">نقاط الصناديق التي لها risk_score وعائد الأفق المختار.</p>
-      <canvas id="sc"></canvas>
+
+  <section class="hero">
+    <div class="eyebrow">MARKET INTELLIGENCE</div>
+    <h1>خريطة فئات الصناديق</h1>
+    <p>
+      مقارنة مباشرة بين الصناديق حسب الفئة والأفق المختار،
+      باستخدام بيانات الأداء الرسمية وSmart Score V3.
+    </p>
+  </section>
+
+  <section class="filter-shell">
+    <div class="filters">
+
+      <div class="field">
+        <label>الفئة الرئيسية</label>
+        <select id="filterCategory">
+          <option value="">كل الفئات</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>التصنيف الأصلي</label>
+        <select id="filterRaw">
+          <option value="">كل التصنيفات</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>مدير الاستثمار</label>
+        <input id="filterManager" placeholder="ابحث باسم المدير">
+      </div>
+
+      <div class="field">
+        <label>Smart Score</label>
+        <select id="filterScore">
+          <option value="">كل الدرجات</option>
+          <option value="90">90+</option>
+          <option value="75">75–89.9</option>
+          <option value="50">50–74.9</option>
+          <option value="0">&lt;50</option>
+          <option value="na">بلا درجة</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Data Tier</label>
+        <select id="filterTier">
+          <option value="">كل المستويات</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>الأفق</label>
+        <select id="horizon"></select>
+      </div>
+
+      <button class="reset" id="reset">إعادة ضبط</button>
+
     </div>
-    <div class="glass" style="padding:12px">
-      <h3>توزيع Smart Score V3</h3>
-      <div class="dist" id="distbar"></div>
-      <p class="sub" id="distlab"></p>
+  </section>
+
+  <section class="kpis" id="kpis">
+    <div class="loading">جاري تحميل البيانات...</div>
+  </section>
+
+  <div class="viewbar">
+    <div class="views">
+      <button data-view="heat" class="active">Heatmap</button>
+      <button data-view="cards">الفئات</button>
+      <button data-view="tree">Treemap</button>
     </div>
+
+    <div class="status" id="status">—</div>
   </div>
-  </div>
+
+  <div class="chips" id="chips"></div>
+
+  <!-- HEATMAP -->
+  <section id="viewHeat">
+    <div class="heatmap-shell">
+
+      <div class="heat-head">
+        <div>
+          <div class="heat-title">خريطة أداء الصناديق</div>
+          <div class="heat-sub" id="heatDescription">
+            كل مربع يمثل صندوقًا واحدًا
+          </div>
+        </div>
+
+        <div class="heat-count" id="heatCount">—</div>
+      </div>
+
+      <div class="heat-body" id="heatBody">
+        <div class="loading">جاري بناء الخريطة...</div>
+      </div>
+
+      <div class="legend">
+        <span><i style="background:#34d399"></i> أداء قوي</span>
+        <span><i style="background:#07805f"></i> إيجابي</span>
+        <span><i style="background:#303640"></i> محايد</span>
+        <span><i style="background:#991b1b"></i> سلبي</span>
+        <span><i style="background:#1b2029"></i> لا توجد بيانات</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CARDS -->
+  <section id="viewCards" hidden>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <!-- TREEMAP -->
+  <section id="viewTree" hidden>
+    <div class="tree-shell">
+      <div id="treemap"></div>
+    </div>
+  </section>
+
+  <!-- ANALYTICS -->
+  <section class="analytics">
+
+    <div class="panel">
+      <div class="panel-title">أعلى قيمة لكل محور Smart Score</div>
+      <div class="panel-sub">
+        أعلى قيمة فعلية مخزنة في Smart Score V3 بين الصناديق الظاهرة.
+      </div>
+
+      <div class="axes" id="axes"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">توزيع Smart Score V3</div>
+      <div class="panel-sub">
+        توزيع الصناديق الظاهرة حسب الدرجة.
+      </div>
+
+      <div class="dist" id="distribution"></div>
+      <div class="dist-labels" id="distributionLabels"></div>
+    </div>
+
+  </section>
+
+  <section class="panel" style="margin-top:10px">
+    <div class="panel-title">المخاطرة مقابل العائد</div>
+    <div class="panel-sub">
+      الصناديق التي لديها Risk Score وعائد متاح للأفق المختار.
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="scatter"></canvas>
+    </div>
+  </section>
+
 </main>
-<div id="tipf"></div>
+
 <div class="mask" id="mask"></div>
 <aside class="drawer" id="drawer"></aside>
+
 <script>
-const CFG=window.KHATER||{};
-const HS=[["4weeks","شهر"],["ytd","YTD"],["last12m","سنة"],["3y","3 سنوات"],["5y","5 سنوات"]];
-const CATCOL={"صناديق الأسهم":"#059669","صناديق النقد":"#0D9488","صناديق الدخل الثابت":"#2563EB","صناديق الذهب":"#D97706","صناديق المؤشرات":"#7C3AED","الصناديق المتوازنة":"#65A30D","صناديق خيرية":"#E11D48","صناديق محمية":"#4F46E5","فئات أخرى":"#6B7280"};
-const AR=c=>{c=(c||"").toLowerCase();
-  if(c.includes("gold")) return "صناديق الذهب";
-  if(c.includes("money market")) return "صناديق النقد";
-  if(c.includes("fixed income")) return "صناديق الدخل الثابت";
-  if(c.includes("balanced")||c.includes("mixed")||c.includes("allocator")) return "الصناديق المتوازنة";
-  if(c.includes("index")||c.includes("etf")||c.includes("traded")||c.includes("passive")) return "صناديق المؤشرات";
-  if(c.includes("equity")||c.includes("thematic")||c.includes("sector")) return "صناديق الأسهم";
-  if(c.includes("protected")||c.includes("guaranteed")) return "صناديق محمية";
-  if(c.includes("charitable")) return "صناديق خيرية";
-  return "فئات أخرى";
-};
-const islamic=c=>/islam|sharia|شرع/i.test(c||"");
-const num=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:1});
-const ret=(f,h)=>{const x=f.scores&&f.scores[h]; return x&&x.return_pct!=null?x.return_pct:null;};
-function inRange(score,sel){
-  if(!sel) return true; if(sel==="na") return score==null; if(score==null) return false;
-  const n=+sel; if(n===90) return score>=90; if(n===75) return score>=75&&score<90; if(n===50) return score>=50&&score<75; return score<50;
-}
-function squarify(items,x,y,w,h){
-  const out=[]; const total=items.reduce((s,i)=>s+i.area,0)||1;
-  const nodes=items.map(i=>({...i,area:i.area/total*(w*h)})).sort((a,b)=>b.area-a.area);
-  function worst(row,len){const s=row.reduce((a,b)=>a+b.area,0); const mx=Math.max(...row.map(r=>r.area)); const mn=Math.min(...row.map(r=>r.area)); return Math.max((len*len*mx)/(s*s),(s*s)/(len*len*mn));}
-  function layout(row,x0,y0,w0,h0){
-    const s=row.reduce((a,b)=>a+b.area,0);
-    if(w0>=h0){let yy=y0; row.forEach(r=>{const hh=s?r.area/w0:0; out.push({...r,x:x0,y:yy,w:w0,h:hh}); yy+=hh;});}
-    else{let xx=x0; row.forEach(r=>{const ww=s?r.area/h0:0; out.push({...r,x:xx,y:y0,w:ww,h:h0}); xx+=ww;});}
-  }
-  function step(list,x0,y0,w0,h0){
-    if(!list.length) return;
-    const vertical=w0>=h0; const len=vertical?h0:w0; let row=[], rest=list.slice();
-    while(rest.length){
-      const n=rest[0];
-      if(!row.length || worst(row.concat([n]),len)<=worst(row,len)){row.push(n); rest=rest.slice(1);}
-      else break;
-    }
-    const s=row.reduce((a,b)=>a+b.area,0);
-    if(vertical){layout(row,x0,y0,s/h0,h0); step(rest,x0+s/h0,y0,w0-s/h0,h0);}
-    else{layout(row,x0,y0,w0,s/w0); step(rest,x0,y0+s/w0,w0,h0-s/w0);}
-  }
-  step(nodes,x,y,w,h); return out;
-}
-function color(v){
-  if(v==null) return "#1F2937";
-  if(v>=0){const t=Math.min(1,v/80); return `rgb(${Math.round(6+16*t)},${Math.round(95+90*t)},${Math.round(70+59*t)})`;}
-  const t=Math.min(1,Math.abs(v)/20); return `rgb(${Math.round(153+86*t)},${Math.round(27+40*t)},${Math.round(27)})`;
-}
-(async()=>{
-  const kpis=document.getElementById("kpis");
-  try{
-    const H={apikey:CFG.key,Authorization:"Bearer "+CFG.key};
-    const [funds,navs,latest]=await Promise.all([
-      fetch(CFG.url+"/rest/v1/funds?select=fund_id,canonical_name,management_company,category,metadata&limit=1000",{headers:H}).then(r=>r.json()),
-      fetch(CFG.url+"/rest/v1/nav_official?select=fund_id,nav,as_of_date&limit=1000",{headers:H}).then(r=>r.json()),
-      fetch(CFG.url+"/rest/v1/fund_smartscore_latest?select=fund_id,final_score,rating,data_tier,risk_score,performance_score,benchmark_score,consistency_score,inflation_score,score_as_of,risk_method&limit=1000",{headers:H}).then(r=>r.json())
-    ]);
-    if(!Array.isArray(funds)) throw 0;
-    const navMap={}; (navs||[]).forEach(n=>navMap[n.fund_id]=n);
-    const ssMap={}; (latest||[]).forEach(n=>ssMap[n.fund_id]=n);
-    const ALL=funds.map(f=>{
-      const ss=ssMap[f.fund_id]||{};
-      return {
-        id:f.fund_id,name:f.canonical_name,manager:f.management_company||"",
-        raw:f.category||"",bucket:AR(f.category),scores:(f.metadata||{}).scores||{},
-        nav:navMap[f.fund_id]?.nav??null, navd:navMap[f.fund_id]?.as_of_date||null, asof:ss.score_as_of||null,
-        final:ss.final_score??null, rating:ss.rating||null, tier:ss.data_tier||"",
-        risk:ss.risk_score??null, P:ss.performance_score??null, R:ss.risk_score??null,
-        B:ss.benchmark_score??null, C:ss.consistency_score??null, I:ss.inflation_score??null,
-        sharia:islamic(f.category)
-      };
-    });
-    document.getElementById("hz").innerHTML=HS.map(([k,l])=>`<option value="${k}">${l}</option>`).join("");
-    document.getElementById("hz").value="last12m";
-    document.getElementById("fb").innerHTML='<option value="">كل الفئات</option>'+[...new Set(ALL.map(f=>f.bucket))].sort().map(b=>`<option>${b}</option>`).join("");
-    document.getElementById("fs").innerHTML='<option value="">كل التصنيفات</option>'+[...new Set(ALL.map(f=>f.raw).filter(Boolean))].sort().map(b=>`<option>${b}</option>`).join("");
-    document.getElementById("ft").innerHTML='<option value="">كل مستويات البيانات</option>'+[...new Set(ALL.map(f=>f.tier).filter(Boolean))].sort().map(b=>`<option>${b}</option>`).join("");
+"use strict";
 
-    const filtered=()=>{
-      const b=document.getElementById("fb").value,s=document.getElementById("fs").value;
-      const m=document.getElementById("fm").value.trim(),r=document.getElementById("fr").value,t=document.getElementById("ft").value;
-      return ALL.filter(f=>(!b||f.bucket===b)&&(!s||f.raw===s)&&(!m||f.manager.includes(m))&&inRange(f.final,r)&&(!t||f.tier===t));
-    };
-    const close=()=>{document.getElementById("drawer").classList.remove("on");document.getElementById("mask").classList.remove("on");};
-    document.getElementById("mask").onclick=close;
-    function openCat(title,list){
-      const h=document.getElementById("hz").value;
-      const hl=HS.find(x=>x[0]===h)[1];
-      document.getElementById("mask").classList.add("on");
-      const d=document.getElementById("drawer"); d.classList.add("on");
-      d.innerHTML=`<button type="button" id="x">إغلاق</button>
-        <h2>صناديق ${title}</h2>
-        <p class="sub">${list.length} صندوق · أفق ${hl}</p>
-        ${list.map(f=>{
-          const rv=ret(f,h);
-          const badge=f.sharia?`🌙 · متوافق مع الشريعة · ${f.bucket}`:"بيانات التوافق الشرعي غير متاحة";
-          return `<div class="frow"><b>${f.name}</b><div class="sub">${f.manager||"—"} · ${f.raw}</div>
-            <div>NAV ${f.nav==null?"لا توجد بيانات متاحة":Number(f.nav).toLocaleString("en-US")}
-             · عائد ${rv==null?"غير متاح":num(rv)+"%"}
-             · Score ${f.final==null?"غير متاح":Number(f.final).toFixed(1)}
-             · مخاطرة ${f.risk==null?"غير متاح":Number(f.risk).toFixed(1)}</div>
-            <div class="sub">${badge}</div>
-            <a href="fund.html?id=${encodeURIComponent(f.id)}&h=${h}">عرض الصندوق</a></div>`;
-        }).join("")}`;
-      document.getElementById("x").onclick=close;
-    }
-    let scatter;
-    
-function renderKhaterHeatmap(groups, horizon) {
-  const host = document.getElementById("v-heat");
-  if (!host) return;
-  const horizonNames = {"4weeks":"شهر","ytd":"YTD","last12m":"12 شهر","3y":"3 سنوات","5y":"5 سنوات"};
-  const getReturn = (fund) => {
-    if (typeof ret !== "function") return null;
-    const value = ret(fund, horizon);
-    if (value === null || value === undefined || value === "" || !Number.isFinite(Number(value))) return null;
-    return Number(value);
-  };
-  const funds = [];
-  Object.entries(groups || {}).forEach(([category, list]) => {
-    (list || []).forEach(fund => {
-      funds.push({...fund, _category: category, _return: getReturn(fund)});
-    });
-  });
-  funds.sort((a, b) => {
-    if (a._return == null && b._return == null) return 0;
-    if (a._return == null) return 1;
-    if (b._return == null) return -1;
-    return b._return - a._return;
-  });
-  const color = value => {
-    if (value == null) return "#20242d";
-    if (value < -20) return "#7f1d1d";
-    if (value < -10) return "#991b1b";
-    if (value < -5)  return "#b4232d";
-    if (value < 0)   return "#6b252b";
-    if (value < 5)   return "#303640";
-    if (value < 15)  return "#064e3b";
-    if (value < 25)  return "#075f49";
-    if (value < 40)  return "#07805f";
-    if (value < 60)  return "#0aa978";
-    if (value < 80)  return "#21c58d";
-    return "#34d399";
-  };
-  const text = value => value != null && value >= 60 ? "#03130e" : "#ffffff";
-  const categories = {};
-  funds.forEach(fund => {
-    if (!categories[fund._category]) categories[fund._category] = [];
-    categories[fund._category].push(fund);
-  });
-  let html = `<div class="fund-heatmap"><div class="fund-heatmap-head"><div><div class="fund-heatmap-title">خريطة أداء الصناديق</div><div class="fund-heatmap-sub">كل مربع يمثل صندوقًا واحدًا · ${horizonNames[horizon] || horizon}</div></div><div class="fund-heatmap-count">${funds.length} صندوق</div></div><div class="fund-heatmap-body">`;
-  Object.entries(categories).forEach(([category, list]) => {
-    html += `<section class="fund-heat-category"><div class="fund-heat-category-head"><div class="fund-heat-category-name">${category}</div><div class="fund-heat-category-meta">${list.length} صندوق</div></div><div class="fund-heat-tiles">`;
-    list.forEach(fund => {
-      const value = fund._return;
-      const formatted = value == null ? "—" : `${value >= 0 ? "+" : ""}${value.toLocaleString("en-US",{maximumFractionDigits:1})}%`;
-      html += `<div class="fund-heat-tile" data-fund-id="${String(fund.id).replace(/"/g,"&quot;")}" style="background:${color(value)};color:${text(value)}" title="${String(fund.name||"").replace(/"/g,"&quot;")}"><div class="fund-heat-name">${fund.name || "صندوق غير معروف"}</div><div class="fund-heat-return">${formatted}</div></div>`;
-    });
-    html += `</div></section>`;
-  });
-  html += `</div><div class="fund-heatmap-legend"><span><i style="background:#34d399"></i>قوي</span><span><i style="background:#07805f"></i>إيجابي</span><span><i style="background:#303640"></i>محايد</span><span><i style="background:#991b1b"></i>سلبي</span><span><i style="background:#20242d"></i>لا توجد بيانات</span></div></div>`;
-  host.innerHTML = html;
-  host.querySelectorAll(".fund-heat-tile").forEach(tile => {
-    tile.addEventListener("click", () => {
-      const id = tile.dataset.fundId;
-      if (!id) return;
-      location.href = "fund.html?id=" + encodeURIComponent(id) + "&h=" + encodeURIComponent(horizon);
-    });
-  });
-}
+/* ============================================================
+   CONFIG
+============================================================ */
 
-    function draw(){
-      const rows=filtered();
-      const h=document.getElementById("hz").value;
-      const groups={}; rows.forEach(f=>(groups[f.bucket]||=[]).push(f));
-      const asof=[...new Set(rows.map(f=>f.asof).filter(Boolean))].sort().at(-1)||"—";
-      const withRet=rows.filter(f=>ret(f,h)!=null);
-      const top=withRet.slice().sort((a,b)=>ret(b,h)-ret(a,h))[0];
-      document.getElementById("kpis").innerHTML=`
-        <div class="kpi glass">آخر سعر معلن<div class="sub">من nav_official</div><b>${[...new Set(rows.map(f=>f.navd).filter(Boolean))].sort().at(-1)||"غير مكتمل"}</b></div>
-        <div class="kpi glass">تقييم Smart Score<div class="sub">محرك V3 — ليس سعر اليوم</div><b>${asof}</b></div>
-        <div class="kpi glass">الصناديق / الفئات<b>${rows.length} · ${Object.keys(groups).length}</b></div>
-        <div class="kpi glass">أعلى عائد للأفق<b>${top?num(ret(top,h))+"%":"غير متاح"}</b><div class="sub">${top?top.name:""}</div></div>`;
+const CFG = window.KHATER || {};
 
-      const allCats=[...new Set(ALL.map(f=>f.bucket))].sort();
-      const cur=document.getElementById("fb").value;
-      document.getElementById("cat-chips").innerHTML=allCats.map(g=>{
-        const c=CATCOL[g]||"#6B7280";
-        const on=cur===g;
-        return `<button type="button" data-chip="${g}" style="padding:5px 11px;font-size:12px;cursor:pointer;border-radius:999px;border:1px solid ${c};background:${on?c:"transparent"};color:${on?"#fff":c}">${g}</button>`;
-      }).join("");
-      document.querySelectorAll("#cat-chips [data-chip]").forEach(b=>b.onclick=()=>{
-        const sel=document.getElementById("fb");
-        sel.value = sel.value===b.dataset.chip ? "" : b.dataset.chip;
-        draw();
-      });
-      renderKhaterHeatmap(groups, h);
-      const host=document.getElementById("v-tree");
-      host.innerHTML='<div id="treemap-canvas"></div>';
-      const container=document.getElementById("treemap-canvas");
-      const width=container.clientWidth||Math.min(1180,window.innerWidth-36);
-      const height=Math.max(720, window.innerHeight-220);
-      const catCol=b=>CATCOL[b]||"#4B5563";
-      const kids=rows.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h))
-        .map(f=>({...f,category_name:f.bucket,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
-      if(!kids.length){ host.innerHTML='<p class="sub">لا توجد بيانات متاحة</p>'; }
-      else {
-        const root=d3.hierarchy({name:"Root",children:kids}).sum(d=>{
-          if(d.children) return 0;
-          const v=d.returns?d.returns[h]:null;
-          return (v==null||isNaN(v))?0:Math.max(Math.abs(v),0.3);
-        }).sort((a,b)=>(b.value||0)-(a.value||0));
-        d3.treemap().size([width,height]).paddingOuter(3).paddingInner(3).tile(d3.treemapSquarify)(root);
-        const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
-        const leaves=svg.selectAll("g.fund").data(root.leaves()).enter().append("g")
-          .attr("transform",d=>`translate(${d.x0},${d.y0})`).style("cursor","pointer")
-          .on("click",(_,d)=>location.href="fund.html?id="+encodeURIComponent(d.data.id)+"&h="+h);
-        leaves.append("rect").attr("width",d=>Math.max(0,d.x1-d.x0)).attr("height",d=>Math.max(0,d.y1-d.y0))
-          .attr("fill",d=>catCol(d.data.bucket)).attr("stroke","#0C0D14").attr("rx",3);
-        leaves.each(function(d){
-          const tw=d.x1-d.x0, th=d.y1-d.y0, g=d3.select(this);
-          const rv=ret(d.data,h);
-          const retStr=rv==null?"—":((rv>0?"+":"")+num(rv)+"%");
-          const fs=Math.max(11, Math.min(22, Math.min(tw/6, th/3.2)));
-          if(tw>=70 && th>=48){
-            let nm=(d.data.name||"").split(/[—(]/)[0].trim();
-            g.append("text").attr("x",tw/2).attr("y",th/2-fs*0.35).attr("text-anchor","middle").attr("fill","#fff")
-              .attr("font-size",fs*0.62).attr("font-weight","700").style("pointer-events","none").text(nm)
-              .each(function(){let x=nm; while(this.getComputedTextLength()>tw-10 && x.length>3){x=x.slice(0,-1); this.textContent=x+"…";}});
-            g.append("text").attr("x",tw/2).attr("y",th/2+fs*0.7).attr("text-anchor","middle").attr("direction","ltr")
-              .attr("fill","#fff").attr("font-size",fs).attr("font-weight","800").style("pointer-events","none").text(retStr);
-          } else if(tw>=36 && th>=20){
-            g.append("text").attr("x",tw/2).attr("y",th/2+4).attr("text-anchor","middle").attr("direction","ltr")
-              .attr("fill","#fff").attr("font-size",Math.min(13,th-4)).attr("font-weight","800").style("pointer-events","none").text(retStr);
-          }
-        });
-      }
-
-      document.getElementById("v-cards").innerHTML='<div class="grid">'+Object.entries(groups).map(([g,list])=>{
-        const isl=list.filter(f=>f.sharia && ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h))[0];
-        const champ=list.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h))[0];
-        return `<article class="glass cat" data-g="${g}"><h3>${g}</h3>
-          <div>${list.length} صندوق · ${list.filter(f=>f.final!=null).length} بدرجة V3</div>
-          <div class="sub">أعلى عائد للأفق: ${champ?num(ret(champ,h))+"% — "+champ.name:"غير متاح"}</div>
-          <div class="sub">${isl?num(ret(isl,h))+"% 🌙 · متوافق مع الشريعة · "+g: (list.some(f=>f.sharia)?"لا يوجد صندوق إسلامي بهذه الفئة له عائد":"بيانات التوافق الشرعي غير متاحة")}</div>
-        </article>`;
-      }).join("")+"</div>";
-      document.querySelectorAll("#v-cards .cat").forEach(c=>c.onclick=()=>openCat(c.dataset.g,groups[c.dataset.g]));
-
-      const axes=[["P","الأداء"],["R","المخاطرة"],["B","المرجع"],["C","الاتساق"],["I","التضخم"]];
-      document.getElementById("champs").innerHTML=axes.map(([k,l])=>{
-        const pool=rows.filter(f=>f[k]!=null);
-        const w=pool.slice().sort((a,b)=>b[k]-a[k])[0];
-        return `<div class="glass champ"><div class="sub">أعلى قيمة للمحور · ${l}</div>
-          <b>${w?Number(w[k]).toFixed(1):"غير متاح"}</b>
-          <div class="sub">${w?w.name:"—"}</div></div>`;
-      }).join("");
-
-      const pts=rows.filter(f=>f.risk!=null && ret(f,h)!=null).map(f=>({x:f.risk,y:ret(f,h),id:f.id,name:f.name,g:f.bucket}));
-      if(scatter) scatter.destroy();
-      scatter=new Chart(document.getElementById("sc"),{type:"scatter",
-        data:{datasets:[{data:pts,backgroundColor:"#10B98188"}]},
-        options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw.name}: عائد ${num(c.raw.y)}% · مخاطرة ${num(c.raw.x)}`}}},
-          scales:{x:{title:{display:true,text:"المخاطرة V3",color:"#9CA3AF"},ticks:{color:"#9CA3AF"},grid:{color:"#1F2937"}},
-                  y:{title:{display:true,text:"عائد الأفق المختار",color:"#9CA3AF"},ticks:{color:"#9CA3AF"},grid:{color:"#1F2937"}}},
-          onClick:(e,el)=>{if(!el.length)return; location.href="fund.html?id="+encodeURIComponent(pts[el[0].index].id)+"&h="+h;}
-        }});
-      const scores=rows.map(f=>f.final).filter(v=>v!=null); const tot=rows.length||1;
-      const bins=[["90",s=>s>=90,"#10B981"],["75",s=>s>=75&&s<90,"#34D399"],["50",s=>s>=50&&s<75,"#F59E0B"],["0",s=>s<50,"#EF4444"]];
-      const counts=bins.map(([sel,fn,c])=>[sel,scores.filter(fn).length,c]);
-      document.getElementById("distbar").innerHTML=counts.map(([sel,n,c])=>`<i data-r="${sel}" style="width:${100*n/tot}%;background:${c}"></i>`).join("");
-      
-      document.getElementById("distlab").textContent=counts.map(([,n],i)=>`${["ممتاز","جيد جداً","متوسط","ضعيف"][i]}: ${n}`).join(" · ")+` · بلا درجة: ${rows.length-scores.length}`;
-      document.querySelectorAll("#distbar i").forEach(i=>i.onclick=()=>{document.getElementById("fr").value=i.dataset.r;draw();});
-    }
-    document.querySelectorAll(".views button").forEach(b=>b.onclick=()=>{
-      document.querySelectorAll(".views button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
-      ["tree","cards","heat"].forEach(v=>document.getElementById("v-"+v).hidden=b.dataset.v!==v);
-      document.getElementById("extra").hidden=b.dataset.v==="tree";
-    });
-    ["fb","fs","fr","ft","hz"].forEach(id=>document.getElementById(id).onchange=draw);
-    document.getElementById("fm").oninput=draw;
-    document.getElementById("reset").onclick=()=>{["fb","fs","fr","ft"].forEach(id=>document.getElementById(id).value="");document.getElementById("fm").value="";document.getElementById("hz").value="last12m";draw();};
-    draw();
-  }catch(e){kpis.textContent="تعذر تحميل البيانات: "+(e&&e.message?e.message:e); console.error(e);}
-})();
-</script>
-</body></html>
+const HORIZONS = [
+  {key:"4weeks", label:"شهر", aliases:["4weeks","4week","1m","1month","month","monthly"]},
+  {key:"ytd"
