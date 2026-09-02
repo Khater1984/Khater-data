@@ -98,17 +98,21 @@ function median(xs){const a=xs.filter(v=>v!=null).sort((x,y)=>x-y); if(!a.length
   const box=document.getElementById("kpis");
   try{
     const H={apikey:CFG.key,Authorization:"Bearer "+CFG.key};
-    const [funds,navs]=await Promise.all([
+    const [funds,navs,latest]=await Promise.all([
       fetch(CFG.url+"/rest/v1/funds?select=fund_id,canonical_name,management_company,category,metadata&limit=1000",{headers:H}).then(r=>r.json()),
-      fetch(CFG.url+"/rest/v1/nav_official?select=fund_id,nav,as_of_date&limit=1000",{headers:H}).then(r=>r.json())
+      fetch(CFG.url+"/rest/v1/nav_official?select=fund_id,nav,as_of_date&limit=1000",{headers:H}).then(r=>r.json()),
+      fetch(CFG.url+"/rest/v1/fund_smartscore_latest?select=fund_id,final_score,rating,data_tier,score_as_of&limit=1000",{headers:H}).then(r=>r.json())
     ]);
     if(!Array.isArray(funds)) throw new Error("funds");
     const navMap={}; (Array.isArray(navs)?navs:[]).forEach(n=>navMap[n.fund_id]=n);
+    const ssMap={}; (Array.isArray(latest)?latest:[]).forEach(n=>ssMap[n.fund_id]=n);
     const ALL=funds.map(f=>({
       id:f.fund_id,name:f.canonical_name,manager:f.management_company||"",
       raw:f.category,bucket:AR(f.category),scores:(f.metadata||{}).scores||{},
-      asof:(f.metadata||{}).scores_as_of||null,
-      nav:navMap[f.fund_id]?.nav??null,navd:navMap[f.fund_id]?.as_of_date||null
+      asof:(ssMap[f.fund_id]&&ssMap[f.fund_id].score_as_of)||(f.metadata||{}).scores_as_of||null,
+      nav:navMap[f.fund_id]?.nav??null,navd:navMap[f.fund_id]?.as_of_date||null,
+      final:ssMap[f.fund_id]?ssMap[f.fund_id].final_score:null,
+      rating:ssMap[f.fund_id]?ssMap[f.fund_id].rating:null
     }));
     const buckets=[...new Set(ALL.map(f=>f.bucket))].sort();
     document.getElementById("fb").innerHTML='<option value="">كل الفئات</option>'+buckets.map(b=>`<option>${b}</option>`).join("");
@@ -130,7 +134,7 @@ function median(xs){const a=xs.filter(v=>v!=null).sort((x,y)=>x-y); if(!a.length
           <div>NAV ${f.nav==null?"لا توجد بيانات متاحة":Number(f.nav).toLocaleString("en-US")}
            · YTD ${num(cell(f,"ytd").return_pct)}%
            · سنة ${num(cell(f,"last12m").return_pct)}%
-           · Score ${cell(f,"last12m").score??"لا توجد بيانات متاحة"}</div>
+           · Smart Score ${f.final==null?"لا توجد بيانات متاحة":Number(f.final).toFixed(1)} ${f.rating||""}</div>
           <a href="fund.html?id=${encodeURIComponent(f.id)}&h=last12m">عرض الصندوق</a></div>`).join("")}`;
       document.getElementById("x").onclick=close;
     }
@@ -161,7 +165,7 @@ function median(xs){const a=xs.filter(v=>v!=null).sort((x,y)=>x-y); if(!a.length
       });
       document.getElementById("heat").innerHTML=html+"</tbody>";
       document.querySelectorAll("#heat td[data-g]").forEach(td=>td.onclick=()=>openDrawer(td.dataset.g,groups[td.dataset.g]));
-      const scores=rows.map(f=>cell(f,"last12m").score).filter(v=>v!=null);
+      const scores=rows.map(f=>f.final).filter(v=>v!=null);
       const tot=rows.length||1;
       const bins=[["90–100",s=>s>=90,"#10B981"],["75–89",s=>s>=75&&s<90,"#34D399"],["50–74",s=>s>=50&&s<75,"#F59E0B"],["<50",s=>s<50,"#EF4444"]];
       const counts=bins.map(([l,fn,c])=>[l,scores.filter(fn).length,c]);
