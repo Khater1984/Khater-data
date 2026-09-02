@@ -243,7 +243,7 @@ function color(v){
       const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
       const cats=svg.selectAll("g.category").data(root.children||[]).enter().append("g").attr("class","category").attr("transform",d=>`translate(${d.x0},${d.y0})`);
       cats.append("rect").attr("width",d=>d.x1-d.x0).attr("height",22).attr("fill","rgba(12,13,20,0.9)");
-      cats.append("text").attr("x",8).attr("y",15).text(d=>(d.x1-d.x0)<90?"":d.data.name).attr("fill","#9CA3AF").attr("font-size","11px").attr("font-weight","bold");
+      cats.append("text").attr("x",8).attr("y",15).text(d=>(d.x1-d.x0)<130?"":d.data.name).attr("fill","#9CA3AF").attr("font-size","11px").attr("font-weight","bold");
       const leaves=cats.selectAll("g.fund").data(d=>d.leaves()).enter().append("g").attr("class","fund")
         .attr("transform",d=>`translate(${d.x0-d.parent.x0},${d.y0-d.parent.y0})`)
         .style("cursor","pointer")
@@ -260,11 +260,14 @@ function color(v){
         .attr("stroke","#0C0D14").attr("rx",2);
       leaves.each(function(d){
         const tw=d.x1-d.x0, th=d.y1-d.y0, g=d3.select(this);
-        if(tw<90||th<44) return;
         const rv=d.data.returns[h], retStr=rv==null?"—":num(rv)+"%";
-        g.append("text").attr("x",4).attr("y",14).text(d.data.fund_name).attr("fill","#fff").attr("font-size","10px").style("pointer-events","none")
-          .each(function(){let txt=d.data.fund_name; while(this.getComputedTextLength()>tw-8 && txt.length){txt=txt.slice(0,-1); this.textContent=txt+"…";}});
-        if(th>=42) g.append("text").attr("x",4).attr("y",28).text(retStr).attr("fill","rgba(255,255,255,.85)").attr("font-size","10px").attr("font-weight","bold").style("pointer-events","none");
+        if(tw>=100 && th>=48){
+          g.append("text").attr("x",4).attr("y",14).text(d.data.fund_name).attr("fill","#fff").attr("font-size","10px").style("pointer-events","none")
+            .each(function(){let txt=d.data.fund_name; while(this.getComputedTextLength()>tw-8 && txt.length){txt=txt.slice(0,-1); this.textContent=txt+"…";}});
+          g.append("text").attr("x",4).attr("y",28).text(retStr).attr("fill","rgba(255,255,255,.9)").attr("font-size","11px").attr("font-weight","bold").style("pointer-events","none");
+        } else if(tw>=46 && th>=26){
+          g.append("text").attr("x",4).attr("y",Math.min(16,th-4)).text(retStr).attr("fill","rgba(255,255,255,.9)").attr("font-size","10px").attr("font-weight","bold").style("pointer-events","none");
+        }
       });
 
       document.getElementById("v-cards").innerHTML='<div class="grid">'+Object.entries(groups).map(([g,list])=>{
