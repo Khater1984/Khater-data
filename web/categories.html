@@ -254,17 +254,26 @@ function color(v){
       const width=container.clientWidth||Math.min(1200,window.innerWidth-36);
       const height=Math.max(1100, window.innerHeight);
       const catCol=b=>CATCOL[b]||"#4B5563";
+      const BANDS=[[50,"50% فأكثر"],[40,"40–50%"],[30,"30–40%"],[20,"20–30%"],[10,"10–20%"]];
+      function bandOf(v){return BANDS.find(([min])=>v>=min);}
       const kids=rows.filter(f=>{const v=ret(f,h); return v!=null && v>=10;}).sort((a,b)=>ret(b,h)-ret(a,h))
         .map(f=>({...f,category_name:f.bucket,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
-      const rootData={name:"Root",children:kids};
+      const grouped={};
+      kids.forEach(f=>{const b=bandOf(ret(f,h)); if(!b) return; (grouped[b[1]]||=[]).push(f);});
+      const rootData={name:"Root",children:BANDS.map(([,lab])=>grouped[lab]?{name:lab,children:grouped[lab]}:null).filter(Boolean)};
       const root=d3.hierarchy(rootData).sum(d=>{
         if(d.children) return 0;
         const v=d.returns?d.returns[h]:null;
         if(v==null||isNaN(v)) return 0;
         return Math.max(v, 0.3);
       }).sort((a,b)=>(b.value||0)-(a.value||0));
-      d3.treemap().size([width,height]).paddingOuter(3).paddingInner(3).tile(d3.treemapSquarify)(root);
+      d3.treemap().size([width,height]).paddingOuter(4).paddingTop(22).paddingInner(3).tile(d3.treemapSquarify)(root);
       const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
+      (root.children||[]).forEach(b=>{
+        if((b.x1-b.x0)<90) return;
+        svg.append("text").attr("x",b.x0+8).attr("y",b.y0+15).text(b.data.name)
+          .attr("fill","#E5E7EB").attr("font-size","12px").attr("font-weight","700");
+      });
       const leaves=svg.selectAll("g.fund").data(root.leaves()).enter().append("g").attr("class","fund")
         .attr("transform",d=>`translate(${d.x0},${d.y0})`)
         .style("cursor","pointer")
