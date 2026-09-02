@@ -6,7 +6,8 @@
 <script src="config.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/app.css"/>
-<script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
+
+
 <style>
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 @media(max-width:800px){.kpis{grid-template-columns:1fr 1fr}}
@@ -27,6 +28,7 @@
 <script type="module">
 import { bucket } from "./js/engine.js";
 import { BENCH_META } from "./js/score.js";
+import { svgBars } from "./js/viz.js";
 const id=new URLSearchParams(location.search).get("id");
 const h0=new URLSearchParams(location.search).get("h")||"last12m";
 const CFG=window.KHATER||{};
@@ -51,8 +53,8 @@ document.getElementById("app").innerHTML=`
   </div>
   <p class="muted">مصدر هذا الأفق: ${s.source||"—"} · تاريخ المصدر ${s.source_as_of||"—"} · جودة ${s.quality||"—"}</p>
   <div class="grid2">
-    <div class="card"><h3>العائد عبر الآفاق</h3><div id="retChart" class="chartbox"></div></div>
-    <div class="card"><h3>مقابل المراجع — ${HL[h0]||h0}</h3><div id="benchChart" class="chartbox"></div></div>
+    <div class="card"><h3>العائد عبر الآفاق</h3><div id="retChart"></div></div>
+    <div class="card"><h3>المراجع مقابل الصندوق — ${HL[h0]||h0}</h3><div id="benchChart"></div></div>
   </div>
   <div class="card" style="margin-top:12px">
     <h3>عقد البيانات في سوبربيس</h3>
@@ -64,21 +66,12 @@ document.getElementById("app").innerHTML=`
   </div>
 `;
 
-const retEl=document.getElementById("retChart");
-const rc=LightweightCharts.createChart(retEl,{layout:{background:{color:"#151b24"},textColor:"#8b95a5"},grid:{vertLines:{color:"#1c2430"},horzLines:{color:"#1c2430"}},rightPriceScale:{borderVisible:false},timeScale:{visible:false,borderVisible:false}});
-const rs=rc.addHistogramSeries({priceLineVisible:false});
-rs.setData(HS.map((k,i)=>({time:"2020-01-"+String(i+1).padStart(2,"0"),value:(f.scores?.[k]?.return_pct)??0,color:(f.scores?.[k]?.return_pct||0)>=0?"#3ddc8a":"#ef7a6e"})));
-rc.applyOptions({width:retEl.clientWidth,height:280});
-
-const names=Object.fromEntries(BENCH_META);
 const vals=BENCH.horizons[h0]||{};
 const fundR=s.return_pct;
-const benchEl=document.getElementById("benchChart");
-const bc=LightweightCharts.createChart(benchEl,{layout:{background:{color:"#151b24"},textColor:"#8b95a5"},grid:{vertLines:{color:"#1c2430"},horzLines:{color:"#1c2430"}},rightPriceScale:{borderVisible:false},timeScale:{visible:false,borderVisible:false}});
-const bs=bc.addHistogramSeries({priceLineVisible:false});
-const points=BENCH_META.map(([k],i)=>({time:`2020-02-${String(i+1).padStart(2,"0")}`,value:vals[k]??0,color:(fundR!=null && vals[k]!=null && fundR>=vals[k])?"#3ddc8a":"#5c6673"}));
-bs.setData(points);
-bc.applyOptions({width:benchEl.clientWidth,height:280});
-new ResizeObserver(()=>{rc.applyOptions({width:retEl.clientWidth});bc.applyOptions({width:benchEl.clientWidth});}).observe(retEl);
+document.getElementById("retChart").innerHTML=svgBars(HS.map(k=>({label:HL[k],value:(f.scores||{})[k]?.return_pct})));
+document.getElementById("benchChart").innerHTML=svgBars([
+  {label:"الصندوق",value:fundR,color:"#d4b06a"},
+  ...BENCH_META.map(([k,l])=>({label:l.replace("/EGP",""),value:vals[k],color:(fundR!=null&&vals[k]!=null&&fundR>=vals[k])?"#3ddc8a":"#5c6673"}))
+]);
 </script>
 </body></html>
