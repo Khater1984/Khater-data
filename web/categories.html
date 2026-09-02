@@ -55,6 +55,8 @@ td.pos.active{background:#047857} td.neg.active{background:#991b1b}
 .mask.on{display:block}
 .frow{border-bottom:1px solid var(--line);padding:8px 0}
 #sc{height:260px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-left:6px}
 @media(max-width:900px){.grid,.kpis,.two,.champs{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.grid,.kpis,.two,.champs{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -245,26 +247,24 @@ function color(v){
       host.innerHTML='<div id="treemap-canvas"></div>';
       const container=document.getElementById("treemap-canvas");
       const width=container.clientWidth||Math.min(1200,window.innerWidth-36);
-      const height=Math.max(560, window.innerHeight-190);
-      const rootData={name:"Root",children:Object.entries(groups).map(([g,list])=>{
-        const kids=list.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h)).slice(0,8)
-          .map(f=>({...f,category_name:g,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
-        return {name:g,children:kids};
-      }).filter(c=>c.children.length)};
+      const height=Math.max(620, window.innerHeight-160);
+      const CATCOL={"صناديق الأسهم":"#059669","صناديق النقد":"#0D9488","صناديق الدخل الثابت":"#2563EB","صناديق الذهب":"#D97706","صناديق المؤشرات":"#7C3AED","الصناديق المتوازنة":"#65A30D","صناديق خيرية":"#E11D48","صناديق محمية":"#4F46E5","فئات أخرى":"#6B7280"};
+      const catCol=b=>CATCOL[b]||"#4B5563";
+      const kids=rows.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h)).slice(0,40)
+        .map(f=>({...f,category_name:f.bucket,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
+      const rootData={name:"Root",children:kids};
       const root=d3.hierarchy(rootData).sum(d=>{
         if(d.children) return 0;
         const v=d.returns?d.returns[h]:null;
         if(v==null||isNaN(v)) return 0;
         return Math.max(v, 0.3);
       }).sort((a,b)=>(b.value||0)-(a.value||0));
-      d3.treemap().size([width,height]).paddingOuter(4).paddingTop(26).paddingInner(2).tile(d3.treemapSquarify)(root);
-      const valid=rows.map(f=>ret(f,h)).filter(v=>v!=null&&!isNaN(v));
-      const colorScale=d3.scaleLinear().domain([d3.min(valid)||0,0,d3.max(valid)||50]).range(["#EF4444","#1F2937","#10B981"]);
+      d3.treemap().size([width,height]).paddingOuter(3).paddingInner(3).tile(d3.treemapSquarify)(root);
+      document.getElementById("treemap-canvas").insertAdjacentHTML("beforebegin",
+        `<div class="legend">${Object.entries(CATCOL).map(([n,c])=>`<span><i style="background:${c}"></i>${n}</span>`).join("")}</div>`);
       const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
-      const cats=svg.selectAll("g.category").data(root.children||[]).enter().append("g").attr("class","category").attr("transform",d=>`translate(${d.x0},${d.y0})`).attr("clip-path",d=>`inset(0)`);
-      cats.append("rect").attr("width",d=>d.x1-d.x0).attr("height",18).attr("fill","rgba(12,13,20,0.55)");
-      const leaves=cats.selectAll("g.fund").data(d=>d.leaves()).enter().append("g").attr("class","fund")
-        .attr("transform",d=>`translate(${d.x0-d.parent.x0},${d.y0-d.parent.y0})`)
+      const leaves=svg.selectAll("g.fund").data(root.leaves()).enter().append("g").attr("class","fund")
+        .attr("transform",d=>`translate(${d.x0},${d.y0})`)
         .style("cursor","pointer")
         .on("click",(_,d)=>{location.href="fund.html?id="+encodeURIComponent(d.data.id)+"&h="+h;})
         .on("mousemove",(e,d)=>{
@@ -275,7 +275,7 @@ function color(v){
         })
         .on("mouseleave",()=>document.getElementById("tipf").style.display="none");
       leaves.append("rect").attr("width",d=>Math.max(0,d.x1-d.x0)).attr("height",d=>Math.max(0,d.y1-d.y0))
-        .attr("fill",d=>{const v=d.data.returns[h]; return v==null||isNaN(v)?"#1E1F2E":colorScale(v);})
+        .attr("fill",d=>catCol(d.data.category_name))
         .attr("stroke","#0C0D14").attr("rx",2);
       function shortName(s){
         s=(s||"").replace(/\s+/g," ").replace(/^\.+/,"").trim();
