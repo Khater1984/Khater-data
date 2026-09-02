@@ -25,14 +25,16 @@
 </div></header>
 <main class="wrap page" id="app">جاري التحميل…</main>
 <script type="module">
-import { loadFundBook } from "./js/live.js";
 import { bucket } from "./js/engine.js";
 import { BENCH_META } from "./js/score.js";
 const id=new URLSearchParams(location.search).get("id");
 const h0=new URLSearchParams(location.search).get("h")||"last12m";
-const packed=await loadFundBook();
+const CFG=window.KHATER||{};
+const headers={apikey:CFG.key,Authorization:"Bearer "+CFG.key};
+const rows=await (await fetch(CFG.url+"/rest/v1/funds?fund_id=eq."+encodeURIComponent(id)+"&select=fund_id,canonical_name,management_company,category,metadata",{headers})).json();
+const raw=rows[0];
 const BENCH=await (await fetch("data/benchmarks.json")).json();
-const f=packed.funds.find(x=>x.id===id);
+const f=raw?{id:raw.fund_id,name:raw.canonical_name,manager:raw.management_company,category:raw.category,scores:(raw.metadata||{}).scores||{},scores_as_of:(raw.metadata||{}).scores_as_of||null}:null;
 if(!f){document.getElementById("app").textContent="غير موجود"; throw 0;}
 const HS=["weekly","4weeks","ytd","last12m","2y","3y","4y","5y","6y"];
 const HL={weekly:"أسبوع","4weeks":"4 أسابيع",ytd:"YTD",last12m:"12M","2y":"2Y","3y":"3Y","4y":"4Y","5y":"5Y","6y":"6Y"};
