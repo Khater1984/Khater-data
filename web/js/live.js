@@ -101,7 +101,9 @@ export async function loadFunds() {
       nav_asof: n ? n.as_of_date : null,
       url: (n && n.source_url) || f.price_update_url,
       eima: Object.fromEntries(Object.entries(p).filter(([k]) => !k.startsWith("_"))),
-      eima_asof: p._asof || null,
+      eima_asof: p._asof || meta.scores_as_of || null,
+      scores: meta.scores || {},
+      scores_as_of: meta.scores_as_of || null,
       bucket: bucket(f.category),
     };
   });
