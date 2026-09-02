@@ -19,7 +19,7 @@ a{color:var(--ok);text-decoration:none}
 header.top{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line);position:sticky;top:0;backdrop-filter:blur(12px);z-index:20}
 nav a{color:var(--mute);margin-inline-start:12px;font-size:13px}
 nav a.on{color:#fff}
-.page{padding:12px 16px 40px;max-width:100%;margin:0 auto}
+.page{padding:16px 18px 48px;max-width:1180px;margin:0 auto}
 .glass{background:var(--card);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(12px)}
 .float{position:sticky;top:60px;z-index:15;display:flex;flex-wrap:wrap;gap:8px;padding:10px;margin-bottom:12px}
 select,input,button{background:#161821;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
@@ -234,7 +234,13 @@ function color(v){
 
       const host=document.getElementById("v-tree");
       host.innerHTML='<div id="cat-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px"></div><div id="treemap-canvas"></div>';
-      document.getElementById("cat-chips").innerHTML=Object.keys(groups).map(g=>`<span class="glass" style="padding:4px 8px;font-size:12px">${g}</span>`).join('');
+      const allCats=[...new Set(ALL.map(f=>f.bucket))].sort();
+      document.getElementById("cat-chips").innerHTML=allCats.map(g=>`<button type="button" class="glass" data-chip="${g}" style="padding:4px 10px;font-size:12px;cursor:pointer;border:${document.getElementById("fb").value===g?"1px solid #10B981":"1px solid transparent"}">${g}</button>`).join("");
+      document.querySelectorAll("#cat-chips [data-chip]").forEach(b=>b.onclick=()=>{
+        const sel=document.getElementById("fb");
+        sel.value = sel.value===b.dataset.chip ? "" : b.dataset.chip;
+        draw();
+      });
       const container=document.getElementById("treemap-canvas");
       const width=container.clientWidth||Math.min(1200,window.innerWidth-36);
       const height=Math.max(560, window.innerHeight-190);
@@ -273,7 +279,7 @@ function color(v){
       function shortName(s){s=(s||"").replace(/\s+/g," ").trim(); const cut=s.split(/[—(]/)[0].trim(); return cut.length>22?cut.slice(0,20)+"…":cut;}
       leaves.each(function(d){
         const tw=d.x1-d.x0, th=d.y1-d.y0, g=d3.select(this);
-        const rv=d.data.returns[h], retStr=rv==null?"—":((rv>0?"+":"")+num(rv)+"%");
+        const rv=d.data.returns[h], retStr=rv==null?"—":(rv==null?"—":(rv>0?"+":"")+num(rv)+"%");
         const fs=Math.max(11, Math.min(26, Math.min(tw/5.6, th/3.1)));
         if(tw>=72 && th>=50){
           g.append("text").attr("x",tw/2).attr("y",th/2-fs*0.38).attr("text-anchor","middle")
