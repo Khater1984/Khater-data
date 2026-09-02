@@ -37,9 +37,15 @@ table th{font-size:11px;letter-spacing:.08em;color:#8b93a0}
     <input id="q" placeholder="بحث"/>
     <select id="bucket"><option value="">كل الفئات</option></select>
     <select id="horizon">
-      <option value="last12m">12 شهراً</option>
+      <option value="weekly">أسبوع</option>
+      <option value="4weeks">4 أسابيع</option>
       <option value="ytd">YTD</option>
+      <option value="last12m" selected>12 شهراً</option>
+      <option value="2y">سنتان</option>
       <option value="3y">3 سنوات</option>
+      <option value="4y">4 سنوات</option>
+      <option value="5y">5 سنوات</option>
+      <option value="6y">6 سنوات</option>
     </select>
     <span class="muted" id="meta"></span>
   </div>
@@ -55,7 +61,8 @@ table th{font-size:11px;letter-spacing:.08em;color:#8b93a0}
 <script type="module">
 import { loadFundBook } from "./js/live.js";
 import { bucket } from "./js/engine.js";
-import { BENCH_META, ret, rating, conf, parts } from "./js/score.js";
+import { BENCH_META, ret } from "./js/score.js";
+function cell(f,h){ return (f.scores&&f.scores[h]) || {}; }
 const packed=await loadFundBook();
 const ALL=packed.funds;
 const BENCH=await (await fetch("data/benchmarks.json")).json();
@@ -75,23 +82,30 @@ function draw(){
   let rows=ALL.filter(f=>{
     if(q && !(f.name+(f.manager||"")).toLowerCase().includes(q)) return false;
     if(b && bucket(f.category)!==b) return false;
-    const r=ret(f,h);
-    return keys.every(k=>r!=null && vals[k]!=null && r>=vals[k]);
+    const s=cell(f,h);
+    const r=s.return_pct ?? ret(f,h);
+    if(keys.length && (r==null || keys.some(k=>vals[k]==null || r<vals[k]))) return false;
+    return true;
   });
-  const peers=ALL.filter(f=>ret(f,h)!=null).map(f=>ret(f,h));
-  rows=rows.map(f=>({f,p:parts(f,h,keys,peers.filter((_,i)=>true))}))
-    .sort((a,c)=>(c.p.score??-1)-(a.p.score??-1));
-  document.getElementById("meta").textContent=`${rows.length} صندوق · EIMA ${BENCH.as_of}`;
-  document.getElementById("tb").innerHTML=rows.map((row,i)=>{
-    const f=row.f,p=row.p;
+  rows.sort((a,c)=>{
+    const as=cell(a,h).score, cs=cell(c,h).score;
+    if(as==null && cs==null) return 0;
+    if(as==null) return 1;
+    if(cs==null) return -1;
+    return cs-as;
+  });
+  document.getElementById("meta").textContent=`${rows.length} صندوق · تقييم مخزّن ${ALL[0]?.scores_as_of||BENCH.as_of} · أفق ${h}`;
+  document.getElementById("tb").innerHTML=rows.map((f,i)=>{
+    const s=cell(f,h);
+    const r=s.return_pct;
     return `<tr onclick="location.href='fund.html?id=${encodeURIComponent(f.id)}&h=${h}'">
       <td class="num">${i+1}</td>
       <td>${f.name}<div class="muted">${f.manager||""}</div></td>
       <td>${bucket(f.category)}</td>
-      <td class="num">${p.r==null?"—":p.r.toLocaleString("en-US",{maximumFractionDigits:1})+"%"}</td>
-      <td class="num score">${p.score==null?"—":p.score.toLocaleString("en-US",{maximumFractionDigits:1})}</td>
-      <td><span class="rate">${rating(p.score)}</span></td>
-      <td class="muted">${conf(f)}</td>
+      <td class="num">${r==null?"—":Number(r).toLocaleString("en-US",{maximumFractionDigits:1})+"%"}</td>
+      <td class="num score">${s.score==null?"—":Number(s.score).toLocaleString("en-US",{maximumFractionDigits:1})}</td>
+      <td><span class="rate">${s.rating||"—"}</span></td>
+      <td class="muted">${s.conf||"—"}</td>
     </tr>`;
   }).join("");
 }
