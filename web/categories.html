@@ -175,7 +175,7 @@ function color(v){
       return {
         id:f.fund_id,name:f.canonical_name,manager:f.management_company||"",
         raw:f.category||"",bucket:AR(f.category),scores:(f.metadata||{}).scores||{},
-        nav:navMap[f.fund_id]?.nav??null, asof:ss.score_as_of||null,
+        nav:navMap[f.fund_id]?.nav??null, navd:navMap[f.fund_id]?.as_of_date||null, asof:ss.score_as_of||null,
         final:ss.final_score??null, rating:ss.rating||null, tier:ss.data_tier||"",
         risk:ss.risk_score??null, P:ss.performance_score??null, R:ss.risk_score??null,
         B:ss.benchmark_score??null, C:ss.consistency_score??null, I:ss.inflation_score??null,
@@ -225,10 +225,10 @@ function color(v){
       const withRet=rows.filter(f=>ret(f,h)!=null);
       const top=withRet.slice().sort((a,b)=>ret(b,h)-ret(a,h))[0];
       document.getElementById("kpis").innerHTML=`
-        <div class="kpi glass">آخر تقييم V3<b>${asof}</b></div>
-        <div class="kpi glass">الصناديق<b>${rows.length}</b></div>
-        <div class="kpi glass">الفئات<b>${Object.keys(groups).length}</b></div>
-        <div class="kpi glass">أعلى عائد للأفق المختار<b>${top?num(ret(top,h))+"%":"غير متاح"}</b><div class="sub">${top?top.name:""}</div></div>`;
+        <div class="kpi glass">آخر سعر معلن<div class="sub">من nav_official</div><b>${[...new Set(rows.map(f=>f.navd).filter(Boolean))].sort().at(-1)||"غير مكتمل"}</b></div>
+        <div class="kpi glass">تقييم Smart Score<div class="sub">محرك V3 — ليس سعر اليوم</div><b>${asof}</b></div>
+        <div class="kpi glass">الصناديق / الفئات<b>${rows.length} · ${Object.keys(groups).length}</b></div>
+        <div class="kpi glass">أعلى عائد للأفق<b>${top?num(ret(top,h))+"%":"غير متاح"}</b><div class="sub">${top?top.name:""}</div></div>`;
 
       const host=document.getElementById("v-tree");
       host.innerHTML='<div id="treemap-canvas"></div>';
@@ -237,13 +237,13 @@ function color(v){
       const height=650;
       const rootData={name:"Root",children:Object.entries(groups).map(([g,list])=>({name:g,children:list.map(f=>({...f,category_name:g,fund_name:f.name,aum_val:1,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}))}))};
       const root=d3.hierarchy(rootData).sum(d=>d.children?0:1).sort((a,b)=>b.value-a.value);
-      d3.treemap().size([width,height]).paddingOuter(4).paddingTop(24).paddingInner(2).tile(d3.treemapSquarify)(root);
+      d3.treemap().size([width,height]).paddingOuter(4).paddingTop(28).paddingInner(2).tile(d3.treemapSquarify)(root);
       const valid=rows.map(f=>ret(f,h)).filter(v=>v!=null&&!isNaN(v));
       const colorScale=d3.scaleLinear().domain([d3.min(valid)||0,0,d3.max(valid)||50]).range(["#EF4444","#1F2937","#10B981"]);
       const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
       const cats=svg.selectAll("g.category").data(root.children||[]).enter().append("g").attr("class","category").attr("transform",d=>`translate(${d.x0},${d.y0})`);
       cats.append("rect").attr("width",d=>d.x1-d.x0).attr("height",22).attr("fill","rgba(12,13,20,0.9)");
-      cats.append("text").attr("x",8).attr("y",15).text(d=>d.data.name).attr("fill","#9CA3AF").attr("font-size","11px").attr("font-weight","bold");
+      cats.append("text").attr("x",8).attr("y",15).text(d=>(d.x1-d.x0)<90?"":d.data.name).attr("fill","#9CA3AF").attr("font-size","11px").attr("font-weight","bold");
       const leaves=cats.selectAll("g.fund").data(d=>d.leaves()).enter().append("g").attr("class","fund")
         .attr("transform",d=>`translate(${d.x0-d.parent.x0},${d.y0-d.parent.y0})`)
         .style("cursor","pointer")
@@ -260,7 +260,7 @@ function color(v){
         .attr("stroke","#0C0D14").attr("rx",2);
       leaves.each(function(d){
         const tw=d.x1-d.x0, th=d.y1-d.y0, g=d3.select(this);
-        if(tw<55||th<30) return;
+        if(tw<90||th<44) return;
         const rv=d.data.returns[h], retStr=rv==null?"—":num(rv)+"%";
         g.append("text").attr("x",4).attr("y",14).text(d.data.fund_name).attr("fill","#fff").attr("font-size","10px").style("pointer-events","none")
           .each(function(){let txt=d.data.fund_name; while(this.getComputedTextLength()>tw-8 && txt.length){txt=txt.slice(0,-1); this.textContent=txt+"…";}});
