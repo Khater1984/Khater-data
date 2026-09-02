@@ -7,1189 +7,767 @@
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --bg:#080b11;
-  --panel:#10141c;
-  --panel2:#141923;
-  --panel3:#181e29;
-  --line:rgba(255,255,255,.075);
-  --line2:rgba(255,255,255,.12);
-  --text:#f3f5f7;
-  --muted:#8c96a6;
-  --green:#10b981;
-  --green2:#34d399;
-  --red:#ef4444;
-  --amber:#f59e0b;
-  --blue:#60a5fa;
-  --shadow:0 16px 50px rgba(0,0,0,.28);
+ --bg:#080b12;
+ --panel:#111621;
+ --panel2:#151b27;
+ --line:rgba(255,255,255,.08);
+ --text:#f3f4f6;
+ --muted:#8993a5;
+ --green:#10b981;
+ --green2:#34d399;
+ --red:#ef4444;
+ --orange:#f59e0b;
+ --blue:#3b82f6;
+ --purple:#8b5cf6;
 }
 
 *{box-sizing:border-box}
 
 html,body{
-  margin:0;
-  padding:0;
-  min-height:100%;
-  background:var(--bg);
-  color:var(--text);
-  font-family:"IBM Plex Sans Arabic",sans-serif;
+ margin:0;
+ min-height:100%;
+ background:
+ radial-gradient(1000px 500px at 5% -10%,rgba(16,185,129,.13),transparent 55%),
+ radial-gradient(900px 500px at 95% 0%,rgba(59,130,246,.10),transparent 55%),
+ var(--bg);
+ color:var(--text);
+ font-family:"IBM Plex Sans Arabic",sans-serif;
 }
 
-body{
-  background:
-    radial-gradient(900px 450px at 0% -10%,rgba(16,185,129,.10),transparent 60%),
-    radial-gradient(800px 450px at 100% 0%,rgba(59,130,246,.08),transparent 60%),
-    var(--bg);
+body{min-height:100vh}
+
+button,input,select{font:inherit}
+
+button,select,input{
+ background:#151a25;
+ color:var(--text);
+ border:1px solid var(--line);
+ border-radius:10px;
+ padding:9px 11px;
+ outline:none;
 }
 
-button,input,select{
-  font:inherit;
+button{cursor:pointer}
+
+button:hover{border-color:rgba(16,185,129,.45)}
+
+button.active{
+ background:var(--green);
+ color:#03130e;
+ border-color:var(--green);
+ font-weight:700;
 }
 
-button{
-  cursor:pointer;
+header{
+ height:58px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:0 22px;
+ border-bottom:1px solid var(--line);
+ background:rgba(8,11,18,.78);
+ backdrop-filter:blur(18px);
+ position:sticky;
+ top:0;
+ z-index:100;
 }
 
-a{
-  color:var(--green2);
-  text-decoration:none;
+.logo{
+ font-weight:700;
+ font-size:15px;
+ white-space:nowrap;
 }
 
-/* =========================
-   TOP BAR
-========================= */
-
-.topbar{
-  height:58px;
-  position:sticky;
-  top:0;
-  z-index:100;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 22px;
-  background:rgba(8,11,17,.84);
-  border-bottom:1px solid var(--line);
-  backdrop-filter:blur(18px);
+nav{
+ display:flex;
+ gap:18px;
 }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:700;
-  white-space:nowrap;
+nav a{
+ color:var(--muted);
+ text-decoration:none;
+ font-size:13px;
 }
 
-.brand-dot{
-  width:9px;
-  height:9px;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 18px rgba(16,185,129,.7);
-}
-
-.nav{
-  display:flex;
-  align-items:center;
-  gap:4px;
-}
-
-.nav a{
-  color:var(--muted);
-  padding:8px 11px;
-  border-radius:8px;
-  font-size:12px;
-}
-
-.nav a:hover,
-.nav a.active{
-  color:#fff;
-  background:rgba(255,255,255,.055);
-}
-
-/* =========================
-   PAGE
-========================= */
+nav a:hover,
+nav a.active{color:#fff}
 
 .page{
-  width:min(1440px,100%);
-  margin:auto;
-  padding:28px 22px 60px;
+ max-width:1240px;
+ margin:auto;
+ padding:24px 18px 60px;
 }
 
 .hero{
-  margin-bottom:20px;
-}
-
-.eyebrow{
-  color:var(--green2);
-  font-family:"IBM Plex Sans",sans-serif;
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:.12em;
-  text-transform:uppercase;
+ display:flex;
+ justify-content:space-between;
+ align-items:flex-end;
+ gap:20px;
+ margin-bottom:20px;
 }
 
 h1{
-  margin:6px 0 5px;
-  font-size:28px;
-  line-height:1.25;
+ margin:0;
+ font-size:27px;
+ letter-spacing:-.5px;
 }
 
 .hero p{
-  margin:0;
-  color:var(--muted);
-  font-size:12px;
-}
-
-/* =========================
-   FILTER BAR
-========================= */
-
-.filter-shell{
-  position:sticky;
-  top:68px;
-  z-index:50;
-  padding:10px;
-  margin-bottom:16px;
-  background:rgba(16,20,28,.90);
-  border:1px solid var(--line);
-  border-radius:14px;
-  box-shadow:var(--shadow);
-  backdrop-filter:blur(18px);
-}
-
-.filters{
-  display:grid;
-  grid-template-columns:
-    minmax(150px,1fr)
-    minmax(150px,1fr)
-    minmax(150px,1fr)
-    minmax(130px,.8fr)
-    minmax(130px,.8fr)
-    minmax(100px,.6fr)
-    auto;
-  gap:7px;
-}
-
-.field{
-  position:relative;
-}
-
-.field label{
-  display:block;
-  color:#687384;
-  font-size:9px;
-  margin:0 0 3px 3px;
-}
-
-select,
-input{
-  width:100%;
-  height:38px;
-  padding:0 10px;
-  color:var(--text);
-  background:#0c1017;
-  border:1px solid var(--line2);
-  border-radius:9px;
-  outline:none;
-  font-size:11px;
-}
-
-select:focus,
-input:focus{
-  border-color:rgba(16,185,129,.55);
-  box-shadow:0 0 0 3px rgba(16,185,129,.08);
-}
-
-.reset{
-  height:38px;
-  align-self:end;
-  border:1px solid var(--line2);
-  border-radius:9px;
-  background:#151a23;
-  color:#c8ced7;
-  padding:0 13px;
-  font-size:11px;
-}
-
-.reset:hover{
-  color:#fff;
-  border-color:rgba(16,185,129,.35);
-}
-
-/* =========================
-   KPI
-========================= */
-
-.kpis{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:9px;
-  margin-bottom:15px;
-}
-
-.kpi{
-  position:relative;
-  overflow:hidden;
-  padding:15px 16px;
-  min-height:92px;
-  background:linear-gradient(145deg,rgba(20,25,35,.95),rgba(13,17,24,.95));
-  border:1px solid var(--line);
-  border-radius:13px;
-}
-
-.kpi:after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:1px;
-  background:linear-gradient(90deg,transparent,var(--green),transparent);
-  opacity:.35;
-}
-
-.kpi-label{
-  color:var(--muted);
-  font-size:10px;
-}
-
-.kpi-value{
-  margin-top:6px;
-  font-family:"IBM Plex Sans",sans-serif;
-  font-size:22px;
-  font-weight:700;
-  direction:ltr;
-  text-align:right;
-}
-
-.kpi-note{
-  margin-top:3px;
-  color:#687384;
-  font-size:9px;
-}
-
-/* =========================
-   VIEW SWITCH
-========================= */
-
-.viewbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:10px;
-}
-
-.views{
-  display:flex;
-  gap:4px;
-  padding:4px;
-  background:#0d1118;
-  border:1px solid var(--line);
-  border-radius:10px;
-}
-
-.views button{
-  border:0;
-  background:transparent;
-  color:var(--muted);
-  border-radius:7px;
-  padding:7px 12px;
-  font-size:10px;
-}
-
-.views button.active{
-  background:#1b2530;
-  color:#fff;
-  box-shadow:0 3px 12px rgba(0,0,0,.25);
+ margin:7px 0 0;
+ color:var(--muted);
+ font-size:12px;
 }
 
 .status{
-  color:#697586;
-  font-size:10px;
+ display:flex;
+ align-items:center;
+ gap:8px;
+ font-size:11px;
+ color:var(--muted);
 }
 
-/* =========================
-   CATEGORY CHIPS
-========================= */
-
-.chips{
-  display:flex;
-  gap:5px;
-  flex-wrap:wrap;
-  margin-bottom:12px;
+.dot{
+ width:8px;
+ height:8px;
+ border-radius:50%;
+ background:var(--green);
+ box-shadow:0 0 12px rgba(16,185,129,.7);
 }
 
-.chip{
-  border:1px solid var(--line2);
-  background:transparent;
-  color:#8e98a8;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:10px;
-}
-
-.chip:hover{
-  color:#fff;
-}
-
-.chip.active{
-  color:#fff;
-  border-color:rgba(16,185,129,.7);
-  background:rgba(16,185,129,.15);
-}
-
-/* =========================
-   HEATMAP
-========================= */
-
-.heatmap-shell{
-  background:#0f141c;
-  border:1px solid var(--line);
-  border-radius:15px;
-  overflow:hidden;
-  box-shadow:var(--shadow);
-}
-
-.heat-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:15px 17px;
-  border-bottom:1px solid var(--line);
-}
-
-.heat-title{
-  font-size:15px;
-  font-weight:700;
-}
-
-.heat-sub{
-  margin-top:3px;
-  color:#717c8d;
-  font-size:10px;
-}
-
-.heat-count{
-  color:#8b95a4;
-  font-family:"IBM Plex Sans",sans-serif;
-  font-size:11px;
-  direction:ltr;
-}
-
-.heat-body{
-  padding:12px;
-}
-
-.category-block{
-  margin-bottom:15px;
-}
-
-.category-block:last-child{
-  margin-bottom:0;
-}
-
-.category-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 3px 6px;
-}
-
-.category-title{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  font-size:11px;
-  font-weight:700;
-}
-
-.category-marker{
-  width:7px;
-  height:7px;
-  border-radius:2px;
-}
-
-.category-meta{
-  color:#697484;
-  font-size:9px;
-}
-
-.tiles{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-  gap:3px;
-}
-
-.tile{
-  position:relative;
-  min-height:82px;
-  padding:10px;
-  border-radius:5px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:
-    transform .12s ease,
-    filter .12s ease,
-    box-shadow .12s ease;
-}
-
-.tile:hover{
-  transform:scale(1.018);
-  filter:brightness(1.1);
-  box-shadow:0 10px 28px rgba(0,0,0,.4);
-  z-index:5;
-}
-
-.tile-name{
-  font-size:10px;
-  line-height:1.4;
-  font-weight:600;
-  max-width:100%;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.tile-return{
-  margin-top:6px;
-  font-family:"IBM Plex Sans",sans-serif;
-  font-size:19px;
-  font-weight:700;
-  direction:ltr;
-  text-align:right;
-  letter-spacing:-.03em;
-}
-
-.tile-score{
-  margin-top:3px;
-  font-family:"IBM Plex Sans",sans-serif;
-  font-size:9px;
-  opacity:.72;
-  direction:ltr;
-  text-align:right;
-}
-
-.tile-manager{
-  margin-top:2px;
-  color:rgba(255,255,255,.55);
-  font-size:8px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.tile-na{
-  background:#1b2029!important;
-  color:#737d8d!important;
-}
-
-/* =========================
-   HEATMAP LEGEND
-========================= */
-
-.legend{
-  display:flex;
-  flex-wrap:wrap;
-  gap:13px;
-  padding:11px 16px 14px;
-  border-top:1px solid var(--line);
-  color:#737d8d;
-  font-size:9px;
-}
-
-.legend span{
-  display:flex;
-  align-items:center;
-  gap:5px;
-}
-
-.legend i{
-  width:10px;
-  height:10px;
-  border-radius:3px;
-}
-
-/* =========================
-   CARDS
-========================= */
-
-.cards{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-}
-
-.category-card{
-  padding:16px;
-  min-height:165px;
-  background:linear-gradient(145deg,#131923,#0f141c);
-  border:1px solid var(--line);
-  border-radius:14px;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.category-card:hover{
-  transform:translateY(-3px);
-  border-color:rgba(16,185,129,.22);
-  box-shadow:var(--shadow);
-}
-
-.category-card h3{
-  margin:0 0 8px;
-  font-size:14px;
-}
-
-.category-count{
-  color:#697484;
-  font-size:10px;
-}
-
-.card-stat{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  margin-top:15px;
-  padding-top:10px;
-  border-top:1px solid var(--line);
-}
-
-.card-stat label{
-  color:#687384;
-  font-size:9px;
-}
-
-.card-stat strong{
-  font-family:"IBM Plex Sans",sans-serif;
-  font-size:15px;
-  direction:ltr;
-}
-
-.card-fund{
-  margin-top:3px;
-  color:#aeb6c2;
-  font-size:9px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-/* =========================
-   TREEMAP
-========================= */
-
-.tree-shell{
-  background:#0f141c;
-  border:1px solid var(--line);
-  border-radius:15px;
-  padding:8px;
-  overflow:auto;
-}
-
-#treemap{
-  min-width:900px;
-  min-height:650px;
-  position:relative;
-}
-
-.tree-cell{
-  position:absolute;
-  border:2px solid #0b0f15;
-  overflow:hidden;
-  cursor:pointer;
-  border-radius:3px;
-  transition:.15s;
-}
-
-.tree-cell:hover{
-  filter:brightness(1.15);
-  z-index:10;
-}
-
-.tree-name{
-  position:absolute;
-  left:4px;
-  right:4px;
-  top:4px;
-  font-size:9px;
-  font-weight:700;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.tree-return{
-  position:absolute;
-  left:4px;
-  right:4px;
-  bottom:5px;
-  font-family:"IBM Plex Sans",sans-serif;
-  font-size:13px;
-  font-weight:700;
-  direction:ltr;
-  text-align:right;
-}
-
-/* =========================
-   ANALYTICS
-========================= */
-
-.analytics{
-  margin-top:15px;
-  display:grid;
-  grid-template-columns:1.25fr .75fr;
-  gap:10px;
+.dot.error{
+ background:var(--red);
+ box-shadow:0 0 12px rgba(239,68,68,.7);
 }
 
 .panel{
-  padding:15px;
-  background:#10151d;
-  border:1px solid var(--line);
-  border-radius:14px;
+ background:rgba(17,22,33,.88);
+ border:1px solid var(--line);
+ border-radius:16px;
+ box-shadow:0 18px 60px rgba(0,0,0,.18);
 }
 
-.panel-title{
-  font-size:13px;
-  font-weight:700;
+.filters{
+ display:grid;
+ grid-template-columns:1.1fr 1.2fr 1.1fr .9fr .9fr auto;
+ gap:8px;
+ padding:11px;
+ margin-bottom:12px;
+ position:sticky;
+ top:70px;
+ z-index:50;
+ backdrop-filter:blur(16px);
 }
 
-.panel-sub{
-  margin-top:3px;
-  color:#687384;
-  font-size:9px;
+.filters input{min-width:0}
+
+.kpis{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:10px;
+ margin-bottom:14px;
 }
 
-.chart-wrap{
-  height:280px;
-  margin-top:12px;
+.kpi{
+ padding:15px;
+ min-height:100px;
 }
 
-.axes{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:5px;
-  margin-top:12px;
+.kpi-label{
+ color:var(--muted);
+ font-size:11px;
 }
 
-.axis{
-  padding:12px 8px;
-  text-align:center;
-  background:#141a23;
-  border:1px solid var(--line);
-  border-radius:9px;
+.kpi-value{
+ font-family:"IBM Plex Sans",sans-serif;
+ font-size:22px;
+ font-weight:700;
+ margin-top:7px;
+ direction:ltr;
+ text-align:right;
 }
 
-.axis-label{
-  color:#707b8c;
-  font-size:9px;
+.kpi-sub{
+ color:#687386;
+ font-size:10px;
+ margin-top:5px;
 }
 
-.axis-value{
-  margin-top:5px;
-  font-family:"IBM Plex Sans",sans-serif;
-  font-size:17px;
-  font-weight:700;
+.views{
+ display:flex;
+ gap:7px;
+ margin:10px 0;
 }
 
-.axis-fund{
-  margin-top:3px;
-  color:#7d8796;
-  font-size:8px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+.chips{
+ display:flex;
+ flex-wrap:wrap;
+ gap:6px;
+ margin:10px 0 14px;
 }
 
-/* =========================
-   SCORE DISTRIBUTION
-========================= */
-
-.dist{
-  display:flex;
-  height:18px;
-  overflow:hidden;
-  margin:22px 0 12px;
-  border-radius:999px;
-  background:#202631;
+.chip{
+ border-radius:999px;
+ padding:6px 12px;
+ font-size:11px;
+ background:transparent;
 }
 
-.dist span{
-  height:100%;
-  cursor:pointer;
-  transition:.15s;
+.section{
+ margin-top:14px;
 }
 
-.dist span:hover{
-  filter:brightness(1.2);
+.section-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:9px;
 }
 
-.dist-labels{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:5px;
+.section-title{
+ font-size:15px;
+ font-weight:700;
 }
 
-.dist-item{
-  padding:8px;
-  background:#141a23;
-  border-radius:7px;
-  text-align:center;
+.section-sub{
+ color:var(--muted);
+ font-size:10px;
+ margin-top:3px;
 }
 
-.dist-item strong{
-  display:block;
-  font-family:"IBM Plex Sans",sans-serif;
-  font-size:15px;
+.hidden{display:none!important}
+
+/* HEATMAP */
+
+.heatmap{
+ overflow:hidden;
 }
 
-.dist-item small{
-  color:#697484;
-  font-size:8px;
+.heat-head{
+ padding:17px 18px;
+ border-bottom:1px solid var(--line);
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:15px;
 }
 
-/* =========================
-   DRAWER
-========================= */
-
-.mask{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:150;
-  background:rgba(0,0,0,.68);
-  backdrop-filter:blur(5px);
+.heat-title{
+ font-size:16px;
+ font-weight:700;
 }
 
-.mask.show{
-  display:block;
+.heat-sub{
+ color:var(--muted);
+ font-size:10px;
+ margin-top:4px;
 }
 
-.drawer{
-  position:fixed;
-  z-index:160;
-  top:0;
-  bottom:0;
-  right:0;
-  width:min(470px,100%);
-  padding:18px;
-  overflow:auto;
-  background:#0d1118;
-  border-left:1px solid var(--line2);
-  box-shadow:-20px 0 70px rgba(0,0,0,.5);
-  transform:translateX(110%);
-  transition:.25s ease;
+.heat-count{
+ color:#a5adba;
+ font-family:"IBM Plex Sans",sans-serif;
+ font-size:12px;
+ direction:ltr;
 }
 
-.drawer.show{
-  transform:none;
+.heat-body{
+ padding:13px;
 }
 
-.drawer-close{
-  border:1px solid var(--line);
-  background:#151a23;
-  color:#aab3bf;
-  border-radius:8px;
-  padding:6px 10px;
-  font-size:10px;
+.category-block{
+ margin-bottom:16px;
 }
 
-.drawer h2{
-  margin:18px 0 4px;
-  font-size:20px;
+.category-block:last-child{margin-bottom:0}
+
+.category-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:6px;
+ padding:0 3px;
 }
 
-.drawer-sub{
-  color:#717c8d;
-  font-size:10px;
+.category-name{
+ font-size:12px;
+ font-weight:700;
 }
 
-.fund-row{
-  margin-top:12px;
-  padding:13px;
-  background:#131923;
-  border:1px solid var(--line);
-  border-radius:10px;
+.category-meta{
+ color:#6f798a;
+ font-size:10px;
 }
 
-.fund-row-name{
-  font-size:12px;
-  font-weight:700;
+.tiles{
+ display:grid;
+ grid-template-columns:repeat(auto-fill,minmax(145px,1fr));
+ gap:3px;
 }
 
-.fund-row-meta{
-  margin-top:3px;
-  color:#717c8d;
-  font-size:9px;
+.tile{
+ min-height:82px;
+ border-radius:6px;
+ padding:9px 10px;
+ cursor:pointer;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ overflow:hidden;
+ transition:.15s ease;
 }
 
-.fund-metrics{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:4px;
-  margin-top:10px;
+.tile:hover{
+ transform:scale(1.025);
+ filter:brightness(1.12);
+ box-shadow:0 12px 30px rgba(0,0,0,.35);
+ z-index:3;
+}
+
+.tile-name{
+ font-size:11px;
+ line-height:1.35;
+ font-weight:600;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+}
+
+.tile-return{
+ font-family:"IBM Plex Sans",sans-serif;
+ font-size:19px;
+ font-weight:700;
+ direction:ltr;
+ text-align:right;
+ margin-top:5px;
+}
+
+.tile-score{
+ font-family:"IBM Plex Sans",sans-serif;
+ font-size:9px;
+ opacity:.68;
+ direction:ltr;
+ text-align:right;
+ margin-top:3px;
+}
+
+.legend{
+ display:flex;
+ flex-wrap:wrap;
+ gap:13px;
+ padding:11px 16px 14px;
+ border-top:1px solid var(--line);
+ color:#8993a5;
+ font-size:10px;
+}
+
+.legend span{
+ display:flex;
+ align-items:center;
+ gap:5px;
+}
+
+.legend i{
+ width:10px;
+ height:10px;
+ border-radius:3px;
+ display:inline-block;
+}
+
+/* CARDS */
+
+.cards{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
+
+.cat-card{
+ padding:16px;
+ cursor:pointer;
+ transition:.2s ease;
+}
+
+.cat-card:hover{
+ transform:translateY(-3px);
+ box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+
+.cat-card h3{
+ margin:0 0 9px;
+ font-size:14px;
 }
 
 .metric{
-  padding:8px 5px;
-  text-align:center;
-  background:#0e131a;
-  border-radius:6px;
+ display:flex;
+ justify-content:space-between;
+ border-bottom:1px solid var(--line);
+ padding:7px 0;
+ font-size:11px;
 }
 
-.metric label{
-  display:block;
-  color:#697484;
-  font-size:8px;
+.metric:last-child{border-bottom:0}
+
+.muted{color:var(--muted)}
+
+.green{color:var(--green2)}
+.red{color:#f87171}
+
+/* TREEMAP */
+
+.treemap{
+ position:relative;
+ width:100%;
+ min-height:620px;
+ background:#090d14;
+ border-radius:16px;
+ overflow:hidden;
+ border:1px solid var(--line);
 }
 
-.metric strong{
-  display:block;
-  margin-top:3px;
-  font-family:"IBM Plex Sans",sans-serif;
-  font-size:12px;
-  direction:ltr;
+.tm{
+ position:absolute;
+ border:1px solid #090d14;
+ overflow:hidden;
+ cursor:pointer;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ text-align:center;
+ color:#fff;
+}
+
+.tm-name{
+ padding:2px 5px;
+ max-width:100%;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+ font-size:11px;
+ font-weight:600;
+}
+
+.tm-return{
+ font-family:"IBM Plex Sans",sans-serif;
+ font-size:16px;
+ font-weight:800;
+ direction:ltr;
+}
+
+/* EXTRA */
+
+.extra-grid{
+ display:grid;
+ grid-template-columns:1.15fr .85fr;
+ gap:10px;
+}
+
+.box{
+ padding:15px;
+}
+
+.axis-grid{
+ display:grid;
+ grid-template-columns:repeat(5,1fr);
+ gap:7px;
+ margin-top:10px;
+}
+
+.axis{
+ background:#151b27;
+ border:1px solid var(--line);
+ border-radius:10px;
+ padding:11px;
+}
+
+.axis-label{
+ color:var(--muted);
+ font-size:10px;
+}
+
+.axis-value{
+ font-family:"IBM Plex Sans",sans-serif;
+ font-size:20px;
+ font-weight:700;
+ margin-top:5px;
+}
+
+.axis-name{
+ color:#b3bac6;
+ font-size:9px;
+ margin-top:4px;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+}
+
+.dist{
+ display:flex;
+ height:18px;
+ border-radius:99px;
+ overflow:hidden;
+ background:#222936;
+ margin:20px 0 10px;
+}
+
+.dist i{height:100%;cursor:pointer}
+
+.dist-label{
+ color:var(--muted);
+ font-size:10px;
+ line-height:2;
+}
+
+/* DRAWER */
+
+.mask{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.7);
+ backdrop-filter:blur(5px);
+ display:none;
+ z-index:150;
+}
+
+.mask.on{display:block}
+
+.drawer{
+ position:fixed;
+ top:0;
+ right:0;
+ bottom:0;
+ width:min(480px,100%);
+ background:#0d121b;
+ border-left:1px solid var(--line);
+ z-index:200;
+ transform:translateX(110%);
+ transition:.25s ease;
+ overflow:auto;
+ padding:18px;
+}
+
+.drawer.on{transform:none}
+
+.drawer-close{
+ margin-bottom:14px;
+}
+
+.fund-row{
+ padding:12px 0;
+ border-bottom:1px solid var(--line);
+}
+
+.fund-row b{
+ display:block;
+ font-size:12px;
+}
+
+.fund-meta{
+ color:var(--muted);
+ font-size:10px;
+ margin:4px 0;
+}
+
+.fund-data{
+ font-family:"IBM Plex Sans Arabic",sans-serif;
+ font-size:10px;
+ line-height:1.8;
 }
 
 .fund-link{
-  display:inline-block;
-  margin-top:9px;
-  font-size:9px;
+ display:inline-block;
+ margin-top:4px;
+ color:var(--green2);
+ font-size:10px;
+ text-decoration:none;
 }
 
-/* =========================
-   STATES
-========================= */
+/* ERROR */
+
+.error-box{
+ padding:22px;
+ border:1px solid rgba(239,68,68,.25);
+ background:rgba(127,29,29,.12);
+ border-radius:14px;
+ color:#fca5a5;
+}
+
+.error-box strong{
+ display:block;
+ color:#fff;
+ margin-bottom:7px;
+}
 
 .loading{
-  padding:50px;
-  text-align:center;
-  color:#788393;
-  font-size:11px;
+ padding:35px;
+ text-align:center;
+ color:var(--muted);
 }
 
-.error{
-  padding:18px;
-  background:rgba(239,68,68,.08);
-  border:1px solid rgba(239,68,68,.2);
-  color:#fca5a5;
-  border-radius:10px;
-  font-size:11px;
+.spinner{
+ width:22px;
+ height:22px;
+ border:2px solid #283140;
+ border-top-color:var(--green);
+ border-radius:50%;
+ animation:spin .8s linear infinite;
+ margin:0 auto 10px;
 }
 
-.empty{
-  padding:50px;
-  text-align:center;
-  color:#697484;
-  font-size:11px;
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:950px){
+ .filters{grid-template-columns:repeat(3,1fr);position:static}
+ .kpis{grid-template-columns:repeat(2,1fr)}
+ .cards{grid-template-columns:repeat(2,1fr)}
+ .extra-grid{grid-template-columns:1fr}
+ .axis-grid{grid-template-columns:repeat(3,1fr)}
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:1100px){
-  .filters{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .kpis{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .cards{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .analytics{
-    grid-template-columns:1fr;
-  }
-}
-
-@media(max-width:700px){
-  .topbar{
-    padding:0 12px;
-  }
-
-  .brand{
-    font-size:12px;
-  }
-
-  .nav{
-    display:none;
-  }
-
-  .page{
-    padding:20px 11px 40px;
-  }
-
-  h1{
-    font-size:22px;
-  }
-
-  .filter-shell{
-    position:relative;
-    top:auto;
-  }
-
-  .filters{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .filters .wide{
-    grid-column:1/-1;
-  }
-
-  .kpis{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .kpi{
-    min-height:85px;
-    padding:12px;
-  }
-
-  .kpi-value{
-    font-size:18px;
-  }
-
-  .viewbar{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .tiles{
-    grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
-  }
-
-  .tile{
-    min-height:72px;
-  }
-
-  .tile-return{
-    font-size:16px;
-  }
-
-  .cards{
-    grid-template-columns:1fr;
-  }
-
-  .axes{
-    grid-template-columns:repeat(2,1fr);
-  }
-}
-
-@media(max-width:430px){
-  .filters{
-    grid-template-columns:1fr;
-  }
-
-  .filters .wide{
-    grid-column:auto;
-  }
-
-  .kpis{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .kpi-value{
-    font-size:16px;
-  }
-
-  .tiles{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .tile{
-    min-height:76px;
-  }
-
-  .dist-labels{
-    grid-template-columns:repeat(2,1fr);
-  }
+@media(max-width:620px){
+ header{padding:0 12px}
+ nav{gap:9px}
+ nav a{font-size:10px}
+ .page{padding:18px 10px 40px}
+ h1{font-size:22px}
+ .hero{align-items:flex-start;flex-direction:column}
+ .filters{grid-template-columns:1fr 1fr}
+ .filters input{grid-column:1/-1}
+ .kpis{grid-template-columns:1fr 1fr}
+ .cards{grid-template-columns:1fr}
+ .axis-grid{grid-template-columns:1fr 1fr}
+ .tiles{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
 }
 </style>
 </head>
 
 <body>
 
-<header class="topbar">
-  <div class="brand">
-    <span class="brand-dot"></span>
-    <span>Khater Funds Radar</span>
-  </div>
+<header>
+ <div class="logo">Khater Funds Radar</div>
 
-  <nav class="nav">
-    <a href="./index.html">البداية</a>
-    <a href="./map.html">البوصلة</a>
-    <a href="./funds.html">الصناديق</a>
-    <a class="active" href="./categories.html">الفئات</a>
-    <a href="./macro.html">الاقتصاد</a>
-  </nav>
+ <nav>
+  <a href="./index.html">البداية</a>
+  <a href="./map.html">البوصلة</a>
+  <a href="./funds.html">الصناديق</a>
+  <a class="active" href="./categories.html">الفئات</a>
+  <a href="./macro.html">الاقتصاد</a>
+ </nav>
 </header>
 
 <main class="page">
 
-  <section class="hero">
-    <div class="eyebrow">MARKET INTELLIGENCE</div>
-    <h1>خريطة فئات الصناديق</h1>
-    <p>
-      مقارنة مباشرة بين الصناديق حسب الفئة والأفق المختار،
-      باستخدام بيانات الأداء الرسمية وSmart Score V3.
-    </p>
-  </section>
+ <div class="hero">
+  <div>
+   <h1>خريطة فئات الصناديق</h1>
+   <p>مقارنة أداء الصناديق داخل فئاتها — بيانات فعلية من Supabase فقط.</p>
+  </div>
 
-  <section class="filter-shell">
-    <div class="filters">
+  <div class="status">
+   <span class="dot" id="statusDot"></span>
+   <span id="statusText">جاري الاتصال بقاعدة البيانات...</span>
+  </div>
+ </div>
 
-      <div class="field">
-        <label>الفئة الرئيسية</label>
-        <select id="filterCategory">
-          <option value="">كل الفئات</option>
-        </select>
-      </div>
+ <div class="panel filters">
 
-      <div class="field">
-        <label>التصنيف الأصلي</label>
-        <select id="filterRaw">
-          <option value="">كل التصنيفات</option>
-        </select>
-      </div>
+  <select id="category">
+   <option value="">كل الفئات</option>
+  </select>
 
-      <div class="field">
-        <label>مدير الاستثمار</label>
-        <input id="filterManager" placeholder="ابحث باسم المدير">
-      </div>
+  <select id="classification">
+   <option value="">كل التصنيفات</option>
+  </select>
 
-      <div class="field">
-        <label>Smart Score</label>
-        <select id="filterScore">
-          <option value="">كل الدرجات</option>
-          <option value="90">90+</option>
-          <option value="75">75–89.9</option>
-          <option value="50">50–74.9</option>
-          <option value="0">&lt;50</option>
-          <option value="na">بلا درجة</option>
-        </select>
-      </div>
+  <input id="manager" placeholder="ابحث باسم مدير الاستثمار">
 
-      <div class="field">
-        <label>Data Tier</label>
-        <select id="filterTier">
-          <option value="">كل المستويات</option>
-        </select>
-      </div>
+  <select id="scoreRange">
+   <option value="">كل الدرجات</option>
+   <option value="90">90–100</option>
+   <option value="75">75–89</option>
+   <option value="50">50–74</option>
+   <option value="0">&lt;50</option>
+   <option value="na">بلا درجة</option>
+  </select>
 
-      <div class="field">
-        <label>الأفق</label>
-        <select id="horizon"></select>
-      </div>
+  <select id="tier">
+   <option value="">كل مستويات البيانات</option>
+  </select>
 
-      <button class="reset" id="reset">إعادة ضبط</button>
+  <select id="horizon">
+   <option value="last12m">12 شهر</option>
+   <option value="ytd">YTD</option>
+   <option value="4weeks">شهر</option>
+   <option value="3y">3 سنوات</option>
+   <option value="5y">5 سنوات</option>
+  </select>
 
-    </div>
-  </section>
+  <button id="reset">إعادة الضبط</button>
 
-  <section class="kpis" id="kpis">
-    <div class="loading">جاري تحميل البيانات...</div>
-  </section>
+ </div>
 
-  <div class="viewbar">
-    <div class="views">
-      <button data-view="heat" class="active">Heatmap</button>
-      <button data-view="cards">الفئات</button>
-      <button data-view="tree">Treemap</button>
-    </div>
+ <div id="loading" class="panel loading">
+  <div class="spinner"></div>
+  جاري تحميل البيانات...
+ </div>
 
-    <div class="status" id="status">—</div>
+ <div id="error" class="error-box hidden"></div>
+
+ <div id="app" class="hidden">
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="views">
+   <button class="active" data-view="heat">مصفوفة الأداء</button>
+   <button data-view="tree">Treemap</button>
+   <button data-view="cards">شبكة الفئات</button>
   </div>
 
   <div class="chips" id="chips"></div>
 
-  <!-- HEATMAP -->
-  <section id="viewHeat">
-    <div class="heatmap-shell">
+  <section id="viewHeat" class="section"></section>
 
-      <div class="heat-head">
-        <div>
-          <div class="heat-title">خريطة أداء الصناديق</div>
-          <div class="heat-sub" id="heatDescription">
-            كل مربع يمثل صندوقًا واحدًا
-          </div>
-        </div>
+  <section id="viewTree" class="section hidden"></section>
 
-        <div class="heat-count" id="heatCount">—</div>
+  <section id="viewCards" class="section hidden"></section>
+
+  <section id="extra" class="section">
+
+   <div class="extra-grid">
+
+    <div class="panel box">
+
+     <div class="section-head">
+      <div>
+       <div class="section-title">أعلى قيمة لكل محور Smart Score</div>
+       <div class="section-sub">
+        من القيم المخزنة فعليًا في fund_smartscore_latest
+       </div>
       </div>
+     </div>
 
-      <div class="heat-body" id="heatBody">
-        <div class="loading">جاري بناء الخريطة...</div>
-      </div>
-
-      <div class="legend">
-        <span><i style="background:#34d399"></i> أداء قوي</span>
-        <span><i style="background:#07805f"></i> إيجابي</span>
-        <span><i style="background:#303640"></i> محايد</span>
-        <span><i style="background:#991b1b"></i> سلبي</span>
-        <span><i style="background:#1b2029"></i> لا توجد بيانات</span>
-      </div>
+     <div class="axis-grid" id="axes"></div>
 
     </div>
-  </section>
 
-  <!-- CARDS -->
-  <section id="viewCards" hidden>
-    <div class="cards" id="cards"></div>
-  </section>
+    <div class="panel box">
 
-  <!-- TREEMAP -->
-  <section id="viewTree" hidden>
-    <div class="tree-shell">
-      <div id="treemap"></div>
-    </div>
-  </section>
+     <div class="section-title">توزيع Smart Score</div>
 
-  <!-- ANALYTICS -->
-  <section class="analytics">
+     <div class="dist" id="distribution"></div>
 
-    <div class="panel">
-      <div class="panel-title">أعلى قيمة لكل محور Smart Score</div>
-      <div class="panel-sub">
-        أعلى قيمة فعلية مخزنة في Smart Score V3 بين الصناديق الظاهرة.
-      </div>
+     <div class="dist-label" id="distributionLabel"></div>
 
-      <div class="axes" id="axes"></div>
     </div>
 
-    <div class="panel">
-      <div class="panel-title">توزيع Smart Score V3</div>
-      <div class="panel-sub">
-        توزيع الصناديق الظاهرة حسب الدرجة.
-      </div>
-
-      <div class="dist" id="distribution"></div>
-      <div class="dist-labels" id="distributionLabels"></div>
-    </div>
+   </div>
 
   </section>
 
-  <section class="panel" style="margin-top:10px">
-    <div class="panel-title">المخاطرة مقابل العائد</div>
-    <div class="panel-sub">
-      الصناديق التي لديها Risk Score وعائد متاح للأفق المختار.
-    </div>
-
-    <div class="chart-wrap">
-      <canvas id="scatter"></canvas>
-    </div>
-  </section>
+ </div>
 
 </main>
 
@@ -1199,12 +777,398 @@ input:focus{
 <script>
 "use strict";
 
-/* ============================================================
-   CONFIG
-============================================================ */
+/*
+  ============================================================
+  KHATER FUNDS RADAR — CATEGORIES
+  Supabase project:
+  jlaqotegkeszuyqzdham
+  ============================================================
+*/
+
+const SUPABASE_URL =
+ "https://jlaqotegkeszuyqzdham.supabase.co";
+
+/*
+  لا نضع Service Role Key داخل الصفحة.
+  المفتاح يجب أن يأتي من config.js:
+  
+  window.KHATER = {
+    url: "https://jlaqotegkeszuyqzdham.supabase.co",
+    key: "YOUR_ANON_KEY"
+  };
+
+  ويمكن أيضًا استعمال:
+  window.SUPABASE_URL
+  window.SUPABASE_ANON_KEY
+*/
 
 const CFG = window.KHATER || {};
 
-const HORIZONS = [
-  {key:"4weeks", label:"شهر", aliases:["4weeks","4week","1m","1month","month","monthly"]},
-  {key:"ytd"
+const API_URL =
+ CFG.url ||
+ window.SUPABASE_URL ||
+ SUPABASE_URL;
+
+const API_KEY =
+ CFG.key ||
+ CFG.anonKey ||
+ window.SUPABASE_ANON_KEY ||
+ "";
+
+const HORIZONS = {
+ last12m:"12 شهر",
+ ytd:"YTD",
+ "4weeks":"شهر",
+ "3y":"3 سنوات",
+ "5y":"5 سنوات"
+};
+
+const CATEGORY_COLORS = {
+ "صناديق الأسهم":"#059669",
+ "صناديق النقد":"#0d9488",
+ "صناديق الدخل الثابت":"#2563eb",
+ "صناديق الذهب":"#d97706",
+ "صناديق المؤشرات":"#7c3aed",
+ "الصناديق المتوازنة":"#65a30d",
+ "صناديق خيرية":"#e11d48",
+ "صناديق محمية":"#4f46e5",
+ "فئات أخرى":"#6b7280"
+};
+
+/* ------------------------------------------------------------
+   Classification
+------------------------------------------------------------ */
+
+function normalizeCategory(value){
+
+ const c = String(value || "").toLowerCase();
+
+ if(c.includes("gold"))
+  return "صناديق الذهب";
+
+ if(c.includes("money market"))
+  return "صناديق النقد";
+
+ if(c.includes("fixed income") || c.includes("bond"))
+  return "صناديق الدخل الثابت";
+
+ if(
+   c.includes("balanced") ||
+   c.includes("mixed") ||
+   c.includes("allocator")
+ )
+  return "الصناديق المتوازنة";
+
+ if(
+   c.includes("index") ||
+   c.includes("etf") ||
+   c.includes("traded") ||
+   c.includes("passive")
+ )
+  return "صناديق المؤشرات";
+
+ if(
+   c.includes("equity") ||
+   c.includes("thematic") ||
+   c.includes("sector")
+ )
+  return "صناديق الأسهم";
+
+ if(
+   c.includes("protected") ||
+   c.includes("guaranteed")
+ )
+  return "صناديق محمية";
+
+ if(c.includes("charitable"))
+  return "صناديق خيرية";
+
+ return "فئات أخرى";
+}
+
+function isIslamic(category){
+ return /islam|sharia|شرع/i.test(category || "");
+}
+
+/* ------------------------------------------------------------
+   Helpers
+------------------------------------------------------------ */
+
+function safeNumber(value){
+ const n = Number(value);
+ return Number.isFinite(n) ? n : null;
+}
+
+function formatNumber(value, digits=1){
+ const n = safeNumber(value);
+ if(n === null) return "—";
+
+ return n.toLocaleString("en-US",{
+   maximumFractionDigits:digits,
+   minimumFractionDigits:digits
+ });
+}
+
+function formatReturn(value){
+ const n = safeNumber(value);
+
+ if(n === null) return "—";
+
+ return (n >= 0 ? "+" : "") +
+   n.toLocaleString("en-US",{
+     maximumFractionDigits:1
+   }) +
+   "%";
+}
+
+/*
+  مهم:
+  العائد يأتي من metadata.scores[HORIZON].return_pct
+  لأن هذه هي البنية الفعلية الموجودة في funds.
+*/
+function getReturn(fund,horizon){
+
+ const scores = fund.metadata &&
+                fund.metadata.scores;
+
+ if(!scores) return null;
+
+ const item = scores[horizon];
+
+ if(!item) return null;
+
+ return safeNumber(item.return_pct);
+}
+
+function getHorizonScore(fund,horizon){
+
+ const scores = fund.metadata &&
+                fund.metadata.scores;
+
+ if(!scores || !scores[horizon])
+  return null;
+
+ return safeNumber(scores[horizon].score);
+}
+
+function scoreMatches(score,range){
+
+ if(!range) return true;
+
+ if(range === "na")
+  return score === null;
+
+ if(score === null)
+  return false;
+
+ if(range === "90")
+  return score >= 90;
+
+ if(range === "75")
+  return score >= 75 && score < 90;
+
+ if(range === "50")
+  return score >= 50 && score < 75;
+
+ return score < 50;
+}
+
+/* ------------------------------------------------------------
+   Heatmap colors
+------------------------------------------------------------ */
+
+function heatColor(value){
+
+ if(value === null)
+  return "#202630";
+
+ if(value < -20)
+  return "#7f1d1d";
+
+ if(value < -10)
+  return "#991b1b";
+
+ if(value < -5)
+  return "#b4232d";
+
+ if(value < 0)
+  return "#6b252b";
+
+ if(value < 5)
+  return "#303640";
+
+ if(value < 15)
+  return "#064e3b";
+
+ if(value < 25)
+  return "#075f49";
+
+ if(value < 40)
+  return "#07805f";
+
+ if(value < 60)
+  return "#0aa978";
+
+ if(value < 80)
+  return "#21c58d";
+
+ return "#34d399";
+}
+
+function heatText(value){
+ return value !== null && value >= 60
+   ? "#03130e"
+   : "#ffffff";
+}
+
+/* ------------------------------------------------------------
+   Supabase REST
+------------------------------------------------------------ */
+
+async function fetchTable(table,select){
+
+ if(!API_KEY){
+   throw new Error(
+     "لم يتم العثور على Supabase Anon Key في config.js"
+   );
+ }
+
+ const url =
+   API_URL.replace(/\/$/,"") +
+   "/rest/v1/" +
+   table +
+   "?select=" +
+   encodeURIComponent(select);
+
+ const response = await fetch(url,{
+   method:"GET",
+   headers:{
+     "apikey":API_KEY,
+     "Authorization":"Bearer " + API_KEY,
+     "Accept":"application/json"
+   }
+ });
+
+ const text = await response.text();
+
+ if(!response.ok){
+   throw new Error(
+     "Supabase HTTP " +
+     response.status +
+     ": " +
+     text.slice(0,500)
+   );
+ }
+
+ try{
+   return JSON.parse(text);
+ }catch{
+   throw new Error(
+     "Supabase أعاد استجابة غير صالحة من جدول " + table
+   );
+ }
+}
+
+/* ------------------------------------------------------------
+   Load
+------------------------------------------------------------ */
+
+async function loadData(){
+
+ try{
+
+   setStatus(
+     "جاري تحميل بيانات الصناديق...",
+     false
+   );
+
+   const [
+     funds,
+     navs,
+     smartScores
+   ] = await Promise.all([
+
+     fetchTable(
+       "funds",
+       [
+         "fund_id",
+         "canonical_name",
+         "management_company",
+         "category",
+         "metadata",
+         "active",
+         "price_update_url",
+         "confidence"
+       ].join(",")
+     ),
+
+     fetchTable(
+       "nav_official",
+       [
+         "fund_id",
+         "nav",
+         "currency",
+         "as_of_date",
+         "source_id",
+         "source_url",
+         "verified_at"
+       ].join(",")
+     ),
+
+     fetchTable(
+       "fund_smartscore_latest",
+       [
+         "fund_id",
+         "canonical_name",
+         "category",
+         "data_tier",
+         "data_quality",
+         "score_as_of",
+         "raw_score",
+         "track_factor",
+         "final_score",
+         "rating",
+         "qualified_rank",
+         "peer_cohort_size",
+         "data_confidence",
+         "qualification_status",
+         "score_explanation",
+         "performance_score",
+         "risk_score",
+         "benchmark_score",
+         "consistency_score",
+         "inflation_score",
+         "risk_method",
+         "signal_as_of",
+         "latest_day_change_pct",
+         "latest_signal_status"
+       ].join(",")
+     )
+
+   ]);
+
+   if(!Array.isArray(funds))
+     throw new Error("جدول funds لم يُرجع مصفوفة.");
+
+   if(!Array.isArray(navs))
+     throw new Error("جدول nav_official لم يُرجع مصفوفة.");
+
+   if(!Array.isArray(smartScores))
+     throw new Error(
+       "جدول fund_smartscore_latest لم يُرجع مصفوفة."
+     );
+
+   /*
+      أحدث NAV لكل صندوق
+   */
+   const navMap = {};
+
+   navs.forEach(row => {
+
+     const old = navMap[row.fund_id];
+
+     if(
+       !old ||
+       String(row.as_of_date || "") >
+       String(old.as_of_date || "")
+     )
