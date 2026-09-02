@@ -236,7 +236,8 @@ function color(v){
       const width=container.clientWidth||Math.min(1200,window.innerWidth-36);
       const height=650;
       const rootData={name:"Root",children:Object.entries(groups).map(([g,list])=>{
-        const kids=list.filter(f=>ret(f,h)!=null).map(f=>({...f,category_name:g,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
+        const kids=list.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h)).slice(0,8)
+          .map(f=>({...f,category_name:g,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
         return {name:g,children:kids};
       }).filter(c=>c.children.length)};
       const root=d3.hierarchy(rootData).sum(d=>{
@@ -251,7 +252,7 @@ function color(v){
       const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
       const cats=svg.selectAll("g.category").data(root.children||[]).enter().append("g").attr("class","category").attr("transform",d=>`translate(${d.x0},${d.y0})`);
       cats.append("rect").attr("width",d=>d.x1-d.x0).attr("height",22).attr("fill","rgba(12,13,20,0.9)");
-      cats.append("text").attr("x",8).attr("y",15).text(d=>(d.x1-d.x0)<130?"":d.data.name).attr("fill","#9CA3AF").attr("font-size","11px").attr("font-weight","bold");
+      cats.append("text").attr("x",8).attr("y",15).text(d=>(d.x1-d.x0)<150?"":d.data.name).attr("fill","#9CA3AF").attr("font-size","11px").attr("font-weight","bold");
       const leaves=cats.selectAll("g.fund").data(d=>d.leaves()).enter().append("g").attr("class","fund")
         .attr("transform",d=>`translate(${d.x0-d.parent.x0},${d.y0-d.parent.y0})`)
         .style("cursor","pointer")
