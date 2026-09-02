@@ -19,7 +19,7 @@ a{color:var(--ok);text-decoration:none}
 header.top{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line);position:sticky;top:0;backdrop-filter:blur(12px);z-index:20}
 nav a{color:var(--mute);margin-inline-start:12px;font-size:13px}
 nav a.on{color:#fff}
-.page{padding:16px 18px 60px;max-width:1240px;margin:0 auto}
+.page{padding:12px 16px 40px;max-width:100%;margin:0 auto}
 .glass{background:var(--card);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(12px)}
 .float{position:sticky;top:60px;z-index:15;display:flex;flex-wrap:wrap;gap:8px;padding:10px;margin-bottom:12px}
 select,input,button{background:#161821;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
@@ -233,10 +233,11 @@ function color(v){
         <div class="kpi glass">أعلى عائد للأفق<b>${top?num(ret(top,h))+"%":"غير متاح"}</b><div class="sub">${top?top.name:""}</div></div>`;
 
       const host=document.getElementById("v-tree");
-      host.innerHTML='<div id="treemap-canvas"></div>';
+      host.innerHTML='<div id="cat-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px"></div><div id="treemap-canvas"></div>';
+      document.getElementById("cat-chips").innerHTML=Object.keys(groups).map(g=>`<span class="glass" style="padding:4px 8px;font-size:12px">${g}</span>`).join('');
       const container=document.getElementById("treemap-canvas");
       const width=container.clientWidth||Math.min(1200,window.innerWidth-36);
-      const height=Math.max(520, Math.min(window.innerHeight-220, 860));
+      const height=Math.max(560, window.innerHeight-190);
       const rootData={name:"Root",children:Object.entries(groups).map(([g,list])=>{
         const kids=list.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h)).slice(0,8)
           .map(f=>({...f,category_name:g,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
@@ -248,13 +249,13 @@ function color(v){
         if(v==null||isNaN(v)) return 0;
         return Math.max(v, 0.3);
       }).sort((a,b)=>(b.value||0)-(a.value||0));
-      d3.treemap().size([width,height]).paddingOuter(4).paddingTop(28).paddingInner(2).tile(d3.treemapSquarify)(root);
+      d3.treemap().size([width,height]).paddingOuter(4).paddingTop(26).paddingInner(2).tile(d3.treemapSquarify)(root);
       const valid=rows.map(f=>ret(f,h)).filter(v=>v!=null&&!isNaN(v));
       const colorScale=d3.scaleLinear().domain([d3.min(valid)||0,0,d3.max(valid)||50]).range(["#EF4444","#1F2937","#10B981"]);
       const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
       const cats=svg.selectAll("g.category").data(root.children||[]).enter().append("g").attr("class","category").attr("transform",d=>`translate(${d.x0},${d.y0})`).attr("clip-path",d=>`inset(0)`);
-      cats.append("rect").attr("width",d=>d.x1-d.x0).attr("height",22).attr("fill","rgba(12,13,20,0.9)");
-      cats.append("text").attr("x",8).attr("y",15).text(d=>(d.x1-d.x0)<150?"":d.data.name).attr("fill","#9CA3AF").attr("font-size","11px").attr("font-weight","bold");
+      cats.append("rect").attr("width",d=>d.x1-d.x0).attr("height",22).attr("fill","rgba(12,13,20,0.92)");
+      cats.filter(d=>(d.x1-d.x0)>=180).append("text").attr("x",8).attr("y",15).text(d=>d.data.name).attr("fill","#E5E7EB").attr("font-size","13px").attr("font-weight","700");
       const leaves=cats.selectAll("g.fund").data(d=>d.leaves()).enter().append("g").attr("class","fund")
         .attr("transform",d=>`translate(${d.x0-d.parent.x0},${d.y0-d.parent.y0})`)
         .style("cursor","pointer")
@@ -272,10 +273,10 @@ function color(v){
       leaves.each(function(d){
         const tw=d.x1-d.x0, th=d.y1-d.y0, g=d3.select(this);
         const rv=d.data.returns[h], retStr=rv==null?"—":num(rv)+"%";
-        if(tw>=100 && th>=48){
-          g.append("text").attr("x",4).attr("y",14).text(d.data.fund_name).attr("fill","#fff").attr("font-size","10px").style("pointer-events","none")
+        if(tw>=88 && th>=42){
+          g.append("text").attr("x",4).attr("y",14).text(d.data.fund_name).attr("fill","#fff").attr("font-size","12px").attr("font-weight","600").style("pointer-events","none")
             .each(function(){let txt=d.data.fund_name; while(this.getComputedTextLength()>tw-8 && txt.length){txt=txt.slice(0,-1); this.textContent=txt+"…";}});
-          g.append("text").attr("x",4).attr("y",28).text(retStr).attr("fill","rgba(255,255,255,.9)").attr("font-size","11px").attr("font-weight","bold").style("pointer-events","none");
+          g.append("text").attr("x",4).attr("y",28).text(retStr).attr("fill","rgba(255,255,255,.9)").attr("font-size","15px").attr("font-weight","800").style("pointer-events","none");
          } else if(tw>=80 && th>=28){
           g.append("text").attr("x",4).attr("y",Math.min(16,th-4)).text(retStr).attr("fill","rgba(255,255,255,.9)").attr("font-size","10px").attr("font-weight","bold").style("pointer-events","none");
         }
