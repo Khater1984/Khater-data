@@ -1171,4 +1171,505 @@ async function loadData(){
        !old ||
        String(row.as_of_date || "") >
        String(old.as_of_date || "")
-     )
+     ) {
+       navMap[row.fund_id] = {
+         nav: safeNumber(row.nav),
+         currency: row.currency,
+         as_of_date: row.as_of_date,
+         source_url: row.source_url
+       };
+     }
+   });
+
+   // دمج البيانات
+   const fundsData = funds.map(fund => {
+     const navInfo = navMap[fund.fund_id] || {};
+     const smart = smartScores.find(s => s.fund_id === fund.fund_id) || {};
+     return {
+       ...fund,
+       nav: navInfo.nav,
+       currency: navInfo.currency,
+       as_of_date: navInfo.as_of_date,
+       smart: smart,
+       normalizedCategory: normalizeCategory(fund.category || '')
+     };
+   });
+
+   // تخزين البيانات العالمية
+   window.allFunds = fundsData;
+
+   // استدعاء دوال العرض
+   populateFilters(fundsData);
+   renderAll(fundsData);
+
+   // إخفاء التحميل وإظهار التطبيق
+   document.getElementById('loading').classList.add('hidden');
+   document.getElementById('app').classList.remove('hidden');
+   setStatus('تم تحميل البيانات بنجاح', true);
+
+ } catch (error) {
+   console.error(error);
+   document.getElementById('loading').classList.add('hidden');
+   const errorBox = document.getElementById('error');
+   errorBox.classList.remove('hidden');
+   errorBox.innerHTML = `<strong>⚠️ خطأ في التحميل</strong><br>${error.message}`;
+   setStatus('فشل التحميل', true);
+ }
+}
+
+/* ------------------------------------------------------------
+   UI Functions
+------------------------------------------------------------ */
+
+function setStatus(msg, isSuccess){
+ const dot = document.getElementById('statusDot');
+ const text = document.getElementById('statusText');
+ text.textContent = msg;
+ if(isSuccess === true){
+   dot.className = 'dot';
+ } else if(isSuccess === false){
+   dot.className = 'dot error';
+ }
+}
+
+/* ---------- Populate Filters ---------- */
+
+function populateFilters(data){
+ const catSelect = document.getElementById('category');
+ const classSelect = document.getElementById('classification');
+ const mgrInput = document.getElementById('manager');
+ const tierSelect = document.getElementById('tier');
+
+ // جمع القيم الفريدة
+ const categories = new Set();
+ const classifications = new Set();
+ const managers = new Set();
+ const tiers = new Set();
+
+ data.forEach(f => {
+   if(f.category) categories.add(f.category);
+   if(f.metadata?.classification) classifications.add(f.metadata.classification);
+   if(f.management_company) managers.add(f.management_company);
+   if(f.smart?.data_tier) tiers.add(f.smart.data_tier);
+ });
+
+ // املأ select category
+ catSelect.innerHTML = '<option value="">كل الفئات</option>';
+ categories.forEach(c => {
+   catSelect.innerHTML += `<option value="${c}">${c}</option>`;
+ });
+
+ // املأ select classification
+ classSelect.innerHTML = '<option value="">كل التصنيفات</option>';
+ classifications.forEach(c => {
+   classSelect.innerHTML += `<option value="${c}">${c}</option>`;
+ });
+
+ // املأ select tier
+ tierSelect.innerHTML = '<option value="">كل مستويات البيانات</option>';
+ tiers.forEach(t => {
+   tierSelect.innerHTML += `<option value="${t}">${t}</option>`;
+ });
+}
+
+/* ---------- Render All ---------- */
+
+function renderAll(data){
+ renderKPIs(data);
+ renderHeatmap(data);
+ renderTree(data);
+ renderCards(data);
+ renderAxes(data);
+ renderDistribution(data);
+ // تطبيق الفلاتر الافتراضية
+ applyFilters();
+}
+
+/* ---------- KPIs ---------- */
+
+function renderKPIs(data){
+ const horizon = document.getElementById('horizon').value;
+ const returns = data.map(f => getReturn(f, horizon)).filter(r => r !== null);
+ const total = data.length;
+ const avg = returns.length ? returns.reduce((a,b) => a + b, 0) / returns.length : null;
+ const max = returns.length ? Math.max(...returns) : null;
+ const min = returns.length ? Math.min(...returns) : null;
+
+ const kpiContainer = document.getElementById('kpis');
+ kpiContainer.innerHTML = `
+   <div class="panel kpi">
+     <div class="kpi-label">عدد الصناديق</div>
+     <div class="kpi-value">${total}</div>
+   </div>
+   <div class="panel kpi">
+     <div class="kpi-label">متوسط العائد (${HORIZONS[horizon] || horizon})</div>
+     <div class="kpi-value">${avg !== null ? formatReturn(avg) : '—'}</div>
+   </div>
+   <div class="panel kpi">
+     <div class="kpi-label">أعلى عائد</div>
+     <div class="kpi-value green">${max !== null ? formatReturn(max) : '—'}</div>
+   </div>
+   <div class="panel kpi">
+     <div class="kpi-label">أدنى عائد</div>
+     <div class="kpi-value red">${min !== null ? formatReturn(min) : '—'}</div>
+   </div>
+ `;
+}
+
+/* ---------- Heatmap ---------- */
+
+function renderHeatmap(data){
+ const horizon = document.getElementById('horizon').value;
+ const container = document.getElementById('viewHeat');
+ container.innerHTML = `<div class="panel heatmap"><div class="heat-head"><div><div class="heat-title">مصفوفة الأداء</div><div class="heat-sub">حسب الفئة والعائد لـ ${HORIZONS[horizon] || horizon}</div></div><div class="heat-count">${data.length} صندوق</div></div><div class="heat-body" id="heatBody"></div><div class="legend" id="heatLegend"></div></div>`;
+
+ const body = document.getElementById('heatBody');
+ const grouped = {};
+ data.forEach(f => {
+   const cat = f.normalizedCategory || 'فئات أخرى';
+   if(!grouped[cat]) grouped[cat] = [];
+   grouped[cat].push(f);
+ });
+
+ // ترتيب الفئات حسب متوسط العائد
+ const sortedCats = Object.keys(grouped).sort((a,b) => {
+   const avgA = grouped[a].reduce((s,f) => s + (getReturn(f, horizon) || 0), 0) / grouped[a].length;
+   const avgB = grouped[b].reduce((s,f) => s + (getReturn(f, horizon) || 0), 0) / grouped[b].length;
+   return avgB - avgA;
+ });
+
+ let html = '';
+ sortedCats.forEach(cat => {
+   const funds = grouped[cat];
+   const avgRet = funds.reduce((s,f) => s + (getReturn(f, horizon) || 0), 0) / funds.length;
+   html += `<div class="category-block"><div class="category-head"><span class="category-name">${cat}</span><span class="category-meta">${funds.length} صندوق | متوسط ${formatReturn(avgRet)}</span></div><div class="tiles">`;
+   // ترتيب الصناديق داخل الفئة تنازلياً حسب العائد
+   funds.sort((a,b) => (getReturn(b, horizon) || 0) - (getReturn(a, horizon) || 0));
+   funds.forEach(f => {
+     const ret = getReturn(f, horizon);
+     const color = heatColor(ret);
+     const textColor = heatText(ret);
+     const score = f.smart?.final_score ? safeNumber(f.smart.final_score) : null;
+     html += `<div class="tile" style="background:${color};color:${textColor}" data-fund-id="${f.fund_id}">
+       <div class="tile-name">${f.canonical_name || 'غير مسمى'}</div>
+       <div class="tile-return">${ret !== null ? formatReturn(ret) : '—'}</div>
+       ${score !== null ? `<div class="tile-score">درجة ${formatNumber(score,0)}</div>` : ''}
+     </div>`;
+   });
+   html += `</div></div>`;
+ });
+ body.innerHTML = html;
+
+ // إضافة وسيلة إيضاح
+ const legend = document.getElementById('heatLegend');
+ legend.innerHTML = `
+   <span><i style="background:#7f1d1d"></i> < -20%</span>
+   <span><i style="background:#991b1b"></i> -20% إلى -10%</span>
+   <span><i style="background:#b4232d"></i> -10% إلى -5%</span>
+   <span><i style="background:#6b252b"></i> -5% إلى 0%</span>
+   <span><i style="background:#303640"></i> 0% إلى 5%</span>
+   <span><i style="background:#064e3b"></i> 5% إلى 15%</span>
+   <span><i style="background:#075f49"></i> 15% إلى 25%</span>
+   <span><i style="background:#07805f"></i> 25% إلى 40%</span>
+   <span><i style="background:#0aa978"></i> 40% إلى 60%</span>
+   <span><i style="background:#21c58d"></i> 60% إلى 80%</span>
+   <span><i style="background:#34d399"></i> > 80%</span>
+ `;
+
+ // إضافة مستمعات على البلاطات لفتح الدرج
+ document.querySelectorAll('#heatBody .tile').forEach(el => {
+   el.addEventListener('click', function(){
+     const id = this.dataset.fundId;
+     openDrawer(id);
+   });
+ });
+}
+
+/* ---------- Treemap ---------- */
+
+function renderTree(data){
+ const horizon = document.getElementById('horizon').value;
+ const container = document.getElementById('viewTree');
+ container.innerHTML = `<div class="treemap" id="treemapContainer"></div>`;
+
+ const tmContainer = document.getElementById('treemapContainer');
+ const width = tmContainer.clientWidth || 800;
+ const height = 620;
+
+ // فلتر البيانات ذات العائد المعروف
+ const valid = data.filter(f => getReturn(f, horizon) !== null);
+ if(valid.length === 0){
+   tmContainer.innerHTML = '<div style="padding:30px;text-align:center;color:var(--muted)">لا توجد بيانات كافية لعرض Treemap</div>';
+   return;
+ }
+
+ // حساب المساحات حسب العائد المطلق (القيمة المطلقة) + إزاحة لتجنب الصفر
+ const totalArea = valid.reduce((sum, f) => {
+   const ret = Math.abs(getReturn(f, horizon) || 0) + 1;
+   return sum + ret;
+ }, 0);
+
+ let x = 0, y = 0;
+ const cols = 5;
+ const rows = Math.ceil(valid.length / cols);
+ const cellW = width / cols;
+ const cellH = height / rows;
+
+ valid.forEach((f, i) => {
+   const ret = getReturn(f, horizon);
+   const color = heatColor(ret);
+   const textColor = heatText(ret);
+   const col = i % cols;
+   const row = Math.floor(i / cols);
+   const el = document.createElement('div');
+   el.className = 'tm';
+   el.style.left = (col * cellW) + 'px';
+   el.style.top = (row * cellH) + 'px';
+   el.style.width = cellW + 'px';
+   el.style.height = cellH + 'px';
+   el.style.background = color;
+   el.style.color = textColor;
+   el.innerHTML = `
+     <div class="tm-name">${f.canonical_name || 'غير مسمى'}</div>
+     <div class="tm-return">${formatReturn(ret)}</div>
+   `;
+   el.dataset.fundId = f.fund_id;
+   el.addEventListener('click', function(){
+     openDrawer(this.dataset.fundId);
+   });
+   tmContainer.appendChild(el);
+ });
+}
+
+/* ---------- Cards ---------- */
+
+function renderCards(data){
+ const horizon = document.getElementById('horizon').value;
+ const container = document.getElementById('viewCards');
+ container.innerHTML = `<div class="cards" id="cardsContainer"></div>`;
+
+ const cardsContainer = document.getElementById('cardsContainer');
+ const grouped = {};
+ data.forEach(f => {
+   const cat = f.normalizedCategory || 'فئات أخرى';
+   if(!grouped[cat]) grouped[cat] = [];
+   grouped[cat].push(f);
+ });
+
+ let html = '';
+ Object.keys(grouped).forEach(cat => {
+   const funds = grouped[cat];
+   const avgRet = funds.reduce((s,f) => s + (getReturn(f, horizon) || 0), 0) / funds.length;
+   const best = funds.reduce((a,b) => (getReturn(a, horizon) || -Infinity) > (getReturn(b, horizon) || -Infinity) ? a : b);
+   const worst = funds.reduce((a,b) => (getReturn(a, horizon) || Infinity) < (getReturn(b, horizon) || Infinity) ? a : b);
+   html += `<div class="panel cat-card" data-category="${cat}">
+     <h3>${cat}</h3>
+     <div class="metric"><span class="muted">عدد الصناديق</span><span>${funds.length}</span></div>
+     <div class="metric"><span class="muted">متوسط العائد</span><span>${formatReturn(avgRet)}</span></div>
+     <div class="metric"><span class="muted">أفضل صندوق</span><span>${best ? best.canonical_name || 'غير مسمى' : '—'}</span></div>
+     <div class="metric"><span class="muted">أسوأ صندوق</span><span>${worst ? worst.canonical_name || 'غير مسمى' : '—'}</span></div>
+   </div>`;
+ });
+ cardsContainer.innerHTML = html;
+
+ // مستمع للنقر على البطاقة لعرض الصناديق التابعة لها في الدرج
+ document.querySelectorAll('.cat-card').forEach(el => {
+   el.addEventListener('click', function(){
+     const cat = this.dataset.category;
+     const funds = data.filter(f => (f.normalizedCategory || 'فئات أخرى') === cat);
+     if(funds.length){
+       openDrawerCategory(cat, funds);
+     }
+   });
+ });
+}
+
+/* ---------- Axes ---------- */
+
+function renderAxes(data){
+ const container = document.getElementById('axes');
+ // محاور smart score المتاحة
+ const axes = [
+   { key: 'performance_score', label: 'الأداء' },
+   { key: 'risk_score', label: 'المخاطرة' },
+   { key: 'benchmark_score', label: 'المقارنة' },
+   { key: 'consistency_score', label: 'الاستمرارية' },
+   { key: 'inflation_score', label: 'التضخم' }
+ ];
+
+ let html = '';
+ axes.forEach(ax => {
+   // أعلى قيمة موجودة لهذا المحور
+   let maxVal = null;
+   let maxFund = null;
+   data.forEach(f => {
+     const val = safeNumber(f.smart?.[ax.key]);
+     if(val !== null && (maxVal === null || val > maxVal)){
+       maxVal = val;
+       maxFund = f;
+     }
+   });
+   html += `<div class="axis"><div class="axis-label">${ax.label}</div><div class="axis-value">${maxVal !== null ? formatNumber(maxVal,0) : '—'}</div><div class="axis-name">${maxFund ? maxFund.canonical_name || 'غير مسمى' : '—'}</div></div>`;
+ });
+ container.innerHTML = html;
+}
+
+/* ---------- Distribution ---------- */
+
+function renderDistribution(data){
+ const container = document.getElementById('distribution');
+ const label = document.getElementById('distributionLabel');
+ // درجات smart score
+ const scores = data.map(f => safeNumber(f.smart?.final_score)).filter(s => s !== null);
+ if(scores.length === 0){
+   container.innerHTML = '';
+   label.textContent = 'لا توجد درجات لعرض التوزيع';
+   return;
+ }
+
+ const bins = [0, 20, 40, 60, 80, 100];
+ const counts = bins.map(() => 0);
+ scores.forEach(s => {
+   for(let i = 0; i < bins.length - 1; i++){
+     if(s >= bins[i] && s < bins[i+1]){
+       counts[i]++;
+       break;
+     }
+   }
+   if(s >= 100) counts[counts.length-1]++;
+ });
+
+ const maxCount = Math.max(...counts, 1);
+ const colors = ['#7f1d1d','#991b1b','#b4232d','#064e3b','#0aa978'];
+ let bars = '';
+ counts.forEach((c, i) => {
+   const pct = (c / maxCount) * 100;
+   bars += `<i style="width:${pct}%;background:${colors[i] || '#303640'};" title="${bins[i]}–${bins[i+1] || '100+'}: ${c}"></i>`;
+ });
+ container.innerHTML = bars;
+
+ const total = scores.length;
+ const avg = scores.reduce((a,b) => a + b, 0) / total;
+ label.textContent = `مجموع ${total} درجة | المتوسط ${formatNumber(avg,0)} | التوزيع حسب الفئات`;
+}
+
+/* ---------- Filtering ---------- */
+
+function applyFilters(){
+ const cat = document.getElementById('category').value;
+ const classif = document.getElementById('classification').value;
+ const manager = document.getElementById('manager').value.trim().toLowerCase();
+ const scoreRange = document.getElementById('scoreRange').value;
+ const tier = document.getElementById('tier').value;
+ const horizon = document.getElementById('horizon').value;
+
+ const data = window.allFunds || [];
+ const filtered = data.filter(f => {
+   if(cat && f.category !== cat) return false;
+   if(classif && (f.metadata?.classification || '') !== classif) return false;
+   if(manager && !(f.management_company || '').toLowerCase().includes(manager)) return false;
+   if(tier && (f.smart?.data_tier || '') !== tier) return false;
+   // score range based on final_score
+   const score = safeNumber(f.smart?.final_score);
+   if(scoreRange && !scoreMatches(score, scoreRange)) return false;
+   return true;
+ });
+
+ // تحديث العرض بناءً على الفلتر
+ renderAll(filtered);
+ // تحديث كلمة "النتائج" في العنوان (اختياري)
+ document.querySelector('.heat-count')?.textContent = filtered.length + ' صندوق';
+}
+
+/* ---------- Drawer ---------- */
+
+function openDrawer(fundId){
+ const data = window.allFunds || [];
+ const fund = data.find(f => f.fund_id === fundId);
+ if(!fund) return;
+ const drawer = document.getElementById('drawer');
+ const mask = document.getElementById('mask');
+ drawer.classList.add('on');
+ mask.classList.add('on');
+
+ let html = `<button class="drawer-close" onclick="closeDrawer()">✕ إغلاق</button>`;
+ html += `<div class="fund-row"><b>${fund.canonical_name || 'غير مسمى'}</b><div class="fund-meta">${fund.management_company || ''}</div><div class="fund-data">الفئة: ${fund.category || '—'}</div><div class="fund-data">التصنيف: ${fund.metadata?.classification || '—'}</div>`;
+ // NAV
+ if(fund.nav !== undefined && fund.nav !== null){
+   html += `<div class="fund-data">أحدث NAV: ${formatNumber(fund.nav)} ${fund.currency || ''}</div>`;
+ }
+ // Smart score
+ if(fund.smart){
+   html += `<div class="fund-data">الدرجة النهائية: ${formatNumber(fund.smart.final_score,0)}</div>`;
+   html += `<div class="fund-data">التقييم: ${fund.smart.rating || '—'}</div>`;
+   html += `<div class="fund-data">الترتيب المؤهل: ${fund.smart.qualified_rank || '—'}</div>`;
+ }
+ if(fund.price_update_url){
+   html += `<a class="fund-link" href="${fund.price_update_url}" target="_blank">عرض المصدر</a>`;
+ }
+ html += `</div>`;
+ drawer.innerHTML = html;
+}
+
+function openDrawerCategory(cat, funds){
+ const drawer = document.getElementById('drawer');
+ const mask = document.getElementById('mask');
+ drawer.classList.add('on');
+ mask.classList.add('on');
+
+ let html = `<button class="drawer-close" onclick="closeDrawer()">✕ إغلاق</button>`;
+ html += `<h3>صناديق الفئة: ${cat}</h3>`;
+ funds.forEach(f => {
+   html += `<div class="fund-row" style="cursor:pointer" onclick="openDrawer('${f.fund_id}')">
+     <b>${f.canonical_name || 'غير مسمى'}</b>
+     <div class="fund-meta">${f.management_company || ''}</div>
+     <div class="fund-data">العائد: ${formatReturn(getReturn(f, document.getElementById('horizon').value))}</div>
+   </div>`;
+ });
+ drawer.innerHTML = html;
+}
+
+function closeDrawer(){
+ document.getElementById('drawer').classList.remove('on');
+ document.getElementById('mask').classList.remove('on');
+}
+
+/* ---------- Event Listeners ---------- */
+
+document.addEventListener('DOMContentLoaded', function(){
+ // تبديل طرق العرض
+ document.querySelectorAll('.views button').forEach(btn => {
+   btn.addEventListener('click', function(){
+     document.querySelectorAll('.views button').forEach(b => b.classList.remove('active'));
+     this.classList.add('active');
+     const view = this.dataset.view;
+     document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+     if(view === 'heat') document.getElementById('viewHeat').classList.remove('hidden');
+     else if(view === 'tree') document.getElementById('viewTree').classList.remove('hidden');
+     else if(view === 'cards') document.getElementById('viewCards').classList.remove('hidden');
+   });
+ });
+
+ // فلترة عند تغيير أي فلتر
+ document.querySelectorAll('.filters select, .filters input').forEach(el => {
+   el.addEventListener('change', applyFilters);
+ });
+ document.getElementById('manager').addEventListener('input', applyFilters);
+
+ // زر إعادة الضبط
+ document.getElementById('reset').addEventListener('click', function(){
+   document.querySelectorAll('.filters select').forEach(s => s.value = '');
+   document.getElementById('manager').value = '';
+   applyFilters();
+ });
+
+ // تحميل البيانات
+ loadData();
+});
+
+// إغلاق الدرج عند النقر على الماسك
+document.getElementById('mask').addEventListener('click', closeDrawer);
+
+</script>
+</body>
+</html>
