@@ -90,6 +90,7 @@ td.pos.active{background:#047857} td.neg.active{background:#991b1b}
   <section id="v-tree"></section>
   <section id="v-cards" hidden></section>
   <section id="v-heat" hidden></section>
+  <div id="extra" hidden>
   <h3>أعلى قيمة لكل محور Smart Score</h3>
   <p class="sub">ترتيب حسب القيمة المخزّنة فقط بين من لهم رقم. ليست منهجية بطل مستقلة.</p>
   <div class="champs" id="champs"></div>
@@ -104,6 +105,7 @@ td.pos.active{background:#047857} td.neg.active{background:#991b1b}
       <div class="dist" id="distbar"></div>
       <p class="sub" id="distlab"></p>
     </div>
+  </div>
   </div>
 </main>
 <div id="tipf"></div>
@@ -234,7 +236,7 @@ function color(v){
       host.innerHTML='<div id="treemap-canvas"></div>';
       const container=document.getElementById("treemap-canvas");
       const width=container.clientWidth||Math.min(1200,window.innerWidth-36);
-      const height=650;
+      const height=Math.max(520, Math.min(window.innerHeight-220, 860));
       const rootData={name:"Root",children:Object.entries(groups).map(([g,list])=>{
         const kids=list.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h)).slice(0,8)
           .map(f=>({...f,category_name:g,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
@@ -330,6 +332,8 @@ function color(v){
     document.querySelectorAll(".views button").forEach(b=>b.onclick=()=>{
       document.querySelectorAll(".views button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
       ["tree","cards","heat"].forEach(v=>document.getElementById("v-"+v).hidden=b.dataset.v!==v);
+      document.getElementById("extra").hidden=b.dataset.v==="tree";
+      if(b.dataset.v==="tree") draw();
     });
     ["fb","fs","fr","ft","hz"].forEach(id=>document.getElementById(id).onchange=draw);
     document.getElementById("fm").oninput=draw;
