@@ -3,75 +3,107 @@
 <head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>ماذا حدث للفلوس؟</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/app.css"/>
 <script src="config.js"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+body{display:grid;grid-template-rows:64px auto 1fr}
+.stage{display:grid;grid-template-columns:220px 1fr 280px;min-height:0}
+@media(max-width:960px){.stage{grid-template-columns:1fr}}
+#chart{min-height:520px;direction:ltr;background:
+  radial-gradient(1200px 500px at 70% -10%, #1a2433 0%, transparent 55%), #0a0e12}
+.legend .item{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.dot{width:8px;height:8px;border-radius:99px;display:inline-block;margin-inline-start:6px}
+.story{font-size:15px;line-height:1.85}
+</style>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
-  <div class="logo">خريطة الفلوس<span>محرّك المقارنة</span></div>
+  <div class="logo">خريطة الفلوس<span id="src">محرّك المقارنة</span></div>
   <nav>
     <a href="./index.html">البداية</a>
     <a class="active" href="./map.html">ماذا حدث للفلوس؟</a>
     <a href="./funds.html">الصناديق</a>
+    <a href="./categories.html">خريطة الفئات</a>
     <a href="./macro.html">الاقتصاد</a>
-    <a href="./why.html">المنهج</a>
   </nav>
 </div></header>
-<div class="controls wrap" style="max-width:none">
-  <div><label class="muted">المبلغ</label><br/><input id="amount" type="number" value="1000"/></div>
-  <div><label class="muted">من</label><br/><input id="start" type="date" value="2016-01-04"/></div>
-  <div><label class="muted">&nbsp;</label><br/><button class="primary" id="run">احسب</button></div>
-  <div>
-    <label class="muted">العرض</label><br/>
-    <select id="mode"><option value="level">قيمة بالجنيه</option><option value="rebased">أساس 100</option><option value="log">لوغاريتم</option></select>
-  </div>
+<div class="controls">
+  <label class="muted">المبلغ <input id="amount" type="number" value="1000"></label>
+  <label class="muted">من <input id="start" type="date" value="2016-01-04"></label>
+  <select id="mode">
+    <option value="level">قيمة بالجنيه</option>
+    <option value="rebased">أساس 100</option>
+    <option value="log">لوغاريتم</option>
+  </select>
+  <button class="primary" id="run">ارسم</button>
 </div>
-<div class="layout">
-  <div class="pane"><div class="h">المسارات</div><div id="list"></div></div>
-  <div class="pane" style="display:flex;flex-direction:column"><div id="chart"></div></div>
-  <div class="pane"><div class="h">الملخص</div><div id="sum"></div><div class="story" id="story"></div></div>
+<div class="stage">
+  <aside class="pane" id="list"></aside>
+  <div id="chart"></div>
+  <aside class="pane">
+    <div class="h">القراءة</div>
+    <div id="sum"></div>
+    <div class="story" id="story"></div>
+  </aside>
 </div>
 <script type="module">
 import { PATHS, fmt, en, toLine, rebase } from "./js/engine.js";
 import { loadEngine } from "./js/live.js";
-let DATA, chart, seriesMap={}, active="usd_egp_mid";
+let DATA, chart, seriesMap={}, active="gold_egp_oz";
 const el=document.getElementById("chart");
-chart=LightweightCharts.createChart(el,{layout:{background:{color:"#0b100e"},textColor:"#8b9a90"},grid:{vertLines:{color:"#1c2622"},horzLines:{color:"#1c2622"}},rightPriceScale:{borderColor:"#2a362f"},timeScale:{borderColor:"#2a362f"}});
-new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth,height:el.clientHeight})).observe(el);
+chart=LightweightCharts.createChart(el,{
+  layout:{background:{type:"solid",color:"transparent"},textColor:"#8b95a5",fontFamily:"IBM Plex Sans"},
+  grid:{vertLines:{color:"#1c2430"},horzLines:{color:"#1c2430"}},
+  crosshair:{mode:0},
+  rightPriceScale:{borderColor:"#273140",scaleMargins:{top:0.08,bottom:0.06}},
+  timeScale:{borderColor:"#273140",timeVisible:false}
+});
+new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth,height:el.clientHeight||520})).observe(el);
+
 function draw(){
   const amount=+document.getElementById("amount").value||1000;
   const start=document.getElementById("start").value||"2016-01-04";
   const mode=document.getElementById("mode").value;
-  Object.values(seriesMap).forEach(s=>chart.removeSeries(s)); seriesMap={}; const rows=[];
+  Object.values(seriesMap).forEach(s=>chart.removeSeries(s)); seriesMap={};
+  const rows=[];
   Object.keys(PATHS).forEach(key=>{
     let line=toLine(DATA.series,start,amount,key); if(!line.length)return;
     if(mode==="rebased") line=rebase(line);
-    const s=chart.addLineSeries({color:PATHS[key].color,lineWidth:key===active?3:1.15,priceLineVisible:false,lastValueVisible:true,title:PATHS[key].name});
+    const s=chart.addLineSeries({
+      color:PATHS[key].color, lineWidth:key===active?3:1.2,
+      priceLineVisible:false, lastValueVisible:key===active
+    });
     s.setData(line); seriesMap[key]=s;
-    rows.push({key,last:line.at(-1).value,mult:line.at(-1).value/line[0].value,asOf:line.at(-1).time});
+    rows.push({key,last:line.at(-1).value,first:line[0].value,mult:line.at(-1).value/line[0].value,asOf:line.at(-1).time});
   });
   chart.priceScale("right").applyOptions({mode:mode==="log"?1:0});
   chart.timeScale().fitContent();
-  document.getElementById("list").innerHTML=rows.map(r=>{
+  document.getElementById("list").innerHTML='<div class="h">المسارات</div>'+rows.map(r=>{
     const chg=(r.mult-1)*100;
-    return `<div class="item ${r.key===active?"on":""}" data-k="${r.key}"><b>${PATHS[r.key].name}</b><span class="${chg>=0?"up":"dn"}">${chg>=0?"+":""}${en(chg)}%</span></div>`;
+    return `<div class="item ${r.key===active?"on":""}" data-k="${r.key}">
+      <b><i class="dot" style="background:${PATHS[r.key].color}"></i>${PATHS[r.key].name}</b>
+      <span class="num ${chg>=0?"up":"dn"}">${chg>=0?"+":""}${en(chg,1)}%</span>
+    </div>`;
   }).join("");
-  document.querySelectorAll(".item").forEach(n=>n.onclick=()=>{active=n.dataset.k;draw()});
+  document.querySelectorAll(".item").forEach(n=>n.onclick=()=>{active=n.dataset.k;draw();});
   const r=rows.find(x=>x.key===active)||rows[0];
-  document.getElementById("sum").innerHTML=`<div class="stat"><em>${PATHS[r.key].name}</em><strong>${fmt(r.last)}</strong></div>
-    <div class="stat"><em>المضاعف</em><strong>${en(r.mult)}×</strong></div>
-    <div class="stat"><em>حتى</em><strong>${r.asOf}</strong></div>`;
-  const usd=rows.find(x=>x.key==="usd_egp_mid"), gold=rows.find(x=>x.key==="gold_egp_oz"), cpi=rows.find(x=>x.key==="purchasing");
-  document.getElementById("story").textContent=`من ${fmt(amount)} جنيه في ${start}: القوة الشرائية ≈ ${cpi?fmt(cpi.last):"—"} · الدولار ≈ ${usd?fmt(usd.last):"—"} · الذهب ≈ ${gold?fmt(gold.last):"—"} جنيه.`;
+  document.getElementById("sum").innerHTML=`
+    <div class="stat"><em>${PATHS[r.key].name}</em><strong class="num">${fmt(r.last)}</strong></div>
+    <div class="stat"><em>مضاعف ${amount.toLocaleString("en-US")} ج.م</em><strong class="num">${en(r.mult,2)}×</strong></div>
+    <div class="stat"><em>حتى</em><strong class="num">${r.asOf}</strong></div>`;
+  const pick=k=>rows.find(x=>x.key===k);
+  const cpi=pick("purchasing"), usd=pick("usd_egp_mid"), gold=pick("gold_egp_oz"), egx=pick("egx30_close");
+  document.getElementById("story").textContent =
+    `${fmt(amount)} جنيه من ${start}: القوة الشرائية ≈ ${cpi?fmt(cpi.last):"—"} · الدولار ≈ ${usd?fmt(usd.last):"—"} · الذهب ≈ ${gold?fmt(gold.last):"—"} · EGX30 ≈ ${egx?fmt(egx.last):"—"} جنيه.`;
 }
 document.getElementById("run").onclick=draw;
 document.getElementById("mode").onchange=draw;
-const packed = await loadEngine();
-DATA = { series: packed.series };
-document.querySelector(".logo span").textContent = packed.source === "supabase" ? "مباشر من القاعدة" : "لقطة احتياطية";
-chart.applyOptions({width:el.clientWidth,height:el.clientHeight});
+const packed=await loadEngine();
+DATA={series:packed.series};
+document.getElementById("src").textContent=packed.source==="supabase"?"مباشر من القاعدة":"لقطة احتياطية";
+chart.applyOptions({width:el.clientWidth,height:Math.max(el.clientHeight,520)});
 draw();
 </script>
 </body></html>
