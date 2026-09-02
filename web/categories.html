@@ -252,7 +252,7 @@ function color(v){
       host.innerHTML='<div id="treemap-canvas"></div>';
       const container=document.getElementById("treemap-canvas");
       const width=container.clientWidth||Math.min(1200,window.innerWidth-36);
-      const height=Math.max(680, window.innerHeight-130);
+      const height=Math.max(860, window.innerHeight-80);
       const catCol=b=>CATCOL[b]||"#4B5563";
       const kids=rows.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h)).slice(0,36)
         .map(f=>({...f,category_name:f.bucket,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
