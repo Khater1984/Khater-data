@@ -231,32 +231,40 @@ function color(v){
         <div class="kpi glass">أعلى عائد للأفق المختار<b>${top?num(ret(top,h))+"%":"غير متاح"}</b><div class="sub">${top?top.name:""}</div></div>`;
 
       const host=document.getElementById("v-tree");
-      const W=host.clientWidth||Math.min(1200,window.innerWidth-36);
-      const Ht=Math.min(window.innerHeight*0.72,760);
-      const root=d3.hierarchy({name:"root",children:Object.entries(groups).map(([g,list])=>({name:g,children:list.map(f=>({f,value:1}))}))}).sum(d=>d.value||0);
-      d3.treemap().tile(d3.treemapSquarify.ratio(1.618)).size([W,Ht]).paddingInner(1).paddingTop(18)(root);
-      const tip=document.getElementById("tipf");
-      host.innerHTML=`<div id="treemap-canvas" style="height:${Ht}px">
-        ${root.children.map(cat=>`
-          <div class="tm-lab" style="left:${cat.x0+4}px;top:${cat.y0+2}px">${cat.data.name}</div>
-          ${cat.children.map(n=>{
-            const f=n.data.f, rv=ret(f,h), tw=n.x1-n.x0, th=n.y1-n.y0;
-            const show=tw>=60 && th>=30;
-            return `<div class="tm-tile" data-id="${f.id}" data-g="${f.bucket}"
-              style="left:${n.x0}px;top:${n.y0}px;width:${tw}px;height:${th}px;background:${color(rv)}"
-              data-tip="${f.name}|${f.manager}|${f.bucket}|${rv==null?"":rv}|${f.sharia?"1":""}">
-              ${show?`<div class="nm">${f.name}</div><div class="rv">${rv==null?"—":num(rv)+"%"}</div>`:""}
-            </div>`;
-          }).join("")}`).join("")}
-      </div>`;
-      host.querySelectorAll(".tm-tile").forEach(el=>{
-        el.onclick=()=>location.href="fund.html?id="+encodeURIComponent(el.dataset.id)+"&h="+h;
-        el.onmousemove=e=>{
-          const [nm,mg,bk,rv,sh]=el.dataset.tip.split("|");
-          tip.style.display="block"; tip.style.left=(e.clientX-12)+"px"; tip.style.top=(e.clientY+14)+"px";
-          tip.innerHTML=`<b>${nm}</b><div class="sub">${mg||"—"} · ${bk}</div><div>${rv===""?"عائد غير متاح":num(+rv)+"%"}</div>${sh?"<div>🌙 متوافق مع الشريعة</div>":"<div class='sub'>بيانات التوافق الشرعي غير متاحة</div>"}`;
-        };
-        el.onmouseleave=()=>tip.style.display="none";
+      host.innerHTML='<div id="treemap-canvas"></div>';
+      const container=document.getElementById("treemap-canvas");
+      const width=container.clientWidth||Math.min(1200,window.innerWidth-36);
+      const height=650;
+      const rootData={name:"Root",children:Object.entries(groups).map(([g,list])=>({name:g,children:list.map(f=>({...f,category_name:g,fund_name:f.name,aum_val:1,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}))}))};
+      const root=d3.hierarchy(rootData).sum(d=>d.children?0:1).sort((a,b)=>b.value-a.value);
+      d3.treemap().size([width,height]).paddingOuter(4).paddingTop(24).paddingInner(2).tile(d3.treemapSquarified)(root);
+      const valid=rows.map(f=>ret(f,h)).filter(v=>v!=null&&!isNaN(v));
+      const colorScale=d3.scaleLinear().domain([d3.min(valid)||0,0,d3.max(valid)||50]).range(["#EF4444","#1F2937","#10B981"]);
+      const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
+      const cats=svg.selectAll("g.category").data(root.children||[]).enter().append("g").attr("class","category").attr("transform",d=>`translate(${d.x0},${d.y0})`);
+      cats.append("rect").attr("width",d=>d.x1-d.x0).attr("height",22).attr("fill","rgba(12,13,20,0.9)");
+      cats.append("text").attr("x",8).attr("y",15).text(d=>d.data.name).attr("fill","#9CA3AF").attr("font-size","11px").attr("font-weight","bold");
+      const leaves=cats.selectAll("g.fund").data(d=>d.leaves()).enter().append("g").attr("class","fund")
+        .attr("transform",d=>`translate(${d.x0-d.parent.x0},${d.y0-d.parent.y0})`)
+        .style("cursor","pointer")
+        .on("click",(_,d)=>{location.href="fund.html?id="+encodeURIComponent(d.data.id)+"&h="+h;})
+        .on("mousemove",(e,d)=>{
+          const f=d.data, rv=f.returns[h];
+          const tip=document.getElementById("tipf");
+          tip.style.display="block"; tip.style.left=(e.clientX-12)+"px"; tip.style.top=(e.clientY+16)+"px";
+          tip.innerHTML=`<b>${f.fund_name}</b><div class="sub">${f.manager||"—"} · ${f.category_name}</div><div>${rv==null?"عائد غير متاح":num(rv)+"%"}</div>${f.sharia?"<div>🌙 متوافق مع الشريعة</div>":"<div class='sub'>بيانات التوافق الشرعي غير متاحة</div>"}`;
+        })
+        .on("mouseleave",()=>document.getElementById("tipf").style.display="none");
+      leaves.append("rect").attr("width",d=>Math.max(0,d.x1-d.x0)).attr("height",d=>Math.max(0,d.y1-d.y0))
+        .attr("fill",d=>{const v=d.data.returns[h]; return v==null||isNaN(v)?"#1E1F2E":colorScale(v);})
+        .attr("stroke","#0C0D14").attr("rx",2);
+      leaves.each(function(d){
+        const tw=d.x1-d.x0, th=d.y1-d.y0, g=d3.select(this);
+        if(tw<55||th<30) return;
+        const rv=d.data.returns[h], retStr=rv==null?"—":num(rv)+"%";
+        g.append("text").attr("x",4).attr("y",14).text(d.data.fund_name).attr("fill","#fff").attr("font-size","10px").style("pointer-events","none")
+          .each(function(){let txt=d.data.fund_name; while(this.getComputedTextLength()>tw-8 && txt.length){txt=txt.slice(0,-1); this.textContent=txt+"…";}});
+        if(th>=42) g.append("text").attr("x",4).attr("y",28).text(retStr).attr("fill","rgba(255,255,255,.85)").attr("font-size","10px").attr("font-weight","bold").style("pointer-events","none");
       });
 
       document.getElementById("v-cards").innerHTML='<div class="grid">'+Object.entries(groups).map(([g,list])=>{
