@@ -376,42 +376,45 @@ function renderKhaterHeatmap(groups, horizon) {
         draw();
       });
       const host=document.getElementById("v-tree");
-      const BANDS=[[50,"50% فأكثر"],[40,"40–50%"],[30,"30–40%"],[20,"20–30%"],[10,"10–20%"]];
-      const RISKS=[["low","مخاطرة منخفضة",0,33],["mid","مخاطرة متوسطة",34,66],["high","مخاطرة مرتفعة",67,100],["na","غير مصنّف",null,null]];
-      function bandOf(v){return BANDS.find(([min])=>v>=min);}
-      function riskOf(r){
-        if(r==null||isNaN(r)) return "na";
-        if(r<=33) return "low";
-        if(r<=66) return "mid";
-        return "high";
-      }
-      const pool=rows.filter(f=>{const v=ret(f,h); return v!=null && v>=10;});
-      let treeHtml=`<div class="glass" style="padding:10px;overflow:auto"><table style="width:100%;border-collapse:separate;border-spacing:6px"><thead><tr><th></th>${RISKS.map(r=>`<th>${r[1]}</th>`).join("")}</tr></thead><tbody>`;
-      BANDS.forEach(([,lab])=>{
-        treeHtml+=`<tr><th style="white-space:nowrap;color:#E5E7EB">${lab}</th>`;
-        RISKS.forEach(([k])=>{
-          const cell=pool.filter(f=>bandOf(ret(f,h))?.[1]===lab && riskOf(f.risk)===k)
-            .sort((a,b)=>ret(b,h)-ret(a,h));
-          const top=cell.slice(0,10);
-          const more=cell.length-top.length;
-          treeHtml+=`<td style="vertical-align:top;background:#14151f;border-radius:10px;min-width:140px">`;
-          if(!top.length) treeHtml+=`<div class="sub" style="padding:8px">—</div>`;
-          else{
-            top.forEach(f=>{
-              treeHtml+=`<div class="fundchip" data-id="${f.id}" style="background:${CATCOL[f.bucket]||"#4B5563"};margin:4px;padding:8px;border-radius:8px;cursor:pointer;color:#fff">
-                <div style="font-size:12px;font-weight:700">${f.name}</div>
-                <div style="font-size:14px;font-weight:800;direction:ltr">+${num(ret(f,h))}%</div>
-              </div>`;
-            });
-            if(more>0) treeHtml+=`<div class="sub" style="padding:6px">أخرى (${more})</div>`;
+      host.innerHTML='<div id="treemap-canvas"></div>';
+      const container=document.getElementById("treemap-canvas");
+      const width=container.clientWidth||Math.min(1180,window.innerWidth-36);
+      const height=Math.max(720, window.innerHeight-220);
+      const catCol=b=>CATCOL[b]||"#4B5563";
+      const kids=rows.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h))
+        .map(f=>({...f,category_name:f.bucket,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
+      if(!kids.length){ host.innerHTML='<p class="sub">لا توجد بيانات متاحة</p>'; }
+      else {
+        const root=d3.hierarchy({name:"Root",children:kids}).sum(d=>{
+          if(d.children) return 0;
+          const v=d.returns?d.returns[h]:null;
+          return (v==null||isNaN(v))?0:Math.max(Math.abs(v),0.3);
+        }).sort((a,b)=>(b.value||0)-(a.value||0));
+        d3.treemap().size([width,height]).paddingOuter(3).paddingInner(3).tile(d3.treemapSquarify)(root);
+        const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
+        const leaves=svg.selectAll("g.fund").data(root.leaves()).enter().append("g")
+          .attr("transform",d=>`translate(${d.x0},${d.y0})`).style("cursor","pointer")
+          .on("click",(_,d)=>location.href="fund.html?id="+encodeURIComponent(d.data.id)+"&h="+h);
+        leaves.append("rect").attr("width",d=>Math.max(0,d.x1-d.x0)).attr("height",d=>Math.max(0,d.y1-d.y0))
+          .attr("fill",d=>catCol(d.data.bucket)).attr("stroke","#0C0D14").attr("rx",3);
+        leaves.each(function(d){
+          const tw=d.x1-d.x0, th=d.y1-d.y0, g=d3.select(this);
+          const rv=ret(d.data,h);
+          const retStr=rv==null?"—":((rv>0?"+":"")+num(rv)+"%");
+          const fs=Math.max(11, Math.min(22, Math.min(tw/6, th/3.2)));
+          if(tw>=70 && th>=48){
+            let nm=(d.data.name||"").split(/[—(]/)[0].trim();
+            g.append("text").attr("x",tw/2).attr("y",th/2-fs*0.35).attr("text-anchor","middle").attr("fill","#fff")
+              .attr("font-size",fs*0.62).attr("font-weight","700").style("pointer-events","none").text(nm)
+              .each(function(){let x=nm; while(this.getComputedTextLength()>tw-10 && x.length>3){x=x.slice(0,-1); this.textContent=x+"…";}});
+            g.append("text").attr("x",tw/2).attr("y",th/2+fs*0.7).attr("text-anchor","middle").attr("direction","ltr")
+              .attr("fill","#fff").attr("font-size",fs).attr("font-weight","800").style("pointer-events","none").text(retStr);
+          } else if(tw>=36 && th>=20){
+            g.append("text").attr("x",tw/2).attr("y",th/2+4).attr("text-anchor","middle").attr("direction","ltr")
+              .attr("fill","#fff").attr("font-size",Math.min(13,th-4)).attr("font-weight","800").style("pointer-events","none").text(retStr);
           }
-          treeHtml+=`</td>`;
         });
-        treeHtml+=`</tr>`;
-      });
-      treeHtml+=`</tbody></table></div>`;
-      host.innerHTML=treeHtml;
-      host.querySelectorAll("[data-id]").forEach(el=>el.onclick=()=>location.href="fund.html?id="+encodeURIComponent(el.dataset.id)+"&h="+h);
+      }
 
       document.getElementById("v-cards").innerHTML='<div class="grid">'+Object.entries(groups).map(([g,list])=>{
         const isl=list.filter(f=>f.sharia && ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h))[0];
