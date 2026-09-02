@@ -260,8 +260,7 @@ function color(v){
       const colorScale=d3.scaleLinear().domain([d3.min(valid)||0,0,d3.max(valid)||50]).range(["#EF4444","#1F2937","#10B981"]);
       const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
       const cats=svg.selectAll("g.category").data(root.children||[]).enter().append("g").attr("class","category").attr("transform",d=>`translate(${d.x0},${d.y0})`).attr("clip-path",d=>`inset(0)`);
-      cats.append("rect").attr("width",d=>d.x1-d.x0).attr("height",22).attr("fill","rgba(12,13,20,0.92)");
-      cats.filter(d=>(d.x1-d.x0)>=180).append("text").attr("x",8).attr("y",15).text(d=>d.data.name).attr("fill","#E5E7EB").attr("font-size","13px").attr("font-weight","700");
+      cats.append("rect").attr("width",d=>d.x1-d.x0).attr("height",18).attr("fill","rgba(12,13,20,0.55)");
       const leaves=cats.selectAll("g.fund").data(d=>d.leaves()).enter().append("g").attr("class","fund")
         .attr("transform",d=>`translate(${d.x0-d.parent.x0},${d.y0-d.parent.y0})`)
         .style("cursor","pointer")
@@ -276,21 +275,30 @@ function color(v){
       leaves.append("rect").attr("width",d=>Math.max(0,d.x1-d.x0)).attr("height",d=>Math.max(0,d.y1-d.y0))
         .attr("fill",d=>{const v=d.data.returns[h]; return v==null||isNaN(v)?"#1E1F2E":colorScale(v);})
         .attr("stroke","#0C0D14").attr("rx",2);
-      function shortName(s){s=(s||"").replace(/\s+/g," ").trim(); const cut=s.split(/[—(]/)[0].trim(); return cut.length>22?cut.slice(0,20)+"…":cut;}
+      function shortName(s){
+        s=(s||"").replace(/\s+/g," ").replace(/^\.+/,"").trim();
+        const cut=s.split(/[—(]/)[0].trim();
+        return cut;
+      }
       leaves.each(function(d){
         const tw=d.x1-d.x0, th=d.y1-d.y0, g=d3.select(this);
-        const rv=d.data.returns[h], retStr=rv==null?"—":(rv==null?"—":(rv>0?"+":"")+num(rv)+"%");
-        const fs=Math.max(11, Math.min(26, Math.min(tw/5.6, th/3.1)));
-        if(tw>=72 && th>=50){
-          g.append("text").attr("x",tw/2).attr("y",th/2-fs*0.38).attr("text-anchor","middle")
-            .attr("fill","#fff").attr("font-size",fs*0.7).attr("font-weight","700").style("pointer-events","none")
-            .text(shortName(d.data.fund_name));
-          g.append("text").attr("x",tw/2).attr("y",th/2+fs*0.72).attr("text-anchor","middle")
-            .attr("fill","#fff").attr("font-size",fs).attr("font-weight","800").style("pointer-events","none")
+        g.append("clipPath").attr("id","c"+d.data.id.replace(/[^a-z0-9]/gi,"")).append("rect").attr("width",Math.max(0,tw)).attr("height",Math.max(0,th));
+        g.attr("clip-path","url(#c"+d.data.id.replace(/[^a-z0-9]/gi,"")+")");
+        const rv=d.data.returns[h];
+        const retStr=rv==null?"—":((rv>0?"+":"")+num(rv)+"%");
+        const fs=Math.max(12, Math.min(24, Math.min(tw/7, th/3.4)));
+        if(tw>=80 && th>=52){
+          const nm=shortName(d.data.fund_name);
+          g.append("text").attr("x",tw/2).attr("y",th/2-fs*0.4).attr("text-anchor","middle")
+            .attr("fill","#fff").attr("font-size",fs*0.62).attr("font-weight","700").style("pointer-events","none")
+            .text(nm)
+            .each(function(){let x=nm; while(this.getComputedTextLength()>tw-12 && x.length>3){x=x.slice(0,-1); this.textContent=x+"…";}});
+          g.append("text").attr("x",tw/2).attr("y",th/2+fs*0.75).attr("text-anchor","middle").attr("direction","ltr")
+            .attr("unicode-bidi","isolate").attr("fill","#fff").attr("font-size",fs).attr("font-weight","800").style("pointer-events","none")
             .text(retStr);
-        } else if(tw>=34 && th>=20){
-          g.append("text").attr("x",tw/2).attr("y",th/2+4).attr("text-anchor","middle")
-            .attr("fill","#fff").attr("font-size",Math.min(13,th-5)).attr("font-weight","800").style("pointer-events","none")
+        } else if(tw>=40 && th>=22){
+          g.append("text").attr("x",tw/2).attr("y",th/2+4).attr("text-anchor","middle").attr("direction","ltr")
+            .attr("unicode-bidi","isolate").attr("fill","#fff").attr("font-size",Math.min(13,th-6)).attr("font-weight","800").style("pointer-events","none")
             .text(retStr);
         }
       });
