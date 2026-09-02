@@ -49,9 +49,18 @@ document.getElementById("app").innerHTML=`
     <div class="kpi"><em>RATING</em><b>${s.rating||"—"}</b></div>
     <div class="kpi"><em>CONF</em><b>${s.conf||"—"}</b></div>
   </div>
+  <p class="muted">مصدر هذا الأفق: ${s.source||"—"} · تاريخ المصدر ${s.source_as_of||"—"} · جودة ${s.quality||"—"}</p>
   <div class="grid2">
     <div class="card"><h3>العائد عبر الآفاق</h3><div id="retChart" class="chartbox"></div></div>
     <div class="card"><h3>مقابل المراجع — ${HL[h0]||h0}</h3><div id="benchChart" class="chartbox"></div></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>عقد البيانات في سوبربيس</h3>
+    <table><thead><tr><th>الأفق</th><th>العائد</th><th>المصدر</th><th>تاريخ المصدر</th></tr></thead>
+    <tbody>${HS.map(k=>{
+      const x=(f.scores||{})[k]||{};
+      return `<tr><td>${HL[k]}</td><td class="num">${x.return_pct==null?"—":Number(x.return_pct).toLocaleString("en-US",{maximumFractionDigits:1})+"%"}</td><td>${x.source||"—"}</td><td class="num">${x.source_as_of||"—"}</td></tr>`;
+    }).join("")}</tbody></table>
   </div>
 `;
 
