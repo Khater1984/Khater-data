@@ -780,40 +780,16 @@ h1{
 /*
   ============================================================
   KHATER FUNDS RADAR — CATEGORIES
-  Supabase project:
-  jlaqotegkeszuyqzdham
+  Supabase project: jlaqotegkeszuyqzdham
   ============================================================
 */
 
-const SUPABASE_URL =
- "https://jlaqotegkeszuyqzdham.supabase.co";
+const SUPABASE_URL = "https://jlaqotegkeszuyqzdham.supabase.co";
 
-/*
-  لا نضع Service Role Key داخل الصفحة.
-  المفتاح يجب أن يأتي من config.js:
-  
-  window.KHATER = {
-    url: "https://jlaqotegkeszuyqzdham.supabase.co",
-    key: "YOUR_ANON_KEY"
-  };
-
-  ويمكن أيضًا استعمال:
-  window.SUPABASE_URL
-  window.SUPABASE_ANON_KEY
-*/
-
+// المفتاح من config.js
 const CFG = window.KHATER || {};
-
-const API_URL =
- CFG.url ||
- window.SUPABASE_URL ||
- SUPABASE_URL;
-
-const API_KEY =
- CFG.key ||
- CFG.anonKey ||
- window.SUPABASE_ANON_KEY ||
- "";
+const API_URL = CFG.url || window.SUPABASE_URL || SUPABASE_URL;
+const API_KEY = CFG.key || CFG.anonKey || window.SUPABASE_ANON_KEY || "";
 
 const HORIZONS = {
  last12m:"12 شهر",
@@ -836,64 +812,26 @@ const CATEGORY_COLORS = {
 };
 
 /* ------------------------------------------------------------
-   Classification
+   Classification Helpers (كما هي موجودة)
 ------------------------------------------------------------ */
-
 function normalizeCategory(value){
-
  const c = String(value || "").toLowerCase();
-
- if(c.includes("gold"))
-  return "صناديق الذهب";
-
- if(c.includes("money market"))
-  return "صناديق النقد";
-
- if(c.includes("fixed income") || c.includes("bond"))
-  return "صناديق الدخل الثابت";
-
- if(
-   c.includes("balanced") ||
-   c.includes("mixed") ||
-   c.includes("allocator")
- )
-  return "الصناديق المتوازنة";
-
- if(
-   c.includes("index") ||
-   c.includes("etf") ||
-   c.includes("traded") ||
-   c.includes("passive")
- )
-  return "صناديق المؤشرات";
-
- if(
-   c.includes("equity") ||
-   c.includes("thematic") ||
-   c.includes("sector")
- )
-  return "صناديق الأسهم";
-
- if(
-   c.includes("protected") ||
-   c.includes("guaranteed")
- )
-  return "صناديق محمية";
-
- if(c.includes("charitable"))
-  return "صناديق خيرية";
-
+ if(c.includes("gold")) return "صناديق الذهب";
+ if(c.includes("money market")) return "صناديق النقد";
+ if(c.includes("fixed income") || c.includes("bond")) return "صناديق الدخل الثابت";
+ if(c.includes("balanced") || c.includes("mixed") || c.includes("allocator")) return "الصناديق المتوازنة";
+ if(c.includes("index") || c.includes("etf") || c.includes("traded") || c.includes("passive")) return "صناديق المؤشرات";
+ if(c.includes("equity") || c.includes("thematic") || c.includes("sector")) return "صناديق الأسهم";
+ if(c.includes("protected") || c.includes("guaranteed")) return "صناديق محمية";
+ if(c.includes("charitable")) return "صناديق خيرية";
  return "فئات أخرى";
 }
 
-function isIslamic(category){
- return /islam|sharia|شرع/i.test(category || "");
-}
+function isIslamic(category){ return /islam|sharia|شرع/i.test(category || ""); }
 
 /* ------------------------------------------------------------
-   Helpers
+   Helpers (كما هي)
 ------------------------------------------------------------ */
-
 function safeNumber(value){
  const n = Number(value);
  return Number.isFinite(n) ? n : null;
@@ -902,7 +840,6 @@ function safeNumber(value){
 function formatNumber(value, digits=1){
  const n = safeNumber(value);
  if(n === null) return "—";
-
  return n.toLocaleString("en-US",{
    maximumFractionDigits:digits,
    minimumFractionDigits:digits
@@ -911,280 +848,155 @@ function formatNumber(value, digits=1){
 
 function formatReturn(value){
  const n = safeNumber(value);
-
  if(n === null) return "—";
-
- return (n >= 0 ? "+" : "") +
-   n.toLocaleString("en-US",{
-     maximumFractionDigits:1
-   }) +
-   "%";
+ return (n >= 0 ? "+" : "") + n.toLocaleString("en-US",{ maximumFractionDigits:1 }) + "%";
 }
 
-/*
-  مهم:
-  العائد يأتي من metadata.scores[HORIZON].return_pct
-  لأن هذه هي البنية الفعلية الموجودة في funds.
-*/
-function getReturn(fund,horizon){
-
- const scores = fund.metadata &&
-                fund.metadata.scores;
-
+function getReturn(fund, horizon){
+ const scores = fund.metadata && fund.metadata.scores;
  if(!scores) return null;
-
  const item = scores[horizon];
-
  if(!item) return null;
-
  return safeNumber(item.return_pct);
 }
 
-function getHorizonScore(fund,horizon){
-
- const scores = fund.metadata &&
-                fund.metadata.scores;
-
- if(!scores || !scores[horizon])
-  return null;
-
+function getHorizonScore(fund, horizon){
+ const scores = fund.metadata && fund.metadata.scores;
+ if(!scores || !scores[horizon]) return null;
  return safeNumber(scores[horizon].score);
 }
 
-function scoreMatches(score,range){
-
+function scoreMatches(score, range){
  if(!range) return true;
-
- if(range === "na")
-  return score === null;
-
- if(score === null)
-  return false;
-
- if(range === "90")
-  return score >= 90;
-
- if(range === "75")
-  return score >= 75 && score < 90;
-
- if(range === "50")
-  return score >= 50 && score < 75;
-
+ if(range === "na") return score === null;
+ if(score === null) return false;
+ if(range === "90") return score >= 90;
+ if(range === "75") return score >= 75 && score < 90;
+ if(range === "50") return score >= 50 && score < 75;
  return score < 50;
 }
 
 /* ------------------------------------------------------------
-   Heatmap colors
+   Heatmap colors (كما هي)
 ------------------------------------------------------------ */
-
 function heatColor(value){
-
- if(value === null)
-  return "#202630";
-
- if(value < -20)
-  return "#7f1d1d";
-
- if(value < -10)
-  return "#991b1b";
-
- if(value < -5)
-  return "#b4232d";
-
- if(value < 0)
-  return "#6b252b";
-
- if(value < 5)
-  return "#303640";
-
- if(value < 15)
-  return "#064e3b";
-
- if(value < 25)
-  return "#075f49";
-
- if(value < 40)
-  return "#07805f";
-
- if(value < 60)
-  return "#0aa978";
-
- if(value < 80)
-  return "#21c58d";
-
+ if(value === null) return "#202630";
+ if(value < -20) return "#7f1d1d";
+ if(value < -10) return "#991b1b";
+ if(value < -5) return "#b4232d";
+ if(value < 0) return "#6b252b";
+ if(value < 5) return "#303640";
+ if(value < 15) return "#064e3b";
+ if(value < 25) return "#075f49";
+ if(value < 40) return "#07805f";
+ if(value < 60) return "#0aa978";
+ if(value < 80) return "#21c58d";
  return "#34d399";
 }
 
 function heatText(value){
- return value !== null && value >= 60
-   ? "#03130e"
-   : "#ffffff";
+ return value !== null && value >= 60 ? "#03130e" : "#ffffff";
 }
 
 /* ------------------------------------------------------------
-   Supabase REST
+   Supabase fetch with timeout (مرنة)
 ------------------------------------------------------------ */
-
-async function fetchTable(table,select){
-
+async function fetchTable(table, select, timeoutMs = 15000){
  if(!API_KEY){
-   throw new Error(
-     "لم يتم العثور على Supabase Anon Key في config.js"
-   );
+   throw new Error("مفتاح Supabase غير موجود في config.js (window.KHATER.key)");
  }
-
- const url =
-   API_URL.replace(/\/$/,"") +
-   "/rest/v1/" +
-   table +
-   "?select=" +
-   encodeURIComponent(select);
-
- const response = await fetch(url,{
-   method:"GET",
-   headers:{
-     "apikey":API_KEY,
-     "Authorization":"Bearer " + API_KEY,
-     "Accept":"application/json"
+ const url = API_URL.replace(/\/$/,"") + "/rest/v1/" + table + "?select=" + encodeURIComponent(select);
+ const controller = new AbortController();
+ const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+ try {
+   const response = await fetch(url, {
+     method: "GET",
+     headers: {
+       "apikey": API_KEY,
+       "Authorization": "Bearer " + API_KEY,
+       "Accept": "application/json"
+     },
+     signal: controller.signal
+   });
+   clearTimeout(timeoutId);
+   const text = await response.text();
+   if(!response.ok){
+     throw new Error(`HTTP ${response.status}: ${text.slice(0,200)}`);
    }
- });
-
- const text = await response.text();
-
- if(!response.ok){
-   throw new Error(
-     "Supabase HTTP " +
-     response.status +
-     ": " +
-     text.slice(0,500)
-   );
- }
-
- try{
-   return JSON.parse(text);
- }catch{
-   throw new Error(
-     "Supabase أعاد استجابة غير صالحة من جدول " + table
-   );
+   try { return JSON.parse(text); } catch(e) {
+     throw new Error("استجابة غير صالحة (ليست JSON)");
+   }
+ } catch(err) {
+   clearTimeout(timeoutId);
+   if(err.name === 'AbortError') throw new Error(`انتهت المهلة (${timeoutMs}ms)`);
+   throw err;
  }
 }
 
 /* ------------------------------------------------------------
-   Load
+   تحميل البيانات الرئيسي مع معالجة أخطاء لكل جدول
 ------------------------------------------------------------ */
-
 async function loadData(){
+ try {
+   setStatus("جاري تحميل بيانات الصناديق...", false);
+   const errors = [];
+   let funds = [], navs = [], smartScores = [];
 
- try{
+   // جلب كل جدول على حدة لعدم تعليق الكل
+   try {
+     funds = await fetchTable("funds", [
+       "fund_id","canonical_name","management_company","category","metadata",
+       "active","price_update_url","confidence"
+     ].join(","));
+   } catch(e) {
+     errors.push({ table: "funds", error: e.message });
+   }
 
-   setStatus(
-     "جاري تحميل بيانات الصناديق...",
-     false
-   );
+   try {
+     navs = await fetchTable("nav_official", [
+       "fund_id","nav","currency","as_of_date","source_id","source_url","verified_at"
+     ].join(","));
+   } catch(e) {
+     errors.push({ table: "nav_official", error: e.message });
+   }
 
-   const [
-     funds,
-     navs,
-     smartScores
-   ] = await Promise.all([
+   try {
+     smartScores = await fetchTable("fund_smartscore_latest", [
+       "fund_id","canonical_name","category","data_tier","data_quality","score_as_of",
+       "raw_score","track_factor","final_score","rating","qualified_rank","peer_cohort_size",
+       "data_confidence","qualification_status","score_explanation","performance_score",
+       "risk_score","benchmark_score","consistency_score","inflation_score","risk_method",
+       "signal_as_of","latest_day_change_pct","latest_signal_status"
+     ].join(","));
+   } catch(e) {
+     errors.push({ table: "fund_smartscore_latest", error: e.message });
+   }
 
-     fetchTable(
-       "funds",
-       [
-         "fund_id",
-         "canonical_name",
-         "management_company",
-         "category",
-         "metadata",
-         "active",
-         "price_update_url",
-         "confidence"
-       ].join(",")
-     ),
+   // إذا فشلت جميع الجداول، اعرض خطأ
+   if(!Array.isArray(funds) || funds.length===0){
+     throw new Error("فشل تحميل جدول funds (الجدول الأساسي)");
+   }
 
-     fetchTable(
-       "nav_official",
-       [
-         "fund_id",
-         "nav",
-         "currency",
-         "as_of_date",
-         "source_id",
-         "source_url",
-         "verified_at"
-       ].join(",")
-     ),
-
-     fetchTable(
-       "fund_smartscore_latest",
-       [
-         "fund_id",
-         "canonical_name",
-         "category",
-         "data_tier",
-         "data_quality",
-         "score_as_of",
-         "raw_score",
-         "track_factor",
-         "final_score",
-         "rating",
-         "qualified_rank",
-         "peer_cohort_size",
-         "data_confidence",
-         "qualification_status",
-         "score_explanation",
-         "performance_score",
-         "risk_score",
-         "benchmark_score",
-         "consistency_score",
-         "inflation_score",
-         "risk_method",
-         "signal_as_of",
-         "latest_day_change_pct",
-         "latest_signal_status"
-       ].join(",")
-     )
-
-   ]);
-
-   if(!Array.isArray(funds))
-     throw new Error("جدول funds لم يُرجع مصفوفة.");
-
-   if(!Array.isArray(navs))
-     throw new Error("جدول nav_official لم يُرجع مصفوفة.");
-
-   if(!Array.isArray(smartScores))
-     throw new Error(
-       "جدول fund_smartscore_latest لم يُرجع مصفوفة."
-     );
-
-   /*
-      أحدث NAV لكل صندوق
-   */
+   // إنشاء خريطة NAV
    const navMap = {};
-
-   navs.forEach(row => {
-
-     const old = navMap[row.fund_id];
-
-     if(
-       !old ||
-       String(row.as_of_date || "") >
-       String(old.as_of_date || "")
-     ) {
-       navMap[row.fund_id] = {
-         nav: safeNumber(row.nav),
-         currency: row.currency,
-         as_of_date: row.as_of_date,
-         source_url: row.source_url
-       };
-     }
-   });
+   if(Array.isArray(navs)){
+     navs.forEach(row => {
+       const old = navMap[row.fund_id];
+       if(!old || String(row.as_of_date || "") > String(old.as_of_date || "")){
+         navMap[row.fund_id] = {
+           nav: safeNumber(row.nav),
+           currency: row.currency,
+           as_of_date: row.as_of_date,
+           source_url: row.source_url
+         };
+       }
+     });
+   }
 
    // دمج البيانات
    const fundsData = funds.map(fund => {
      const navInfo = navMap[fund.fund_id] || {};
-     const smart = smartScores.find(s => s.fund_id === fund.fund_id) || {};
+     const smart = (Array.isArray(smartScores) ? smartScores.find(s => s.fund_id === fund.fund_id) : {}) || {};
      return {
        ...fund,
        nav: navInfo.nav,
@@ -1195,84 +1007,67 @@ async function loadData(){
      };
    });
 
-   // تخزين البيانات العالمية
    window.allFunds = fundsData;
 
-   // استدعاء دوال العرض
+   // عرض التنبيهات إذا كان هناك أخطاء في بعض الجداول
+   if(errors.length){
+     console.warn("بعض الجداول فشلت:", errors);
+     // نعرض خطأ في الشريط لكن نستمر
+     let msg = errors.map(e => `${e.table}: ${e.error}`).join(' | ');
+     document.getElementById('error').classList.remove('hidden');
+     document.getElementById('error').innerHTML = `<strong>⚠️ تحذير: بعض البيانات غير متوفرة</strong><br>${msg}`;
+   }
+
+   // الآن عرض البيانات
    populateFilters(fundsData);
    renderAll(fundsData);
 
-   // إخفاء التحميل وإظهار التطبيق
    document.getElementById('loading').classList.add('hidden');
    document.getElementById('app').classList.remove('hidden');
-   setStatus('تم تحميل البيانات بنجاح', true);
+   setStatus('تم تحميل البيانات', true);
 
- } catch (error) {
-   console.error(error);
+ } catch(error) {
+   console.error('خطأ جوهري:', error);
    document.getElementById('loading').classList.add('hidden');
    const errorBox = document.getElementById('error');
    errorBox.classList.remove('hidden');
-   errorBox.innerHTML = `<strong>⚠️ خطأ في التحميل</strong><br>${error.message}`;
-   setStatus('فشل التحميل', true);
+   errorBox.innerHTML = `<strong>⚠️ فشل تحميل البيانات</strong><br>${error.message}`;
+   setStatus('فشل التحميل', false);
  }
 }
 
 /* ------------------------------------------------------------
-   UI Functions
+   دوال واجهة المستخدم (جميعها محفوظة كما هي)
 ------------------------------------------------------------ */
-
 function setStatus(msg, isSuccess){
  const dot = document.getElementById('statusDot');
  const text = document.getElementById('statusText');
  text.textContent = msg;
- if(isSuccess === true){
-   dot.className = 'dot';
- } else if(isSuccess === false){
-   dot.className = 'dot error';
- }
+ if(isSuccess === true) dot.className = 'dot';
+ else if(isSuccess === false) dot.className = 'dot error';
 }
-
-/* ---------- Populate Filters ---------- */
 
 function populateFilters(data){
  const catSelect = document.getElementById('category');
  const classSelect = document.getElementById('classification');
- const mgrInput = document.getElementById('manager');
  const tierSelect = document.getElementById('tier');
 
- // جمع القيم الفريدة
- const categories = new Set();
- const classifications = new Set();
- const managers = new Set();
- const tiers = new Set();
-
+ const categories = new Set(), classifications = new Set(), tiers = new Set();
  data.forEach(f => {
    if(f.category) categories.add(f.category);
    if(f.metadata?.classification) classifications.add(f.metadata.classification);
-   if(f.management_company) managers.add(f.management_company);
    if(f.smart?.data_tier) tiers.add(f.smart.data_tier);
  });
 
- // املأ select category
  catSelect.innerHTML = '<option value="">كل الفئات</option>';
- categories.forEach(c => {
-   catSelect.innerHTML += `<option value="${c}">${c}</option>`;
- });
+ categories.forEach(c => { catSelect.innerHTML += `<option value="${c}">${c}</option>`; });
 
- // املأ select classification
  classSelect.innerHTML = '<option value="">كل التصنيفات</option>';
- classifications.forEach(c => {
-   classSelect.innerHTML += `<option value="${c}">${c}</option>`;
- });
+ classifications.forEach(c => { classSelect.innerHTML += `<option value="${c}">${c}</option>`; });
 
- // املأ select tier
  tierSelect.innerHTML = '<option value="">كل مستويات البيانات</option>';
- tiers.forEach(t => {
-   tierSelect.innerHTML += `<option value="${t}">${t}</option>`;
- });
+ tiers.forEach(t => { tierSelect.innerHTML += `<option value="${t}">${t}</option>`; });
 }
-
-/* ---------- Render All ---------- */
 
 function renderAll(data){
  renderKPIs(data);
@@ -1281,11 +1076,8 @@ function renderAll(data){
  renderCards(data);
  renderAxes(data);
  renderDistribution(data);
- // تطبيق الفلاتر الافتراضية
- applyFilters();
+ applyFilters(); // تطبيق الفلاتر الافتراضية
 }
-
-/* ---------- KPIs ---------- */
 
 function renderKPIs(data){
  const horizon = document.getElementById('horizon').value;
@@ -1316,8 +1108,6 @@ function renderKPIs(data){
  `;
 }
 
-/* ---------- Heatmap ---------- */
-
 function renderHeatmap(data){
  const horizon = document.getElementById('horizon').value;
  const container = document.getElementById('viewHeat');
@@ -1331,7 +1121,6 @@ function renderHeatmap(data){
    grouped[cat].push(f);
  });
 
- // ترتيب الفئات حسب متوسط العائد
  const sortedCats = Object.keys(grouped).sort((a,b) => {
    const avgA = grouped[a].reduce((s,f) => s + (getReturn(f, horizon) || 0), 0) / grouped[a].length;
    const avgB = grouped[b].reduce((s,f) => s + (getReturn(f, horizon) || 0), 0) / grouped[b].length;
@@ -1343,7 +1132,6 @@ function renderHeatmap(data){
    const funds = grouped[cat];
    const avgRet = funds.reduce((s,f) => s + (getReturn(f, horizon) || 0), 0) / funds.length;
    html += `<div class="category-block"><div class="category-head"><span class="category-name">${cat}</span><span class="category-meta">${funds.length} صندوق | متوسط ${formatReturn(avgRet)}</span></div><div class="tiles">`;
-   // ترتيب الصناديق داخل الفئة تنازلياً حسب العائد
    funds.sort((a,b) => (getReturn(b, horizon) || 0) - (getReturn(a, horizon) || 0));
    funds.forEach(f => {
      const ret = getReturn(f, horizon);
@@ -1360,7 +1148,6 @@ function renderHeatmap(data){
  });
  body.innerHTML = html;
 
- // إضافة وسيلة إيضاح
  const legend = document.getElementById('heatLegend');
  legend.innerHTML = `
    <span><i style="background:#7f1d1d"></i> < -20%</span>
@@ -1376,16 +1163,10 @@ function renderHeatmap(data){
    <span><i style="background:#34d399"></i> > 80%</span>
  `;
 
- // إضافة مستمعات على البلاطات لفتح الدرج
  document.querySelectorAll('#heatBody .tile').forEach(el => {
-   el.addEventListener('click', function(){
-     const id = this.dataset.fundId;
-     openDrawer(id);
-   });
+   el.addEventListener('click', function(){ openDrawer(this.dataset.fundId); });
  });
 }
-
-/* ---------- Treemap ---------- */
 
 function renderTree(data){
  const horizon = document.getElementById('horizon').value;
@@ -1396,20 +1177,12 @@ function renderTree(data){
  const width = tmContainer.clientWidth || 800;
  const height = 620;
 
- // فلتر البيانات ذات العائد المعروف
  const valid = data.filter(f => getReturn(f, horizon) !== null);
  if(valid.length === 0){
    tmContainer.innerHTML = '<div style="padding:30px;text-align:center;color:var(--muted)">لا توجد بيانات كافية لعرض Treemap</div>';
    return;
  }
 
- // حساب المساحات حسب العائد المطلق (القيمة المطلقة) + إزاحة لتجنب الصفر
- const totalArea = valid.reduce((sum, f) => {
-   const ret = Math.abs(getReturn(f, horizon) || 0) + 1;
-   return sum + ret;
- }, 0);
-
- let x = 0, y = 0;
  const cols = 5;
  const rows = Math.ceil(valid.length / cols);
  const cellW = width / cols;
@@ -1434,14 +1207,10 @@ function renderTree(data){
      <div class="tm-return">${formatReturn(ret)}</div>
    `;
    el.dataset.fundId = f.fund_id;
-   el.addEventListener('click', function(){
-     openDrawer(this.dataset.fundId);
-   });
+   el.addEventListener('click', function(){ openDrawer(this.dataset.fundId); });
    tmContainer.appendChild(el);
  });
 }
-
-/* ---------- Cards ---------- */
 
 function renderCards(data){
  const horizon = document.getElementById('horizon').value;
@@ -1472,23 +1241,17 @@ function renderCards(data){
  });
  cardsContainer.innerHTML = html;
 
- // مستمع للنقر على البطاقة لعرض الصناديق التابعة لها في الدرج
  document.querySelectorAll('.cat-card').forEach(el => {
    el.addEventListener('click', function(){
      const cat = this.dataset.category;
      const funds = data.filter(f => (f.normalizedCategory || 'فئات أخرى') === cat);
-     if(funds.length){
-       openDrawerCategory(cat, funds);
-     }
+     if(funds.length) openDrawerCategory(cat, funds);
    });
  });
 }
 
-/* ---------- Axes ---------- */
-
 function renderAxes(data){
  const container = document.getElementById('axes');
- // محاور smart score المتاحة
  const axes = [
    { key: 'performance_score', label: 'الأداء' },
    { key: 'risk_score', label: 'المخاطرة' },
@@ -1499,14 +1262,11 @@ function renderAxes(data){
 
  let html = '';
  axes.forEach(ax => {
-   // أعلى قيمة موجودة لهذا المحور
-   let maxVal = null;
-   let maxFund = null;
+   let maxVal = null, maxFund = null;
    data.forEach(f => {
      const val = safeNumber(f.smart?.[ax.key]);
      if(val !== null && (maxVal === null || val > maxVal)){
-       maxVal = val;
-       maxFund = f;
+       maxVal = val; maxFund = f;
      }
    });
    html += `<div class="axis"><div class="axis-label">${ax.label}</div><div class="axis-value">${maxVal !== null ? formatNumber(maxVal,0) : '—'}</div><div class="axis-name">${maxFund ? maxFund.canonical_name || 'غير مسمى' : '—'}</div></div>`;
@@ -1514,12 +1274,9 @@ function renderAxes(data){
  container.innerHTML = html;
 }
 
-/* ---------- Distribution ---------- */
-
 function renderDistribution(data){
  const container = document.getElementById('distribution');
  const label = document.getElementById('distributionLabel');
- // درجات smart score
  const scores = data.map(f => safeNumber(f.smart?.final_score)).filter(s => s !== null);
  if(scores.length === 0){
    container.innerHTML = '';
@@ -1531,10 +1288,7 @@ function renderDistribution(data){
  const counts = bins.map(() => 0);
  scores.forEach(s => {
    for(let i = 0; i < bins.length - 1; i++){
-     if(s >= bins[i] && s < bins[i+1]){
-       counts[i]++;
-       break;
-     }
+     if(s >= bins[i] && s < bins[i+1]){ counts[i]++; break; }
    }
    if(s >= 100) counts[counts.length-1]++;
  });
@@ -1553,15 +1307,15 @@ function renderDistribution(data){
  label.textContent = `مجموع ${total} درجة | المتوسط ${formatNumber(avg,0)} | التوزيع حسب الفئات`;
 }
 
-/* ---------- Filtering ---------- */
-
+/* ------------------------------------------------------------
+   الفلاتر والدرج
+------------------------------------------------------------ */
 function applyFilters(){
  const cat = document.getElementById('category').value;
  const classif = document.getElementById('classification').value;
  const manager = document.getElementById('manager').value.trim().toLowerCase();
  const scoreRange = document.getElementById('scoreRange').value;
  const tier = document.getElementById('tier').value;
- const horizon = document.getElementById('horizon').value;
 
  const data = window.allFunds || [];
  const filtered = data.filter(f => {
@@ -1569,19 +1323,15 @@ function applyFilters(){
    if(classif && (f.metadata?.classification || '') !== classif) return false;
    if(manager && !(f.management_company || '').toLowerCase().includes(manager)) return false;
    if(tier && (f.smart?.data_tier || '') !== tier) return false;
-   // score range based on final_score
    const score = safeNumber(f.smart?.final_score);
    if(scoreRange && !scoreMatches(score, scoreRange)) return false;
    return true;
  });
 
- // تحديث العرض بناءً على الفلتر
  renderAll(filtered);
- // تحديث كلمة "النتائج" في العنوان (اختياري)
- document.querySelector('.heat-count')?.textContent = filtered.length + ' صندوق';
+ const heatCount = document.querySelector('.heat-count');
+ if(heatCount) heatCount.textContent = filtered.length + ' صندوق';
 }
-
-/* ---------- Drawer ---------- */
 
 function openDrawer(fundId){
  const data = window.allFunds || [];
@@ -1594,11 +1344,9 @@ function openDrawer(fundId){
 
  let html = `<button class="drawer-close" onclick="closeDrawer()">✕ إغلاق</button>`;
  html += `<div class="fund-row"><b>${fund.canonical_name || 'غير مسمى'}</b><div class="fund-meta">${fund.management_company || ''}</div><div class="fund-data">الفئة: ${fund.category || '—'}</div><div class="fund-data">التصنيف: ${fund.metadata?.classification || '—'}</div>`;
- // NAV
  if(fund.nav !== undefined && fund.nav !== null){
    html += `<div class="fund-data">أحدث NAV: ${formatNumber(fund.nav)} ${fund.currency || ''}</div>`;
  }
- // Smart score
  if(fund.smart){
    html += `<div class="fund-data">الدرجة النهائية: ${formatNumber(fund.smart.final_score,0)}</div>`;
    html += `<div class="fund-data">التقييم: ${fund.smart.rating || '—'}</div>`;
@@ -1634,10 +1382,10 @@ function closeDrawer(){
  document.getElementById('mask').classList.remove('on');
 }
 
-/* ---------- Event Listeners ---------- */
-
+/* ------------------------------------------------------------
+   أحداث DOM
+------------------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', function(){
- // تبديل طرق العرض
  document.querySelectorAll('.views button').forEach(btn => {
    btn.addEventListener('click', function(){
      document.querySelectorAll('.views button').forEach(b => b.classList.remove('active'));
@@ -1650,26 +1398,28 @@ document.addEventListener('DOMContentLoaded', function(){
    });
  });
 
- // فلترة عند تغيير أي فلتر
  document.querySelectorAll('.filters select, .filters input').forEach(el => {
    el.addEventListener('change', applyFilters);
  });
  document.getElementById('manager').addEventListener('input', applyFilters);
 
- // زر إعادة الضبط
  document.getElementById('reset').addEventListener('click', function(){
    document.querySelectorAll('.filters select').forEach(s => s.value = '');
    document.getElementById('manager').value = '';
    applyFilters();
  });
 
- // تحميل البيانات
  loadData();
 });
 
-// إغلاق الدرج عند النقر على الماسك
 document.getElementById('mask').addEventListener('click', closeDrawer);
 
+/* 
+   مصدر البيانات:
+   - الجداول المستخدمة: funds, nav_official, fund_smartscore_latest
+   - الأعمدة المستخدمة هي المحددة في fetchTable لكل جدول، ويتم التعامل مع البيانات المفقودة بأمان.
+   - في حال فشل جدول، تظهر رسالة تحذير مع اسم الجدول وسبب الفشل.
+*/
 </script>
 </body>
 </html>
