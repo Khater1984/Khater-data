@@ -7,49 +7,52 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/app.css"/>
 <style>
-.group{border:1px solid #2a3140;border-radius:14px;padding:14px;margin:12px 0}
-.cells{display:flex;flex-wrap:wrap;gap:8px}
-.cell{background:#14181f;border:1px solid #2a3140;border-radius:10px;padding:12px;min-width:140px;flex:1}
-.cell b{display:block;font-size:22px;font-family:"IBM Plex Sans",sans-serif}
+.cell{min-width:160px;cursor:pointer}
+.cell b{font-size:26px}
 </style>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
-  <div class="logo">خريطة الفئات<span>متوسط العائد داخل كل مجموعة</span></div>
-  <nav><a href="./funds.html">الصناديق</a></nav>
+  <div class="logo">خريطة الفئات<span>متوسط 12 شهراً من التقرير السنوي</span></div>
+  <nav>
+    <a href="./index.html">البداية</a>
+    <a href="./map.html">ماذا حدث للفلوس؟</a>
+    <a href="./funds.html">الصناديق</a>
+    <a class="active" href="./categories.html">خريطة الفئات</a>
+    <a href="./macro.html">الاقتصاد</a>
+  </nav>
 </div></header>
-<main class="wrap page" id="app"></main>
-<script type="module">
-import { loadFundBook } from "./js/live.js";
-import { bucket } from "./js/engine.js";
-const packed=await loadFundBook();
-const groups={
- "أسهم":["أسهم","متداول"],
- "نقدي":["نقدي"],
- "دخل ثابت":["دخل ثابت"],
- "متوازن / تخصيص":["متوازن"],
- "ذهب":["ذهب"],
- "أخرى":["خيري","محمي","أخرى"]
-};
-function avg(list){
-  const xs=list.map(f=>f.eima?.last12m?.ret).filter(v=>v!=null).map(Number);
-  if(!xs.length) return null;
-  return xs.reduce((a,b)=>a+b,0)/xs.length;
-}
-function block(title, funds){
-  const by={};
-  funds.forEach(f=>{const k=f.category||"Other"; (by[k]||=[]).push(f)});
-  const cells=Object.entries(by).map(([k,arr])=>{
-    const a=avg(arr);
-    return `<div class="cell"><b>${a==null?"—":a.toLocaleString("en-US",{maximumFractionDigits:1})+"%"}</b><span>${k}</span><div class="muted">${arr.length} صندوق</div></div>`;
+<main class="wrap page" id="app">جاري التحميل…</main>
+<script>
+const CFG=window.KHATER||{};
+const bucket=c=>{c=(c||"").toLowerCase();
+ if(c.includes("gold"))return "ذهب";
+ if(c.includes("equity")||c.includes("index")||c.includes("thematic")||c.includes("sector"))return "أسهم";
+ if(c.includes("money market"))return "نقدي";
+ if(c.includes("fixed income"))return "دخل ثابت";
+ if(c.includes("balanced")||c.includes("mixed")||c.includes("allocator"))return "متوازن";
+ if(c.includes("etf")||c.includes("traded"))return "متداول";
+ if(c.includes("protected")||c.includes("guaranteed"))return "محمي";
+ if(c.includes("charitable"))return "خيري"; return "أخرى";};
+(async()=>{
+  const raw=await (await fetch(CFG.url+"/rest/v1/funds?select=canonical_name,category,metadata&limit=1000",{headers:{apikey:CFG.key,Authorization:"Bearer "+CFG.key}})).json();
+  const funds=raw.map(f=>({
+    name:f.canonical_name, cat:f.category, bucket:bucket(f.category),
+    r:(f.metadata&&f.metadata.scores&&f.metadata.scores.last12m)?f.metadata.scores.last12m.return_pct:null
+  }));
+  const groups={};
+  funds.forEach(f=>{(groups[f.bucket]||={items:[],by:{}}).items.push(f);
+    (groups[f.bucket].by[f.cat||"غير مصنّف"]||=[]).push(f);
+  });
+  const avg=arr=>{const xs=arr.map(x=>x.r).filter(v=>v!=null); return xs.length?xs.reduce((a,b)=>a+b,0)/xs.length:null;};
+  const fmt=v=>v==null?"—":v.toLocaleString("en-US",{maximumFractionDigits:1})+"%";
+  document.getElementById("app").innerHTML=Object.entries(groups).map(([g,obj])=>{
+    const cells=Object.entries(obj.by).map(([k,arr])=>`<div class="card cell" onclick="location.href='funds.html'">
+      <b class="num">${fmt(avg(arr))}</b><div>${k}</div><div class="muted">${arr.length} صندوق · منها ${arr.filter(x=>x.r!=null).length} بعائد سنوي</div>
+    </div>`).join("");
+    return `<section class="card" style="margin:14px 0"><h2>${g} · المتوسط ${fmt(avg(obj.items))} · ${obj.items.length}</h2>
+      <div class="cells" style="display:flex;flex-wrap:wrap;gap:8px">${cells}</div></section>`;
   }).join("");
-  const a=avg(funds);
-  return `<section class="group"><h2>${title} · المتوسط ${a==null?"—":a.toLocaleString("en-US",{maximumFractionDigits:1})+"%"} · ${funds.length}</h2><div class="cells">${cells}</div></section>`;
-}
-const html=Object.entries(groups).map(([t,keys])=>{
-  const funds=packed.funds.filter(f=>keys.includes(bucket(f.category)));
-  return block(t,funds);
-}).join("");
-document.getElementById("app").innerHTML="<p class='muted'>الرقم = متوسط عائد 12 شهراً حسب EIMA. اللون للتقسيم لا للتوصية.</p>"+html;
+})();
 </script>
 </body></html>
