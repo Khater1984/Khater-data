@@ -59,13 +59,23 @@ table th{font-size:11px;letter-spacing:.08em;color:#8b93a0}
   <tbody id="tb"></tbody>
 </table>
 <script type="module">
-import { loadFundBook } from "./js/live.js";
 import { bucket } from "./js/engine.js";
-import { BENCH_META, ret } from "./js/score.js";
-function cell(f,h){ return (f.scores&&f.scores[h]) || {}; }
-const packed=await loadFundBook();
-const ALL=packed.funds;
-const BENCH=await (await fetch("data/benchmarks.json")).json();
+import { BENCH_META } from "./js/score.js";
+function cell(f,h){ return (f.scores && f.scores[h]) || {}; }
+const CFG = window.KHATER || {};
+if(!CFG.url || !CFG.key) throw new Error("config.js missing publishable key");
+const headers = { apikey: CFG.key, Authorization: "Bearer " + CFG.key };
+const rawFunds = await (await fetch(CFG.url + "/rest/v1/funds?select=fund_id,canonical_name,management_company,category,metadata&limit=1000", { headers })).json();
+const ALL = rawFunds.map(f => ({
+  id: f.fund_id,
+  name: f.canonical_name,
+  manager: f.management_company,
+  category: f.category,
+  scores: (f.metadata || {}).scores || {},
+  scores_as_of: (f.metadata || {}).scores_as_of || null
+}));
+const BENCH = await (await fetch("data/benchmarks.json")).json();
+document.querySelector(".logo span").textContent = "مباشر من Supabase · " + (ALL[0]?.scores_as_of || "");
 const chips=document.getElementById("chips");
 chips.innerHTML=BENCH_META.map(([k,l])=>`<button class="chip" data-k="${k}">${l}</button>`).join("");
 let SEL=new Set();
