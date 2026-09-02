@@ -95,6 +95,34 @@ td.pos.active{background:#047857} td.neg.active{background:#991b1b}
 #v-heat .hm-tooltip b{color:#fff}
 @media(max-width:700px){#v-heat .heatmap-grid{min-width:790px;grid-template-columns:170px repeat(5,105px)}#v-heat .hm-category,#v-heat .hm-cell{min-height:70px}#v-heat .hm-value{font-size:16px}}
 
+
+#v-heat{width:100%;margin-top:12px}
+.fund-heatmap{width:100%;background:#0f1219;border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden}
+.fund-heatmap-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
+.fund-heatmap-title{font-size:16px;font-weight:700;color:#f3f4f6}
+.fund-heatmap-sub{margin-top:4px;color:#8992a2;font-size:11px}
+.fund-heatmap-sub strong{color:#10b981}
+.fund-heatmap-count{color:#9ca3af;font-size:12px}
+.fund-heatmap-body{padding:12px}
+.fund-heat-category{margin-bottom:14px}
+.fund-heat-category:last-child{margin-bottom:0}
+.fund-heat-category-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;padding:0 3px}
+.fund-heat-category-name{color:#f3f4f6;font-size:12px;font-weight:700}
+.fund-heat-category-meta{color:#697383;font-size:10px}
+.fund-heat-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:3px}
+.fund-heat-tile{min-height:78px;padding:9px 10px;border-radius:5px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;transition:transform .12s ease,filter .12s ease,box-shadow .12s ease}
+.fund-heat-tile:hover{transform:scale(1.025);filter:brightness(1.12);box-shadow:0 8px 25px rgba(0,0,0,.35);position:relative;z-index:5}
+.fund-heat-name{font-size:11px;line-height:1.35;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fund-heat-return{margin-top:5px;direction:ltr;text-align:right;font-family:"IBM Plex Sans",sans-serif;font-size:19px;font-weight:700;letter-spacing:-.03em}
+.fund-heat-score{margin-top:3px;opacity:.65;direction:ltr;text-align:right;font-family:"IBM Plex Sans",sans-serif;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fund-heatmap-legend{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:11px 16px 14px;border-top:1px solid rgba(255,255,255,.06);color:#8b94a4;font-size:10px}
+.fund-heatmap-legend span{display:flex;align-items:center;gap:5px}
+.fund-heatmap-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.fund-heat-tooltip{position:fixed;display:none;z-index:9999;min-width:220px;max-width:300px;padding:12px 14px;background:#151923;border:1px solid rgba(255,255,255,.13);border-radius:10px;box-shadow:0 18px 50px rgba(0,0,0,.5);color:#cbd1db;font-size:10px;line-height:1.9;pointer-events:none}
+.fund-heat-tooltip strong{color:#fff}
+.fh-tip-name{color:#fff;font-size:12px;font-weight:700;margin-bottom:5px}
+@media(max-width:700px){.fund-heatmap-head{align-items:flex-start;gap:10px}.fund-heat-tiles{grid-template-columns:repeat(auto-fill,minmax(125px,1fr))}.fund-heat-tile{min-height:72px}.fund-heat-return{font-size:17px}}
+
 </style>
 </head>
 <body>
@@ -261,56 +289,85 @@ function color(v){
     
 function renderKhaterHeatmap(groups, horizon) {
   const host = document.getElementById("v-heat");
-  const horizonNames = {"4weeks":"شهر","ytd":"YTD","last12m":"سنة","3y":"3 سنوات","5y":"5 سنوات"};
-  const getReturn = (fund, hz) => {
-    const v = (typeof ret==="function") ? ret(fund, hz) : (fund.scores && fund.scores[hz] && fund.scores[hz].return_pct);
-    return v==null||v===""||isNaN(Number(v)) ? null : Number(v);
+  const horizonNames = {"4weeks":"شهر","ytd":"YTD","last12m":"12 شهر","3y":"3 سنوات","5y":"5 سنوات"};
+  const funds = [];
+  Object.entries(groups || {}).forEach(([category, list]) => {
+    (list || []).forEach(f => { funds.push({...f, _category: category}); });
+  });
+  const unique = new Map();
+  funds.forEach(f => { if (!unique.has(f.id)) unique.set(f.id, f); });
+  const allFunds = [...unique.values()];
+  const getReturn = fund => {
+    const value = typeof ret === "function" ? ret(fund, horizon) : null;
+    if (value === null || value === undefined || value === "" || Number.isNaN(Number(value))) return null;
+    return Number(value);
   };
-  const heatClass = value => {
-    if (value == null) return "hm-na";
+  function tileColor(value) {
+    if (value === null) return "#20242d";
     if (value < 0) {
-      if (value <= -15) return "hm-negative-4";
-      if (value <= -7)  return "hm-negative-3";
-      if (value <= -3)  return "hm-negative-2";
-      return "hm-negative-1";
+      if (value <= -20) return "#7f1d1d";
+      if (value <= -10) return "#991b1b";
+      if (value <= -5)  return "#b4232d";
+      return "#6b252b";
     }
-    if (value < 5)  return "hm-neutral";
-    if (value < 15) return "hm-positive-1";
-    if (value < 30) return "hm-positive-2";
-    if (value < 50) return "hm-positive-3";
-    if (value < 75) return "hm-positive-4";
-    return "hm-positive-5";
-  };
-  const average = values => values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
-  const categories = Object.entries(groups).map(([name, funds]) => {
-    const values = funds.map(f => getReturn(f, horizon)).filter(v => v != null);
-    return {name, funds, count:funds.length, available:values.length, avg:average(values)};
-  }).sort((a,b)=>(b.avg ?? -Infinity)-(a.avg ?? -Infinity));
-  let html = `<div class="heatmap-shell"><div class="heatmap-toolbar"><div><div class="heatmap-title">خريطة أداء الفئات</div><div class="heatmap-desc">مقارنة أداء الفئات عبر الآفاق الزمنية — اضغط على أي خلية للتفاصيل</div></div><div class="heatmap-desc">الأفق النشط: <b style="color:#fff">${horizonNames[horizon]||horizon}</b></div></div><div class="heatmap-scroll"><div class="heatmap-grid"><div class="hm-head">الفئة</div>${HS.map(([key,label])=>`<div class="hm-head ${key===horizon?"hm-active":""}">${label}</div>`).join("")}`;
-  categories.forEach(category => {
-    html += `<div class="hm-category"><strong>${category.name}</strong><span>${category.count} صندوق · ${category.available} قيمة</span></div>`;
-    HS.forEach(([key]) => {
-      const values = category.funds.map(f => getReturn(f,key)).filter(v => v != null);
-      const avg = average(values);
-      html += `<div class="hm-cell ${heatClass(avg)} ${key===horizon?"hm-active":""}" data-category="${String(category.name).replace(/"/g,"&quot;")}" data-horizon="${key}" data-value="${avg==null?"":avg}" data-funds="${category.count}" data-available="${values.length}"><div class="hm-value">${avg==null?"—":((avg>=0?"+":"")+avg.toLocaleString("en-US",{maximumFractionDigits:1})+"%")}</div><div class="hm-count">${values.length} قيمة</div></div>`;
+    if (value < 5) return "#303640";
+    if (value < 15) return "#064e3b";
+    if (value < 25) return "#075f49";
+    if (value < 40) return "#07805f";
+    if (value < 60) return "#0aa978";
+    if (value < 80) return "#21c58d";
+    return "#34d399";
+  }
+  function textColor(value) {
+    if (value !== null && value >= 60) return "#03130e";
+    return "#ffffff";
+  }
+  const categories = {};
+  allFunds.forEach(f => {
+    if (!categories[f._category]) categories[f._category] = [];
+    categories[f._category].push(f);
+  });
+  Object.values(categories).forEach(list => {
+    list.sort((a, b) => {
+      const av = getReturn(a), bv = getReturn(b);
+      if (av === null && bv === null) return 0;
+      if (av === null) return 1;
+      if (bv === null) return -1;
+      return bv - av;
     });
   });
-  html += `</div></div><div class="heatmap-legend"><span><i style="background:#063d32"></i>ضعيف إيجابي</span><span><i style="background:#07805f"></i>إيجابي</span><span><i style="background:#36d399"></i>قوي جدًا</span><span><i style="background:#252b35"></i>محايد</span><span><i style="background:#8b1e27"></i>سلبي</span><span><i style="background:#171b23"></i>لا توجد بيانات</span></div></div><div class="hm-tooltip" id="khaterHeatTooltip"></div>`;
+  let html = `<div class="fund-heatmap"><div class="fund-heatmap-head"><div><div class="fund-heatmap-title">خريطة أداء الصناديق</div><div class="fund-heatmap-sub">كل مربع يمثل صندوقًا واحدًا · الأفق: <strong>${horizonNames[horizon] || horizon}</strong></div></div><div class="fund-heatmap-count">${allFunds.length} صندوق</div></div><div class="fund-heatmap-body">`;
+  Object.entries(categories).forEach(([category, list]) => {
+    html += `<section class="fund-heat-category"><div class="fund-heat-category-head"><div class="fund-heat-category-name">${category}</div><div class="fund-heat-category-meta">${list.length} صندوق</div></div><div class="fund-heat-tiles">`;
+    list.forEach(f => {
+      const value = getReturn(f);
+      const color = tileColor(value);
+      const txt = textColor(value);
+      const score = f.final === null || f.final === undefined ? "—" : Number(f.final).toFixed(1);
+      const rating = f.rating || "—";
+      html += `<div class="fund-heat-tile" data-fund-id="${String(f.id).replace(/"/g,"&quot;")}" data-category="${String(category).replace(/"/g,"&quot;")}" style="background:${color};color:${txt}"><div class="fund-heat-name">${f.name || "صندوق غير معروف"}</div><div class="fund-heat-return">${value === null ? "—" : `${value >= 0 ? "+" : ""}${value.toLocaleString("en-US",{maximumFractionDigits:1})}%`}</div><div class="fund-heat-score">Score ${score} · ${rating}</div></div>`;
+    });
+    html += `</div></section>`;
+  });
+  html += `</div><div class="fund-heatmap-legend"><span><i style="background:#34d399"></i>أداء قوي</span><span><i style="background:#07805f"></i>أداء إيجابي</span><span><i style="background:#303640"></i>قريب من الصفر</span><span><i style="background:#991b1b"></i>أداء سلبي</span><span><i style="background:#20242d"></i>لا توجد بيانات</span></div></div><div id="fundHeatTooltip" class="fund-heat-tooltip"></div>`;
   host.innerHTML = html;
-  const tooltip = document.getElementById("khaterHeatTooltip");
-  host.querySelectorAll(".hm-cell").forEach(cell => {
-    cell.addEventListener("mouseenter", () => {
-      const horizonLabel = horizonNames[cell.dataset.horizon] || cell.dataset.horizon;
-      const value = cell.dataset.value;
-      tooltip.innerHTML = `<b>${cell.dataset.category}</b><br>الأفق: <b>${horizonLabel}</b><br>متوسط العائد: <b>${value===""?"غير متاح":((Number(value)>=0?"+":"")+Number(value).toFixed(1)+"%")}</b><br>الصناديق: <b>${cell.dataset.funds}</b><br>القيم المستخدمة: <b>${cell.dataset.available}</b>`;
+  const tooltip = document.getElementById("fundHeatTooltip");
+  host.querySelectorAll(".fund-heat-tile").forEach(tile => {
+    const fund = allFunds.find(f => String(f.id) === String(tile.dataset.fundId));
+    if (!fund) return;
+    const value = getReturn(fund);
+    tile.addEventListener("mouseenter", () => {
+      tooltip.innerHTML = `<div class="fh-tip-name">${fund.name || "—"}</div><div>الفئة: <strong>${tile.dataset.category}</strong></div><div>مدير الاستثمار: <strong>${fund.manager || "—"}</strong></div><div>${horizonNames[horizon] || horizon}: <strong>${value === null ? "غير متاح" : `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`}</strong></div><div>Smart Score: <strong>${fund.final == null ? "غير متاح" : Number(fund.final).toFixed(1)}</strong></div><div>Rating: <strong>${fund.rating || "—"}</strong></div><div>Data Tier: <strong>${fund.tier || "—"}</strong></div>`;
       tooltip.style.display = "block";
     });
-    cell.addEventListener("mousemove", e => {
-      tooltip.style.left = Math.min(e.clientX+16, window.innerWidth-tooltip.offsetWidth-10)+"px";
-      tooltip.style.top = Math.min(e.clientY+16, window.innerHeight-tooltip.offsetHeight-10)+"px";
+    tile.addEventListener("mousemove", e => {
+      tooltip.style.left = Math.min(e.clientX + 14, window.innerWidth - tooltip.offsetWidth - 12) + "px";
+      tooltip.style.top = Math.min(e.clientY + 14, window.innerHeight - tooltip.offsetHeight - 12) + "px";
     });
-    cell.addEventListener("mouseleave", () => { tooltip.style.display="none"; });
-    cell.addEventListener("click", () => { if (typeof openCat==="function") openCat(cell.dataset.category, groups[cell.dataset.category]||[]); });
+    tile.addEventListener("mouseleave", () => { tooltip.style.display = "none"; });
+    tile.addEventListener("click", () => {
+      location.href = "fund.html?id=" + encodeURIComponent(fund.id) + "&h=" + encodeURIComponent(horizon);
+    });
   });
 }
 
