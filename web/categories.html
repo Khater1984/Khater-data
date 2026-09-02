@@ -30,10 +30,12 @@ button.on{background:#10B981;color:#04110b;border:0}
 .cat,.champ,.tile{padding:12px;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s}
 .cat:hover,.tile:hover,.champ:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(16,185,129,.12)}
 .cat{cursor:pointer;min-height:120px}
-.tree{display:flex;flex-direction:column;gap:10px}
-.group{padding:10px}
-.tiles{display:flex;flex-wrap:wrap;gap:4px}
-.tile{flex:1 1 140px;min-height:88px;cursor:pointer;border-radius:8px;padding:8px;font-size:12px;color:#fff}
+#treemap-canvas{position:relative;width:100%;height:min(72vh,760px);background:#0c0d14;overflow:hidden}
+.tm-cat{position:absolute;overflow:hidden}
+.tm-lab{position:absolute;top:3px;right:6px;z-index:2;font-size:11px;color:#fff;text-shadow:0 1px 2px #000;pointer-events:none}
+.tm-tile{position:absolute;border:1px solid #0c0d14;overflow:hidden;cursor:pointer;color:#fff;padding:4px}
+.tm-tile .nm{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tm-tile .rv{font-size:12px;font-weight:600}
 .sub{color:var(--mute);font-size:12px;margin:4px 0}
 .two{display:grid;grid-template-columns:1.1fr .9fr;gap:10px}
 table{width:100%;border-collapse:separate;border-spacing:2px;font-size:12px}
@@ -126,6 +128,29 @@ function inRange(score,sel){
   if(!sel) return true; if(sel==="na") return score==null; if(score==null) return false;
   const n=+sel; if(n===90) return score>=90; if(n===75) return score>=75&&score<90; if(n===50) return score>=50&&score<75; return score<50;
 }
+function squarify(items,x,y,w,h){
+  const out=[]; const total=items.reduce((s,i)=>s+i.area,0)||1;
+  const nodes=items.map(i=>({...i,area:i.area/total*(w*h)})).sort((a,b)=>b.area-a.area);
+  function worst(row,len){const s=row.reduce((a,b)=>a+b.area,0); const mx=Math.max(...row.map(r=>r.area)); const mn=Math.min(...row.map(r=>r.area)); return Math.max((len*len*mx)/(s*s),(s*s)/(len*len*mn));}
+  function layout(row,x0,y0,w0,h0){
+    const s=row.reduce((a,b)=>a+b.area,0);
+    if(w0>=h0){let yy=y0; row.forEach(r=>{const hh=s?r.area/w0:0; out.push({...r,x:x0,y:yy,w:w0,h:hh}); yy+=hh;});}
+    else{let xx=x0; row.forEach(r=>{const ww=s?r.area/h0:0; out.push({...r,x:xx,y:y0,w:ww,h:h0}); xx+=ww;});}
+  }
+  function step(list,x0,y0,w0,h0){
+    if(!list.length) return;
+    const vertical=w0>=h0; const len=vertical?h0:w0; let row=[], rest=list.slice();
+    while(rest.length){
+      const n=rest[0];
+      if(!row.length || worst(row.concat([n]),len)<=worst(row,len)){row.push(n); rest=rest.slice(1);}
+      else break;
+    }
+    const s=row.reduce((a,b)=>a+b.area,0);
+    if(vertical){layout(row,x0,y0,s/h0,h0); step(rest,x0+s/h0,y0,w0-s/h0,h0);}
+    else{layout(row,x0,y0,w0,s/w0); step(rest,x0,y0+s/w0,w0,h0-s/w0);}
+  }
+  step(nodes,x,y,w,h); return out;
+}
 function color(v){
   if(v==null) return "#1F2937";
   if(v>=0){const t=Math.min(1,v/80); return `rgb(${Math.round(6+16*t)},${Math.round(95+90*t)},${Math.round(70+59*t)})`;}
@@ -203,21 +228,23 @@ function color(v){
         <div class="kpi glass">الفئات<b>${Object.keys(groups).length}</b></div>
         <div class="kpi glass">أعلى عائد للأفق المختار<b>${top?num(ret(top,h))+"%":"غير متاح"}</b><div class="sub">${top?top.name:""}</div></div>`;
 
-      document.getElementById("v-tree").innerHTML=Object.entries(groups).map(([g,list])=>{
-        const isl=list.filter(f=>f.sharia && ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h))[0];
-        const islLine=list.some(f=>f.sharia)
-          ?(isl?`${num(ret(isl,h))}% 🌙 · متوافق مع الشريعة · ${g}`:"لا يوجد صندوق إسلامي بهذه الفئة له عائد في هذا الأفق")
-          :"بيانات التوافق الشرعي غير متاحة";
-        return `<div class="glass group"><div style="display:flex;justify-content:space-between"><b>${g}</b><button type="button" data-g="${g}">فتح الفئة</button></div>
-          <div class="sub">${islLine}</div>
-          <div class="tiles">${list.map(f=>{
-            const rv=ret(f,h);
-            return `<div class="tile" data-id="${f.id}" style="background:${color(rv)}" title="${f.name}">
-              <div>${f.name}</div><div>${rv==null?"غير متاح":num(rv)+"%"}</div></div>`;
-          }).join("")}</div></div>`;
-      }).join("")||"<p>لا توجد بيانات متاحة</p>";
-      document.querySelectorAll("#v-tree [data-g]").forEach(b=>b.onclick=()=>openCat(b.dataset.g,groups[b.dataset.g]));
-      document.querySelectorAll("#v-tree .tile").forEach(t=>t.onclick=()=>location.href="fund.html?id="+encodeURIComponent(t.dataset.id)+"&h="+h);
+      const canvas=document.getElementById("v-tree");
+      const W=canvas.clientWidth||Math.min(1200,window.innerWidth-36), Ht=Math.min(window.innerHeight*0.72,760);
+      const catItems=Object.entries(groups).map(([g,list])=>({g,list,area:list.length}));
+      const catRects=squarify(catItems,0,0,W,Ht);
+      canvas.innerHTML=`<div id="treemap-canvas" style="height:${Ht}px">${catRects.map(c=>{
+        const funds=squarify(c.list.map(f=>({f,area:1})),0,0,c.w,c.h);
+        return `<div class="tm-cat" data-g="${c.g}" style="left:${c.x}px;top:${c.y}px;width:${c.w}px;height:${c.h}px">
+          <div class="tm-lab">${c.g}</div>
+          ${funds.map(t=>{
+            const rv=ret(t.f,h);
+            const tip=`${t.f.name} · ${t.f.manager} · NAV ${t.f.nav??"—"} · ${rv==null?"غير متاح":num(rv)+"%"} · Score ${t.f.final??"—"}`;
+            return `<div class="tm-tile" data-id="${t.f.id}" title="${tip}" style="left:${t.x}px;top:${t.y}px;width:${t.w}px;height:${t.h}px;background:${color(rv)}">
+              <div class="nm">${t.f.name}</div><div class="rv">${rv==null?"—":num(rv)+"%"}</div></div>`;
+          }).join("")}</div>`;
+      }).join("")}</div>`;
+      document.querySelectorAll("#v-tree .tm-tile").forEach(t=>t.onclick=e=>{e.stopPropagation(); location.href="fund.html?id="+encodeURIComponent(t.dataset.id)+"&h="+h;});
+      document.querySelectorAll("#v-tree .tm-cat").forEach(c=>c.ondblclick=()=>openCat(c.dataset.g,groups[c.dataset.g]));
 
       document.getElementById("v-cards").innerHTML='<div class="grid">'+Object.entries(groups).map(([g,list])=>{
         const isl=list.filter(f=>f.sharia && ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h))[0];
