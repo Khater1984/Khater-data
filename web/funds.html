@@ -55,15 +55,19 @@ function bucket(c){
     });
     const raw = await r.json();
     if(!Array.isArray(raw)) throw new Error("استجابة غير متوقعة " + r.status);
+    const latest = await (await fetch(CFG.url + "/rest/v1/fund_smartscore_latest?select=fund_id,final_score,rating,data_tier,data_confidence,score_as_of,performance_score,risk_score,benchmark_score,consistency_score,inflation_score&limit=1000", { headers: { apikey: CFG.key, Authorization: "Bearer " + CFG.key } })).json();
+    const L = {};
+    (Array.isArray(latest)?latest:[]).forEach(x => L[x.fund_id] = x);
     const ALL = raw.map(f => ({
       id: f.fund_id,
       name: f.canonical_name,
       manager: f.management_company || "",
       category: f.category,
       scores: (f.metadata || {}).scores || {},
-      asof: (f.metadata || {}).scores_as_of
+      asof: (f.metadata || {}).scores_as_of,
+      ss: L[f.fund_id] || null
     }));
-    document.getElementById("src").textContent = "سوبربيس · " + (ALL[0]?.asof || "") + " · " + ALL.length + " صندوق";
+    document.getElementById("src").textContent = "Smart Score V3 · " + ALL.length + " صندوق";
     [...new Set(ALL.map(f => bucket(f.category)))].sort().forEach(b => {
       document.getElementById("bucket").insertAdjacentHTML("beforeend", `<option>${b}</option>`);
     });
@@ -73,7 +77,7 @@ function bucket(c){
       const b = document.getElementById("bucket").value;
       const h = document.getElementById("horizon").value;
       let rows = ALL.filter(f => (!q || (f.name+f.manager).includes(q)) && (!b || bucket(f.category)===b));
-      rows.sort((a,c) => (cell(c,h).score ?? -1) - (cell(a,h).score ?? -1));
+      rows.sort((a,c) => ((c.ss&&c.ss.final_score) ?? -1) - ((a.ss&&a.ss.final_score) ?? -1));
       document.getElementById("meta").textContent = rows.length + " صف";
       document.getElementById("tb").innerHTML = rows.map((f,i) => {
         const s = cell(f,h);
@@ -83,9 +87,9 @@ function bucket(c){
           <td>${f.name}<div class="muted">${f.manager}</div></td>
           <td>${bucket(f.category)}</td>
           <td class="num">${ret==null?"—":Number(ret).toLocaleString("en-US",{maximumFractionDigits:1})+"%"}<div class="muted">${s.source==="eima_annual"?"سنوي":s.source==="eima_weekly"?"أسبوعي":""}</div></td>
-          <td class="num score">${s.score==null?"—":s.score}</td>
-          <td>${s.rating||"—"}</td>
-          <td>${s.conf||"—"}</td>
+          <td class="num score">${f.ss&&f.ss.final_score!=null?Number(f.ss.final_score).toFixed(1):"—"}</td>
+          <td>${(f.ss&&f.ss.rating)||"—"}</td>
+          <td>${(f.ss&&f.ss.data_confidence)||(s.conf)||"—"}</td>
         </tr>`;
       }).join("");
     };
