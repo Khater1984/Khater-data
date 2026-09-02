@@ -261,17 +261,22 @@ function color(v){
       const grouped={};
       kids.forEach(f=>{const b=bandOf(ret(f,h)); if(!b) return; (grouped[b[1]]||=[]).push(f);});
       const bands=BANDS.map(([,lab])=>{
-        const list=grouped[lab]||[];
-        const val=list.reduce((s,f)=>s+Math.max(ret(f,h),0.3),0);
-        return {lab,list,val};
+        const full=(grouped[lab]||[]).slice();
+        const top=full.slice(0,10);
+        if(full.length>10){
+          const rest=full.slice(10);
+          const avg=rest.reduce((s,f)=>s+ret(f,h),0)/rest.length;
+          top.push({id:"other-"+lab,fund_name:"أخرى ("+rest.length+")",name:"أخرى",manager:"",category_name:"فئات أخرى",bucket:"فئات أخرى",sharia:false,isOther:true,returns:{[h]:avg}});
+        }
+        const val=top.reduce((s,f)=>s+Math.max((f.returns&&f.returns[h])??ret(f,h)??0,0.3),0);
+        return {lab,list:top,full:full.length,val};
       }).filter(b=>b.list.length);
-      const total=bands.reduce((s,b)=>s+b.val,0)||1;
       const header=26;
       let y=0; const laid=[];
       const svg=d3.select("#treemap-canvas").append("svg").attr("width",width);
       bands.forEach(b=>{
-        const bh=Math.max(150, Math.round(height*b.val/total));
-        svg.append("text").attr("x",8).attr("y",y+18).text(b.lab+" · "+b.list.length+" صندوق")
+        const bh=210;
+        svg.append("text").attr("x",8).attr("y",y+18).text(b.lab+" · أعلى 10 من "+b.full)
           .attr("fill","#E5E7EB").attr("font-size","13px").attr("font-weight","700");
         const inner=d3.hierarchy({children:b.list}).sum(d=>{
           if(d.children) return 0;
@@ -286,7 +291,7 @@ function color(v){
       const leaves=svg.selectAll("g.fund").data(laid).enter().append("g").attr("class","fund")
         .attr("transform",d=>`translate(${d.x0},${d.y0})`)
         .style("cursor","pointer")
-        .on("click",(_,d)=>{location.href="fund.html?id="+encodeURIComponent(d.data.id)+"&h="+h;})
+        .on("click",(_,d)=>{if(d.data.isOther) return; location.href="fund.html?id="+encodeURIComponent(d.data.id)+"&h="+h;})
         .on("mousemove",(e,d)=>{
           const f=d.data, rv=f.returns[h];
           const tip=document.getElementById("tipf");
