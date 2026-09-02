@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>خريطة الفلوس — السوق المصري مفهوماً</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="css/app.css"/>
+  <script src="config.js"></script>
 </head>
 <body>
   <header class="site-header"><div class="wrap">
@@ -21,15 +22,34 @@
   <main class="wrap">
     <section class="hero">
       <div class="kicker">ليس موقع عرض صناديق</div>
-      <h1>المواطن يسأل: ماذا حدث لأموالي؟ ولماذا؟ وما الخيارات المتاحة؟</h1>
-      <p>منذ 2016 تآكلت القوة الشرائية وتفرّقت البيانات. المنصة تجمع الاقتصاد والأصول والصناديق في طبقة واحدة، بالجنيه، بلا توصية شراء.</p>
-      <a class="btn" href="./map.html">ابدأ من 1,000 جنيه في 2016</a>
+      <h1>ماذا حدث لأموالي منذ 2016؟</h1>
+      <p>التضخم والدولار والذهب والبورصة والصناديق كانت في جزر منفصلة. هنا تُجمع بالجنيه، وتُقارن بعدل، من دون أن نقول لك ماذا تشتري.</p>
+      <a class="btn" href="./map.html">ابدأ بـ 1,000 جنيه</a>
     </section>
+    <section class="strip" id="strip"></section>
     <section class="grid3">
-      <a class="card" href="./macro.html"><h3>الاقتصاد</h3><p>التضخم وسعر الصرف والفائدة والأذون كقصة واحدة.</p></a>
-      <a class="card" href="./map.html"><h3>الأصول المرجعية</h3><p>الجنيه مقابل الدولار والذهب وEGX30 وSPY وبيتكوين.</p></a>
-      <a class="card" href="./funds.html"><h3>الصناديق</h3><p>206 صندوقاً، سعر حي، آفاق أداء، وبصمة الصندوق.</p></a>
+      <a class="card" href="./map.html"><div class="kicker">01</div><h3>ماذا حدث للفلوس؟</h3><p>مسار المبلغ نفسه عبر التضخم، الدولار، الذهب، EGX30 والأسواق العالمية.</p></a>
+      <a class="card" href="./funds.html"><div class="kicker">02</div><h3>الصناديق بذكاء</h3><p>فلتر AND على المراجع، ثم Score وRating وDNA. التفوق شرط ظهور لا زخرفة.</p></a>
+      <a class="card" href="./categories.html"><div class="kicker">03</div><h3>خريطة الفئات</h3><p>أين يتركز العائد داخل النقد والأسهم والذهب — قبل الغرق في صندوق واحد.</p></a>
     </section>
   </main>
-  <footer class="site"><div class="wrap">Supabase + GitHub Actions · ليست نصيحة استثمارية</div></footer>
+  <footer class="site"><div class="wrap">البيانات من سوبربيس · التحديث اليومي عبر GitHub Actions · ليست نصيحة استثمارية</div></footer>
+  <script type="module">
+    import { loadEngine, loadFundBook } from "./js/live.js";
+    const fmt = n => n.toLocaleString("en-US", {maximumFractionDigits: 2});
+    try {
+      const [m, f] = await Promise.all([loadEngine(), loadFundBook()]);
+      const last = k => (m.series[k]||[]).at(-1);
+      const usd = last("usd_egp_mid");
+      const egx = last("egx30_close");
+      const priced = f.funds.filter(x => x.nav != null).length;
+      document.getElementById("strip").innerHTML = `
+        <div class="kpi"><em>USD / EGP</em><b class="num">${usd?fmt(usd[1]):"—"}</b><span class="muted">${usd?usd[0]:""}</span></div>
+        <div class="kpi"><em>EGX30</em><b class="num">${egx?fmt(egx[1]):"—"}</b><span class="muted">${egx?egx[0]:""}</span></div>
+        <div class="kpi"><em>صناديق مسعّرة</em><b class="num">${priced} / ${f.funds.length}</b><span class="muted">${f.source}</span></div>
+        <div class="kpi"><em>مصدر المحرّك</em><b>${m.source==="supabase"?"مباشر":"لقطة"}</b><span class="muted">macro_series</span></div>`;
+    } catch(e) {
+      document.getElementById("strip").innerHTML = '<div class="muted">تعذر تحميل الملخص</div>';
+    }
+  </script>
 </body></html>
