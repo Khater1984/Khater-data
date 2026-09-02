@@ -6,22 +6,10 @@
 <script src="config.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/app.css"/>
-<style>
-.toolbar{padding:16px 20px;border-bottom:1px solid var(--line)}
-.hint{color:var(--mute);font-size:13px;margin-bottom:10px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid #3a4450;background:#12161c;color:#d7dde6;border-radius:999px;padding:8px 12px;cursor:pointer;font-size:13px}
-.chip.on{border-color:#d7b56a;color:#fff;background:#1b1710}
-.row2{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.num{font-family:"IBM Plex Sans",sans-serif;direction:ltr;unicode-bidi:isolate}
-.score{color:#b794f6;font-weight:600}
-.rate{border:1px solid #3a4450;padding:2px 8px;border-radius:6px;font-size:12px}
-table th{font-size:11px;letter-spacing:.08em;color:#8b93a0}
-</style>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
-  <div class="logo">خريطة الفلوس<span>الصناديق</span></div>
+  <div class="logo">خريطة الفلوس<span id="src">الصناديق</span></div>
   <nav>
     <a href="./index.html">البداية</a>
     <a href="./map.html">ماذا حدث للفلوس؟</a>
@@ -31,100 +19,79 @@ table th{font-size:11px;letter-spacing:.08em;color:#8b93a0}
   </nav>
 </div></header>
 <div class="toolbar">
-  <div class="hint">AND على المراجع. آفاق 12 شهراً و2–6 سنوات من التقرير السنوي EIMA (1y)، لا من last12m الأسبوعي المتضخم.</div>
-  <div class="chips" id="chips"></div>
-  <div class="row2">
-    <input id="q" placeholder="بحث"/>
-    <select id="bucket"><option value="">كل الفئات</option></select>
-    <select id="horizon">
-      <option value="weekly">أسبوع</option>
-      <option value="4weeks">4 أسابيع</option>
-      <option value="ytd">YTD</option>
-      <option value="last12m" selected>12 شهراً</option>
-      <option value="2y">سنتان</option>
-      <option value="3y">3 سنوات</option>
-      <option value="4y">4 سنوات</option>
-      <option value="5y">5 سنوات</option>
-      <option value="6y">6 سنوات</option>
-    </select>
-    <span class="muted" id="meta"></span>
-  </div>
+  <input id="q" placeholder="بحث عن صندوق"/>
+  <select id="bucket"><option value="">كل الفئات</option></select>
+  <select id="horizon">
+    <option value="last12m">12 شهراً (سنوي)</option>
+    <option value="ytd">منذ بداية العام</option>
+    <option value="weekly">آخر أسبوع</option>
+    <option value="2y">سنتان</option>
+    <option value="3y">3 سنوات</option>
+  </select>
+  <span class="muted" id="meta"></span>
 </div>
-<table>
-  <thead>
-    <tr>
-      <th>#</th><th>FUND</th><th>CATEGORY</th><th>RETURN</th><th>SCORE</th><th>RATING</th><th>CONF</th>
-    </tr>
-  </thead>
-  <tbody id="tb"></tbody>
-</table>
-<script type="module">
-import { bucket } from "./js/engine.js";
-import { BENCH_META } from "./js/score.js";
-function cell(f,h){ return (f.scores && f.scores[h]) || {}; }
+<p class="wrap muted" id="err"></p>
+<table><thead><tr><th>#</th><th>الصندوق</th><th>الفئة</th><th>العائد</th><th>التقييم</th><th>التصنيف</th><th>الثقة</th></tr></thead><tbody id="tb"></tbody></table>
+<script>
 const CFG = window.KHATER || {};
-if(!CFG.url || !CFG.key) throw new Error("config.js missing publishable key");
-const headers = { apikey: CFG.key, Authorization: "Bearer " + CFG.key };
-const res = await fetch(CFG.url + "/rest/v1/funds?select=fund_id,canonical_name,management_company,category,metadata&limit=1000", { headers });
-const rawFunds = await res.json();
-if(!Array.isArray(rawFunds)){
-  document.getElementById("tb").innerHTML = `<tr><td colspan="7">تعذر قراءة الصناديق: ${res.status}</td></tr>`;
-  throw new Error(JSON.stringify(rawFunds));
+const err = (m) => { document.getElementById("err").textContent = m; };
+function bucket(c){
+  c=(c||"").toLowerCase();
+  if(c.includes("gold")) return "ذهب";
+  if(c.includes("equity")||c.includes("index")||c.includes("thematic")||c.includes("sector")) return "أسهم";
+  if(c.includes("money market")) return "نقدي";
+  if(c.includes("fixed income")) return "دخل ثابت";
+  if(c.includes("balanced")||c.includes("mixed")||c.includes("allocator")) return "متوازن";
+  if(c.includes("etf")||c.includes("traded")) return "متداول";
+  if(c.includes("protected")||c.includes("guaranteed")) return "محمي";
+  if(c.includes("charitable")) return "خيري";
+  return "أخرى";
 }
-const ALL = rawFunds.map(f => ({
-  id: f.fund_id,
-  name: f.canonical_name,
-  manager: f.management_company,
-  category: f.category,
-  scores: (f.metadata || {}).scores || {},
-  scores_as_of: (f.metadata || {}).scores_as_of || null
-}));
-const BENCH = await (await fetch("data/benchmarks.json")).json();
-document.querySelector(".logo span").textContent = "مباشر من Supabase · " + (ALL[0]?.scores_as_of || "");
-const chips=document.getElementById("chips");
-chips.innerHTML=BENCH_META.map(([k,l])=>`<button class="chip" data-k="${k}">${l}</button>`).join("");
-let SEL=new Set();
-chips.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{c.classList.toggle("on");SEL=new Set([...chips.querySelectorAll(".chip.on")].map(x=>x.dataset.k));draw();});
-[...new Set(ALL.map(f=>bucket(f.category)))].sort().forEach(b=>document.getElementById("bucket").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
-
-function draw(){
-  const q=document.getElementById("q").value.trim().toLowerCase();
-  const b=document.getElementById("bucket").value;
-  const h=document.getElementById("horizon").value;
-  const vals=BENCH.horizons[h]||{};
-  const keys=[...SEL];
-  keys._vals=vals;
-  let rows=ALL.filter(f=>{
-    if(q && !(f.name+(f.manager||"")).toLowerCase().includes(q)) return false;
-    if(b && bucket(f.category)!==b) return false;
-    const s=cell(f,h);
-    const r=s.return_pct;
-    if(keys.length && (r==null || keys.some(k=>vals[k]==null || r<vals[k]))) return false;
-    return true;
-  });
-  rows.sort((a,c)=>{
-    const as=cell(a,h).score, cs=cell(c,h).score;
-    if(as==null && cs==null) return 0;
-    if(as==null) return 1;
-    if(cs==null) return -1;
-    return cs-as;
-  });
-  document.getElementById("meta").textContent=`${rows.length} صندوق · تقييم مخزّن ${ALL[0]?.scores_as_of||BENCH.as_of} · أفق ${h}`;
-  document.getElementById("tb").innerHTML=rows.map((f,i)=>{
-    const s=cell(f,h);
-    const r=s.return_pct;
-    return `<tr onclick="location.href='fund.html?id=${encodeURIComponent(f.id)}&h=${h}'">
-      <td class="num">${i+1}</td>
-      <td>${f.name}<div class="muted">${f.manager||""}</div></td>
-      <td>${bucket(f.category)}</td>
-      <td class="num">${r==null?"—":Number(r).toLocaleString("en-US",{maximumFractionDigits:1})+"%"}<div class="muted">${s.source==="eima_annual"?"سنوي":(s.source==="eima_weekly"?"أسبوعي":"")}</div></td>
-      <td class="num score">${s.score==null?"—":Number(s.score).toLocaleString("en-US",{maximumFractionDigits:1})}</td>
-      <td><span class="rate">${s.rating||"—"}</span></td>
-      <td class="muted">${s.conf||"—"}</td>
-    </tr>`;
-  }).join("");
-}
-["q","bucket","horizon"].forEach(id=>document.getElementById(id).oninput=draw);
-draw();
+(async () => {
+  try {
+    if(!CFG.url || !CFG.key) throw new Error("لا مفتاح عام في config.js");
+    const r = await fetch(CFG.url + "/rest/v1/funds?select=fund_id,canonical_name,management_company,category,metadata&limit=1000", {
+      headers: { apikey: CFG.key, Authorization: "Bearer " + CFG.key }
+    });
+    const raw = await r.json();
+    if(!Array.isArray(raw)) throw new Error("استجابة غير متوقعة " + r.status);
+    const ALL = raw.map(f => ({
+      id: f.fund_id,
+      name: f.canonical_name,
+      manager: f.management_company || "",
+      category: f.category,
+      scores: (f.metadata || {}).scores || {},
+      asof: (f.metadata || {}).scores_as_of
+    }));
+    document.getElementById("src").textContent = "سوبربيس · " + (ALL[0]?.asof || "") + " · " + ALL.length + " صندوق";
+    [...new Set(ALL.map(f => bucket(f.category)))].sort().forEach(b => {
+      document.getElementById("bucket").insertAdjacentHTML("beforeend", `<option>${b}</option>`);
+    });
+    const cell = (f,h) => f.scores[h] || {};
+    const draw = () => {
+      const q = document.getElementById("q").value.trim();
+      const b = document.getElementById("bucket").value;
+      const h = document.getElementById("horizon").value;
+      let rows = ALL.filter(f => (!q || (f.name+f.manager).includes(q)) && (!b || bucket(f.category)===b));
+      rows.sort((a,c) => (cell(c,h).score ?? -1) - (cell(a,h).score ?? -1));
+      document.getElementById("meta").textContent = rows.length + " صف";
+      document.getElementById("tb").innerHTML = rows.map((f,i) => {
+        const s = cell(f,h);
+        const ret = s.return_pct;
+        return `<tr onclick="location.href='fund.html?id=${encodeURIComponent(f.id)}&h=${h}'">
+          <td class="num">${i+1}</td>
+          <td>${f.name}<div class="muted">${f.manager}</div></td>
+          <td>${bucket(f.category)}</td>
+          <td class="num">${ret==null?"—":Number(ret).toLocaleString("en-US",{maximumFractionDigits:1})+"%"}<div class="muted">${s.source==="eima_annual"?"سنوي":s.source==="eima_weekly"?"أسبوعي":""}</div></td>
+          <td class="num score">${s.score==null?"—":s.score}</td>
+          <td>${s.rating||"—"}</td>
+          <td>${s.conf||"—"}</td>
+        </tr>`;
+      }).join("");
+    };
+    ["q","bucket","horizon"].forEach(id => document.getElementById(id).oninput = draw);
+    draw();
+  } catch (e) { err(String(e)); console.error(e); }
+})();
 </script>
 </body></html>
