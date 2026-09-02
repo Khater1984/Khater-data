@@ -65,7 +65,12 @@ function cell(f,h){ return (f.scores && f.scores[h]) || {}; }
 const CFG = window.KHATER || {};
 if(!CFG.url || !CFG.key) throw new Error("config.js missing publishable key");
 const headers = { apikey: CFG.key, Authorization: "Bearer " + CFG.key };
-const rawFunds = await (await fetch(CFG.url + "/rest/v1/funds?select=fund_id,canonical_name,management_company,category,metadata&limit=1000", { headers })).json();
+const res = await fetch(CFG.url + "/rest/v1/funds?select=fund_id,canonical_name,management_company,category,metadata&limit=1000", { headers });
+const rawFunds = await res.json();
+if(!Array.isArray(rawFunds)){
+  document.getElementById("tb").innerHTML = `<tr><td colspan="7">تعذر قراءة الصناديق: ${res.status}</td></tr>`;
+  throw new Error(JSON.stringify(rawFunds));
+}
 const ALL = rawFunds.map(f => ({
   id: f.fund_id,
   name: f.canonical_name,
@@ -93,7 +98,7 @@ function draw(){
     if(q && !(f.name+(f.manager||"")).toLowerCase().includes(q)) return false;
     if(b && bucket(f.category)!==b) return false;
     const s=cell(f,h);
-    const r=s.return_pct ?? ret(f,h);
+    const r=s.return_pct;
     if(keys.length && (r==null || keys.some(k=>vals[k]==null || r<vals[k]))) return false;
     return true;
   });
