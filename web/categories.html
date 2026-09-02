@@ -87,6 +87,7 @@ td.pos.active{background:#047857} td.neg.active{background:#991b1b}
     <button data-v="cards" type="button">شبكة البطاقات</button>
     <button data-v="heat" type="button">مصفوفة الأداء</button>
   </div>
+  <div id="cat-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px"></div>
   <section id="v-tree"></section>
   <section id="v-cards" hidden></section>
   <section id="v-heat" hidden></section>
@@ -232,15 +233,16 @@ function color(v){
         <div class="kpi glass">الصناديق / الفئات<b>${rows.length} · ${Object.keys(groups).length}</b></div>
         <div class="kpi glass">أعلى عائد للأفق<b>${top?num(ret(top,h))+"%":"غير متاح"}</b><div class="sub">${top?top.name:""}</div></div>`;
 
-      const host=document.getElementById("v-tree");
-      host.innerHTML='<div id="cat-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px"></div><div id="treemap-canvas"></div>';
       const allCats=[...new Set(ALL.map(f=>f.bucket))].sort();
-      document.getElementById("cat-chips").innerHTML=allCats.map(g=>`<button type="button" class="glass" data-chip="${g}" style="padding:4px 10px;font-size:12px;cursor:pointer;border:${document.getElementById("fb").value===g?"1px solid #10B981":"1px solid transparent"}">${g}</button>`).join("");
+      const cur=document.getElementById("fb").value;
+      document.getElementById("cat-chips").innerHTML=allCats.map(g=>`<button type="button" class="glass" data-chip="${g}" style="padding:4px 10px;font-size:12px;cursor:pointer;border:${cur===g?"1px solid #10B981":"1px solid transparent"}">${g}</button>`).join("");
       document.querySelectorAll("#cat-chips [data-chip]").forEach(b=>b.onclick=()=>{
         const sel=document.getElementById("fb");
         sel.value = sel.value===b.dataset.chip ? "" : b.dataset.chip;
         draw();
       });
+      const host=document.getElementById("v-tree");
+      host.innerHTML='<div id="treemap-canvas"></div>';
       const container=document.getElementById("treemap-canvas");
       const width=container.clientWidth||Math.min(1200,window.innerWidth-36);
       const height=Math.max(560, window.innerHeight-190);
