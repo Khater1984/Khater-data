@@ -60,6 +60,41 @@ td.pos.active{background:#047857} td.neg.active{background:#991b1b}
 @media(max-width:900px){.grid,.kpis,.two,.champs{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.grid,.kpis,.two,.champs{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+#v-heat{margin-top:12px}
+#v-heat .heatmap-shell{background:rgba(17,19,29,.92);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden}
+#v-heat .heatmap-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07)}
+#v-heat .heatmap-title{font-size:15px;font-weight:700}
+#v-heat .heatmap-desc{margin-top:3px;color:#8f98a8;font-size:11px}
+#v-heat .heatmap-scroll{overflow-x:auto;overflow-y:hidden;padding:10px}
+#v-heat .heatmap-grid{min-width:850px;display:grid;grid-template-columns:220px repeat(5,minmax(115px,1fr));gap:3px}
+#v-heat .hm-head{height:38px;display:flex;align-items:center;justify-content:center;color:#8f98a8;font-size:11px;font-weight:600;background:#11141c;border-radius:6px}
+#v-heat .hm-category{min-height:78px;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;background:#151923;border:1px solid rgba(255,255,255,.04);border-radius:7px}
+#v-heat .hm-category strong{font-size:12px;color:#f3f4f6}
+#v-heat .hm-category span{margin-top:3px;color:#737d8d;font-size:9px}
+#v-heat .hm-cell{min-height:78px;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;transition:transform .15s ease,filter .15s ease,box-shadow .15s ease}
+#v-heat .hm-cell:hover{transform:scale(1.025);filter:brightness(1.12);box-shadow:0 8px 25px rgba(0,0,0,.3);z-index:3}
+#v-heat .hm-value{direction:ltr;font-family:"IBM Plex Sans",sans-serif;font-size:18px;font-weight:700;letter-spacing:-.02em}
+#v-heat .hm-count{margin-top:4px;color:rgba(255,255,255,.62);font-size:9px}
+#v-heat .hm-positive-1{background:#063d32}
+#v-heat .hm-positive-2{background:#075b47}
+#v-heat .hm-positive-3{background:#07805f}
+#v-heat .hm-positive-4{background:#0aa978;color:#03130e}
+#v-heat .hm-positive-5{background:#36d399;color:#03130e}
+#v-heat .hm-negative-1{background:#461b20}
+#v-heat .hm-negative-2{background:#681b22}
+#v-heat .hm-negative-3{background:#8b1e27}
+#v-heat .hm-negative-4{background:#b4232d}
+#v-heat .hm-neutral{background:#252b35;color:#c4c9d1}
+#v-heat .hm-na{background:#171b23;color:#697383}
+#v-heat .hm-active{outline:2px solid #10b981;outline-offset:-2px}
+#v-heat .heatmap-legend{display:flex;flex-wrap:wrap;gap:12px;padding:10px 16px 14px;color:#8f98a8;font-size:10px}
+#v-heat .heatmap-legend span{display:flex;align-items:center;gap:5px}
+#v-heat .heatmap-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+#v-heat .hm-tooltip{position:fixed;z-index:9999;min-width:190px;max-width:260px;padding:11px 13px;background:#10131b;border:1px solid rgba(255,255,255,.12);border-radius:10px;box-shadow:0 15px 45px rgba(0,0,0,.45);pointer-events:none;display:none;font-size:11px;line-height:1.7}
+#v-heat .hm-tooltip b{color:#fff}
+@media(max-width:700px){#v-heat .heatmap-grid{min-width:790px;grid-template-columns:170px repeat(5,105px)}#v-heat .hm-category,#v-heat .hm-cell{min-height:70px}#v-heat .hm-value{font-size:16px}}
+
 </style>
 </head>
 <body>
@@ -223,6 +258,62 @@ function color(v){
       document.getElementById("x").onclick=close;
     }
     let scatter;
+    
+function renderKhaterHeatmap(groups, horizon) {
+  const host = document.getElementById("v-heat");
+  const horizonNames = {"4weeks":"شهر","ytd":"YTD","last12m":"سنة","3y":"3 سنوات","5y":"5 سنوات"};
+  const getReturn = (fund, hz) => {
+    const v = (typeof ret==="function") ? ret(fund, hz) : (fund.scores && fund.scores[hz] && fund.scores[hz].return_pct);
+    return v==null||v===""||isNaN(Number(v)) ? null : Number(v);
+  };
+  const heatClass = value => {
+    if (value == null) return "hm-na";
+    if (value < 0) {
+      if (value <= -15) return "hm-negative-4";
+      if (value <= -7)  return "hm-negative-3";
+      if (value <= -3)  return "hm-negative-2";
+      return "hm-negative-1";
+    }
+    if (value < 5)  return "hm-neutral";
+    if (value < 15) return "hm-positive-1";
+    if (value < 30) return "hm-positive-2";
+    if (value < 50) return "hm-positive-3";
+    if (value < 75) return "hm-positive-4";
+    return "hm-positive-5";
+  };
+  const average = values => values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
+  const categories = Object.entries(groups).map(([name, funds]) => {
+    const values = funds.map(f => getReturn(f, horizon)).filter(v => v != null);
+    return {name, funds, count:funds.length, available:values.length, avg:average(values)};
+  }).sort((a,b)=>(b.avg ?? -Infinity)-(a.avg ?? -Infinity));
+  let html = `<div class="heatmap-shell"><div class="heatmap-toolbar"><div><div class="heatmap-title">خريطة أداء الفئات</div><div class="heatmap-desc">مقارنة أداء الفئات عبر الآفاق الزمنية — اضغط على أي خلية للتفاصيل</div></div><div class="heatmap-desc">الأفق النشط: <b style="color:#fff">${horizonNames[horizon]||horizon}</b></div></div><div class="heatmap-scroll"><div class="heatmap-grid"><div class="hm-head">الفئة</div>${HS.map(([key,label])=>`<div class="hm-head ${key===horizon?"hm-active":""}">${label}</div>`).join("")}`;
+  categories.forEach(category => {
+    html += `<div class="hm-category"><strong>${category.name}</strong><span>${category.count} صندوق · ${category.available} قيمة</span></div>`;
+    HS.forEach(([key]) => {
+      const values = category.funds.map(f => getReturn(f,key)).filter(v => v != null);
+      const avg = average(values);
+      html += `<div class="hm-cell ${heatClass(avg)} ${key===horizon?"hm-active":""}" data-category="${String(category.name).replace(/"/g,"&quot;")}" data-horizon="${key}" data-value="${avg==null?"":avg}" data-funds="${category.count}" data-available="${values.length}"><div class="hm-value">${avg==null?"—":((avg>=0?"+":"")+avg.toLocaleString("en-US",{maximumFractionDigits:1})+"%")}</div><div class="hm-count">${values.length} قيمة</div></div>`;
+    });
+  });
+  html += `</div></div><div class="heatmap-legend"><span><i style="background:#063d32"></i>ضعيف إيجابي</span><span><i style="background:#07805f"></i>إيجابي</span><span><i style="background:#36d399"></i>قوي جدًا</span><span><i style="background:#252b35"></i>محايد</span><span><i style="background:#8b1e27"></i>سلبي</span><span><i style="background:#171b23"></i>لا توجد بيانات</span></div></div><div class="hm-tooltip" id="khaterHeatTooltip"></div>`;
+  host.innerHTML = html;
+  const tooltip = document.getElementById("khaterHeatTooltip");
+  host.querySelectorAll(".hm-cell").forEach(cell => {
+    cell.addEventListener("mouseenter", () => {
+      const horizonLabel = horizonNames[cell.dataset.horizon] || cell.dataset.horizon;
+      const value = cell.dataset.value;
+      tooltip.innerHTML = `<b>${cell.dataset.category}</b><br>الأفق: <b>${horizonLabel}</b><br>متوسط العائد: <b>${value===""?"غير متاح":((Number(value)>=0?"+":"")+Number(value).toFixed(1)+"%")}</b><br>الصناديق: <b>${cell.dataset.funds}</b><br>القيم المستخدمة: <b>${cell.dataset.available}</b>`;
+      tooltip.style.display = "block";
+    });
+    cell.addEventListener("mousemove", e => {
+      tooltip.style.left = Math.min(e.clientX+16, window.innerWidth-tooltip.offsetWidth-10)+"px";
+      tooltip.style.top = Math.min(e.clientY+16, window.innerHeight-tooltip.offsetHeight-10)+"px";
+    });
+    cell.addEventListener("mouseleave", () => { tooltip.style.display="none"; });
+    cell.addEventListener("click", () => { if (typeof openCat==="function") openCat(cell.dataset.category, groups[cell.dataset.category]||[]); });
+  });
+}
+
     function draw(){
       const rows=filtered();
       const h=document.getElementById("hz").value;
@@ -296,18 +387,7 @@ function color(v){
         </article>`;
       }).join("")+"</div>";
       document.querySelectorAll("#v-cards .cat").forEach(c=>c.onclick=()=>openCat(c.dataset.g,groups[c.dataset.g]));
-
-      let html=`<div class="glass wraptable" style="overflow:auto"><table><thead><tr><th>الفئة</th>${HS.map(([k,l])=>`<th class="${k===h?"active":""}">${l}</th>`).join("")}</tr></thead><tbody>`;
-      Object.entries(groups).forEach(([g,list])=>{
-        html+=`<tr><th>${g}</th>`+HS.map(([k])=>{
-          const xs=list.map(f=>ret(f,k)).filter(v=>v!=null);
-          if(!xs.length) return `<td class="na">—</td>`;
-          const hi=Math.max(...xs);
-          return `<td class="${hi>=0?"pos":"neg"} ${k===h?"active":""}" data-g="${g}">${num(hi)}%</td>`;
-        }).join("")+`</tr>`;
-      });
-      document.getElementById("v-heat").innerHTML=html+"</tbody></table></div><p class='sub'>الخلية = أعلى عائد مخزّن في الفئة لذلك الأفق، بين الصناديق التي لها رقم فقط.</p>";
-      document.querySelectorAll("#v-heat td[data-g]").forEach(td=>td.onclick=()=>openCat(td.dataset.g,groups[td.dataset.g]));
+      renderKhaterHeatmap(groups, h);
 
       const axes=[["P","الأداء"],["R","المخاطرة"],["B","المرجع"],["C","الاتساق"],["I","التضخم"]];
       document.getElementById("champs").innerHTML=axes.map(([k,l])=>{
@@ -331,6 +411,7 @@ function color(v){
       const bins=[["90",s=>s>=90,"#10B981"],["75",s=>s>=75&&s<90,"#34D399"],["50",s=>s>=50&&s<75,"#F59E0B"],["0",s=>s<50,"#EF4444"]];
       const counts=bins.map(([sel,fn,c])=>[sel,scores.filter(fn).length,c]);
       document.getElementById("distbar").innerHTML=counts.map(([sel,n,c])=>`<i data-r="${sel}" style="width:${100*n/tot}%;background:${c}"></i>`).join("");
+      renderKhaterHeatmap(groups, h);
       document.getElementById("distlab").textContent=counts.map(([,n],i)=>`${["ممتاز","جيد جداً","متوسط","ضعيف"][i]}: ${n}`).join(" · ")+` · بلا درجة: ${rows.length-scores.length}`;
       document.querySelectorAll("#distbar i").forEach(i=>i.onclick=()=>{document.getElementById("fr").value=i.dataset.r;draw();});
     }
