@@ -7,43 +7,56 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#12131C;--card:#1E1F2E;--line:#2A2C3D;--ink:#F3F4F6;--mute:#9CA3AF;--ok:#10B981;--bad:#EF4444}
+:root{--bg:#0C0D14;--card:rgba(30,31,46,.80);--line:rgba(255,255,255,.08);--ink:#F3F4F6;--mute:#9CA3AF;--ok:#10B981;--bad:#EF4444}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",sans-serif}
-a{color:var(--ok)}
-header{height:52px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px}
-nav a{color:var(--mute);margin-inline-start:12px;text-decoration:none;font-size:13px}
+body{min-height:100vh;background:
+  radial-gradient(900px 400px at 10% -10%, rgba(16,185,129,.12), transparent 50%),
+  radial-gradient(800px 400px at 90% 0%, rgba(59,130,246,.10), transparent 45%),
+  #0C0D14}
+a{color:var(--ok);text-decoration:none}
+header.top{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line);position:sticky;top:0;backdrop-filter:blur(12px);z-index:20}
+nav a{color:var(--mute);margin-inline-start:12px;font-size:13px}
 nav a.on{color:#fff}
-.page{padding:16px 18px 40px;max-width:1200px;margin:0 auto}
-h1{font-size:22px;margin:0}
-.sub{color:var(--mute);font-size:13px;margin:4px 0 12px}
+.page{padding:16px 18px 60px;max-width:1240px;margin:0 auto}
+.glass{background:var(--card);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(12px)}
+.float{position:sticky;top:60px;z-index:15;display:flex;flex-wrap:wrap;gap:8px;padding:10px;margin-bottom:12px}
+select,input,button{background:#161821;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+button.on{background:#10B981;color:#04110b;border:0}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.kpi,.card,.cat{background:var(--card);border:1px solid var(--line);border-radius:12px}
-.kpi{padding:10px 12px}.kpi b{display:block;font-size:20px;margin-top:2px}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
-input,select,button{background:#161821;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.kpi{padding:12px}.kpi b{display:block;font-size:20px;margin-top:4px}
+.views{display:flex;gap:8px;margin:8px 0}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.cat{padding:12px;cursor:pointer;min-height:110px}
-.cat:hover{border-color:var(--ok)}
-.two{display:grid;grid-template-columns:1.2fr .8fr;gap:10px;margin:14px 0}
-.wraptable{overflow:auto;border:1px solid var(--line);border-radius:12px}
+.cat,.champ,.tile{padding:12px;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s}
+.cat:hover,.tile:hover,.champ:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(16,185,129,.12)}
+.cat{cursor:pointer;min-height:120px}
+.tree{display:flex;flex-direction:column;gap:10px}
+.group{padding:10px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px}
+.tile{min-height:72px;cursor:pointer;border-radius:10px;padding:8px;font-size:12px;color:#fff}
+.sub{color:var(--mute);font-size:12px;margin:4px 0}
+.two{display:grid;grid-template-columns:1.1fr .9fr;gap:10px}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th,td{padding:7px;border-bottom:1px solid var(--line);text-align:center}
-td.pos{background:#065F46;cursor:pointer} td.neg{background:#7f1d1d;cursor:pointer} td.na{color:#6B7280;background:#1F2937}
-.dist{display:flex;height:16px;border-radius:99px;overflow:hidden;background:#1F2937;cursor:pointer}
-.dist i{height:16px}
-.drawer{position:fixed;top:0;bottom:0;left:0;width:min(440px,100%);background:#161821;border-right:1px solid var(--line);
-  transform:translateX(-110%);transition:.25s;z-index:50;overflow:auto;padding:14px}
+th.active{color:#10B981}
+td.pos{background:#065F46} td.neg{background:#7f1d1d} td.na{background:#1F2937;color:#6B7280}
+.champs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0}
+.dist{display:flex;height:16px;border-radius:99px;overflow:hidden;background:#1F2937}
+.dist i{height:16px;cursor:pointer}
+.drawer{position:fixed;top:0;bottom:0;right:0;width:min(460px,100%);background:rgba(12,13,20,.96);
+  border-left:1px solid var(--line);transform:translateX(110%);transition:.3s;z-index:50;overflow:auto;padding:16px}
 .drawer.on{transform:none}
-.mask{display:none;position:fixed;inset:0;background:#0007;z-index:40}
+.mask{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:40}
 .mask.on{display:block}
 .frow{border-bottom:1px solid var(--line);padding:8px 0}
-#sc{height:280px}
-@media(max-width:900px){.grid,.kpis,.two{grid-template-columns:1fr}}
+#sc{height:260px}
+@media(max-width:900px){.grid,.kpis,.two,.champs{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.grid,.kpis,.two,.champs{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<header>
+<header class="top">
   <strong>خريطة فئات الصناديق</strong>
   <nav>
     <a href="./index.html">البداية</a><a href="./map.html">البوصلة</a>
@@ -52,42 +65,41 @@ td.pos{background:#065F46;cursor:pointer} td.neg{background:#7f1d1d;cursor:point
   </nav>
 </header>
 <main class="page">
-  <h1>خريطة فئات الصناديق</h1>
-  <p class="sub">مقارنة أداء ومخاطر الصناديق حسب الفئة — الأرقام من سوبربيس فقط.</p>
-  <div class="kpis" id="kpis"><div class="kpi">جاري تحميل البيانات...</div></div>
-  <div class="filters">
+  <h1>مقارنة أداء ومخاطر الصناديق حسب الفئة</h1>
+  <p class="sub">قراءة فقط من funds + nav_official + fund_smartscore_latest. بلا اختراع أرقام.</p>
+  <div class="glass float" id="bar">
     <select id="fb"><option value="">كل الفئات</option></select>
-    <select id="fs"><option value="">كل التصنيفات الخام</option></select>
+    <select id="fs"><option value="">كل التصنيفات</option></select>
     <input id="fm" placeholder="مدير الاستثمار"/>
-    <select id="fr">
-      <option value="">كل الدرجات</option>
-      <option value="90">90–100</option>
-      <option value="75">75–89</option>
-      <option value="50">50–74</option>
-      <option value="0">&lt;50</option>
-      <option value="na">بلا درجة</option>
-    </select>
+    <select id="fr"><option value="">كل الدرجات</option><option value="90">90–100</option><option value="75">75–89</option><option value="50">50–74</option><option value="0">&lt;50</option><option value="na">بلا درجة</option></select>
     <select id="ft"><option value="">كل مستويات البيانات</option></select>
+    <select id="hz"></select>
     <button type="button" id="reset">إعادة ضبط الفلاتر</button>
   </div>
+  <div class="kpis" id="kpis">جاري تحميل البيانات...</div>
+  <div class="views">
+    <button class="on" data-v="tree" type="button">خريطة Treemap</button>
+    <button data-v="cards" type="button">شبكة البطاقات</button>
+    <button data-v="heat" type="button">مصفوفة الأداء</button>
+  </div>
+  <section id="v-tree"></section>
+  <section id="v-cards" hidden></section>
+  <section id="v-heat" hidden></section>
+  <h3>أعلى قيمة لكل محور Smart Score</h3>
+  <p class="sub">ترتيب حسب القيمة المخزّنة فقط بين من لهم رقم. ليست منهجية بطل مستقلة.</p>
+  <div class="champs" id="champs"></div>
   <div class="two">
-    <div>
-      <h3>مصفوفة الوسيط المتاح</h3>
-      <p class="sub">الخلية = وسيط return_pct من metadata.scores للصناديق التي لها رقم. ليست منهجية فئة رسمية.</p>
-      <div class="wraptable"><table id="heat"></table></div>
-    </div>
-    <div class="card" style="padding:12px">
+    <div class="glass" style="padding:12px">
       <h3>المخاطرة مقابل العائد</h3>
-      <p class="sub">كل نقطة صندوق له risk_score (وكيل التشتت في V3) وعائد 12 شهراً المخزّن. لا نقطة فئة مجمّعة.</p>
+      <p class="sub">نقاط الصناديق التي لها risk_score وعائد الأفق المختار.</p>
       <canvas id="sc"></canvas>
     </div>
+    <div class="glass" style="padding:12px">
+      <h3>توزيع Smart Score V3</h3>
+      <div class="dist" id="distbar"></div>
+      <p class="sub" id="distlab"></p>
+    </div>
   </div>
-  <h3>توزيع Smart Score V3</h3>
-  <p class="sub">من fund_smartscore_latest.final_score — اضغط الشريحة للتصفية.</p>
-  <div class="dist" id="distbar"></div>
-  <p class="sub" id="distlab"></p>
-  <h3>الفئات</h3>
-  <div class="grid" id="cats"></div>
 </main>
 <div class="mask" id="mask"></div>
 <aside class="drawer" id="drawer"></aside>
@@ -105,31 +117,28 @@ const AR=c=>{c=(c||"").toLowerCase();
   if(c.includes("charitable")) return "صناديق خيرية";
   return "فئات أخرى";
 };
+const islamic=c=>/islam|sharia|شرع/i.test(c||"");
 const num=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:1});
-const cell=(f,h)=>(f.scores&&f.scores[h])||{};
-function median(xs){const a=xs.filter(v=>v!=null).sort((x,y)=>x-y); if(!a.length) return null; const m=Math.floor(a.length/2); return a.length%2?a[m]:(a[m-1]+a[m])/2;}
+const ret=(f,h)=>{const x=f.scores&&f.scores[h]; return x&&x.return_pct!=null?x.return_pct:null;};
 function inRange(score,sel){
-  if(!sel) return true;
-  if(sel==="na") return score==null;
-  if(score==null) return false;
-  const n=+sel;
-  if(n===90) return score>=90;
-  if(n===75) return score>=75 && score<90;
-  if(n===50) return score>=50 && score<75;
-  if(n===0) return score<50;
-  return true;
+  if(!sel) return true; if(sel==="na") return score==null; if(score==null) return false;
+  const n=+sel; if(n===90) return score>=90; if(n===75) return score>=75&&score<90; if(n===50) return score>=50&&score<75; return score<50;
+}
+function color(v){
+  if(v==null) return "#1F2937";
+  if(v>=0){const t=Math.min(1,v/80); return `rgb(${Math.round(6+16*t)},${Math.round(95+90*t)},${Math.round(70+59*t)})`;}
+  const t=Math.min(1,Math.abs(v)/20); return `rgb(${Math.round(153+86*t)},${Math.round(27+40*t)},${Math.round(27)})`;
 }
 (async()=>{
   const kpis=document.getElementById("kpis");
   try{
-    if(!CFG.url||!CFG.key) throw 0;
     const H={apikey:CFG.key,Authorization:"Bearer "+CFG.key};
     const [funds,navs,latest]=await Promise.all([
       fetch(CFG.url+"/rest/v1/funds?select=fund_id,canonical_name,management_company,category,metadata&limit=1000",{headers:H}).then(r=>r.json()),
       fetch(CFG.url+"/rest/v1/nav_official?select=fund_id,nav,as_of_date&limit=1000",{headers:H}).then(r=>r.json()),
-      fetch(CFG.url+"/rest/v1/fund_smartscore_latest?select=fund_id,final_score,rating,data_tier,risk_score,score_as_of,risk_method&limit=1000",{headers:H}).then(r=>r.json())
+      fetch(CFG.url+"/rest/v1/fund_smartscore_latest?select=fund_id,final_score,rating,data_tier,risk_score,performance_score,benchmark_score,consistency_score,inflation_score,score_as_of,risk_method&limit=1000",{headers:H}).then(r=>r.json())
     ]);
-    if(!Array.isArray(funds)) throw 1;
+    if(!Array.isArray(funds)) throw 0;
     const navMap={}; (navs||[]).forEach(n=>navMap[n.fund_id]=n);
     const ssMap={}; (latest||[]).forEach(n=>ssMap[n.fund_id]=n);
     const ALL=funds.map(f=>{
@@ -137,97 +146,132 @@ function inRange(score,sel){
       return {
         id:f.fund_id,name:f.canonical_name,manager:f.management_company||"",
         raw:f.category||"",bucket:AR(f.category),scores:(f.metadata||{}).scores||{},
-        asof:ss.score_as_of||(f.metadata||{}).scores_as_of||null,
-        nav:navMap[f.fund_id]?.nav??null,
-        final:ss.final_score??null, rating:ss.rating||null,
-        risk:ss.risk_score??null, tier:ss.data_tier||"",
-        rmethod:ss.risk_method||""
+        nav:navMap[f.fund_id]?.nav??null, asof:ss.score_as_of||null,
+        final:ss.final_score??null, rating:ss.rating||null, tier:ss.data_tier||"",
+        risk:ss.risk_score??null, P:ss.performance_score??null, R:ss.risk_score??null,
+        B:ss.benchmark_score??null, C:ss.consistency_score??null, I:ss.inflation_score??null,
+        sharia:islamic(f.category)
       };
     });
+    document.getElementById("hz").innerHTML=HS.map(([k,l])=>`<option value="${k}">${l}</option>`).join("");
+    document.getElementById("hz").value="last12m";
     document.getElementById("fb").innerHTML='<option value="">كل الفئات</option>'+[...new Set(ALL.map(f=>f.bucket))].sort().map(b=>`<option>${b}</option>`).join("");
-    document.getElementById("fs").innerHTML='<option value="">كل التصنيفات الخام</option>'+[...new Set(ALL.map(f=>f.raw).filter(Boolean))].sort().map(b=>`<option>${b}</option>`).join("");
+    document.getElementById("fs").innerHTML='<option value="">كل التصنيفات</option>'+[...new Set(ALL.map(f=>f.raw).filter(Boolean))].sort().map(b=>`<option>${b}</option>`).join("");
     document.getElementById("ft").innerHTML='<option value="">كل مستويات البيانات</option>'+[...new Set(ALL.map(f=>f.tier).filter(Boolean))].sort().map(b=>`<option>${b}</option>`).join("");
 
     const filtered=()=>{
-      const b=document.getElementById("fb").value, s=document.getElementById("fs").value;
-      const m=document.getElementById("fm").value.trim(), r=document.getElementById("fr").value, t=document.getElementById("ft").value;
+      const b=document.getElementById("fb").value,s=document.getElementById("fs").value;
+      const m=document.getElementById("fm").value.trim(),r=document.getElementById("fr").value,t=document.getElementById("ft").value;
       return ALL.filter(f=>(!b||f.bucket===b)&&(!s||f.raw===s)&&(!m||f.manager.includes(m))&&inRange(f.final,r)&&(!t||f.tier===t));
     };
     const close=()=>{document.getElementById("drawer").classList.remove("on");document.getElementById("mask").classList.remove("on");};
     document.getElementById("mask").onclick=close;
-    function openDrawer(title,list){
+    function openCat(title,list){
+      const h=document.getElementById("hz").value;
+      const hl=HS.find(x=>x[0]===h)[1];
       document.getElementById("mask").classList.add("on");
       const d=document.getElementById("drawer"); d.classList.add("on");
-      const scored=list.filter(f=>f.final!=null).length;
       d.innerHTML=`<button type="button" id="x">إغلاق</button>
         <h2>صناديق ${title}</h2>
-        <p class="sub">${list.length} صندوق · ${scored} لها Smart Score V3</p>
-        ${list.map(f=>`<div class="frow"><b>${f.name}</b>
-          <div class="sub">${f.manager||"—"} · ${f.raw||""}</div>
-          <div>NAV ${f.nav==null?"لا توجد بيانات متاحة":Number(f.nav).toLocaleString("en-US")}
-           · YTD ${num(cell(f,"ytd").return_pct)}%
-           · Score ${f.final==null?"لا توجد بيانات متاحة":Number(f.final).toFixed(1)}
-           · مخاطرة ${f.risk==null?"غير متاح":Number(f.risk).toFixed(1)}</div>
-          <a href="fund.html?id=${encodeURIComponent(f.id)}&h=last12m">عرض الصندوق</a></div>`).join("")||"<p>لا توجد بيانات متاحة</p>"}`;
+        <p class="sub">${list.length} صندوق · أفق ${hl}</p>
+        ${list.map(f=>{
+          const rv=ret(f,h);
+          const badge=f.sharia?`🌙 · متوافق مع الشريعة · ${f.bucket}`:"بيانات التوافق الشرعي غير متاحة";
+          return `<div class="frow"><b>${f.name}</b><div class="sub">${f.manager||"—"} · ${f.raw}</div>
+            <div>NAV ${f.nav==null?"لا توجد بيانات متاحة":Number(f.nav).toLocaleString("en-US")}
+             · عائد ${rv==null?"غير متاح":num(rv)+"%"}
+             · Score ${f.final==null?"غير متاح":Number(f.final).toFixed(1)}
+             · مخاطرة ${f.risk==null?"غير متاح":Number(f.risk).toFixed(1)}</div>
+            <div class="sub">${badge}</div>
+            <a href="fund.html?id=${encodeURIComponent(f.id)}&h=${h}">عرض الصندوق</a></div>`;
+        }).join("")}`;
       document.getElementById("x").onclick=close;
     }
     let scatter;
     function draw(){
       const rows=filtered();
+      const h=document.getElementById("hz").value;
       const groups={}; rows.forEach(f=>(groups[f.bucket]||=[]).push(f));
       const asof=[...new Set(rows.map(f=>f.asof).filter(Boolean))].sort().at(-1)||"—";
+      const withRet=rows.filter(f=>ret(f,h)!=null);
+      const top=withRet.slice().sort((a,b)=>ret(b,h)-ret(a,h))[0];
       document.getElementById("kpis").innerHTML=`
-        <div class="kpi">آخر تقييم V3<b>${asof}</b></div>
-        <div class="kpi">الصناديق<b>${rows.length}</b></div>
-        <div class="kpi">الفئات<b>${Object.keys(groups).length}</b></div>
-        <div class="kpi">التصنيف الخام<b>${[...new Set(rows.map(f=>f.raw))].length}</b></div>`;
-      document.getElementById("cats").innerHTML=Object.entries(groups).map(([g,list])=>{
-        const scored=list.filter(f=>f.final!=null);
-        const top=scored.slice().sort((a,b)=>b.final-a.final)[0];
-        const rets=list.map(f=>cell(f,"last12m").return_pct).filter(v=>v!=null);
-        return `<article class="cat" data-g="${g}">
-          <h3>${g}</h3>
-          <div>${list.length} صندوق · ${scored.length} مقيّم V3 · ${list.filter(f=>f.risk!=null).length} لهم درجة مخاطرة</div>
-          <div>أعلى Smart Score: ${top?Number(top.final).toFixed(1)+" — "+top.name:"لا توجد بيانات متاحة"}</div>
-          <div class="sub">وسيط العائد السنوي المتاح: ${rets.length?num(median(rets))+"% ("+rets.length+" صندوق)":"غير متاح"} — ليس مؤشر فئة</div>
-          <div class="sub">آخر تقييم ${[...list.map(f=>f.asof).filter(Boolean)].sort().at(-1)||"—"}</div>
-        </article>`;
-      }).join("")||"<p>لا توجد بيانات متاحة</p>";
-      document.querySelectorAll(".cat").forEach(c=>c.onclick=()=>openDrawer(c.dataset.g,groups[c.dataset.g]));
+        <div class="kpi glass">آخر تقييم V3<b>${asof}</b></div>
+        <div class="kpi glass">الصناديق<b>${rows.length}</b></div>
+        <div class="kpi glass">الفئات<b>${Object.keys(groups).length}</b></div>
+        <div class="kpi glass">أعلى عائد للأفق المختار<b>${top?num(ret(top,h))+"%":"غير متاح"}</b><div class="sub">${top?top.name:""}</div></div>`;
 
-      let html=`<thead><tr><th>الفئة</th>${HS.map(([,l])=>`<th>${l}</th>`).join("")}</tr></thead><tbody>`;
+      document.getElementById("v-tree").innerHTML=Object.entries(groups).map(([g,list])=>{
+        const isl=list.filter(f=>f.sharia && ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h))[0];
+        const islLine=list.some(f=>f.sharia)
+          ?(isl?`${num(ret(isl,h))}% 🌙 · متوافق مع الشريعة · ${g}`:"لا يوجد صندوق إسلامي بهذه الفئة له عائد في هذا الأفق")
+          :"بيانات التوافق الشرعي غير متاحة";
+        return `<div class="glass group"><div style="display:flex;justify-content:space-between"><b>${g}</b><button type="button" data-g="${g}">فتح الفئة</button></div>
+          <div class="sub">${islLine}</div>
+          <div class="tiles">${list.map(f=>{
+            const rv=ret(f,h);
+            return `<div class="tile" data-id="${f.id}" style="background:${color(rv)}" title="${f.name}">
+              <div>${f.name}</div><div>${rv==null?"غير متاح":num(rv)+"%"}</div></div>`;
+          }).join("")}</div></div>`;
+      }).join("")||"<p>لا توجد بيانات متاحة</p>";
+      document.querySelectorAll("#v-tree [data-g]").forEach(b=>b.onclick=()=>openCat(b.dataset.g,groups[b.dataset.g]));
+      document.querySelectorAll("#v-tree .tile").forEach(t=>t.onclick=()=>location.href="fund.html?id="+encodeURIComponent(t.dataset.id)+"&h="+h);
+
+      document.getElementById("v-cards").innerHTML='<div class="grid">'+Object.entries(groups).map(([g,list])=>{
+        const isl=list.filter(f=>f.sharia && ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h))[0];
+        const champ=list.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h))[0];
+        return `<article class="glass cat" data-g="${g}"><h3>${g}</h3>
+          <div>${list.length} صندوق · ${list.filter(f=>f.final!=null).length} بدرجة V3</div>
+          <div class="sub">أعلى عائد للأفق: ${champ?num(ret(champ,h))+"% — "+champ.name:"غير متاح"}</div>
+          <div class="sub">${isl?num(ret(isl,h))+"% 🌙 · متوافق مع الشريعة · "+g: (list.some(f=>f.sharia)?"لا يوجد صندوق إسلامي بهذه الفئة له عائد":"بيانات التوافق الشرعي غير متاحة")}</div>
+        </article>`;
+      }).join("")+"</div>";
+      document.querySelectorAll("#v-cards .cat").forEach(c=>c.onclick=()=>openCat(c.dataset.g,groups[c.dataset.g]));
+
+      let html=`<div class="glass wraptable" style="overflow:auto"><table><thead><tr><th>الفئة</th>${HS.map(([k,l])=>`<th class="${k===h?"active":""}">${l}</th>`).join("")}</tr></thead><tbody>`;
       Object.entries(groups).forEach(([g,list])=>{
-        html+=`<tr><th>${g}</th>`+HS.map(([h,l])=>{
-          const xs=list.map(f=>cell(f,h).return_pct).filter(v=>v!=null);
-          if(!xs.length) return `<td class="na" title="${g} · ${l} · 0/${list.length}">—</td>`;
-          const med=median(xs);
-          return `<td class="${med>=0?"pos":"neg"}" data-g="${g}" title="${g} · ${l} · وسيط ${num(med)}% · ${xs.length}/${list.length}">${num(med)}%</td>`;
+        html+=`<tr><th>${g}</th>`+HS.map(([k])=>{
+          const xs=list.map(f=>ret(f,k)).filter(v=>v!=null);
+          if(!xs.length) return `<td class="na">—</td>`;
+          const hi=Math.max(...xs);
+          return `<td class="${hi>=0?"pos":"neg"} ${k===h?"active":""}" data-g="${g}">${num(hi)}%</td>`;
         }).join("")+`</tr>`;
       });
-      document.getElementById("heat").innerHTML=html+"</tbody>";
-      document.querySelectorAll("#heat td[data-g]").forEach(td=>td.onclick=()=>openDrawer(td.dataset.g,groups[td.dataset.g]));
+      document.getElementById("v-heat").innerHTML=html+"</tbody></table></div><p class='sub'>الخلية = أعلى عائد مخزّن في الفئة لذلك الأفق، بين الصناديق التي لها رقم فقط.</p>";
+      document.querySelectorAll("#v-heat td[data-g]").forEach(td=>td.onclick=()=>openCat(td.dataset.g,groups[td.dataset.g]));
 
-      const pts=rows.filter(f=>f.risk!=null && cell(f,"last12m").return_pct!=null).map(f=>({x:f.risk,y:cell(f,"last12m").return_pct,id:f.id,name:f.name}));
-      const ctx=document.getElementById("sc");
+      const axes=[["P","الأداء"],["R","المخاطرة"],["B","المرجع"],["C","الاتساق"],["I","التضخم"]];
+      document.getElementById("champs").innerHTML=axes.map(([k,l])=>{
+        const pool=rows.filter(f=>f[k]!=null);
+        const w=pool.slice().sort((a,b)=>b[k]-a[k])[0];
+        return `<div class="glass champ"><div class="sub">أعلى قيمة للمحور · ${l}</div>
+          <b>${w?Number(w[k]).toFixed(1):"غير متاح"}</b>
+          <div class="sub">${w?w.name:"—"}</div></div>`;
+      }).join("");
+
+      const pts=rows.filter(f=>f.risk!=null && ret(f,h)!=null).map(f=>({x:f.risk,y:ret(f,h),id:f.id,name:f.name,g:f.bucket}));
       if(scatter) scatter.destroy();
-      scatter=new Chart(ctx,{type:"scatter",data:{datasets:[{label:"صناديق",data:pts,backgroundColor:"#10B98188"}]},
-        options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const p=c.raw; return `${p.name}: عائد ${num(p.y)}% · مخاطرة ${num(p.x)}`;}}}},
-          scales:{x:{title:{display:true,text:"المخاطرة (وكيل V3)",color:"#9CA3AF"},ticks:{color:"#9CA3AF"},grid:{color:"#2A2C3D"}},
-                  y:{title:{display:true,text:"عائد 12 شهراً المخزّن",color:"#9CA3AF"},ticks:{color:"#9CA3AF"},grid:{color:"#2A2C3D"}}},
-          onClick:(e,el)=>{if(!el.length)return; const p=pts[el[0].index]; location.href="fund.html?id="+encodeURIComponent(p.id);}
+      scatter=new Chart(document.getElementById("sc"),{type:"scatter",
+        data:{datasets:[{data:pts,backgroundColor:"#10B98188"}]},
+        options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw.name}: عائد ${num(c.raw.y)}% · مخاطرة ${num(c.raw.x)}`}}},
+          scales:{x:{title:{display:true,text:"المخاطرة V3",color:"#9CA3AF"},ticks:{color:"#9CA3AF"},grid:{color:"#1F2937"}},
+                  y:{title:{display:true,text:"عائد الأفق المختار",color:"#9CA3AF"},ticks:{color:"#9CA3AF"},grid:{color:"#1F2937"}}},
+          onClick:(e,el)=>{if(!el.length)return; location.href="fund.html?id="+encodeURIComponent(pts[el[0].index].id)+"&h="+h;}
         }});
-
-      const scores=rows.map(f=>f.final).filter(v=>v!=null);
-      const tot=rows.length||1;
-      const bins=[["90",90,100,"#10B981"],["75",75,90,"#34D399"],["50",50,75,"#F59E0B"],["0",-1,50,"#EF4444"]];
-      const counts=bins.map(([sel,a,b,c])=>[sel,scores.filter(s=>s>=a && s<b || (a<0&&s<50)).length,c]);
+      const scores=rows.map(f=>f.final).filter(v=>v!=null); const tot=rows.length||1;
+      const bins=[["90",s=>s>=90,"#10B981"],["75",s=>s>=75&&s<90,"#34D399"],["50",s=>s>=50&&s<75,"#F59E0B"],["0",s=>s<50,"#EF4444"]];
+      const counts=bins.map(([sel,fn,c])=>[sel,scores.filter(fn).length,c]);
       document.getElementById("distbar").innerHTML=counts.map(([sel,n,c])=>`<i data-r="${sel}" style="width:${100*n/tot}%;background:${c}"></i>`).join("");
       document.getElementById("distlab").textContent=counts.map(([,n],i)=>`${["ممتاز","جيد جداً","متوسط","ضعيف"][i]}: ${n}`).join(" · ")+` · بلا درجة: ${rows.length-scores.length}`;
       document.querySelectorAll("#distbar i").forEach(i=>i.onclick=()=>{document.getElementById("fr").value=i.dataset.r;draw();});
     }
-    ["fb","fs","fr","ft"].forEach(id=>document.getElementById(id).onchange=draw);
+    document.querySelectorAll(".views button").forEach(b=>b.onclick=()=>{
+      document.querySelectorAll(".views button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+      ["tree","cards","heat"].forEach(v=>document.getElementById("v-"+v).hidden=b.dataset.v!==v);
+    });
+    ["fb","fs","fr","ft","hz"].forEach(id=>document.getElementById(id).onchange=draw);
     document.getElementById("fm").oninput=draw;
-    document.getElementById("reset").onclick=()=>{["fb","fs","fr","ft"].forEach(id=>document.getElementById(id).value="");document.getElementById("fm").value="";draw();};
+    document.getElementById("reset").onclick=()=>{["fb","fs","fr","ft"].forEach(id=>document.getElementById(id).value="");document.getElementById("fm").value="";document.getElementById("hz").value="last12m";draw();};
     draw();
   }catch(e){kpis.textContent="تعذر تحميل البيانات"; console.error(e);}
 })();
