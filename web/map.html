@@ -13,8 +13,15 @@ body{background:#12131C}
 .hero-mini{padding:28px 0 6px}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 18px}
 @media(max-width:900px){.tiles{grid-template-columns:1fr}}
-.tile{background:#1E1F2E;border:1px solid #2A2C3D;border-radius:14px;padding:14px;cursor:pointer;text-align:right;width:100%}
-.tile .asof{color:#6B7280;font-size:12px}
+.tiles{align-items:stretch}
+button.tile, .tile{
+  height:auto!important; min-height:148px; display:flex; flex-direction:column; align-items:flex-start; justify-content:space-between;
+  background:#1E1F2E; border:1px solid #2A2C3D; border-radius:16px; padding:16px; cursor:pointer;
+  text-align:right; width:100%; white-space:normal; line-height:1.45; font:inherit; color:inherit;
+}
+.tile .kicker{margin-bottom:8px}
+.tile .v{font-size:28px; font-family:"IBM Plex Sans",sans-serif; margin:0 0 8px}
+.tile .asof{color:#6B7280;font-size:12px;margin-top:8px}
 .pill{display:inline-block;border-radius:999px;padding:3px 8px;font-size:12px}
 .pill.up{background:#0b3b2e;color:#10B981}
 .pill.dn{background:#3a1515;color:#FF5252}
@@ -105,15 +112,15 @@ const LABELS = {
   deposit:"ودائع البنوك", tbill:"أذون الخزانة"
 };
 const META = {
-  usd_egp_mid: {method:"100 × (سعر الصرف الحالي ÷ أول سعر متاح منذ يناير 2016). المصدر: usd_egp_mid في macro_series.", series:"usd_egp_mid"},
-  gold_egp_oz: {method:"ذهب عالمي بالدولار محوّل للجنيه بسلسلة usd_egp_mid لنفس الفترة. 100 × (القيمة الحالية ÷ قيمة البداية).", series:"gold_egp_oz"},
-  silver_egp_oz: {method:"فضة عالمية بالدولار محوّلة للجنيه بسلسلة usd_egp_mid. 100 × (الحالي ÷ البداية).", series:"silver_egp_oz"},
-  spy_egp: {method:"SPY بالدولار محوّل للجنيه. 100 × (الحالي ÷ البداية).", series:"spy_egp"},
-  qqq_egp: {method:"QQQ بالدولار محوّل للجنيه. 100 × (الحالي ÷ البداية).", series:"qqq_egp"},
-  egx30_close: {method:"إغلاق EGX30. 100 × (الإغلاق الحالي ÷ أول إغلاق في/بعد يناير 2016).", series:"egx30_close"},
-  purchasing: {method:"ليست قسمة سعرين. تُركَّب التغيرات الشهرية للتضخم (cpi_headline_mom_pct) من 2016. الناتج = القوة الشرائية المتبقية من 100 جنيه نقداً.", series:"cpi_headline_mom_pct"},
-  deposit: {method:"ليست قسمة سعرين. يُطبَّق متوسط العائد السنوي المعلن على الأيام الفعلية: (1+y)^(Δt/365) من سلسلة bank_deposit_1_3m_avg_pct.", series:"bank_deposit_1_3m_avg_pct"},
-  tbill: {method:"ليست قسمة سعرين. يُطبَّق متوسط عائد مزاد 91 يوماً زمنياً من tbill_91_avg_yield_pct. أول مشاهدة في السلسلة قد تكون بعد يناير 2016.", series:"tbill_91_avg_yield_pct"}
+  usd_egp_mid: {text:"نفس الـ100 جنيه لو تحوّلت دولاراً في أول سعر متاح بعد يناير 2016 ثم قُيّمت بآخر سعر صرف في القاعدة.", href:"https://www.cbe.org.eg/en/economic-research/statistics/exchange-rates", link:"البنك المركزي — أسعار الصرف"},
+  gold_egp_oz: {text:"سعر أونصة الذهب بالدولار محوّل للجنيه بسعر الصرف في كل فترة، ثم قياس ماذا أصبحت 100 جنيه من أول نقطة 2016.", href:"https://www.cbe.org.eg/en/economic-research/statistics/exchange-rates", link:"منهج التحويل عبر سعر الصرف"},
+  silver_egp_oz: {text:"سعر أونصة الفضة بالدولار محوّل للجنيه بسعر الصرف، بنفس قاعدة الـ100 جنيه من 2016.", href:"https://www.cbe.org.eg/en/economic-research/statistics/exchange-rates", link:"منهج التحويل عبر سعر الصرف"},
+  spy_egp: {text:"مؤشر الأسهم الأمريكية الأوسع مُقوَّم بالجنيه عبر سعر الصرف. الرقم = ماذا أصبحت 100 جنيه منذ أول تداول في 2016.", href:"https://finance.yahoo.com/quote/SPY/", link:"سلسلة SPY (ثم التحويل للجنيه)"},
+  qqq_egp: {text:"أسهم التكنولوجيا الأمريكية مُقوَّمة بالجنيه عبر سعر الصرف من أول تداول 2016.", href:"https://finance.yahoo.com/quote/QQQ/", link:"سلسلة QQQ (ثم التحويل للجنيه)"},
+  egx30_close: {text:"ماذا أصبحت 100 جنيه لو تحركت مع إغلاق مؤشر البورصة المصرية من أول جلسة في يناير 2016 أو بعدها.", href:"https://www.egx.com.eg/", link:"البورصة المصرية"},
+  purchasing: {text:"النقد بلا استثمار. نركّب التضخم الشهري المعلن منذ 2016 لنرى كم تبقى من قوة 100 جنيه الشرائية.", href:"https://www.cbe.org.eg/en/economic-research/statistics/inflation-rates", link:"معدلات التضخم — البنك المركزي / الجهاز المركزي"},
+  deposit: {text:"عائد الوديعة القصيرة يُطبَّق على عدد الأيام الفعلي بين المشاهدات، لا بقسمة سعرين.", href:"https://www.cbe.org.eg/en/economic-research/statistics/interest-rates", link:"أسعار العائد — البنك المركزي"},
+  tbill: {text:"عائد مزاد أذون 91 يوماً يُطبَّق زمنياً. أول مزاد في السلسلة قد يكون بعد يناير 2016 ويُذكر على البطاقة.", href:"https://www.cbe.org.eg/en/economic-research/statistics/treasury-bills", link:"أذون الخزانة — البنك المركزي"}
 };
 const START="2016-01-01";
 const packed=await loadEngine();
@@ -155,12 +162,12 @@ function openDetail(key){
   document.getElementById("mtitle").textContent=LABELS[key]+" — ماذا حدث لقيمة 100 جنيه؟";
   if(!raw.length){
     document.getElementById("msum").textContent="⚠️ البيانات التاريخية غير مكتملة، لا يمكن حساب العائد بدقة.";
-    document.getElementById("mmethod").textContent=META[key].method;
+    document.getElementById("mmethod").innerHTML=`${META[key].text} <a href="${META[key].href}" target="_blank" rel="noopener">${META[key].link}</a>`;
     modal.classList.add("on"); return;
   }
   const rb=rebase(raw); const last=rb.at(-1);
   document.getElementById("msum").textContent=`البداية 100 ج.م في ${raw[0].time} · الحالية ${en(last.value,1)} ج.م (${last.value>=100?"+":""}${en(last.value-100,1)}%) · آخر تحديث ${last.time}`;
-  document.getElementById("mmethod").textContent=META[key].method+" السلسلة: "+META[key].series+" في جدول macro_series.";
+  document.getElementById("mmethod").innerHTML=`${META[key].text} <a href="${META[key].href}" target="_blank" rel="noopener">${META[key].link}</a>`;
   modal.classList.add("on");
   const box=document.getElementById("dchart");
   if(!dchart){
