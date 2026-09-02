@@ -2,74 +2,130 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ماذا حدث للفلوس؟</title>
+<title>البوصلة الاقتصادية</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/app.css"/>
 <script src="config.js"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
 <style>
-body{display:grid;grid-template-rows:64px auto 1fr auto}
-#chart{min-height:480px;direction:ltr}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px 18px;border-top:1px solid var(--line)}
-@media(max-width:800px){.cards{grid-template-columns:1fr 1fr}}
+.hero-mini{padding:28px 0 8px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0 18px}
+@media(max-width:900px){.tiles{grid-template-columns:1fr 1fr}}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.tile .v{font-size:26px;font-family:"IBM Plex Sans",sans-serif;margin:4px 0}
+.seg{display:flex;gap:8px;margin:8px 0 12px}
+.seg button{cursor:pointer}
+.seg button.on{background:var(--gold);color:#16110a;border:0}
+#chart{height:420px;direction:ltr;border:1px solid var(--line);border-radius:14px}
+.why{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0 40px}
+@media(max-width:800px){.why{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
-  <div class="logo">خريطة الفلوس<span>ماذا حدث لـ 1,000 جنيه؟</span></div>
+  <div class="logo">البوصلة الاقتصادية<span>للمواطن المصري منذ 2016</span></div>
   <nav>
     <a href="./index.html">البداية</a>
-    <a class="active" href="./map.html">ماذا حدث للفلوس؟</a>
+    <a class="active" href="./map.html">البوصلة</a>
     <a href="./funds.html">الصناديق</a>
-    <a href="./categories.html">خريطة الفئات</a>
+    <a href="./categories.html">الفئات</a>
     <a href="./macro.html">الاقتصاد</a>
   </nav>
 </div></header>
-<div class="controls">
-  <span class="muted">نعرض أربعة مسارات فقط على مقياس واحد (أساس 100) حتى تُقرأ القصة.</span>
-  <input id="amount" type="number" value="1000"/>
-  <input id="start" type="date" value="2016-01-04"/>
-  <button class="primary" id="run">حدّث</button>
-</div>
-<div id="chart"></div>
-<div class="cards" id="cards"></div>
+<main class="wrap">
+  <section class="hero-mini">
+    <div class="kicker">المرجع الاقتصادي</div>
+    <h1>ماذا حدث لقيمة أموالك منذ 2016؟</h1>
+    <p class="muted">ليست صفحة أسعار. لو كان معك 100 جنيه في يناير 2016، كيف تحركت قيمتها أمام أهم البدائل؟ كل المسارات تبدأ من 100.</p>
+  </section>
+  <h3>الأصول وأسعار الصرف</h3>
+  <div class="tiles" id="assets"></div>
+  <h3>الاقتصاد النقدي</h3>
+  <div class="tiles" id="policy"></div>
+  <div class="seg">
+    <button class="on" data-g="value">مقارنة القيمة</button>
+    <button data-g="policy">تكلفة المعيشة والسياسة النقدية</button>
+  </div>
+  <div id="chart"></div>
+  <section class="why">
+    <div class="card">
+      <h3>ماذا حدث لقوة الجنيه؟</h3>
+      <p id="pound"></p>
+    </div>
+    <div class="card">
+      <h3>لماذا يحدث ذلك معاً؟</h3>
+      <p>عندما يرتفع التضخم، غالباً ما ترتفع الفائدة وعائد الأذون، ويبحث الناس عن الدولار والذهب والأسهم. القوة الشرائية للجنيه تتراجع على الخط الزمني نفسه. الصفحة تعلّم قراءة هذا التزامن، لا توصي بشراء أصل.</p>
+    </div>
+  </section>
+</main>
 <script type="module">
-import { PATHS, fmt, en, toLine, rebase } from "./js/engine.js";
+import { PATHS, fmt, en, toLine, rebase, nearest } from "./js/engine.js";
 import { loadEngine } from "./js/live.js";
-const SHOW=["purchasing","usd_egp_mid","gold_egp_oz","egx30_close"];
 const packed=await loadEngine();
-const DATA={series:packed.series};
+const S=packed.series;
+const START="2016-01-04";
+const GROUPS={
+  value:["usd_egp_mid","gold_egp_oz","silver_egp_oz","egx30_close","spy_egp","qqq_egp"],
+  policy:["purchasing","deposit","tbill"]
+};
+function last(key){ return (S[key]||[]).at(-1); }
+function chg(key){
+  const line=toLine(S,START,100,key);
+  if(!line.length) return null;
+  return line.at(-1).value; // already starting ~100 if we use amount 100? toLine uses first point as base for levels
+}
+function tile(title, key, unit){
+  const L=last(key==="purchasing"?null:key);
+  const line=toLine(S,START,100,key);
+  const idx=line.length?line.at(-1).value:null;
+  const asof=line.length?line.at(-1).time:(L?L[0]:"");
+  return `<div class="tile">
+    <div class="kicker">${title}</div>
+    <div class="v num">${idx==null?"—":en(idx,1)}</div>
+    <div class="muted">أساس 100 في 2016 · حتى ${asof||"—"}</div>
+  </div>`;
+}
+document.getElementById("assets").innerHTML=[
+  tile("الدولار","usd_egp_mid"),
+  tile("الذهب","gold_egp_oz"),
+  tile("الفضة","silver_egp_oz"),
+  tile("EGX30","egx30_close"),
+  tile("S&P / SPY","spy_egp"),
+  tile("ناسداك / QQQ","qqq_egp")
+].join("");
+document.getElementById("policy").innerHTML=[
+  tile("القوة الشرائية","purchasing"),
+  tile("الوديعة","deposit"),
+  tile("أذون 91 يوماً","tbill")
+].join("");
+const pound=toLine(S,START,100,"purchasing");
+if(pound.length){
+  document.getElementById("pound").innerHTML=`من <b class="num">100</b> في 2016 إلى حوالي <b class="num">${en(pound.at(-1).value,1)}</b> في ${pound.at(-1).time}. هذا معنى تآكل الجنيه النقدي، لا سعر الذهب.`;
+}
 const el=document.getElementById("chart");
 const chart=LightweightCharts.createChart(el,{
   layout:{background:{color:"#0a0e12"},textColor:"#8b95a5",fontFamily:"IBM Plex Sans"},
   grid:{vertLines:{color:"#1c2430"},horzLines:{color:"#1c2430"}},
-  rightPriceScale:{borderColor:"#273140"},
-  timeScale:{borderColor:"#273140"}
+  rightPriceScale:{borderColor:"#273140"}, timeScale:{borderColor:"#273140"}
 });
-new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth,height:el.clientHeight||480})).observe(el);
-let series={};
-function draw(){
-  const amount=+document.getElementById("amount").value||1000;
-  const start=document.getElementById("start").value;
-  Object.values(series).forEach(s=>chart.removeSeries(s)); series={};
-  const cards=[];
-  SHOW.forEach(key=>{
-    const raw=toLine(DATA.series,start,amount,key);
-    if(!raw.length) return;
-    const line=rebase(raw);
-    const s=chart.addLineSeries({color:PATHS[key].color,lineWidth:2.4,priceLineVisible:false});
-    s.setData(line); series[key]=s;
-    const last=raw.at(-1).value;
-    const chg=(line.at(-1).value-100);
-    cards.push(`<div class="card"><div class="kicker">${PATHS[key].name}</div>
-      <h3 class="num">${fmt(last)} ج.م</h3>
-      <p class="${chg>=0?"up":"dn"}">${chg>=0?"+":""}${en(chg,1)}٪ منذ ${start}</p></div>`);
+new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth,height:420})).observe(el);
+let drawn=[];
+function render(group){
+  drawn.forEach(s=>chart.removeSeries(s)); drawn=[];
+  GROUPS[group].forEach(key=>{
+    let line=toLine(S,START,100,key);
+    if(!line.length) return;
+    line=rebase(line);
+    const s=chart.addLineSeries({color:PATHS[key].color,lineWidth:2.2,priceLineVisible:false,title:PATHS[key].name});
+    s.setData(line); drawn.push(s);
   });
   chart.timeScale().fitContent();
-  document.getElementById("cards").innerHTML=cards.join("");
 }
-document.getElementById("run").onclick=draw;
-chart.applyOptions({width:el.clientWidth,height:480});
-draw();
+document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".seg button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); render(b.dataset.g);
+});
+chart.applyOptions({width:el.clientWidth,height:420});
+render("value");
 </script>
 </body></html>
