@@ -148,15 +148,15 @@ td.pos.active{background:#047857} td.neg.active{background:#991b1b}
   </div>
   <div class="kpis" id="kpis">جاري تحميل البيانات...</div>
   <div class="views">
-    <button class="on" data-v="tree" type="button">خريطة Treemap</button>
+    <button data-v="tree" type="button">خريطة Treemap</button>
     <button data-v="cards" type="button">شبكة البطاقات</button>
-    <button data-v="heat" type="button">مصفوفة الأداء</button>
+    <button class="on" data-v="heat" type="button">مصفوفة الأداء</button>
   </div>
   <div id="cat-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px"></div>
-  <section id="v-tree"></section>
+  <section id="v-tree" hidden></section>
   <section id="v-cards" hidden></section>
-  <section id="v-heat" hidden></section>
-  <div id="extra" hidden>
+  <section id="v-heat"></section>
+  <div id="extra">
   <h3>أعلى قيمة لكل محور Smart Score</h3>
   <p class="sub">ترتيب حسب القيمة المخزّنة فقط بين من لهم رقم. ليست منهجية بطل مستقلة.</p>
   <div class="champs" id="champs"></div>
@@ -375,6 +375,7 @@ function renderKhaterHeatmap(groups, horizon) {
         sel.value = sel.value===b.dataset.chip ? "" : b.dataset.chip;
         draw();
       });
+      renderKhaterHeatmap(groups, h);
       const host=document.getElementById("v-tree");
       host.innerHTML='<div id="treemap-canvas"></div>';
       const container=document.getElementById("treemap-canvas");
@@ -426,7 +427,6 @@ function renderKhaterHeatmap(groups, horizon) {
         </article>`;
       }).join("")+"</div>";
       document.querySelectorAll("#v-cards .cat").forEach(c=>c.onclick=()=>openCat(c.dataset.g,groups[c.dataset.g]));
-      renderKhaterHeatmap(groups, h);
 
       const axes=[["P","الأداء"],["R","المخاطرة"],["B","المرجع"],["C","الاتساق"],["I","التضخم"]];
       document.getElementById("champs").innerHTML=axes.map(([k,l])=>{
@@ -458,7 +458,6 @@ function renderKhaterHeatmap(groups, horizon) {
       document.querySelectorAll(".views button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
       ["tree","cards","heat"].forEach(v=>document.getElementById("v-"+v).hidden=b.dataset.v!==v);
       document.getElementById("extra").hidden=b.dataset.v==="tree";
-      if(b.dataset.v==="tree") draw();
     });
     ["fb","fs","fr","ft","hz"].forEach(id=>document.getElementById(id).onchange=draw);
     document.getElementById("fm").oninput=draw;
