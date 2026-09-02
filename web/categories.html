@@ -31,7 +31,7 @@ button.on{background:#10B981;color:#04110b;border:0}
 .cat,.champ,.tile{padding:12px;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s}
 .cat:hover,.tile:hover,.champ:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(16,185,129,.12)}
 .cat{cursor:pointer;min-height:120px}
-#treemap-canvas{position:relative;width:100%;height:min(72vh,760px);background:#0c0d14;overflow:hidden}
+#treemap-canvas{position:relative;width:100%;background:#0c0d14;overflow:visible}
 .tm-lab{position:absolute;z-index:10;background:rgba(12,13,20,.85);padding:4px 8px;border-radius:4px;font-size:12px;font-weight:700;pointer-events:none}
 .tm-tile{position:absolute;border:1px solid #0c0d14;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;color:#fff;padding:2px}
 .tm-tile .nm,.tm-tile .rv{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(9px,1vw,13px)}
@@ -252,9 +252,9 @@ function color(v){
       host.innerHTML='<div id="treemap-canvas"></div>';
       const container=document.getElementById("treemap-canvas");
       const width=container.clientWidth||Math.min(1200,window.innerWidth-36);
-      const height=Math.max(860, window.innerHeight-80);
+      const height=Math.max(1100, window.innerHeight);
       const catCol=b=>CATCOL[b]||"#4B5563";
-      const kids=rows.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h)).slice(0,36)
+      const kids=rows.filter(f=>{const v=ret(f,h); return v!=null && v>=10;}).sort((a,b)=>ret(b,h)-ret(a,h))
         .map(f=>({...f,category_name:f.bucket,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
       const rootData={name:"Root",children:kids};
       const root=d3.hierarchy(rootData).sum(d=>{
