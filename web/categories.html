@@ -5,61 +5,77 @@
 <title>خريطة فئات الصناديق</title>
 <script src="config.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="css/app.css"/>
 <style>
-body{background:#12131C}
-.bar{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 16px}
-.kpi{background:#1E1F2E;border:1px solid #2A2C3D;border-radius:12px;padding:10px 14px;min-width:140px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}
-@media(max-width:640px){.grid{grid-template-columns:1fr}}
-.cat{background:#1E1F2E;border:1px solid #2A2C3D;border-radius:14px;padding:14px;cursor:pointer;text-align:right}
-.cat:hover{border-color:#10B981}
-.heat{width:100%;border-collapse:collapse;font-size:12px;margin:16px 0;overflow:auto}
-.heat th,.heat td{border:1px solid #2A2C3D;padding:6px 8px;text-align:center}
-.heat td.pos{background:#065F46;color:#d1fae5;cursor:pointer}
-.heat td.neg{background:#991B1B;color:#fecaca;cursor:pointer}
-.heat td.na{color:#6B7280}
-.drawer{position:fixed;inset:0 0 0 auto;width:min(460px,100%);background:#12131C;border-right:1px solid #2A2C3D;
-  transform:translateX(-110%);transition:transform .25s;z-index:30;overflow:auto;padding:16px}
+:root{--bg:#12131C;--card:#1E1F2E;--line:#2A2C3D;--ink:#F3F4F6;--mute:#9CA3AF;--ok:#10B981;--bad:#EF4444}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",sans-serif}
+a{color:var(--ok);text-decoration:none}
+header{height:56px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+nav a{margin-inline-start:14px;color:var(--mute)}
+nav a.on{color:#fff}
+.page{padding:20px 20px 48px;max-width:1180px;margin:0 auto}
+h1{font-size:26px;margin:0 0 6px}
+.sub{color:var(--mute);margin:0 0 16px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.kpi b{display:block;font-size:22px;margin-top:4px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+input,select,button{background:#161821;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.cat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;min-height:128px}
+.cat:hover{border-color:var(--ok)}
+.cat h3{margin:0 0 8px;font-size:18px}
+.wraptable{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:8px;border-bottom:1px solid var(--line);text-align:center}
+th{color:var(--mute);font-weight:500}
+td.pos{background:#065F46;color:#ecfdf5;cursor:pointer}
+td.neg{background:#7f1d1d;color:#fee2e2;cursor:pointer}
+td.na{color:#6B7280}
+.dist{display:flex;height:16px;border-radius:99px;overflow:hidden;background:#1F2937;margin:8px 0}
+.dist i{height:16px;display:block}
+.drawer{position:fixed;top:0;bottom:0;right:0;width:min(420px,100%);background:#161821;border-left:1px solid var(--line);
+  transform:translateX(110%);transition:transform .25s ease;z-index:50;overflow:auto;padding:16px}
+html[dir="rtl"] .drawer{right:auto;left:0;border-left:0;border-right:1px solid var(--line);transform:translateX(-110%)}
 .drawer.on{transform:none}
-.frow{border-bottom:1px solid #2A2C3D;padding:10px 0}
-.segbar{display:flex;height:14px;border-radius:99px;overflow:hidden;background:#1F2937;margin:8px 0 16px}
-.segbar i{display:block;height:14px}
-.note{color:#9CA3AF;font-size:12px}
+.mask{display:none;position:fixed;inset:0;background:#0008;z-index:40}
+.mask.on{display:block}
+.frow{border-bottom:1px solid var(--line);padding:10px 0}
+@media(max-width:900px){.grid,.kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.grid,.kpis{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header class="site-header"><div class="wrap">
-  <div class="logo">خريطة فئات الصناديق<span>مقارنة حسب الفئة من القاعدة</span></div>
+<header>
+  <strong>خريطة فئات الصناديق</strong>
   <nav>
     <a href="./index.html">البداية</a>
     <a href="./map.html">البوصلة</a>
     <a href="./funds.html">الصناديق</a>
-    <a class="active" href="./categories.html">الفئات</a>
+    <a class="on" href="./categories.html">الفئات</a>
     <a href="./macro.html">الاقتصاد</a>
   </nav>
-</div></header>
-<main class="wrap page">
-  <p class="muted">كل رقم من funds.metadata.scores و nav_official. لا يوجد مؤشر فئة رسمي في القاعدة؛ الوسيط أدناه وصف للبيانات المتاحة فقط.</p>
-  <div class="bar" id="kpis">جاري تحميل البيانات...</div>
-  <div class="row2" style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0">
-    <select id="fb"></select>
+</header>
+<main class="page">
+  <h1>خريطة فئات الصناديق</h1>
+  <p class="sub">مقارنة الصناديق حسب الفئة من سوبربيس. لا يوجد عائد فئة رسمي؛ المصفوفة وسيط للعوائد المخزّنة فقط.</p>
+  <div class="kpis" id="kpis"><div class="kpi">جاري تحميل البيانات...</div></div>
+  <div class="filters">
+    <select id="fb"><option value="">كل الفئات</option></select>
     <input id="fm" placeholder="مدير الاستثمار"/>
-    <button id="reset" type="button">إعادة ضبط الفلاتر</button>
+    <button type="button" id="reset">إعادة ضبط الفلاتر</button>
   </div>
-  <h3>الفئات</h3>
   <div class="grid" id="cats"></div>
-  <h3>مصفوفة الوسيط المتاح حسب الأفق</h3>
-  <p class="note">الخلية = وسيط return_pct للصناديق التي لها رقم في ذلك الأفق. ليست منهجية فئة معتمدة.</p>
-  <div style="overflow:auto"><table class="heat" id="heat"></table></div>
-  <h3>توزيع Smart Score المخزّن (أفق 12 شهراً السنوي)</h3>
-  <p class="note">القيمة من metadata.scores.last12m.score كما خزّناها للعرض. محرك كلود منفصل.</p>
-  <div class="segbar" id="distbar"></div>
-  <div id="distlab" class="note"></div>
-  <h3>خريطة المخاطرة مقابل العائد</h3>
-  <p class="note">لا توجد بيانات تقلب/انحراف معياري في الجداول الحالية — لا توجد بيانات متاحة.</p>
+  <h2>مصفوفة الوسيط المتاح</h2>
+  <p class="sub">الخلية = وسيط return_pct للصناديق التي لها رقم. اضغط الصف لفتح القائمة.</p>
+  <div class="wraptable"><table id="heat"></table></div>
+  <h2>توزيع الدرجة المخزّنة — 12 شهراً</h2>
+  <div class="dist" id="distbar"></div>
+  <p class="sub" id="distlab"></p>
+  <h2>المخاطرة مقابل العائد</h2>
+  <p class="sub">لا توجد بيانات متاحة للتقلب في القاعدة.</p>
 </main>
+<div class="mask" id="mask"></div>
 <aside class="drawer" id="drawer"></aside>
 <script>
 const CFG=window.KHATER||{};
@@ -77,107 +93,86 @@ const AR=c=>{c=(c||"").toLowerCase();
 };
 const num=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:1});
 const cell=(f,h)=>(f.scores&&f.scores[h])||{};
-function median(xs){
-  const a=xs.filter(v=>v!=null).sort((x,y)=>x-y);
-  if(!a.length) return null;
-  const m=Math.floor(a.length/2);
-  return a.length%2?a[m]:(a[m-1]+a[m])/2;
-}
+function median(xs){const a=xs.filter(v=>v!=null).sort((x,y)=>x-y); if(!a.length) return null; const m=Math.floor(a.length/2); return a.length%2?a[m]:(a[m-1]+a[m])/2;}
 (async()=>{
+  const box=document.getElementById("kpis");
   try{
-    if(!CFG.url||!CFG.key) throw 0;
     const H={apikey:CFG.key,Authorization:"Bearer "+CFG.key};
-    const [funds, navs]=await Promise.all([
+    const [funds,navs]=await Promise.all([
       fetch(CFG.url+"/rest/v1/funds?select=fund_id,canonical_name,management_company,category,metadata&limit=1000",{headers:H}).then(r=>r.json()),
       fetch(CFG.url+"/rest/v1/nav_official?select=fund_id,nav,as_of_date&limit=1000",{headers:H}).then(r=>r.json())
     ]);
-    if(!Array.isArray(funds)) throw 1;
-    const navMap={};
-    (navs||[]).forEach(n=>navMap[n.fund_id]=n);
+    if(!Array.isArray(funds)) throw new Error("funds");
+    const navMap={}; (Array.isArray(navs)?navs:[]).forEach(n=>navMap[n.fund_id]=n);
     const ALL=funds.map(f=>({
-      id:f.fund_id, name:f.canonical_name, manager:f.management_company||"",
-      raw:f.category, bucket:AR(f.category),
-      scores:(f.metadata||{}).scores||{}, asof:(f.metadata||{}).scores_as_of||null,
-      nav:navMap[f.fund_id]?.nav ?? null, navd:navMap[f.fund_id]?.as_of_date||null
+      id:f.fund_id,name:f.canonical_name,manager:f.management_company||"",
+      raw:f.category,bucket:AR(f.category),scores:(f.metadata||{}).scores||{},
+      asof:(f.metadata||{}).scores_as_of||null,
+      nav:navMap[f.fund_id]?.nav??null,navd:navMap[f.fund_id]?.as_of_date||null
     }));
     const buckets=[...new Set(ALL.map(f=>f.bucket))].sort();
     document.getElementById("fb").innerHTML='<option value="">كل الفئات</option>'+buckets.map(b=>`<option>${b}</option>`).join("");
-    let filt=()=>ALL;
     const filtered=()=>{
-      const b=document.getElementById("fb").value;
-      const m=document.getElementById("fm").value.trim();
+      const b=document.getElementById("fb").value, m=document.getElementById("fm").value.trim();
       return ALL.filter(f=>(!b||f.bucket===b)&&(!m||f.manager.includes(m)));
     };
-    function openDrawer(bucket, list){
-      const el=document.getElementById("drawer");
-      el.classList.add("on");
-      el.innerHTML=`<button type="button" id="x">إغلاق</button>
-        <h2>صناديق ${bucket}</h2>
-        <p class="note">${list.length} صندوق</p>
-        ${list.map(f=>{
-          const s=cell(f,"last12m");
-          return `<div class="frow">
-            <b>${f.name}</b><div class="note">${f.manager}</div>
-            <div>NAV ${f.nav==null?"لا توجد بيانات متاحة":Number(f.nav).toLocaleString("en-US")} · YTD ${num(cell(f,"ytd").return_pct)}% · 12ش ${num(s.return_pct)}% · Score ${s.score??"لا توجد بيانات متاحة"}</div>
-            <a href="fund.html?id=${encodeURIComponent(f.id)}&h=last12m">عرض الصندوق</a>
-          </div>`;
-        }).join("")}`;
-      document.getElementById("x").onclick=()=>el.classList.remove("on");
+    const close=()=>{document.getElementById("drawer").classList.remove("on");document.getElementById("mask").classList.remove("on");};
+    document.getElementById("mask").onclick=close;
+    function openDrawer(name,list){
+      document.getElementById("mask").classList.add("on");
+      const d=document.getElementById("drawer");
+      d.classList.add("on");
+      d.innerHTML=`<button type="button" id="x">إغلاق</button>
+        <h2>صناديق ${name}</h2>
+        <p class="sub">${list.length} صندوق</p>
+        ${list.map(f=>`<div class="frow"><b>${f.name}</b>
+          <div class="sub">${f.manager||"—"}</div>
+          <div>NAV ${f.nav==null?"لا توجد بيانات متاحة":Number(f.nav).toLocaleString("en-US")}
+           · YTD ${num(cell(f,"ytd").return_pct)}%
+           · سنة ${num(cell(f,"last12m").return_pct)}%
+           · Score ${cell(f,"last12m").score??"لا توجد بيانات متاحة"}</div>
+          <a href="fund.html?id=${encodeURIComponent(f.id)}&h=last12m">عرض الصندوق</a></div>`).join("")}`;
+      document.getElementById("x").onclick=close;
     }
     function draw(){
       const rows=filtered();
       const asof=[...new Set(rows.map(f=>f.asof).filter(Boolean))].sort().at(-1)||"—";
-      const sub=[...new Set(rows.map(f=>f.raw||""))].length;
+      const groups={}; rows.forEach(f=>(groups[f.bucket]||=[]).push(f));
       document.getElementById("kpis").innerHTML=`
-        <div class="kpi">آخر تقييم مخزّن<br><b>${asof}</b></div>
-        <div class="kpi">عدد الصناديق<br><b>${rows.length}</b></div>
-        <div class="kpi">عدد الفئات<br><b>${[...new Set(rows.map(f=>f.bucket))].length}</b></div>
-        <div class="kpi">التصنيفات الخام<br><b>${sub}</b></div>`;
-      const groups={};
-      rows.forEach(f=>(groups[f.bucket]||=[]).push(f));
-      document.getElementById("cats").innerHTML=Object.entries(groups).map(([g,list])=>{
-        const with12=list.filter(f=>cell(f,"last12m").return_pct!=null).length;
-        const latest=[...list.map(f=>f.asof).filter(Boolean)].sort().at(-1)||"—";
-        return `<div class="cat" data-g="${g}">
-          <h3>${g}</h3>
-          <div>${list.length} صندوق · ${with12} بعائد 12 شهراً مخزّن</div>
-          <div class="note">آخر تحديث تقييم ${latest}</div>
-          <div class="note">أداء الفئة الرسمي: غير متاح — لا منهجية فئة في القاعدة</div>
-        </div>`;
-      }).join("");
-      document.querySelectorAll(".cat").forEach(c=>c.onclick=()=>openDrawer(c.dataset.g, groups[c.dataset.g]));
-      let ht=`<tr><th>الفئة</th>${HS.map(([,l])=>`<th>${l}</th>`).join("")}</tr>`;
+        <div class="kpi">آخر تقييم مخزّن<b>${asof}</b></div>
+        <div class="kpi">الصناديق<b>${rows.length}</b></div>
+        <div class="kpi">الفئات<b>${Object.keys(groups).length}</b></div>
+        <div class="kpi">التصنيف الخام<b>${[...new Set(rows.map(f=>f.raw||""))].length}</b></div>`;
+      document.getElementById("cats").innerHTML=Object.entries(groups).map(([g,list])=>`<article class="cat" data-g="${g}">
+        <h3>${g}</h3>
+        <div>${list.length} صندوق</div>
+        <div class="sub">${list.filter(f=>cell(f,"last12m").return_pct!=null).length} بعائد سنوي مخزّن</div>
+        <div class="sub">أداء الفئة الرسمي: غير متاح</div>
+      </article>`).join("");
+      document.querySelectorAll(".cat").forEach(c=>c.onclick=()=>openDrawer(c.dataset.g,groups[c.dataset.g]));
+      let html=`<thead><tr><th>الفئة</th>${HS.map(([,l])=>`<th>${l}</th>`).join("")}</tr></thead><tbody>`;
       Object.entries(groups).forEach(([g,list])=>{
-        ht+=`<tr><th>${g}</th>`+HS.map(([h])=>{
+        html+=`<tr><th>${g}</th>`+HS.map(([h])=>{
           const xs=list.map(f=>cell(f,h).return_pct).filter(v=>v!=null);
           if(!xs.length) return `<td class="na">—</td>`;
           const med=median(xs);
-          const cls=med>=0?"pos":"neg";
-          return `<td class="${cls}" data-g="${g}" title="${g} · ${xs.length}/${list.length}">${num(med)}%</td>`;
+          return `<td class="${med>=0?"pos":"neg"}" data-g="${g}">${num(med)}%</td>`;
         }).join("")+`</tr>`;
       });
-      document.getElementById("heat").innerHTML=ht;
-      document.querySelectorAll("#heat td[data-g]").forEach(td=>td.onclick=()=>openDrawer(td.dataset.g, groups[td.dataset.g]));
+      document.getElementById("heat").innerHTML=html+"</tbody>";
+      document.querySelectorAll("#heat td[data-g]").forEach(td=>td.onclick=()=>openDrawer(td.dataset.g,groups[td.dataset.g]));
       const scores=rows.map(f=>cell(f,"last12m").score).filter(v=>v!=null);
-      const bins=[
-        ["ممتاز 90–100", scores.filter(s=>s>=90).length, "#10B981"],
-        ["جيد جداً 75–89", scores.filter(s=>s>=75&&s<90).length, "#34D399"],
-        ["متوسط 50–74", scores.filter(s=>s>=50&&s<75).length, "#F59E0B"],
-        ["ضعيف <50", scores.filter(s=>s<50).length, "#EF4444"]
-      ];
-      const missing=rows.length-scores.length;
       const tot=rows.length||1;
-      document.getElementById("distbar").innerHTML=bins.map(([,n,c])=>`<i style="width:${100*n/tot}%;background:${c}"></i>`).join("");
-      document.getElementById("distlab").textContent=bins.map(([l,n])=>`${l}: ${n} (${(100*n/tot).toFixed(1)}%)`).join(" · ")+` · بلا درجة: ${missing}`;
+      const bins=[["90–100",s=>s>=90,"#10B981"],["75–89",s=>s>=75&&s<90,"#34D399"],["50–74",s=>s>=50&&s<75,"#F59E0B"],["<50",s=>s<50,"#EF4444"]];
+      const counts=bins.map(([l,fn,c])=>[l,scores.filter(fn).length,c]);
+      document.getElementById("distbar").innerHTML=counts.map(([,n,c])=>`<i style="width:${100*n/tot}%;background:${c}"></i>`).join("");
+      document.getElementById("distlab").textContent=counts.map(([l,n])=>`${l}: ${n}`).join(" · ")+` · بلا درجة: ${rows.length-scores.length}`;
     }
     document.getElementById("fb").onchange=draw;
     document.getElementById("fm").oninput=draw;
     document.getElementById("reset").onclick=()=>{document.getElementById("fb").value="";document.getElementById("fm").value="";draw();};
     draw();
-  }catch(e){
-    document.getElementById("kpis").textContent="تعذر تحميل البيانات";
-    console.error(e);
-  }
+  }catch(e){box.textContent="تعذر تحميل البيانات"; console.error(e);}
 })();
 </script>
 </body></html>
