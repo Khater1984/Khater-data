@@ -237,7 +237,7 @@ function color(v){
       const height=650;
       const rootData={name:"Root",children:Object.entries(groups).map(([g,list])=>({name:g,children:list.map(f=>({...f,category_name:g,fund_name:f.name,aum_val:1,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}))}))};
       const root=d3.hierarchy(rootData).sum(d=>d.children?0:1).sort((a,b)=>b.value-a.value);
-      d3.treemap().size([width,height]).paddingOuter(4).paddingTop(24).paddingInner(2).tile(d3.treemapSquarified)(root);
+      d3.treemap().size([width,height]).paddingOuter(4).paddingTop(24).paddingInner(2).tile(d3.treemapSquarify)(root);
       const valid=rows.map(f=>ret(f,h)).filter(v=>v!=null&&!isNaN(v));
       const colorScale=d3.scaleLinear().domain([d3.min(valid)||0,0,d3.max(valid)||50]).range(["#EF4444","#1F2937","#10B981"]);
       const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
@@ -323,7 +323,7 @@ function color(v){
     document.getElementById("fm").oninput=draw;
     document.getElementById("reset").onclick=()=>{["fb","fs","fr","ft"].forEach(id=>document.getElementById(id).value="");document.getElementById("fm").value="";document.getElementById("hz").value="last12m";draw();};
     draw();
-  }catch(e){kpis.textContent="تعذر تحميل البيانات"; console.error(e);}
+  }catch(e){kpis.textContent="تعذر تحميل البيانات: "+(e&&e.message?e.message:e); console.error(e);}
 })();
 </script>
 </body></html>
