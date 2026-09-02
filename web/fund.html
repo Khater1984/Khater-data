@@ -34,6 +34,8 @@ const h0=new URLSearchParams(location.search).get("h")||"last12m";
 const CFG=window.KHATER||{};
 const headers={apikey:CFG.key,Authorization:"Bearer "+CFG.key};
 const rows=await (await fetch(CFG.url+"/rest/v1/funds?fund_id=eq."+encodeURIComponent(id)+"&select=fund_id,canonical_name,management_company,category,metadata",{headers})).json();
+const ssRows=await (await fetch(CFG.url+"/rest/v1/fund_smartscore_latest?fund_id=eq."+encodeURIComponent(id)+"&select=final_score,raw_score,rating,data_tier,data_confidence,score_as_of,performance_score,risk_score,benchmark_score,consistency_score,inflation_score,score_explanation,risk_method,track_factor",{headers})).json();
+const ss=ssRows[0]||null;
 const raw=rows[0];
 const BENCH=await (await fetch("data/benchmarks.json")).json();
 const f=raw?{id:raw.fund_id,name:raw.canonical_name,manager:raw.management_company,category:raw.category,scores:(raw.metadata||{}).scores||{},scores_as_of:(raw.metadata||{}).scores_as_of||null}:null;
@@ -42,16 +44,24 @@ const HS=["weekly","4weeks","ytd","last12m","2y","3y","4y","5y","6y"];
 const HL={weekly:"أسبوع","4weeks":"4 أسابيع",ytd:"YTD",last12m:"12M","2y":"2Y","3y":"3Y","4y":"4Y","5y":"5Y","6y":"6Y"};
 const s=(f.scores||{})[h0]||{};
 document.getElementById("app").innerHTML=`
-  <div class="muted"><a href="./funds.html">الصناديق</a> · تقييم ${f.scores_as_of||"—"} · أفق ${HL[h0]||h0}</div>
+  <div class="muted"><a href="./funds.html">الصناديق</a> · Smart Score V3 · ${ss&&ss.score_as_of?ss.score_as_of:"لا توجد بيانات متاحة"} · أفق العائد ${HL[h0]||h0}</div>
   <h1>${f.name}</h1>
   <p class="muted">${f.manager||""} · ${bucket(f.category)} · ليست توصية</p>
   <div class="kpis">
     <div class="kpi"><em>RETURN</em><b class="num">${s.return_pct==null?"—":s.return_pct.toLocaleString("en-US",{maximumFractionDigits:1})+"%"}</b></div>
-    <div class="kpi"><em>SCORE</em><b class="num score">${s.score==null?"—":s.score}</b></div>
-    <div class="kpi"><em>RATING</em><b>${s.rating||"—"}</b></div>
-    <div class="kpi"><em>CONF</em><b>${s.conf||"—"}</b></div>
+    <div class="kpi"><em>SMART SCORE</em><b class="num score">${ss&&ss.final_score!=null?Number(ss.final_score).toFixed(1):"—"}</b></div>
+    <div class="kpi"><em>RATING</em><b>${ss&&ss.rating?ss.rating:"—"}</b></div>
+    <div class="kpi"><em>TIER</em><b>${ss&&ss.data_tier?ss.data_tier:"—"}</b></div>
   </div>
-  <p class="muted">مصدر هذا الأفق: ${s.source||"—"} · تاريخ المصدر ${s.source_as_of||"—"} · جودة ${s.quality||"—"}</p>
+  <p class="muted">${ss&&ss.score_explanation?ss.score_explanation:""} · المعادلة 0.30P + 0.25R + 0.25B + 0.10C + 0.10I</p>
+  <div class="kpis">
+    <div class="kpi"><em>P</em><b>${ss&&ss.performance_score!=null?Number(ss.performance_score).toFixed(1):"—"}</b></div>
+    <div class="kpi"><em>R</em><b>${ss&&ss.risk_score!=null?Number(ss.risk_score).toFixed(1):"—"}</b></div>
+    <div class="kpi"><em>B</em><b>${ss&&ss.benchmark_score!=null?Number(ss.benchmark_score).toFixed(1):"—"}</b></div>
+    <div class="kpi"><em>C</em><b>${ss&&ss.consistency_score!=null?Number(ss.consistency_score).toFixed(1):"—"}</b></div>
+    <div class="kpi"><em>I</em><b>${ss&&ss.inflation_score!=null?Number(ss.inflation_score).toFixed(1):"—"}</b></div>
+  </div>
+  <p class="muted">عائد الأفق: ${s.source||"—"} · ${s.source_as_of||"—"}</p>
   <div class="grid2">
     <div class="card"><h3>العائد عبر الآفاق</h3><div id="retChart"></div></div>
     <div class="card"><h3>المراجع مقابل الصندوق — ${HL[h0]||h0}</h3><div id="benchChart"></div></div>
