@@ -5,6 +5,7 @@
 <title>البوصلة الاقتصادية</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/app.css"/>
+<link rel="stylesheet" href="css/accordion.css"/>
 <script src="config.js"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
 <style>
@@ -57,10 +58,13 @@
       <p>عندما يرتفع التضخم، غالباً ما ترتفع الفائدة وعائد الأذون، ويبحث الناس عن الدولار والذهب والأسهم. القوة الشرائية للجنيه تتراجع على الخط الزمني نفسه. الصفحة تعلّم قراءة هذا التزامن، لا توصي بشراء أصل.</p>
     </div>
   </section>
+  <div id="pp-root" class="pp-wrap"></div>
 </main>
 <script type="module">
 import { PATHS, fmt, en, toLine, rebase, nearest } from "./js/engine.js";
 import { loadEngine } from "./js/live.js";
+import { mountPurchasingAccordion } from "./js/accordion.js";
+await mountPurchasingAccordion(document.getElementById("pp-root"));
 const packed=await loadEngine();
 const S=packed.series;
 const START="2016-01-04";
