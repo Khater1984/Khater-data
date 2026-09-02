@@ -117,6 +117,7 @@ td.pos.active{background:#047857} td.neg.active{background:#991b1b}
 <script>
 const CFG=window.KHATER||{};
 const HS=[["4weeks","شهر"],["ytd","YTD"],["last12m","سنة"],["3y","3 سنوات"],["5y","5 سنوات"]];
+const CATCOL={"صناديق الأسهم":"#059669","صناديق النقد":"#0D9488","صناديق الدخل الثابت":"#2563EB","صناديق الذهب":"#D97706","صناديق المؤشرات":"#7C3AED","الصناديق المتوازنة":"#65A30D","صناديق خيرية":"#E11D48","صناديق محمية":"#4F46E5","فئات أخرى":"#6B7280"};
 const AR=c=>{c=(c||"").toLowerCase();
   if(c.includes("gold")) return "صناديق الذهب";
   if(c.includes("money market")) return "صناديق النقد";
@@ -237,7 +238,11 @@ function color(v){
 
       const allCats=[...new Set(ALL.map(f=>f.bucket))].sort();
       const cur=document.getElementById("fb").value;
-      document.getElementById("cat-chips").innerHTML=allCats.map(g=>`<button type="button" class="glass" data-chip="${g}" style="padding:4px 10px;font-size:12px;cursor:pointer;border:${cur===g?"1px solid #10B981":"1px solid transparent"}">${g}</button>`).join("");
+      document.getElementById("cat-chips").innerHTML=allCats.map(g=>{
+        const c=CATCOL[g]||"#6B7280";
+        const on=cur===g;
+        return `<button type="button" data-chip="${g}" style="padding:5px 11px;font-size:12px;cursor:pointer;border-radius:999px;border:1px solid ${c};background:${on?c:"transparent"};color:${on?"#fff":c}">${g}</button>`;
+      }).join("");
       document.querySelectorAll("#cat-chips [data-chip]").forEach(b=>b.onclick=()=>{
         const sel=document.getElementById("fb");
         sel.value = sel.value===b.dataset.chip ? "" : b.dataset.chip;
@@ -247,10 +252,9 @@ function color(v){
       host.innerHTML='<div id="treemap-canvas"></div>';
       const container=document.getElementById("treemap-canvas");
       const width=container.clientWidth||Math.min(1200,window.innerWidth-36);
-      const height=Math.max(620, window.innerHeight-160);
-      const CATCOL={"صناديق الأسهم":"#059669","صناديق النقد":"#0D9488","صناديق الدخل الثابت":"#2563EB","صناديق الذهب":"#D97706","صناديق المؤشرات":"#7C3AED","الصناديق المتوازنة":"#65A30D","صناديق خيرية":"#E11D48","صناديق محمية":"#4F46E5","فئات أخرى":"#6B7280"};
+      const height=Math.max(680, window.innerHeight-130);
       const catCol=b=>CATCOL[b]||"#4B5563";
-      const kids=rows.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h)).slice(0,40)
+      const kids=rows.filter(f=>ret(f,h)!=null).sort((a,b)=>ret(b,h)-ret(a,h)).slice(0,36)
         .map(f=>({...f,category_name:f.bucket,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
       const rootData={name:"Root",children:kids};
       const root=d3.hierarchy(rootData).sum(d=>{
@@ -260,8 +264,6 @@ function color(v){
         return Math.max(v, 0.3);
       }).sort((a,b)=>(b.value||0)-(a.value||0));
       d3.treemap().size([width,height]).paddingOuter(3).paddingInner(3).tile(d3.treemapSquarify)(root);
-      document.getElementById("treemap-canvas").insertAdjacentHTML("beforebegin",
-        `<div class="legend">${Object.entries(CATCOL).map(([n,c])=>`<span><i style="background:${c}"></i>${n}</span>`).join("")}</div>`);
       const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
       const leaves=svg.selectAll("g.fund").data(root.leaves()).enter().append("g").attr("class","fund")
         .attr("transform",d=>`translate(${d.x0},${d.y0})`)
