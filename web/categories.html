@@ -289,84 +289,63 @@ function color(v){
     
 function renderKhaterHeatmap(groups, horizon) {
   const host = document.getElementById("v-heat");
+  if (!host) return;
   const horizonNames = {"4weeks":"شهر","ytd":"YTD","last12m":"12 شهر","3y":"3 سنوات","5y":"5 سنوات"};
-  const funds = [];
-  Object.entries(groups || {}).forEach(([category, list]) => {
-    (list || []).forEach(f => { funds.push({...f, _category: category}); });
-  });
-  const unique = new Map();
-  funds.forEach(f => { if (!unique.has(f.id)) unique.set(f.id, f); });
-  const allFunds = [...unique.values()];
-  const getReturn = fund => {
-    const value = typeof ret === "function" ? ret(fund, horizon) : null;
-    if (value === null || value === undefined || value === "" || Number.isNaN(Number(value))) return null;
+  const getReturn = (fund) => {
+    if (typeof ret !== "function") return null;
+    const value = ret(fund, horizon);
+    if (value === null || value === undefined || value === "" || !Number.isFinite(Number(value))) return null;
     return Number(value);
   };
-  function tileColor(value) {
-    if (value === null) return "#20242d";
-    if (value < 0) {
-      if (value <= -20) return "#7f1d1d";
-      if (value <= -10) return "#991b1b";
-      if (value <= -5)  return "#b4232d";
-      return "#6b252b";
-    }
-    if (value < 5) return "#303640";
-    if (value < 15) return "#064e3b";
-    if (value < 25) return "#075f49";
-    if (value < 40) return "#07805f";
-    if (value < 60) return "#0aa978";
-    if (value < 80) return "#21c58d";
-    return "#34d399";
-  }
-  function textColor(value) {
-    if (value !== null && value >= 60) return "#03130e";
-    return "#ffffff";
-  }
-  const categories = {};
-  allFunds.forEach(f => {
-    if (!categories[f._category]) categories[f._category] = [];
-    categories[f._category].push(f);
-  });
-  Object.values(categories).forEach(list => {
-    list.sort((a, b) => {
-      const av = getReturn(a), bv = getReturn(b);
-      if (av === null && bv === null) return 0;
-      if (av === null) return 1;
-      if (bv === null) return -1;
-      return bv - av;
+  const funds = [];
+  Object.entries(groups || {}).forEach(([category, list]) => {
+    (list || []).forEach(fund => {
+      funds.push({...fund, _category: category, _return: getReturn(fund)});
     });
   });
-  let html = `<div class="fund-heatmap"><div class="fund-heatmap-head"><div><div class="fund-heatmap-title">خريطة أداء الصناديق</div><div class="fund-heatmap-sub">كل مربع يمثل صندوقًا واحدًا · الأفق: <strong>${horizonNames[horizon] || horizon}</strong></div></div><div class="fund-heatmap-count">${allFunds.length} صندوق</div></div><div class="fund-heatmap-body">`;
+  funds.sort((a, b) => {
+    if (a._return == null && b._return == null) return 0;
+    if (a._return == null) return 1;
+    if (b._return == null) return -1;
+    return b._return - a._return;
+  });
+  const color = value => {
+    if (value == null) return "#20242d";
+    if (value < -20) return "#7f1d1d";
+    if (value < -10) return "#991b1b";
+    if (value < -5)  return "#b4232d";
+    if (value < 0)   return "#6b252b";
+    if (value < 5)   return "#303640";
+    if (value < 15)  return "#064e3b";
+    if (value < 25)  return "#075f49";
+    if (value < 40)  return "#07805f";
+    if (value < 60)  return "#0aa978";
+    if (value < 80)  return "#21c58d";
+    return "#34d399";
+  };
+  const text = value => value != null && value >= 60 ? "#03130e" : "#ffffff";
+  const categories = {};
+  funds.forEach(fund => {
+    if (!categories[fund._category]) categories[fund._category] = [];
+    categories[fund._category].push(fund);
+  });
+  let html = `<div class="fund-heatmap"><div class="fund-heatmap-head"><div><div class="fund-heatmap-title">خريطة أداء الصناديق</div><div class="fund-heatmap-sub">كل مربع يمثل صندوقًا واحدًا · ${horizonNames[horizon] || horizon}</div></div><div class="fund-heatmap-count">${funds.length} صندوق</div></div><div class="fund-heatmap-body">`;
   Object.entries(categories).forEach(([category, list]) => {
     html += `<section class="fund-heat-category"><div class="fund-heat-category-head"><div class="fund-heat-category-name">${category}</div><div class="fund-heat-category-meta">${list.length} صندوق</div></div><div class="fund-heat-tiles">`;
-    list.forEach(f => {
-      const value = getReturn(f);
-      const color = tileColor(value);
-      const txt = textColor(value);
-      const score = f.final === null || f.final === undefined ? "—" : Number(f.final).toFixed(1);
-      const rating = f.rating || "—";
-      html += `<div class="fund-heat-tile" data-fund-id="${String(f.id).replace(/"/g,"&quot;")}" data-category="${String(category).replace(/"/g,"&quot;")}" style="background:${color};color:${txt}"><div class="fund-heat-name">${f.name || "صندوق غير معروف"}</div><div class="fund-heat-return">${value === null ? "—" : `${value >= 0 ? "+" : ""}${value.toLocaleString("en-US",{maximumFractionDigits:1})}%`}</div><div class="fund-heat-score">Score ${score} · ${rating}</div></div>`;
+    list.forEach(fund => {
+      const value = fund._return;
+      const formatted = value == null ? "—" : `${value >= 0 ? "+" : ""}${value.toLocaleString("en-US",{maximumFractionDigits:1})}%`;
+      html += `<div class="fund-heat-tile" data-fund-id="${String(fund.id).replace(/"/g,"&quot;")}" style="background:${color(value)};color:${text(value)}" title="${String(fund.name||"").replace(/"/g,"&quot;")}"><div class="fund-heat-name">${fund.name || "صندوق غير معروف"}</div><div class="fund-heat-return">${formatted}</div></div>`;
     });
     html += `</div></section>`;
   });
-  html += `</div><div class="fund-heatmap-legend"><span><i style="background:#34d399"></i>أداء قوي</span><span><i style="background:#07805f"></i>أداء إيجابي</span><span><i style="background:#303640"></i>قريب من الصفر</span><span><i style="background:#991b1b"></i>أداء سلبي</span><span><i style="background:#20242d"></i>لا توجد بيانات</span></div></div><div id="fundHeatTooltip" class="fund-heat-tooltip"></div>`;
+  html += `</div><div class="fund-heatmap-legend"><span><i style="background:#34d399"></i>قوي</span><span><i style="background:#07805f"></i>إيجابي</span><span><i style="background:#303640"></i>محايد</span><span><i style="background:#991b1b"></i>سلبي</span><span><i style="background:#20242d"></i>لا توجد بيانات</span></div></div>`;
   host.innerHTML = html;
-  const tooltip = document.getElementById("fundHeatTooltip");
   host.querySelectorAll(".fund-heat-tile").forEach(tile => {
-    const fund = allFunds.find(f => String(f.id) === String(tile.dataset.fundId));
-    if (!fund) return;
-    const value = getReturn(fund);
-    tile.addEventListener("mouseenter", () => {
-      tooltip.innerHTML = `<div class="fh-tip-name">${fund.name || "—"}</div><div>الفئة: <strong>${tile.dataset.category}</strong></div><div>مدير الاستثمار: <strong>${fund.manager || "—"}</strong></div><div>${horizonNames[horizon] || horizon}: <strong>${value === null ? "غير متاح" : `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`}</strong></div><div>Smart Score: <strong>${fund.final == null ? "غير متاح" : Number(fund.final).toFixed(1)}</strong></div><div>Rating: <strong>${fund.rating || "—"}</strong></div><div>Data Tier: <strong>${fund.tier || "—"}</strong></div>`;
-      tooltip.style.display = "block";
-    });
-    tile.addEventListener("mousemove", e => {
-      tooltip.style.left = Math.min(e.clientX + 14, window.innerWidth - tooltip.offsetWidth - 12) + "px";
-      tooltip.style.top = Math.min(e.clientY + 14, window.innerHeight - tooltip.offsetHeight - 12) + "px";
-    });
-    tile.addEventListener("mouseleave", () => { tooltip.style.display = "none"; });
     tile.addEventListener("click", () => {
-      location.href = "fund.html?id=" + encodeURIComponent(fund.id) + "&h=" + encodeURIComponent(horizon);
+      const id = tile.dataset.fundId;
+      if (!id) return;
+      location.href = "fund.html?id=" + encodeURIComponent(id) + "&h=" + encodeURIComponent(horizon);
     });
   });
 }
@@ -468,7 +447,7 @@ function renderKhaterHeatmap(groups, horizon) {
       const bins=[["90",s=>s>=90,"#10B981"],["75",s=>s>=75&&s<90,"#34D399"],["50",s=>s>=50&&s<75,"#F59E0B"],["0",s=>s<50,"#EF4444"]];
       const counts=bins.map(([sel,fn,c])=>[sel,scores.filter(fn).length,c]);
       document.getElementById("distbar").innerHTML=counts.map(([sel,n,c])=>`<i data-r="${sel}" style="width:${100*n/tot}%;background:${c}"></i>`).join("");
-      renderKhaterHeatmap(groups, h);
+      
       document.getElementById("distlab").textContent=counts.map(([,n],i)=>`${["ممتاز","جيد جداً","متوسط","ضعيف"][i]}: ${n}`).join(" · ")+` · بلا درجة: ${rows.length-scores.length}`;
       document.querySelectorAll("#distbar i").forEach(i=>i.onclick=()=>{document.getElementById("fr").value=i.dataset.r;draw();});
     }
