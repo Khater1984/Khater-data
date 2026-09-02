@@ -260,21 +260,30 @@ function color(v){
         .map(f=>({...f,category_name:f.bucket,fund_name:f.name,returns:Object.fromEntries(HS.map(([k])=>[k,ret(f,k)]))}));
       const grouped={};
       kids.forEach(f=>{const b=bandOf(ret(f,h)); if(!b) return; (grouped[b[1]]||=[]).push(f);});
-      const rootData={name:"Root",children:BANDS.map(([,lab])=>grouped[lab]?{name:lab,children:grouped[lab]}:null).filter(Boolean)};
-      const root=d3.hierarchy(rootData).sum(d=>{
-        if(d.children) return 0;
-        const v=d.returns?d.returns[h]:null;
-        if(v==null||isNaN(v)) return 0;
-        return Math.max(v, 0.3);
-      }).sort((a,b)=>(b.value||0)-(a.value||0));
-      d3.treemap().size([width,height]).paddingOuter(4).paddingTop(22).paddingInner(3).tile(d3.treemapSquarify)(root);
-      const svg=d3.select("#treemap-canvas").append("svg").attr("width",width).attr("height",height);
-      (root.children||[]).forEach(b=>{
-        if((b.x1-b.x0)<90) return;
-        svg.append("text").attr("x",b.x0+8).attr("y",b.y0+15).text(b.data.name)
-          .attr("fill","#E5E7EB").attr("font-size","12px").attr("font-weight","700");
+      const bands=BANDS.map(([,lab])=>{
+        const list=grouped[lab]||[];
+        const val=list.reduce((s,f)=>s+Math.max(ret(f,h),0.3),0);
+        return {lab,list,val};
+      }).filter(b=>b.list.length);
+      const total=bands.reduce((s,b)=>s+b.val,0)||1;
+      const header=26;
+      let y=0; const laid=[];
+      const svg=d3.select("#treemap-canvas").append("svg").attr("width",width);
+      bands.forEach(b=>{
+        const bh=Math.max(150, Math.round(height*b.val/total));
+        svg.append("text").attr("x",8).attr("y",y+18).text(b.lab+" · "+b.list.length+" صندوق")
+          .attr("fill","#E5E7EB").attr("font-size","13px").attr("font-weight","700");
+        const inner=d3.hierarchy({children:b.list}).sum(d=>{
+          if(d.children) return 0;
+          const v=d.returns?d.returns[h]:null;
+          return (v==null||isNaN(v))?0:Math.max(v,0.3);
+        }).sort((a,c)=>(c.value||0)-(a.value||0));
+        d3.treemap().size([width,bh-header]).paddingInner(3).tile(d3.treemapSquarify)(inner);
+        inner.leaves().forEach(n=>{n.x0+=0; n.y0+=y+header; n.x1+=0; n.y1+=y+header; laid.push(n);});
+        y+=bh+8;
       });
-      const leaves=svg.selectAll("g.fund").data(root.leaves()).enter().append("g").attr("class","fund")
+      svg.attr("height",y);
+      const leaves=svg.selectAll("g.fund").data(laid).enter().append("g").attr("class","fund")
         .attr("transform",d=>`translate(${d.x0},${d.y0})`)
         .style("cursor","pointer")
         .on("click",(_,d)=>{location.href="fund.html?id="+encodeURIComponent(d.data.id)+"&h="+h;})
