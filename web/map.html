@@ -8,19 +8,15 @@
 <script src="config.js"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
 <style>
-body{display:grid;grid-template-rows:64px auto 1fr}
-.stage{display:grid;grid-template-columns:220px 1fr 280px;min-height:0}
-@media(max-width:960px){.stage{grid-template-columns:1fr}}
-#chart{min-height:520px;direction:ltr;background:
-  radial-gradient(1200px 500px at 70% -10%, #1a2433 0%, transparent 55%), #0a0e12}
-.legend .item{display:flex;justify-content:space-between;gap:8px;align-items:center}
-.dot{width:8px;height:8px;border-radius:99px;display:inline-block;margin-inline-start:6px}
-.story{font-size:15px;line-height:1.85}
+body{display:grid;grid-template-rows:64px auto 1fr auto}
+#chart{min-height:480px;direction:ltr}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px 18px;border-top:1px solid var(--line)}
+@media(max-width:800px){.cards{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
-  <div class="logo">خريطة الفلوس<span id="src">محرّك المقارنة</span></div>
+  <div class="logo">خريطة الفلوس<span>ماذا حدث لـ 1,000 جنيه؟</span></div>
   <nav>
     <a href="./index.html">البداية</a>
     <a class="active" href="./map.html">ماذا حدث للفلوس؟</a>
@@ -30,80 +26,50 @@ body{display:grid;grid-template-rows:64px auto 1fr}
   </nav>
 </div></header>
 <div class="controls">
-  <label class="muted">المبلغ <input id="amount" type="number" value="1000"></label>
-  <label class="muted">من <input id="start" type="date" value="2016-01-04"></label>
-  <select id="mode">
-    <option value="level">قيمة بالجنيه</option>
-    <option value="rebased">أساس 100</option>
-    <option value="log">لوغاريتم</option>
-  </select>
-  <button class="primary" id="run">ارسم</button>
+  <span class="muted">نعرض أربعة مسارات فقط على مقياس واحد (أساس 100) حتى تُقرأ القصة.</span>
+  <input id="amount" type="number" value="1000"/>
+  <input id="start" type="date" value="2016-01-04"/>
+  <button class="primary" id="run">حدّث</button>
 </div>
-<div class="stage">
-  <aside class="pane" id="list"></aside>
-  <div id="chart"></div>
-  <aside class="pane">
-    <div class="h">القراءة</div>
-    <div id="sum"></div>
-    <div class="story" id="story"></div>
-  </aside>
-</div>
+<div id="chart"></div>
+<div class="cards" id="cards"></div>
 <script type="module">
 import { PATHS, fmt, en, toLine, rebase } from "./js/engine.js";
 import { loadEngine } from "./js/live.js";
-let DATA, chart, seriesMap={}, active="gold_egp_oz";
+const SHOW=["purchasing","usd_egp_mid","gold_egp_oz","egx30_close"];
+const packed=await loadEngine();
+const DATA={series:packed.series};
 const el=document.getElementById("chart");
-chart=LightweightCharts.createChart(el,{
-  layout:{background:{type:"solid",color:"transparent"},textColor:"#8b95a5",fontFamily:"IBM Plex Sans"},
+const chart=LightweightCharts.createChart(el,{
+  layout:{background:{color:"#0a0e12"},textColor:"#8b95a5",fontFamily:"IBM Plex Sans"},
   grid:{vertLines:{color:"#1c2430"},horzLines:{color:"#1c2430"}},
-  crosshair:{mode:0},
-  rightPriceScale:{borderColor:"#273140",scaleMargins:{top:0.08,bottom:0.06}},
-  timeScale:{borderColor:"#273140",timeVisible:false}
+  rightPriceScale:{borderColor:"#273140"},
+  timeScale:{borderColor:"#273140"}
 });
-new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth,height:el.clientHeight||520})).observe(el);
-
+new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth,height:el.clientHeight||480})).observe(el);
+let series={};
 function draw(){
   const amount=+document.getElementById("amount").value||1000;
-  const start=document.getElementById("start").value||"2016-01-04";
-  const mode=document.getElementById("mode").value;
-  Object.values(seriesMap).forEach(s=>chart.removeSeries(s)); seriesMap={};
-  const rows=[];
-  Object.keys(PATHS).forEach(key=>{
-    let line=toLine(DATA.series,start,amount,key); if(!line.length)return;
-    if(mode==="rebased") line=rebase(line);
-    const s=chart.addLineSeries({
-      color:PATHS[key].color, lineWidth:key===active?3:1.2,
-      priceLineVisible:false, lastValueVisible:key===active
-    });
-    s.setData(line); seriesMap[key]=s;
-    rows.push({key,last:line.at(-1).value,first:line[0].value,mult:line.at(-1).value/line[0].value,asOf:line.at(-1).time});
+  const start=document.getElementById("start").value;
+  Object.values(series).forEach(s=>chart.removeSeries(s)); series={};
+  const cards=[];
+  SHOW.forEach(key=>{
+    const raw=toLine(DATA.series,start,amount,key);
+    if(!raw.length) return;
+    const line=rebase(raw);
+    const s=chart.addLineSeries({color:PATHS[key].color,lineWidth:2.4,priceLineVisible:false});
+    s.setData(line); series[key]=s;
+    const last=raw.at(-1).value;
+    const chg=(line.at(-1).value-100);
+    cards.push(`<div class="card"><div class="kicker">${PATHS[key].name}</div>
+      <h3 class="num">${fmt(last)} ج.م</h3>
+      <p class="${chg>=0?"up":"dn"}">${chg>=0?"+":""}${en(chg,1)}٪ منذ ${start}</p></div>`);
   });
-  chart.priceScale("right").applyOptions({mode:mode==="log"?1:0});
   chart.timeScale().fitContent();
-  document.getElementById("list").innerHTML='<div class="h">المسارات</div>'+rows.map(r=>{
-    const chg=(r.mult-1)*100;
-    return `<div class="item ${r.key===active?"on":""}" data-k="${r.key}">
-      <b><i class="dot" style="background:${PATHS[r.key].color}"></i>${PATHS[r.key].name}</b>
-      <span class="num ${chg>=0?"up":"dn"}">${chg>=0?"+":""}${en(chg,1)}%</span>
-    </div>`;
-  }).join("");
-  document.querySelectorAll(".item").forEach(n=>n.onclick=()=>{active=n.dataset.k;draw();});
-  const r=rows.find(x=>x.key===active)||rows[0];
-  document.getElementById("sum").innerHTML=`
-    <div class="stat"><em>${PATHS[r.key].name}</em><strong class="num">${fmt(r.last)}</strong></div>
-    <div class="stat"><em>مضاعف ${amount.toLocaleString("en-US")} ج.م</em><strong class="num">${en(r.mult,2)}×</strong></div>
-    <div class="stat"><em>حتى</em><strong class="num">${r.asOf}</strong></div>`;
-  const pick=k=>rows.find(x=>x.key===k);
-  const cpi=pick("purchasing"), usd=pick("usd_egp_mid"), gold=pick("gold_egp_oz"), egx=pick("egx30_close");
-  document.getElementById("story").textContent =
-    `${fmt(amount)} جنيه من ${start}: القوة الشرائية ≈ ${cpi?fmt(cpi.last):"—"} · الدولار ≈ ${usd?fmt(usd.last):"—"} · الذهب ≈ ${gold?fmt(gold.last):"—"} · EGX30 ≈ ${egx?fmt(egx.last):"—"} جنيه.`;
+  document.getElementById("cards").innerHTML=cards.join("");
 }
 document.getElementById("run").onclick=draw;
-document.getElementById("mode").onchange=draw;
-const packed=await loadEngine();
-DATA={series:packed.series};
-document.getElementById("src").textContent=packed.source==="supabase"?"مباشر من القاعدة":"لقطة احتياطية";
-chart.applyOptions({width:el.clientWidth,height:Math.max(el.clientHeight,520)});
+chart.applyOptions({width:el.clientWidth,height:480});
 draw();
 </script>
 </body></html>
