@@ -13,7 +13,15 @@ body{background:#12131C}
 .hero-mini{padding:28px 0 6px}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 18px}
 @media(max-width:900px){.tiles{grid-template-columns:1fr}}
-.tile{background:#1E1F2E;border:1px solid #2A2C3D;border-radius:14px;padding:14px}
+.tile{background:#1E1F2E;border:1px solid #2A2C3D;border-radius:14px;padding:14px;cursor:pointer;text-align:right;width:100%}
+.tile .asof{color:#6B7280;font-size:12px}
+.pill{display:inline-block;border-radius:999px;padding:3px 8px;font-size:12px}
+.pill.up{background:#0b3b2e;color:#10B981}
+.pill.dn{background:#3a1515;color:#FF5252}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:40;align-items:center;justify-content:center;padding:18px}
+.modal.on{display:flex}
+.modal .box{background:#12131C;border:1px solid #2A2C3D;border-radius:16px;max-width:860px;width:100%;max-height:90vh;overflow:auto;padding:18px}
+#dchart{height:320px;direction:ltr}
 .tile .v{font-size:24px;font-family:"IBM Plex Sans",sans-serif;margin:6px 0}
 .badge-g{color:#2ECC71;font-size:13px} .badge-r{color:#FF5252;font-size:13px}
 .seg,.ranges{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
@@ -71,6 +79,15 @@ body{background:#12131C}
   </section>
   <div id="pp-root" class="pp-wrap"></div>
 </main>
+<div class="modal" id="modal">
+  <div class="box">
+    <button id="mclose" class="primary" style="float:left">إغلاق</button>
+    <h2 id="mtitle"></h2>
+    <p class="muted" id="msum"></p>
+    <div id="dchart"></div>
+    <p class="muted" id="mmethod" style="margin-top:12px"></p>
+  </div>
+</div>
 <script type="module">
 import { toLine, rebase, en } from "./js/engine.js";
 import { loadEngine } from "./js/live.js";
@@ -87,6 +104,17 @@ const LABELS = {
   egx30_close:"البورصة المصرية (EGX30)", purchasing:"القوة الشرائية للنقد",
   deposit:"ودائع البنوك", tbill:"أذون الخزانة"
 };
+const META = {
+  usd_egp_mid: {method:"100 × (سعر الصرف الحالي ÷ أول سعر متاح منذ يناير 2016). المصدر: usd_egp_mid في macro_series.", series:"usd_egp_mid"},
+  gold_egp_oz: {method:"ذهب عالمي بالدولار محوّل للجنيه بسلسلة usd_egp_mid لنفس الفترة. 100 × (القيمة الحالية ÷ قيمة البداية).", series:"gold_egp_oz"},
+  silver_egp_oz: {method:"فضة عالمية بالدولار محوّلة للجنيه بسلسلة usd_egp_mid. 100 × (الحالي ÷ البداية).", series:"silver_egp_oz"},
+  spy_egp: {method:"SPY بالدولار محوّل للجنيه. 100 × (الحالي ÷ البداية).", series:"spy_egp"},
+  qqq_egp: {method:"QQQ بالدولار محوّل للجنيه. 100 × (الحالي ÷ البداية).", series:"qqq_egp"},
+  egx30_close: {method:"إغلاق EGX30. 100 × (الإغلاق الحالي ÷ أول إغلاق في/بعد يناير 2016).", series:"egx30_close"},
+  purchasing: {method:"ليست قسمة سعرين. تُركَّب التغيرات الشهرية للتضخم (cpi_headline_mom_pct) من 2016. الناتج = القوة الشرائية المتبقية من 100 جنيه نقداً.", series:"cpi_headline_mom_pct"},
+  deposit: {method:"ليست قسمة سعرين. يُطبَّق متوسط العائد السنوي المعلن على الأيام الفعلية: (1+y)^(Δt/365) من سلسلة bank_deposit_1_3m_avg_pct.", series:"bank_deposit_1_3m_avg_pct"},
+  tbill: {method:"ليست قسمة سعرين. يُطبَّق متوسط عائد مزاد 91 يوماً زمنياً من tbill_91_avg_yield_pct. أول مشاهدة في السلسلة قد تكون بعد يناير 2016.", series:"tbill_91_avg_yield_pct"}
+};
 const START="2016-01-01";
 const packed=await loadEngine();
 const S=packed.series;
@@ -101,20 +129,52 @@ function lastOf(key){
   return p.length?p.at(-1):null;
 }
 function card(key, warn){
-  const p=lastOf(key);
-  if(!p) return `<div class="tile"><div class="kicker">${LABELS[key]}</div><div class="v">—</div></div>`;
-  const chg=p.value-100;
-  const cls=warn||chg<0?"badge-r":"badge-g";
-  const extra=warn? " (تآكل القيمة)":"";
-  return `<div class="tile">
+  const raw=toLine(S,START,100,key);
+  const p=raw.length?raw.at(-1):null;
+  const start=raw.length?raw[0].time:null;
+  if(!p) return `<button class="tile" data-k="${key}" type="button"><div class="kicker">${LABELS[key]}</div><div class="v">البيانات غير مكتملة للحساب</div></button>`;
+  const rebased=rebase(raw);
+  const last=rebased.at(-1).value;
+  const chg=last-100;
+  const pill=warn||chg<0?`pill dn`:`pill up`;
+  const extra=warn? " — تآكل القيمة":"";
+  const startNote=start && start>"2016-01-07"?` · البداية الفعلية ${start}`:"";
+  return `<button class="tile" data-k="${key}" type="button">
     <div class="kicker">${LABELS[key]}</div>
-    <div class="v">${en(p.value,1)} ج.م</div>
-    <div class="${cls}">${chg>=0?"+":""}${en(chg,1)}%${extra}</div>
-    <div class="muted">${p.time}</div>
-  </div>`;
+    <div class="v">${en(last,1)} ج.م</div>
+    <span class="${pill}">${chg>=0?"+":""}${en(chg,1)}%${extra}</span>
+    <div class="asof">آخر مشاهدة ${p.time}${startNote}</div>
+  </button>`;
 }
 document.getElementById("assets").innerHTML=["usd_egp_mid","gold_egp_oz","silver_egp_oz","spy_egp","qqq_egp","egx30_close"].map(k=>card(k)).join("");
 document.getElementById("policy").innerHTML=card("purchasing",true)+card("deposit")+card("tbill");
+let dchart, dseries;
+function openDetail(key){
+  const raw=toLine(S,START,100,key);
+  const modal=document.getElementById("modal");
+  document.getElementById("mtitle").textContent=LABELS[key]+" — ماذا حدث لقيمة 100 جنيه؟";
+  if(!raw.length){
+    document.getElementById("msum").textContent="⚠️ البيانات التاريخية غير مكتملة، لا يمكن حساب العائد بدقة.";
+    document.getElementById("mmethod").textContent=META[key].method;
+    modal.classList.add("on"); return;
+  }
+  const rb=rebase(raw); const last=rb.at(-1);
+  document.getElementById("msum").textContent=`البداية 100 ج.م في ${raw[0].time} · الحالية ${en(last.value,1)} ج.م (${last.value>=100?"+":""}${en(last.value-100,1)}%) · آخر تحديث ${last.time}`;
+  document.getElementById("mmethod").textContent=META[key].method+" السلسلة: "+META[key].series+" في جدول macro_series.";
+  modal.classList.add("on");
+  const box=document.getElementById("dchart");
+  if(!dchart){
+    dchart=LightweightCharts.createChart(box,{layout:{background:{color:"#12131C"},textColor:"#9AA0B4"},grid:{vertLines:{color:"#1E1F2E"},horzLines:{color:"#1E1F2E"}},rightPriceScale:{borderVisible:false},timeScale:{borderVisible:false}});
+  }
+  if(dseries) dchart.removeSeries(dseries);
+  dseries=dchart.addLineSeries({color:COLORS[key],lineWidth:2.4,priceLineVisible:false});
+  dseries.setData(rb);
+  dchart.applyOptions({width:box.clientWidth,height:320});
+  dchart.timeScale().setVisibleRange({from:raw[0].time,to:last.time});
+}
+document.querySelectorAll(".tile").forEach(t=>t.onclick=()=>openDetail(t.dataset.k));
+document.getElementById("mclose").onclick=()=>document.getElementById("modal").classList.remove("on");
+document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal") e.currentTarget.classList.remove("on");});
 const cash=lastOf("purchasing");
 if(cash) document.getElementById("pound").textContent=`100 جنيه نقداً في يناير 2016 أصبحت حوالي ${en(cash.value,1)} جنيهاً من القوة الشرائية في ${cash.time} بسبب التضخم المتراكم.`;
 
