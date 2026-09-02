@@ -9,16 +9,20 @@
 <script src="config.js"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
 <style>
-.hero-mini{padding:28px 0 8px}
-.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0 18px}
-@media(max-width:900px){.tiles{grid-template-columns:1fr 1fr}}
-.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
-.tile .v{font-size:26px;font-family:"IBM Plex Sans",sans-serif;margin:4px 0}
-.seg{display:flex;gap:8px;margin:8px 0 12px}
-.seg button{cursor:pointer}
-.seg button.on{background:var(--gold);color:#16110a;border:0}
-#chart{height:420px;direction:ltr;border:1px solid var(--line);border-radius:14px}
-.why{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0 40px}
+body{background:#12131C}
+.hero-mini{padding:28px 0 6px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 18px}
+@media(max-width:900px){.tiles{grid-template-columns:1fr}}
+.tile{background:#1E1F2E;border:1px solid #2A2C3D;border-radius:14px;padding:14px}
+.tile .v{font-size:24px;font-family:"IBM Plex Sans",sans-serif;margin:6px 0}
+.badge-g{color:#2ECC71;font-size:13px} .badge-r{color:#FF5252;font-size:13px}
+.seg,.ranges{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.seg button,.ranges button{cursor:pointer}
+.seg button.on,.ranges button.on{background:#FFD700;color:#12131C;border:0}
+.chart-wrap{position:relative}
+#chart{height:440px;direction:ltr;border:1px solid #2A2C3D;border-radius:14px;background:#12131C}
+#tip{display:none;position:absolute;top:12px;left:12px;background:#1E1F2E;border:1px solid #2A2C3D;border-radius:10px;padding:10px;font-size:12px;min-width:200px;z-index:5;direction:rtl}
+.why{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}
 @media(max-width:800px){.why{grid-template-columns:1fr}}
 </style>
 </head>
@@ -35,19 +39,26 @@
 </div></header>
 <main class="wrap">
   <section class="hero-mini">
-    <div class="kicker">المرجع الاقتصادي</div>
     <h1>ماذا حدث لقيمة أموالك منذ 2016؟</h1>
-    <p class="muted">ليست صفحة أسعار. لو كان معك 100 جنيه في يناير 2016، كيف تحركت قيمتها أمام أهم البدائل؟ كل المسارات تبدأ من 100.</p>
+    <p class="muted">لو كان معك 100 جنيه في يناير 2016، إليك القيمة الحالية لـ 100 جنيه إذا احتفظت بها كاش مقارنة باستثمارها في الأصول المختلفة حتى اليوم:</p>
   </section>
-  <h3>الأصول وأسعار الصرف</h3>
+  <h3>الأصول ونمو الاستثمار</h3>
   <div class="tiles" id="assets"></div>
-  <h3>الاقتصاد النقدي</h3>
+  <h3>الاقتصاد النقدي والادخار</h3>
   <div class="tiles" id="policy"></div>
   <div class="seg">
-    <button class="on" data-g="value">مقارنة القيمة</button>
+    <button class="on" data-g="value">مقارنة أداء الأصول</button>
     <button data-g="policy">تكلفة المعيشة والسياسة النقدية</button>
   </div>
-  <div id="chart"></div>
+  <div class="ranges">
+    <button class="on" data-r="all">الكل (2016 - 2026)</button>
+    <button data-r="5">آخر 5 سنوات</button>
+    <button data-r="2">آخر سنتين</button>
+  </div>
+  <div class="chart-wrap">
+    <div id="tip"></div>
+    <div id="chart"></div>
+  </div>
   <section class="why">
     <div class="card">
       <h3>ماذا حدث لقوة الجنيه؟</h3>
@@ -55,81 +66,108 @@
     </div>
     <div class="card">
       <h3>لماذا يحدث ذلك معاً؟</h3>
-      <p>عندما يرتفع التضخم، غالباً ما ترتفع الفائدة وعائد الأذون، ويبحث الناس عن الدولار والذهب والأسهم. القوة الشرائية للجنيه تتراجع على الخط الزمني نفسه. الصفحة تعلّم قراءة هذا التزامن، لا توصي بشراء أصل.</p>
+      <p>ارتفاع التضخم يأكل النقد السائل، فترتفع الفائدة وعائد الأذون، ويتجه جزء من المدخرات إلى الدولار والذهب والأسهم. المسارات تتحرك معاً لأنها استجابة لنفس الضغط على الجنيه، لا لأنها توصية شراء.</p>
     </div>
   </section>
   <div id="pp-root" class="pp-wrap"></div>
 </main>
 <script type="module">
-import { PATHS, fmt, en, toLine, rebase, nearest } from "./js/engine.js";
+import { toLine, rebase, en } from "./js/engine.js";
 import { loadEngine } from "./js/live.js";
 import { mountPurchasingAccordion } from "./js/accordion.js";
-await mountPurchasingAccordion(document.getElementById("pp-root"));
+
+const COLORS = {
+  purchasing:"#FF5252", usd_egp_mid:"#14B8A6", gold_egp_oz:"#FFD700",
+  silver_egp_oz:"#C0C0C0", qqq_egp:"#A855F7", spy_egp:"#3B82F6",
+  egx30_close:"#10B981", deposit:"#F59E0B", tbill:"#34D399"
+};
+const LABELS = {
+  usd_egp_mid:"سعر الدولار", gold_egp_oz:"الذهب", silver_egp_oz:"الفضة",
+  spy_egp:"الأسهم الأمريكية (S&P 500)", qqq_egp:"أسهم التكنولوجيا (ناسداك)",
+  egx30_close:"البورصة المصرية (EGX30)", purchasing:"القوة الشرائية للنقد",
+  deposit:"ودائع البنوك", tbill:"أذون الخزانة"
+};
+const START="2016-01-01";
 const packed=await loadEngine();
 const S=packed.series;
-const START="2016-01-04";
+await mountPurchasingAccordion(document.getElementById("pp-root"));
+
+function path(key){
+  const line=toLine(S,START,100,key);
+  return line.length?rebase(line):[];
+}
+function lastOf(key){
+  const p=path(key);
+  return p.length?p.at(-1):null;
+}
+function card(key, warn){
+  const p=lastOf(key);
+  if(!p) return `<div class="tile"><div class="kicker">${LABELS[key]}</div><div class="v">—</div></div>`;
+  const chg=p.value-100;
+  const cls=warn||chg<0?"badge-r":"badge-g";
+  const extra=warn? " (تآكل القيمة)":"";
+  return `<div class="tile">
+    <div class="kicker">${LABELS[key]}</div>
+    <div class="v">${en(p.value,1)} ج.م</div>
+    <div class="${cls}">${chg>=0?"+":""}${en(chg,1)}%${extra}</div>
+    <div class="muted">${p.time}</div>
+  </div>`;
+}
+document.getElementById("assets").innerHTML=["usd_egp_mid","gold_egp_oz","silver_egp_oz","spy_egp","qqq_egp","egx30_close"].map(k=>card(k)).join("");
+document.getElementById("policy").innerHTML=card("purchasing",true)+card("deposit")+card("tbill");
+const cash=lastOf("purchasing");
+if(cash) document.getElementById("pound").textContent=`100 جنيه نقداً في يناير 2016 أصبحت حوالي ${en(cash.value,1)} جنيهاً من القوة الشرائية في ${cash.time} بسبب التضخم المتراكم.`;
+
 const GROUPS={
   value:["usd_egp_mid","gold_egp_oz","silver_egp_oz","egx30_close","spy_egp","qqq_egp"],
   policy:["purchasing","deposit","tbill"]
 };
-function last(key){ return (S[key]||[]).at(-1); }
-function chg(key){
-  const line=toLine(S,START,100,key);
-  if(!line.length) return null;
-  return line.at(-1).value; // already starting ~100 if we use amount 100? toLine uses first point as base for levels
-}
-function tile(title, key, unit){
-  const L=last(key==="purchasing"?null:key);
-  const line=toLine(S,START,100,key);
-  const idx=line.length?line.at(-1).value:null;
-  const asof=line.length?line.at(-1).time:(L?L[0]:"");
-  return `<div class="tile">
-    <div class="kicker">${title}</div>
-    <div class="v num">${idx==null?"—":en(idx,1)}</div>
-    <div class="muted">أساس 100 في 2016 · حتى ${asof||"—"}</div>
-  </div>`;
-}
-document.getElementById("assets").innerHTML=[
-  tile("الدولار","usd_egp_mid"),
-  tile("الذهب","gold_egp_oz"),
-  tile("الفضة","silver_egp_oz"),
-  tile("EGX30","egx30_close"),
-  tile("S&P / SPY","spy_egp"),
-  tile("ناسداك / QQQ","qqq_egp")
-].join("");
-document.getElementById("policy").innerHTML=[
-  tile("القوة الشرائية","purchasing"),
-  tile("الوديعة","deposit"),
-  tile("أذون 91 يوماً","tbill")
-].join("");
-const pound=toLine(S,START,100,"purchasing");
-if(pound.length){
-  document.getElementById("pound").innerHTML=`من <b class="num">100</b> في 2016 إلى حوالي <b class="num">${en(pound.at(-1).value,1)}</b> في ${pound.at(-1).time}. هذا معنى تآكل الجنيه النقدي، لا سعر الذهب.`;
-}
+let group="value", range="all", lines={};
 const el=document.getElementById("chart");
 const chart=LightweightCharts.createChart(el,{
-  layout:{background:{color:"#0a0e12"},textColor:"#8b95a5",fontFamily:"IBM Plex Sans"},
-  grid:{vertLines:{color:"#1c2430"},horzLines:{color:"#1c2430"}},
-  rightPriceScale:{borderColor:"#273140"}, timeScale:{borderColor:"#273140"}
+  layout:{background:{color:"#12131C"},textColor:"#9AA0B4",fontFamily:"IBM Plex Sans"},
+  grid:{vertLines:{color:"#1E1F2E"},horzLines:{color:"#1E1F2E"}},
+  rightPriceScale:{borderColor:"#2A2C3D",mode:1},
+  timeScale:{borderColor:"#2A2C3D"}
 });
-new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth,height:420})).observe(el);
-let drawn=[];
-function render(group){
-  drawn.forEach(s=>chart.removeSeries(s)); drawn=[];
-  GROUPS[group].forEach(key=>{
-    let line=toLine(S,START,100,key);
-    if(!line.length) return;
-    line=rebase(line);
-    const s=chart.addLineSeries({color:PATHS[key].color,lineWidth:2.2,priceLineVisible:false,title:PATHS[key].name});
-    s.setData(line); drawn.push(s);
-  });
-  chart.timeScale().fitContent();
+new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth,height:440})).observe(el);
+
+function visRange(){
+  const end="2026-12-31";
+  if(range==="all") return {from:START,to:end};
+  if(range==="5") return {from:"2021-01-01",to:end};
+  return {from:"2024-01-01",to:end};
 }
+function render(){
+  Object.values(lines).forEach(s=>chart.removeSeries(s)); lines={};
+  GROUPS[group].forEach(key=>{
+    const data=path(key);
+    if(!data.length) return;
+    const s=chart.addLineSeries({color:COLORS[key],lineWidth:2.3,priceLineVisible:false,lastValueVisible:true});
+    s.setData(data); lines[key]=s;
+  });
+  chart.timeScale().setVisibleRange(visRange());
+}
+chart.subscribeCrosshairMove(param=>{
+  const tip=document.getElementById("tip");
+  if(!param.time){tip.style.display="none";return;}
+  const rows=Object.entries(lines).map(([k,s])=>{
+    const v=param.seriesData.get(s);
+    if(!v) return "";
+    return `<div>${LABELS[k]}: <b>${en(v.value,1)} ج.م</b></div>`;
+  }).join("");
+  tip.style.display="block";
+  tip.innerHTML=`<div class="muted">${param.time}</div>${rows}`;
+});
 document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll(".seg button").forEach(x=>x.classList.remove("on"));
-  b.classList.add("on"); render(b.dataset.g);
+  b.classList.add("on"); group=b.dataset.g; render();
 });
-chart.applyOptions({width:el.clientWidth,height:420});
-render("value");
+document.querySelectorAll(".ranges button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".ranges button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); range=b.dataset.r; render();
+});
+chart.applyOptions({width:el.clientWidth,height:440});
+render();
 </script>
 </body></html>
