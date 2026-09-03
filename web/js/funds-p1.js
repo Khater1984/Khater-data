@@ -6,13 +6,13 @@
   const $=id=>document.getElementById(id);
   const esc=s=>String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
   const get=async path=>{const r=await fetch(C.url+path,{headers:HDR});const j=await r.json();if(!r.ok)throw Error(j.message||('HTTP '+r.status));return j};
+  const BENCH={inflation:{type:'inflation',series:'cpi_headline_mom_pct'},tbill:{type:'tbill',series:'tbill_364_avg_yield_pct'},btc:{type:'level',series:'btc_egp'},qqq:{type:'level',series:'qqq_egp'},spy:{type:'level',series:'spy_egp'},usd:{type:'level',series:'usd_egp_mid'},silver:{type:'level',series:'silver_egp_oz'},gold:{type:'level',series:'gold_egp_oz'},egx30:{type:'level',series:'egx30_close'}};
 
   /* Prevent a monthly CPI observation from being presented as weekly/4-week inflation. */
   window.benchmark=async function(k,h,end){
-    const B=window.BENCH||{};
-    const b=B[k];
+    const b=BENCH[k];
     if(!b) return null;
-    if((k==='inflation') && (h==='weekly'||h==='4weeks')) return null;
+    if(k==='inflation' && (h==='weekly'||h==='4weeks')) return null;
     const d=new Date(end+'T00:00:00Z');
     if(h==='weekly') d.setUTCDate(d.getUTCDate()-7);
     else if(h==='4weeks') d.setUTCDate(d.getUTCDate()-28);
@@ -46,53 +46,35 @@
     const dates=[...new Set(r.map(x=>x.report_date).filter(Boolean))];
     return {count:dates.length,first:dates[0]||null,last:dates[dates.length-1]||null};
   }
-
   function ensureMeta(){
-    const h=$('h'); if(!h) return null;
+    const h=$('h'); if(!h)return null;
     let box=$('horizonMeta');
-    if(!box){
-      box=document.createElement('div');box.id='horizonMeta';box.className='horizon-meta';
-      h.insertAdjacentElement('afterend',box);
-    }
+    if(!box){box=document.createElement('div');box.id='horizonMeta';box.className='horizon-meta';h.insertAdjacentElement('afterend',box)}
     return box;
   }
   async function updateHorizonMeta(){
-    const h=$('h'); if(!h||!h.value)return;
-    const box=ensureMeta(); if(!box)return;
+    const h=$('h');if(!h||!h.value)return;const box=ensureMeta();if(!box)return;
     box.textContent='جارٍ التحقق من تاريخ البيانات...';
-    try{
-      const e=await horizonEvidence(h.value);
-      if(!e.last){box.textContent='لا توجد بيانات فعلية لهذه الفترة في قاعدة البيانات.';return;}
+    try{const e=await horizonEvidence(h.value);if(!e.last){box.textContent='لا توجد بيانات فعلية لهذه الفترة في قاعدة البيانات.';return}
       const base='آخر تاريخ متاح: '+e.last;
-      if(e.count<=1) box.innerHTML=esc(base)+' · <b>لقطة واحدة فقط</b>؛ لا تُعامل كأنها سلسلة تاريخية كاملة.';
+      if(e.count<=1)box.innerHTML=esc(base)+' · <b>لقطة واحدة فقط</b>؛ لا تُعامل كأنها سلسلة تاريخية كاملة.';
       else box.innerHTML=esc(base)+' · السجل التاريخي المتاح: <b>'+e.count+'</b> لقطة زمنية ('+esc(e.first)+' → '+esc(e.last)+').';
-    }catch(err){box.textContent='تعذر التحقق من تاريخ البيانات.';}
+    }catch(err){box.textContent='تعذر التحقق من تاريخ البيانات.'}
   }
-
   function addSortControl(){
-    const tb=document.querySelector('.toolbar'); if(!tb||$('viewSort'))return;
+    const tb=document.querySelector('.toolbar');if(!tb||$('viewSort'))return;
     const s=document.createElement('select');s.id='viewSort';
     s.innerHTML='<option value="score">ترتيب العرض: SmartScore</option><option value="return">ترتيب العرض: العائد</option>';
-    tb.insertBefore(s,$('reset')||null);
-    s.addEventListener('change',sortRows);
+    tb.insertBefore(s,$('reset')||null);s.addEventListener('change',sortRows);
   }
   function sortRows(){
-    const body=$('rows'),s=$('viewSort'); if(!body||!s)return;
+    const body=$('rows'),s=$('viewSort');if(!body||!s)return;
     const rows=[...body.querySelectorAll('tr')];
     const val=(tr,idx)=>{const n=parseFloat((tr.children[idx]?.textContent||'').replace(/[^0-9+\-.]/g,''));return Number.isFinite(n)?n:-Infinity};
     rows.sort((a,b)=>val(b,s.value==='score'?4:3)-val(a,s.value==='score'?4:3));
     rows.forEach((tr,i)=>{if(tr.children[0])tr.children[0].textContent=i+1;body.appendChild(tr)});
   }
-
-  function observeResults(){
-    const body=$('rows');if(!body)return;
-    new MutationObserver(()=>{addSortControl();sortRows()}).observe(body,{childList:true});
-  }
-
-  function init(){
-    addSortControl();
-    const h=$('h'); if(h){h.addEventListener('change',updateHorizonMeta);setTimeout(updateHorizonMeta,500)}
-    observeResults();
-  }
+  function observeResults(){const body=$('rows');if(!body)return;new MutationObserver(()=>{addSortControl();sortRows()}).observe(body,{childList:true})}
+  function init(){addSortControl();const h=$('h');if(h){h.addEventListener('change',updateHorizonMeta);setTimeout(updateHorizonMeta,500)}observeResults()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
