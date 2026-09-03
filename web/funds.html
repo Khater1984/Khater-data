@@ -7,178 +7,137 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;700&display=swap" rel="stylesheet"/>
 <style>
 :root{--bg:#0C0D14;--card:#161821;--line:rgba(255,255,255,.08);--ink:#F3F4F6;--mute:#9CA3AF;--ok:#10B981;--bad:#EF4444}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",sans-serif}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",sans-serif}
 body{min-height:100vh;background:radial-gradient(900px 400px at 85% -10%,rgba(16,185,129,.10),transparent 50%),var(--bg)}
-.top{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#0C0D14ee;z-index:20}
-nav a{color:var(--mute);text-decoration:none;margin-inline-start:14px;font-size:13px}
-nav a.on{color:#fff}
-.page{max-width:1240px;margin:0 auto;padding:18px 18px 60px}
-h1{margin:0 0 6px;font-size:26px}
-.sub{color:var(--mute);font-size:13px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#0C0D14ee;z-index:30}
+nav a{color:var(--mute);text-decoration:none;margin-inline-start:14px;font-size:13px}nav a.on{color:#fff}
+.page{max-width:1320px;margin:0 auto;padding:18px 18px 60px}h1{margin:0 0 6px;font-size:26px}.sub{color:var(--mute);font-size:13px}
 .glass{background:rgba(30,31,46,.82);border:1px solid var(--line);border-radius:14px}
-.float{display:flex;flex-wrap:wrap;gap:8px;padding:10px;position:sticky;top:56px;z-index:10;backdrop-filter:blur(10px)}
-select,input,button{background:#12131C;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit}
-button{cursor:pointer}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
-.kpi{padding:12px 14px}
-.kpi b{display:block;font-size:22px;margin-top:4px;font-family:"IBM Plex Sans",sans-serif;direction:ltr;text-align:right}
-.wraptable{overflow:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
-th{color:#9CA3AF;font-weight:600;cursor:pointer;white-space:nowrap;position:sticky;top:0;background:#161821}
-tr{cursor:pointer}
-tr:hover td{background:rgba(16,185,129,.06)}
-.pos{color:#34D399} .neg{color:#F87171} .na{color:#6B7280}
-.name{font-weight:650} .mgr{color:var(--mute);font-size:12px;margin-top:2px}
-.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;border:1px solid var(--line);color:#D1D5DB}
-.ltr{direction:ltr;font-family:"IBM Plex Sans",sans-serif}
-@media(max-width:800px){.kpis{grid-template-columns:1fr 1fr} th:nth-child(6),td:nth-child(6),th:nth-child(8),td:nth-child(8){display:none}}
+.float{display:flex;flex-wrap:wrap;gap:8px;padding:10px;position:sticky;top:56px;z-index:20;backdrop-filter:blur(10px)}
+select,input,button{background:#12131C;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit}button{cursor:pointer}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.kpi{padding:12px 14px}.kpi b{display:block;font-size:22px;margin-top:4px;font-family:"IBM Plex Sans",sans-serif;direction:ltr;text-align:right}
+.bench{margin:12px 0;padding:14px}.bench-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}.bench-title{font-weight:700}.bench-note{font-size:12px;color:var(--mute)}
+.bench-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.bench-item{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid var(--line);border-radius:11px;background:#12131C;min-width:0}.bench-item input{width:17px;height:17px;padding:0;accent-color:#10B981}.bench-main{min-width:0;flex:1}.bench-label{font-size:12px;color:#D1D5DB;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bench-value{font-family:"IBM Plex Sans",sans-serif;direction:ltr;text-align:right;font-size:16px;font-weight:700;margin-top:2px}.bench-date{font-size:10px;color:var(--mute);direction:ltr;text-align:right}.bench-item.disabled{opacity:.45}.bench-item.best{border-color:rgba(16,185,129,.35)}
+.filter-status{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:10px;font-size:12px;color:var(--mute)}.filter-status strong{color:#fff}.and-badge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid rgba(16,185,129,.35);color:#6EE7B7}
+.wraptable{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}th{color:#9CA3AF;font-weight:600;cursor:pointer;white-space:nowrap;position:sticky;top:0;background:#161821;z-index:2}tr{cursor:pointer}tr:hover td{background:rgba(16,185,129,.06)}
+.pos{color:#34D399}.neg{color:#F87171}.na{color:#6B7280}.name{font-weight:650}.mgr{color:var(--mute);font-size:12px;margin-top:2px}.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;border:1px solid var(--line);color:#D1D5DB}.ltr{direction:ltr;font-family:"IBM Plex Sans",sans-serif}
+@media(max-width:900px){.bench-grid{grid-template-columns:repeat(2,1fr)}.kpis{grid-template-columns:1fr 1fr}}@media(max-width:600px){.bench-grid{grid-template-columns:1fr}nav a{margin-inline-start:7px}.page{padding-inline:10px}}
 </style>
 </head>
 <body>
-<header class="top">
-  <strong>أداء الصناديق المصرية</strong>
-  <nav>
-    <a href="./index.html">البداية</a>
-    <a href="./map.html">البوصلة</a>
-    <a class="on" href="./funds.html">الصناديق</a>
-    <a href="./categories.html">الفئات</a>
-    <a href="./macro.html">الاقتصاد</a>
-  </nav>
-</header>
+<header class="top"><strong>أداء الصناديق المصرية</strong><nav><a href="./index.html">البداية</a><a href="./map.html">البوصلة</a><a class="on" href="./funds.html">الصناديق</a><a href="./categories.html">الفئات</a><a href="./macro.html">الاقتصاد</a></nav></header>
 <main class="page">
-  <h1>شاشة فرز الصناديق</h1>
-  <p class="sub">بيانات حية من funds + nav_official + fund_smartscore_latest. العائد من metadata.scores حسب الأفق المختار. التقييم من محرك V3 كما هو مخزّن.</p>
-  <div class="glass float">
-    <input id="q" placeholder="بحث بالاسم أو المدير" style="min-width:220px"/>
-    <select id="fb"><option value="">كل الفئات</option></select>
-    <select id="fm"><option value="">كل المديرين</option></select>
-    <select id="fr"><option value="">كل الدرجات</option><option value="90">90–100</option><option value="75">75–89</option><option value="50">50–74</option><option value="0">&lt;50</option><option value="na">بلا درجة</option></select>
-    <select id="hz"></select>
-    <button type="button" id="reset">إعادة ضبط</button>
-  </div>
-  <div class="kpis" id="kpis">جاري التحميل...</div>
-  <div class="glass wraptable">
-    <table>
-      <thead>
-        <tr>
-          <th data-k="#">#</th>
-          <th data-k="name">الصندوق</th>
-          <th data-k="bucket">الفئة</th>
-          <th data-k="nav">NAV</th>
-          <th data-k="ret">العائد</th>
-          <th data-k="ytd">YTD</th>
-          <th data-k="final">Smart Score</th>
-          <th data-k="rating">التصنيف</th>
-          <th data-k="tier">الثقة</th>
-        </tr>
-      </thead>
-      <tbody id="tb"></tbody>
-    </table>
-  </div>
-  <p class="sub" id="foot"></p>
+<h1>شاشة فرز الصناديق</h1>
+<p class="sub">العائد من fund_performance_history. المعايير الاقتصادية من macro_series. لا توجد قيم ثابتة للمعايير.</p>
+<div class="glass float">
+<input id="q" placeholder="بحث بالاسم أو المدير" style="min-width:220px"/>
+<select id="fb"><option value="">كل الفئات</option></select>
+<select id="fm"><option value="">كل المديرين</option></select>
+<select id="fr"><option value="">كل الدرجات</option><option value="90">90–100</option><option value="75">75–89</option><option value="50">50–74</option><option value="0">&lt;50</option><option value="na">بلا درجة</option></select>
+<select id="hz"></select><button type="button" id="reset">إعادة ضبط</button>
+</div>
+<section class="glass bench"><div class="bench-head"><div><div class="bench-title">اختبر مقابل المعايير</div><div class="bench-note">منطق AND · الصندوق يجب أن يتفوق على كل معيار محدد · القيم والتواريخ من Supabase</div></div><div class="and-badge">AND</div></div><div class="bench-grid" id="benchGrid">جاري تحميل المعايير...</div><div class="filter-status" id="filterStatus"></div></section>
+<div class="kpis" id="kpis">جاري التحميل...</div>
+<div class="glass wraptable"><table><thead><tr><th data-k="#">#</th><th data-k="name">الصندوق</th><th data-k="bucket">الفئة</th><th data-k="nav">NAV</th><th data-k="ret">العائد</th><th data-k="ytd">YTD</th><th data-k="final">Smart Score</th><th data-k="rating">التصنيف</th><th data-k="tier">الثقة</th></tr></thead><tbody id="tb"></tbody></table></div>
+<p class="sub" id="foot"></p>
 </main>
 <script>
 const CFG=window.KHATER||{};
-const HS=[["4weeks","شهر"],["ytd","YTD"],["last12m","12 شهراً"],["3y","3 سنوات"],["5y","5 سنوات"]];
-const AR=c=>{c=(c||"").toLowerCase();
-  if(c.includes("gold")) return "صناديق الذهب";
-  if(c.includes("money market")) return "صناديق النقد";
-  if(c.includes("fixed income")) return "صناديق الدخل الثابت";
-  if(c.includes("balanced")||c.includes("mixed")||c.includes("allocator")) return "الصناديق المتوازنة";
-  if(c.includes("index")||c.includes("etf")||c.includes("traded")||c.includes("passive")) return "صناديق المؤشرات";
-  if(c.includes("equity")||c.includes("thematic")||c.includes("sector")) return "صناديق الأسهم";
-  if(c.includes("protected")||c.includes("guaranteed")) return "صناديق محمية";
-  if(c.includes("charitable")) return "صناديق خيرية";
-  return "فئات أخرى";
+const LABELS={weekly:"أسبوعي",fourweeks:"4 أسابيع",last12m:"12 شهراً",ytd:"منذ بداية العام",oneYear:"سنة",twoYears:"سنتان",threeYears:"3 سنوات",fourYears:"4 سنوات",fiveYears:"5 سنوات",sixYears:"6 سنوات"};
+const BENCH={
+  inflation:{label:"التضخم",kind:"inflation",series:"cpi_headline_mom_pct"},
+  tbill:{label:"T-Bill",kind:"tbill",series:"tbill_364_avg_yield_pct"},
+  btc:{label:"Bitcoin / EGP",kind:"level",series:"btc_egp"},
+  qqq:{label:"Nasdaq / EGP",kind:"level",series:"qqq_egp"},
+  spy:{label:"S&P 500 / EGP",kind:"level",series:"spy_egp"},
+  usd:{label:"USD / EGP",kind:"level",series:"usd_egp_mid"},
+  silver:{label:"Silver / EGP",kind:"level",series:"silver_egp_oz"},
+  gold:{label:"Gold / EGP",kind:"level",series:"gold_egp_oz"},
+  egx30:{label:"EGX 30",kind:"level",series:"egx30_close"}
 };
-const num=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:1});
-const ret=(f,h)=>{const x=f.scores&&f.scores[h]; return x&&x.return_pct!=null?Number(x.return_pct):null;};
-const inRange=(score,sel)=>{
-  if(!sel) return true; if(sel==="na") return score==null; if(score==null) return false;
-  const n=+sel; if(n===90) return score>=90; if(n===75) return score>=75&&score<90; if(n===50) return score>=50&&score<75; return score<50;
-};
+const num=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:2});
+const pct=v=>v==null?"—":num(v)+"%";
+const AR=c=>{c=(c||"").toLowerCase();if(c.includes("gold"))return "صناديق الذهب";if(c.includes("money market"))return "صناديق النقد";if(c.includes("fixed income"))return "صناديق الدخل الثابت";if(c.includes("balanced")||c.includes("mixed")||c.includes("allocator"))return "الصناديق المتوازنة";if(c.includes("index")||c.includes("etf")||c.includes("traded")||c.includes("passive"))return "صناديق المؤشرات";if(c.includes("equity")||c.includes("thematic")||c.includes("sector"))return "صناديق الأسهم";if(c.includes("protected")||c.includes("guaranteed"))return "صناديق محمية";if(c.includes("charitable"))return "صناديق خيرية";return "فئات أخرى";};
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+const horizonLabel=h=>LABELS[h]||h;
+const horizonSpec=h=>({weekly:{days:7},fourweeks:{days:28},last12m:{months:12},ytd:{ytd:true},oneYear:{years:1},twoYears:{years:2},threeYears:{years:3},fourYears:{years:4},fiveYears:{years:5},sixYears:{years:6}}[h]||null);
+const dateOnly=d=>new Date(d+"T00:00:00Z");
+const iso=d=>d.toISOString().slice(0,10);
+const periodStart=(end,h)=>{const s=horizonSpec(h);if(!s)return null;const d=dateOnly(end);if(s.ytd)return `${d.getUTCFullYear()}-01-01`;if(s.days){d.setUTCDate(d.getUTCDate()-s.days);return iso(d)}if(s.months){d.setUTCMonth(d.getUTCMonth()-s.months);return iso(d)}if(s.years){d.setUTCFullYear(d.getUTCFullYear()-s.years);return iso(d)}return null;};
 (async()=>{
-  const kpis=document.getElementById("kpis");
-  try{
-    if(!CFG.url||!CFG.key) throw new Error("لا مفتاح عام في config.js");
-    const H={apikey:CFG.key,Authorization:"Bearer "+CFG.key};
-    const [funds,navs,latest]=await Promise.all([
-      fetch(CFG.url+"/rest/v1/funds?select=fund_id,canonical_name,management_company,category,metadata&limit=1000",{headers:H}).then(r=>r.json()),
-      fetch(CFG.url+"/rest/v1/nav_official?select=fund_id,nav,as_of_date&limit=1000",{headers:H}).then(r=>r.json()),
-      fetch(CFG.url+"/rest/v1/fund_smartscore_latest?select=fund_id,final_score,rating,data_tier,data_confidence,score_as_of,risk_score&limit=1000",{headers:H}).then(r=>r.json())
-    ]);
-    if(!Array.isArray(funds)) throw new Error("استجابة الصناديق غير متوقعة");
-    const navMap={}; (navs||[]).forEach(n=>navMap[n.fund_id]=n);
-    const ssMap={}; (latest||[]).forEach(n=>ssMap[n.fund_id]=n);
-    const ALL=funds.map(f=>{
-      const ss=ssMap[f.fund_id]||{};
-      return {
-        id:f.fund_id, name:f.canonical_name||"—", manager:f.management_company||"",
-        raw:f.category||"", bucket:AR(f.category), scores:(f.metadata||{}).scores||{},
-        nav:navMap[f.fund_id]?.nav??null, navd:navMap[f.fund_id]?.as_of_date||null,
-        final:ss.final_score??null, rating:ss.rating||"", tier:ss.data_tier||ss.data_confidence||"",
-        asof:ss.score_as_of||null, risk:ss.risk_score??null
-      };
-    });
-    document.getElementById("hz").innerHTML=HS.map(([k,l])=>`<option value="${k}">${l}</option>`).join("");
-    document.getElementById("hz").value="last12m";
-    [...new Set(ALL.map(f=>f.bucket))].sort().forEach(b=>document.getElementById("fb").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
-    [...new Set(ALL.map(f=>f.manager).filter(Boolean))].sort().forEach(m=>document.getElementById("fm").insertAdjacentHTML("beforeend",`<option>${m}</option>`));
-    let sortKey="final", sortDir=-1;
-    const filtered=()=>{
-      const q=document.getElementById("q").value.trim();
-      const b=document.getElementById("fb").value, m=document.getElementById("fm").value, r=document.getElementById("fr").value;
-      return ALL.filter(f=>(!q||(f.name+f.manager).includes(q))&&(!b||f.bucket===b)&&(!m||f.manager===m)&&inRange(f.final,r));
-    };
-    const draw=()=>{
-      const h=document.getElementById("hz").value;
-      let rows=filtered();
-      rows.sort((a,c)=>{
-        const pick=x=>sortKey==="ret"?ret(x,h):sortKey==="ytd"?ret(x,"ytd"):sortKey==="#"?0:x[sortKey];
-        const av=pick(a), cv=pick(c);
-        if(av==null&&cv==null) return 0;
-        if(av==null) return 1; if(cv==null) return -1;
-        if(typeof av==="string") return sortDir*String(av).localeCompare(String(cv),"ar");
-        return sortDir*(cv-av);
-      });
-      const withRet=rows.filter(f=>ret(f,h)!=null);
-      const top=withRet[0];
-      const scored=rows.filter(f=>f.final!=null);
-      const navd=[...new Set(rows.map(f=>f.navd).filter(Boolean))].sort().at(-1)||"—";
-      const asof=[...new Set(rows.map(f=>f.asof).filter(Boolean))].sort().at(-1)||"—";
-      kpis.innerHTML=`
-        <div class="kpi glass">المعروض<b>${rows.length}</b><div class="sub">من ${ALL.length} صندوق</div></div>
-        <div class="kpi glass">آخر سعر معلن<b>${navd}</b><div class="sub">nav_official</div></div>
-        <div class="kpi glass">تقييم V3 حتى<b>${asof}</b><div class="sub">${scored.length} بدرجة</div></div>
-        <div class="kpi glass">أعلى عائد للأفق<b>${top?num(ret(top,h))+"%":"—"}</b><div class="sub">${top?top.name:""}</div></div>`;
-      document.getElementById("tb").innerHTML=rows.map((f,i)=>{
-        const rv=ret(f,h), ytd=ret(f,"ytd");
-        const src=(f.scores[h]&&f.scores[h].source)||"";
-        return `<tr data-id="${f.id}">
-          <td class="ltr">${i+1}</td>
-          <td><div class="name">${f.name}</div><div class="mgr">${f.manager||"—"}</div></td>
-          <td><span class="pill">${f.bucket}</span></td>
-          <td class="ltr">${f.nav==null?"—":Number(f.nav).toLocaleString("en-US",{maximumFractionDigits:4})}<div class="mgr">${f.navd||""}</div></td>
-          <td class="ltr ${rv==null?"na":rv>=0?"pos":"neg"}">${rv==null?"—":num(rv)+"%"}${src?`<div class="mgr">${src==="eima_annual"?"سنوي":src==="eima_weekly"?"أسبوعي":src}</div>`:""}</td>
-          <td class="ltr ${ytd==null?"na":ytd>=0?"pos":"neg"}">${ytd==null?"—":num(ytd)+"%"}</td>
-          <td class="ltr">${f.final==null?"—":Number(f.final).toFixed(1)}</td>
-          <td>${f.rating||"—"}</td>
-          <td>${f.tier||"—"}</td>
-        </tr>`;
-      }).join("");
-      document.querySelectorAll("#tb tr").forEach(tr=>tr.onclick=()=>location.href="fund.html?id="+encodeURIComponent(tr.dataset.id)+"&h="+h);
-      document.getElementById("foot").textContent="الأفق النشط: "+(HS.find(x=>x[0]===h)||[h,h])[1]+" · الترتيب الحالي لا يغيّر منهجية Smart Score.";
-    };
-    document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{
-      const k=th.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=k==="name"||k==="bucket"||k==="rating"?1:-1;}
-      draw();
-    });
-    ["q","fb","fm","fr","hz"].forEach(id=>document.getElementById(id).oninput=draw);
-    document.getElementById("reset").onclick=()=>{["q","fb","fm","fr"].forEach(id=>document.getElementById(id).value="");document.getElementById("hz").value="last12m";draw();};
-    draw();
-  }catch(e){kpis.textContent="تعذر التحميل: "+(e&&e.message?e.message:e); console.error(e);}
+ const kpis=document.getElementById("kpis"),grid=document.getElementById("benchGrid"),status=document.getElementById("filterStatus");
+ try{
+  if(!CFG.url||!CFG.key)throw new Error("لا مفتاح عام في config.js");
+  const H={apikey:CFG.key,Authorization:"Bearer "+CFG.key};
+  const getJson=async url=>{const r=await fetch(url,{headers:H});const j=await r.json();if(!r.ok||j?.code)throw new Error(j?.message||`HTTP ${r.status}`);return j};
+  const [funds,navs,latest,horizonRows]=await Promise.all([
+   getJson(CFG.url+"/rest/v1/funds?select=fund_id,canonical_name,management_company,category&limit=1000"),
+   getJson(CFG.url+"/rest/v1/nav_official?select=fund_id,nav,as_of_date&limit=1000"),
+   getJson(CFG.url+"/rest/v1/fund_smartscore_latest?select=fund_id,final_score,rating,data_tier,data_confidence,score_as_of,risk_score&limit=1000"),
+   getJson(CFG.url+"/rest/v1/fund_performance_history?select=horizon&limit=1000")
+  ]);
+  if(!Array.isArray(funds))throw new Error("استجابة الصناديق غير متوقعة");
+  const HS=[...new Set((horizonRows||[]).map(x=>x.horizon).filter(Boolean))];
+  const order=["weekly","4weeks","ytd","last12m","1y","2y","3y","4y","5y","6y"];HS.sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+  if(!HS.length)throw new Error("لا توجد آفاق أداء في fund_performance_history");
+  const navMap={};(navs||[]).forEach(n=>navMap[n.fund_id]=n);const ssMap={};(latest||[]).forEach(n=>ssMap[n.fund_id]=n);
+  const ALL=funds.map(f=>{const ss=ssMap[f.fund_id]||{};return{id:f.fund_id,name:f.canonical_name||"—",manager:f.management_company||"",raw:f.category||"",bucket:AR(f.category),nav:navMap[f.fund_id]?.nav??null,navd:navMap[f.fund_id]?.as_of_date||null,final:ss.final_score??null,rating:ss.rating||"",tier:ss.data_tier||ss.data_confidence||"",asof:ss.score_as_of||null,risk:ss.risk_score??null,ret:null};});
+  const hz=document.getElementById("hz");hz.innerHTML=HS.map(h=>`<option value="${esc(h)}">${esc(horizonLabel(h))}</option>`).join("");hz.value=HS.includes("last12m")?"last12m":HS[0];
+  [...new Set(ALL.map(f=>f.bucket))].sort().forEach(b=>document.getElementById("fb").insertAdjacentHTML("beforeend",`<option value="${esc(b)}">${esc(b)}</option>`));
+  [...new Set(ALL.map(f=>f.manager).filter(Boolean))].sort().forEach(m=>document.getElementById("fm").insertAdjacentHTML("beforeend",`<option value="${esc(m)}">${esc(m)}</option>`));
+  const perfCache={},benchCache={};let selected=new Set(),sortKey="final",sortDir=-1,currentPerfDate=null,currentBench={};
+  async function loadPerformance(h){
+   if(perfCache[h])return perfCache[h];
+   const latestRows=await getJson(CFG.url+`/rest/v1/fund_performance_history?select=report_date&horizon=eq.${encodeURIComponent(h)}&order=report_date.desc&limit=1`);
+   if(!latestRows?.length)throw new Error(`لا يوجد تاريخ مسجل للأفق ${h}`);
+   const reportDate=latestRows[0].report_date;
+   const rows=await getJson(CFG.url+`/rest/v1/fund_performance_history?select=fund_id,report_date,return_pct,rank&horizon=eq.${encodeURIComponent(h)}&report_date=eq.${encodeURIComponent(reportDate)}&limit=1000`);
+   const map={};(rows||[]).forEach(x=>map[x.fund_id]=x.return_pct==null?null:Number(x.return_pct));perfCache[h]={date:reportDate,map,rows:rows||[]};return perfCache[h];
+  }
+  async function levelBenchmark(key,start,end){
+   const cacheKey=key+"|"+start+"|"+end;if(benchCache[cacheKey])return benchCache[cacheKey];
+   const body=JSON.stringify({p_series_key:BENCH[key].series,p_start_date:start,p_end_date:end});
+   const r=await fetch(CFG.url+"/rest/v1/rpc/benchmark_return",{method:"POST",headers:{...H,"Content-Type":"application/json"},body});const j=await r.json();if(!r.ok)throw new Error(j?.message||`HTTP ${r.status}`);const v=j==null?null:Number(j);benchCache[cacheKey]={value:Number.isFinite(v)?v*100:null,start,end};return benchCache[cacheKey];
+  }
+  async function macroRows(series,start,end){
+   const u=CFG.url+`/rest/v1/macro_series?select=ts_date,value,unit&series_key=eq.${encodeURIComponent(series)}&ts_date=gte.${encodeURIComponent(start)}&ts_date=lte.${encodeURIComponent(end)}&order=ts_date.asc&limit=1000`;return getJson(u);
+  }
+  async function calcBenchmark(key,end,h){
+   const start=periodStart(end,h);if(!start)return null;
+   if(BENCH[key].kind==="level")return levelBenchmark(key,start,end);
+   if(BENCH[key].kind==="inflation"){
+    const rows=await macroRows(BENCH[key].series,start,end);if(!rows.length)return null;let factor=1;rows.forEach(x=>{if(x.value!=null)factor*=1+Number(x.value)/100});return{value:(factor-1)*100,start,end,unit:"monthly compounded"};
+   }
+   if(BENCH[key].kind==="tbill"){
+    const rows=await macroRows(BENCH[key].series,start,end);if(!rows.length)return null;const avg=rows.reduce((a,x)=>a+(x.value==null?0:Number(x.value)),0)/rows.filter(x=>x.value!=null).length;if(!Number.isFinite(avg))return null;const days=Math.max(1,Math.round((dateOnly(end)-dateOnly(start))/86400000));return{value:avg*days/365,start,end,unit:"period-equivalent from annualized yield",annualized:avg};
+   }
+   return null;
+  }
+  function filtered(){const q=document.getElementById("q").value.trim().toLowerCase(),b=document.getElementById("fb").value,m=document.getElementById("fm").value,r=document.getElementById("fr").value;return ALL.filter(f=>(!q||(f.name+f.manager).toLowerCase().includes(q))&&(!b||f.bucket===b)&&(!m||f.manager===m)&&inRange(f.final,r));}
+  const inRange=(score,sel)=>{if(!sel)return true;if(sel==="na")return score==null;if(score==null)return false;const n=+sel;if(n===90)return score>=90;if(n===75)return score>=75&&score<90;if(n===50)return score>=50&&score<75;return score<50;};
+  async function loadBenchmarks(h,end){
+   const cacheKey=h+"|"+end;if(benchCache[cacheKey]){currentBench=benchCache[cacheKey];return currentBench;}
+   const keys=Object.keys(BENCH),out={};await Promise.all(keys.map(async key=>{try{out[key]=await calcBenchmark(key,end,h)}catch(e){console.warn("benchmark",key,e)}}));benchCache[cacheKey]=out;currentBench=out;return out;
+  }
+  async function renderBench(h,end){
+   const b=await loadBenchmarks(h,end);grid.innerHTML=Object.entries(BENCH).map(([key,meta])=>{const x=b[key],available=x&&x.value!=null,checked=selected.has(key);const detail=x?.start&&x?.end?`${x.start} → ${x.end}`:"لا توجد بيانات للفترة";return `<label class="bench-item ${!available?"disabled":""} ${key==="gold"?"best":""}"><input type="checkbox" data-bench="${key}" ${checked&&available?"checked":""} ${!available?"disabled":""}/><div class="bench-main"><div class="bench-label">${esc(meta.label)}</div><div class="bench-value">${available?pct(x.value):"—"}</div><div class="bench-date">${esc(detail)}</div></div></label>`}).join("");
+   grid.querySelectorAll("input[data-bench]").forEach(el=>el.onchange=()=>{if(el.checked)selected.add(el.dataset.bench);else selected.delete(el.dataset.bench);draw();});
+  }
+  function applyBenchFilter(rows){const active=[...selected].filter(k=>currentBench[k]?.value!=null);if(!active.length)return rows;return rows.filter(f=>active.every(k=>{const rv=f.ret, bv=currentBench[k]?.value;return rv!=null&&bv!=null&&rv>bv;}));}
+  async function draw(){
+   const h=hz.value;const p=await loadPerformance(h);currentPerfDate=p.date;ALL.forEach(f=>f.ret=p.map[f.id]??null);await renderBench(h,p.date);let rows=applyBenchFilter(filtered());rows.sort((a,c)=>{const pick=x=>sortKey==="ret"?x.ret:sortKey==="ytd"?null:sortKey==="#"?0:x[sortKey];const av=pick(a),cv=pick(c);if(av==null&&cv==null)return 0;if(av==null)return 1;if(cv==null)return -1;if(typeof av==="string")return sortDir*String(av).localeCompare(String(cv),"ar");return sortDir*(cv-av)});
+   const base=filtered(),scored=rows.filter(f=>f.final!=null),withRet=rows.filter(f=>f.ret!=null),top=withRet[0],navd=[...new Set(rows.map(f=>f.navd).filter(Boolean))].sort().at(-1)||"—",asof=[...new Set(rows.map(f=>f.asof).filter(Boolean))].sort().at(-1)||"—";
+   kpis.innerHTML=`<div class="kpi glass">المعروض<b>${rows.length}</b><div class="sub">بعد المعايير · قبلها ${base.length}</div></div><div class="kpi glass">تاريخ الأداء<b>${p.date}</b><div class="sub">fund_performance_history · ${horizonLabel(h)}</div></div><div class="kpi glass">تقييم V3 حتى<b>${asof}</b><div class="sub">${scored.length} بدرجة</div></div><div class="kpi glass">أعلى عائد للأفق<b>${top?pct(top.ret):"—"}</b><div class="sub">${top?esc(top.name):""}</div></div>`;
+   document.getElementById("tb").innerHTML=rows.map((f,i)=>`<tr data-id="${esc(f.id)}"><td class="ltr">${i+1}</td><td><div class="name">${esc(f.name)}</div><div class="mgr">${esc(f.manager||"—")}</div></td><td><span class="pill">${esc(f.bucket)}</span></td><td class="ltr">${f.nav==null?"—":Number(f.nav).toLocaleString("en-US",{maximumFractionDigits:4})}<div class="mgr">${esc(f.navd||"")}</div></td><td class="ltr ${f.ret==null?"na":f.ret>=0?"pos":"neg"}">${pct(f.ret)}</td><td class="ltr na">—</td><td class="ltr">${f.final==null?"—":Number(f.final).toFixed(1)}</td><td>${esc(f.rating||"—")}</td><td>${esc(f.tier||"—")}</td></tr>`).join("");
+   document.querySelectorAll("#tb tr").forEach(tr=>tr.onclick=()=>location.href="fund.html?id="+encodeURIComponent(tr.dataset.id)+"&h="+encodeURIComponent(h));
+   const active=[...selected].filter(k=>currentBench[k]?.value!=null);status.innerHTML=active.length?`<span>المعايير النشطة: <strong>${active.map(k=>esc(BENCH[k].label)).join(" · ")}</strong></span><span>الصندوق يجب أن يتفوق على <strong>ALL</strong></span>`:`<span>لا توجد معايير مفعّلة</span><span>اختر معياراً أو أكثر لتفعيل منطق AND</span>`;
+   document.getElementById("foot").textContent=`الأفق النشط: ${horizonLabel(h)} · تاريخ سجل الصناديق: ${p.date} · المعايير المتاحة فقط هي التي تملك بيانات فعلية للفترة.`;
+  }
+  document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=k==="name"||k==="bucket"||k==="rating"?1:-1}draw()});
+  ["q","fb","fm","fr","hz"].forEach(id=>document.getElementById(id).oninput=draw);
+  document.getElementById("reset").onclick=()=>{["q","fb","fm","fr"].forEach(id=>document.getElementById(id).value="");selected.clear();hz.value=HS.includes("last12m")?"last12m":HS[0];draw()};
+  await draw();
+ }catch(e){kpis.textContent="تعذر التحميل: "+(e&&e.message?e.message:e);grid.textContent="تعذر تحميل المعايير من Supabase";console.error(e)}
 })();
 </script>
 </body>
