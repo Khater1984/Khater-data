@@ -1,38 +1,21 @@
 name: Fix categories navigation
+
 on:
   push:
     branches:
       - main
+
 permissions:
   contents: write
+
 jobs:
   fix:
-    if: github.event.head_commit.message != 'fix: apply standardized categories navigation'
+    if: ${{ github.event.head_commit.message != 'fix: apply standardized categories navigation' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Patch categories.html safely
-        shell: python
-        run: |
-          from pathlib import Path
-          p = Path("web/categories.html")
-          s = p.read_text(encoding="utf-8")
-          old_nav = '<nav class="nav"><a href="./index.html">البداية</a><a href="./map.html">البوصلة</a><a href="./funds.html">الصناديق</a><a class="active" href="./categories.html">الفئات</a><a href="./macro.html">الاقتصاد</a></nav>'
-          new_nav = '<nav class="nav"><a href="./index.html">البداية</a><a href="./map.html">ماذا حدث للفلوس؟</a><a href="./funds.html">الصناديق</a><a class="active" href="./categories.html">خريطة الفئات</a><a href="./macro.html">الاقتصاد</a><a href="./why.html">المنهج</a></nav>'
-          if old_nav not in s:
-              raise SystemExit("Expected old categories nav not found; refusing to modify file.")
-          s = s.replace(old_nav, new_nav, 1)
-          old_css = '.nav{display:flex;gap:18px}.nav a{font-size:11px;color:var(--muted);text-decoration:none}.nav a.active{color:#fff}'
-          new_css = '.nav{display:flex;align-items:stretch;gap:6px;padding:5px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}.nav a{position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 128px;width:128px;min-width:128px;height:40px;box-sizing:border-box;color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;padding:0 10px;border-radius:10px;border:1px solid transparent;transition:color .2s ease,background .2s ease,box-shadow .2s ease;white-space:nowrap;line-height:1}.nav a:hover{color:var(--text);background:rgba(255,255,255,.055)}.nav a:focus-visible{outline:2px solid rgba(217,173,74,.75);outline-offset:2px}.nav a.active{color:#11151a;background:var(--gold);border-color:var(--gold);box-shadow:0 5px 16px rgba(217,173,74,.22),inset 0 1px 0 rgba(255,255,255,.28);font-weight:700}.nav a.active:after{content:"";position:absolute;left:22%;right:22%;bottom:3px;height:2px;border-radius:2px;background:rgba(17,21,26,.7)}'
-          if old_css not in s:
-              raise SystemExit("Expected old categories nav CSS not found; refusing to modify file.")
-          s = s.replace(old_css, new_css, 1)
-          marker = '@media(max-width:700px){'
-          mobile = '@media(max-width:850px){.header .wrap{padding:12px 0;align-items:flex-start;flex-direction:column;gap:10px}.nav{width:100%;overflow-x:auto;flex-wrap:nowrap;padding:5px}.nav a{flex:0 0 128px;width:128px;min-width:128px;height:40px;font-size:11px;padding:0 8px}}'
-          if marker not in s:
-              raise SystemExit("Expected mobile media query not found; refusing to modify file.")
-          s = s.replace(marker, mobile + marker, 1)
-          p.write_text(s, encoding="utf-8")
+        run: python -c "from pathlib import Path; p=Path('web/categories.html'); s=p.read_text(encoding='utf-8'); old='<nav class=\"nav\"><a href=\"./index.html\">البداية</a><a href=\"./map.html\">البوصلة</a><a href=\"./funds.html\">الصناديق</a><a class=\"active\" href=\"./categories.html\">الفئات</a><a href=\"./macro.html\">الاقتصاد</a></nav>'; new='<nav class=\"nav\"><a href=\"./index.html\">البداية</a><a href=\"./map.html\">ماذا حدث للفلوس؟</a><a href=\"./funds.html\">الصناديق</a><a class=\"active\" href=\"./categories.html\">خريطة الفئات</a><a href=\"./macro.html\">الاقتصاد</a><a href=\"./why.html\">المنهج</a></nav>'; assert old in s, 'Expected old categories nav not found'; s=s.replace(old,new,1); oldcss='.nav{display:flex;gap:18px}.nav a{font-size:11px;color:var(--muted);text-decoration:none}.nav a.active{color:#fff}'; newcss='.nav{display:flex;align-items:stretch;gap:6px;padding:5px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}.nav a{position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 128px;width:128px;min-width:128px;height:40px;box-sizing:border-box;color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;padding:0 10px;border-radius:10px;border:1px solid transparent;transition:color .2s ease,background .2s ease,box-shadow .2s ease;white-space:nowrap;line-height:1}.nav a:hover{color:var(--text);background:rgba(255,255,255,.055)}.nav a:focus-visible{outline:2px solid rgba(217,173,74,.75);outline-offset:2px}.nav a.active{color:#11151a;background:var(--gold);border-color:var(--gold);box-shadow:0 5px 16px rgba(217,173,74,.22),inset 0 1px 0 rgba(255,255,255,.28);font-weight:700}.nav a.active:after{content:\"\";position:absolute;left:22%;right:22%;bottom:3px;height:2px;border-radius:2px;background:rgba(17,21,26,.7)}'; assert oldcss in s, 'Expected old categories nav CSS not found'; s=s.replace(oldcss,newcss,1); marker='@media(max-width:700px){'; mobile='@media(max-width:850px){.header .wrap{padding:12px 0;align-items:flex-start;flex-direction:column;gap:10px}.nav{width:100%;overflow-x:auto;flex-wrap:nowrap;padding:5px}.nav a{flex:0 0 128px;width:128px;min-width:128px;height:40px;font-size:11px;padding:0 8px}}'; assert marker in s, 'Expected mobile media query not found'; s=s.replace(marker,mobile+marker,1); p.write_text(s,encoding='utf-8')"
       - name: Commit categories change
         run: |
           git config user.name "github-actions[bot]"
