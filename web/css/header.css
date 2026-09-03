@@ -1,0 +1,65 @@
+/* SHARED SITE HEADER / NAVIGATION — single source of truth */
+.site-header{
+  position:sticky!important;top:0!important;z-index:100!important;
+  background:rgba(10,14,18,.94)!important;
+  border-bottom:1px solid #273140!important;
+  backdrop-filter:blur(16px)!important;
+  box-shadow:none!important;
+}
+.site-header .wrap{
+  width:auto!important;max-width:1180px!important;margin:0 auto!important;
+  padding:0 22px!important;min-height:64px!important;height:64px!important;
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  gap:16px!important;box-sizing:border-box!important;
+}
+.site-header .logo{
+  font-family:"IBM Plex Sans Arabic",Arial,sans-serif!important;
+  font-weight:700!important;font-size:inherit!important;line-height:1.3!important;
+  white-space:nowrap!important;letter-spacing:.01em!important;color:#eef2f6!important;
+  margin:0!important;padding:0!important;
+}
+.site-header .logo span{
+  display:block!important;font-size:11px!important;line-height:1.3!important;
+  color:#8b95a5!important;font-weight:400!important;margin-top:1px!important;
+  letter-spacing:0!important;
+}
+.site-header nav{
+  display:flex!important;align-items:stretch!important;gap:6px!important;
+  width:auto!important;margin:0!important;padding:0!important;
+  flex-wrap:nowrap!important;font-size:13.5px!important;color:#8b95a5!important;
+}
+.site-header nav a,
+.site-header nav a:hover,
+.site-header nav a:focus,
+.site-header nav a:focus-visible,
+.site-header nav a:active,
+.site-header nav a.active{
+  position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 128px!important;width:128px!important;min-width:128px!important;max-width:128px!important;
+  height:40px!important;min-height:40px!important;max-height:40px!important;
+  box-sizing:border-box!important;margin:0!important;padding:0 10px!important;
+  border:1px solid transparent!important;border-radius:10px!important;
+  font-family:"IBM Plex Sans Arabic",Arial,sans-serif!important;
+  font-size:12px!important;font-weight:700!important;line-height:1!important;
+  letter-spacing:normal!important;white-space:nowrap!important;text-decoration:none!important;
+  transform:none!important;opacity:1!important;
+  transition:color .2s ease,background .2s ease,box-shadow .2s ease!important;
+}
+.site-header nav a{color:#8b95a5!important;background:transparent!important}
+.site-header nav a:hover{color:#eef2f6!important;background:rgba(255,255,255,.055)!important}
+.site-header nav a:focus-visible{outline:2px solid rgba(212,176,106,.75)!important;outline-offset:2px!important}
+.site-header nav a.active,
+.site-header nav a.active:hover{
+  color:#11151a!important;background:#d4b06a!important;border-color:#d4b06a!important;
+  box-shadow:0 5px 16px rgba(212,176,106,.22),inset 0 1px 0 rgba(255,255,255,.28)!important;
+}
+.site-header nav a.active:after{
+  content:""!important;position:absolute!important;left:22%!important;right:22%!important;bottom:3px!important;
+  width:auto!important;height:2px!important;border-radius:2px!important;background:rgba(17,21,26,.7)!important;
+  pointer-events:none!important;box-sizing:border-box!important;
+}
+@media(max-width:860px){
+  .site-header .wrap{height:auto!important;min-height:64px!important;padding-top:12px!important;padding-bottom:12px!important;align-items:flex-start!important;flex-direction:column!important;gap:10px!important}
+  .site-header nav{width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;flex-wrap:nowrap!important;padding:5px!important;border:1px solid rgba(255,255,255,.07)!important;background:rgba(255,255,255,.025)!important;border-radius:14px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;scrollbar-width:thin!important}
+  .site-header nav a,.site-header nav a:hover,.site-header nav a:focus,.site-header nav a:focus-visible,.site-header nav a:active,.site-header nav a.active{flex:0 0 128px!important;width:128px!important;min-width:128px!important;max-width:128px!important}
+}
