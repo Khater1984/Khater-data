@@ -35,10 +35,24 @@
   .nav a,.nav a:hover,.nav a:focus-visible,.nav a.active{flex:0 0 128px!important;width:128px!important;min-width:128px!important;max-width:128px!important}
 }
 
+
+/* FINAL NAV: same geometry and typography as the shared site navigation */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap");
+.site-header{border-bottom:1px solid var(--line);background:rgba(10,14,18,.86);position:sticky;top:0;z-index:30;backdrop-filter:blur(16px)}
+.site-header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px;max-width:1180px;margin:0 auto;padding:0 22px}
+.site-header .logo{font-weight:700;letter-spacing:.01em}
+.site-header .logo span{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:1px}
+.site-header nav{display:flex;gap:6px;font-size:13.5px;color:var(--muted);flex-wrap:nowrap}
+.site-header nav a,.site-header nav a:hover,.site-header nav a:focus-visible,.site-header nav a.active{position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 128px;width:128px;min-width:128px;max-width:128px;height:40px;box-sizing:border-box;color:var(--muted);text-decoration:none;font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:12px;font-weight:700;padding:0 10px;margin:0;border-radius:10px;border:1px solid transparent;white-space:nowrap;line-height:1;transform:none;opacity:1;transition:color .2s ease,background .2s ease,box-shadow .2s ease}
+.site-header nav a:hover{color:var(--text);background:rgba(255,255,255,.055)}
+.site-header nav a:focus-visible{outline:2px solid rgba(214,180,106,.75);outline-offset:2px}
+.site-header nav a.active{color:#11151a;background:var(--gold);border-color:var(--gold);box-shadow:0 5px 16px rgba(214,180,106,.22),inset 0 1px 0 rgba(255,255,255,.28)}
+.site-header nav a.active:after{content:"";position:absolute;left:22%;right:22%;bottom:3px;height:2px;border-radius:2px;background:rgba(17,21,26,.7);pointer-events:none}
+@media(max-width:700px){.site-header .wrap{height:auto;min-height:64px;padding-top:12px;padding-bottom:12px;align-items:flex-start;flex-direction:column;gap:10px}.site-header nav{width:100%;overflow-x:auto;overflow-y:hidden;padding:5px;flex-wrap:nowrap;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}.site-header nav a,.site-header nav a:hover,.site-header nav a:focus-visible,.site-header nav a.active{flex:0 0 128px;width:128px;min-width:128px;max-width:128px}}
 </style>
 </head>
 <body>
-<header class="header"><div class="wrap"><div class="brand">Khater Funds Radar<span>Institutional Fund Intelligence</span></div><nav class="nav"><a href="./index.html">البداية</a><a href="./map.html">ماذا حدث للفلوس؟</a><a href="./funds.html">الصناديق</a><a class="active" href="./categories.html">خريطة الفئات</a><a href="./macro.html">الاقتصاد</a><a href="./why.html">المنهج</a></nav></div></header>
+<header class="site-header"><div class="wrap"><div class="logo">خريطة الفلوس<span>خريطة الفئات</span></div><nav><a href="./index.html">البداية</a><a href="./map.html">ماذا حدث للفلوس؟</a><a href="./funds.html">الصناديق</a><a class="active" href="./categories.html">خريطة الفئات</a><a href="./macro.html">الاقتصاد</a><a href="./why.html">المنهج</a></nav></div></header>
 <main class="wrap page">
 <section class="hero"><div class="hero-main"><div class="eyebrow">CATEGORY INTELLIGENCE MAP</div><h1>خريطة فئات الصناديق</h1><p>شاشة لفهم بنية سوق الصناديق المصري: أين تتركز الصناديق؟ ما حجم كل فئة؟ وما جودة البيانات والتقييمات المتاحة داخلها؟</p></div><div class="hero-side"><div class="status">FUND UNIVERSE</div><div class="side-number" id="totalFunds">—</div><div class="side-label">صندوق في قاعدة البيانات</div><div class="side-grid"><div class="micro"><div class="k">الفئات</div><span class="v" id="totalCats">—</span></div><div class="micro"><div class="k">Rated</div><span class="v" id="ratedFunds">—</span></div></div></div></section>
 <section class="controls"><input id="search" placeholder="ابحث باسم الفئة أو مدير الاستثمار أو الصندوق..."><select id="score"><option value="">كل SmartScore</option><option value="90">90+</option><option value="75">75–89.9</option><option value="50">50–74.9</option><option value="0">أقل من 50</option></select><select id="confidence"><option value="">كل مستويات الثقة</option><option value="High">High</option><option value="Moderate">Moderate</option><option value="Limited">Limited</option><option value="Insufficient">Insufficient</option></select><button id="clear">مسح</button></section>
