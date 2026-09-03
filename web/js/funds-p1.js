@@ -12,12 +12,13 @@
     if(k==='inflation'&&(h==='weekly'||h==='4weeks'))return null;
     const d=new Date(end+'T00:00:00Z');
     if(h==='weekly')d.setUTCDate(d.getUTCDate()-7);else if(h==='4weeks')d.setUTCDate(d.getUTCDate()-28);else if(h==='last12m')d.setUTCFullYear(d.getUTCFullYear()-1);else if(h==='ytd')d.setUTCMonth(0,1);else if(/^\dy$/.test(h))d.setUTCFullYear(d.getUTCFullYear()-Number(h[0]));else return null;
-    const start=d.toISOString().slice(0,10);
-    const r=await get('/rest/v1/macro_series?select=ts_date,value,unit&series_key=eq.'+encodeURIComponent(b.series)+'&ts_date=gte.'+start+'&ts_date=lte.'+end+'&order=ts_date.asc&limit=5000');
+    const requestedStart=d.toISOString().slice(0,10);
+    const r=await get('/rest/v1/macro_series?select=ts_date,value,unit&series_key=eq.'+encodeURIComponent(b.series)+'&ts_date=gte.'+requestedStart+'&ts_date=lte.'+end+'&order=ts_date.asc&limit=5000');
     const v=r.filter(x=>x.value!=null);if(!v.length)return null;
-    if(b.type==='level'){const a=Number(v[0].value),z=Number(v[v.length-1].value);if(!Number.isFinite(a)||a===0||!Number.isFinite(z))return null;return{value:(z/a-1)*100,start,end,unit:v[v.length-1].unit,calculated:true};}
-    if(b.type==='inflation'){let f=1;v.forEach(x=>{f*=1+Number(x.value)/100});return{value:(f-1)*100,start,end,unit:v[v.length-1].unit,calculated:true};}
-    if(b.type==='tbill'){const avg=v.reduce((s,x)=>s+Number(x.value),0)/v.length;const days=Math.max(1,(new Date(end)-new Date(start))/86400000);return{value:avg*days/365,start,end,unit:v[v.length-1].unit,calculated:true};}
+    const actualStart=v[0].ts_date, actualEnd=v[v.length-1].ts_date;
+    if(b.type==='level'){const a=Number(v[0].value),z=Number(v[v.length-1].value);if(!Number.isFinite(a)||a===0||!Number.isFinite(z))return null;return{value:(z/a-1)*100,start:actualStart,end:actualEnd,requestedStart,endRequested:end,unit:v[v.length-1].unit,calculated:true};}
+    if(b.type==='inflation'){let f=1;for(const x of v){const n=Number(x.value);if(!Number.isFinite(n))return null;f*=1+n/100}return{value:(f-1)*100,start:actualStart,end:actualEnd,requestedStart,endRequested:end,unit:v[v.length-1].unit,calculated:true};}
+    if(b.type==='tbill'){const nums=v.map(x=>Number(x.value));if(nums.some(n=>!Number.isFinite(n)))return null;const avg=nums.reduce((s,n)=>s+n,0)/nums.length;const days=Math.max(1,(new Date(actualEnd)-new Date(actualStart))/86400000);return{value:avg*days/365,start:actualStart,end:actualEnd,requestedStart,endRequested:end,unit:v[v.length-1].unit,calculated:true};}
     return null;
   };
   async function horizonEvidence(h){const r=await get('/rest/v1/fund_performance_history?select=report_date&horizon=eq.'+encodeURIComponent(h)+'&order=report_date.asc&limit=1000');const dates=[...new Set(r.map(x=>x.report_date).filter(Boolean))];return{count:dates.length,first:dates[0]||null,last:dates[dates.length-1]||null};}
