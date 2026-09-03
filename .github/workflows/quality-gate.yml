@@ -1,0 +1,33 @@
+name: Quality gate
+
+on:
+  pull_request:
+  push:
+    branches: [main, 'dev/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check Python syntax
+        run: python -m compileall -q scripts
+      - name: Check JSON and local assets
+        run: python scripts/verify_baseline.py
+      - name: Check JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in web/js/*.js; do node --check "$file"; done
+          for file in web/*.html; do
+            awk '/<script>/{on=1;next}/<\/script>/{on=0}on' "$file" > /tmp/inline.js
+            if [ -s /tmp/inline.js ]; then node --check /tmp/inline.js; fi
+          done
