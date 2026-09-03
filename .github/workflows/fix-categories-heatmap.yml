@@ -1,0 +1,35 @@
+name: Fix categories heatmap
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-categories-heatmap.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch treemap split
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('web/categories.html')
+          s = p.read_text(encoding='utf-8')
+          old = "function split(items,x,y,w,h){items=A(items);if(!items.length)return[];if(items.length===1)return[{item:items[0],x:x,y:y,w:w,h:h}];"
+          new = "function split(items,x,y,w,h){items=A(items);if(!items.length)return[];if(items.length===1)return[{item:(items[0]&&items[0].item!==undefined)?items[0].item:items[0],x:x,y:y,w:w,h:h}];"
+          if old not in s:
+              raise SystemExit('Expected split function not found; refusing to modify file.')
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add web/categories.html
+          git commit -m 'Fix categories heatmap sector rendering' || exit 0
+          git push
