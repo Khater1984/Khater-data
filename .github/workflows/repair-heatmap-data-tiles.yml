@@ -1,0 +1,104 @@
+name: Repair heatmap data tiles
+on:
+  push:
+    paths:
+      - .github/workflows/repair-heatmap-data-tiles.yml
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace heatmap renderer
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('web/categories.html')
+          s=p.read_text(encoding='utf-8')
+          new=r'''function renderHeatmap(gs){
+  gs=A(gs).filter(g=>g&&Array.isArray(g.funds)&&g.funds.length>0);
+  const canvas=$('heatCanvas');
+  if(!canvas)return;
+  const scoreOf=f=>{if(!f||f.fund_id==null)return null;return state.scores.get(f.fund_id)||state.scores.get(S(f.fund_id))||null};
+  const scoreVal=f=>{const q=scoreOf(f);return N(q&&q.final_score)};
+  const funds=A(state.filtered);
+  const rated=funds.filter(f=>scoreVal(f)!=null).length;
+  const vals=funds.map(scoreVal).filter(v=>v!=null);
+  const active=state.heatCategory?gs.filter(g=>S(g.name)===S(state.heatCategory)):gs;
+  const list=active.length?active:gs;
+  text('heatFunds',funds.length);
+  text('heatRated',rated);
+  text('heatCoverage',funds.length?Math.round(rated/funds.length*100)+'%':'0%');
+  text('heatTop',vals.length?Math.max(...vals).toFixed(1):'—');
+  text('heatCats',list.length);
+  text('heatMode',state.heatCategory?'CATEGORY':'MARKET');
+  const back=$('heatBack'),all=$('heatAll');
+  if(back)back.style.display=state.heatCategory?'inline-block':'none';
+  if(all)all.classList.toggle('active',!state.heatCategory);
+  canvas.innerHTML='';
+  if(!list.length){canvas.innerHTML='<div class="loading">لا توجد بيانات مطابقة للفلاتر الحالية.</div>';return}
+  canvas.style.display='grid';
+  canvas.style.gridTemplateColumns=state.heatCategory?'1fr':'repeat(4,minmax(0,1fr))';
+  canvas.style.gridAutoRows=state.heatCategory?'1fr':'minmax(150px,1fr)';
+  canvas.style.gap='4px';
+  canvas.style.overflow='auto';
+  list.forEach(g=>{
+    const sec=document.createElement('section');
+    sec.className='sector-box';
+    sec.style.position='relative';
+    sec.style.width='100%';
+    sec.style.height='100%';
+    sec.style.minHeight=state.heatCategory?'0':'150px';
+    sec.style.boxSizing='border-box';
+    const title=document.createElement('div');
+    title.className='sector-title';
+    title.innerHTML='<b>'+esc(g.name)+'</b><span>'+g.funds.length+' funds</span>';
+    sec.appendChild(title);
+    const body=document.createElement('div');
+    body.className='sector-tiles';
+    body.style.position='absolute';body.style.left='4px';body.style.right='4px';body.style.top='34px';body.style.bottom='4px';
+    body.style.display='grid';
+    const fs=g.funds.slice().sort((a,b)=>(scoreVal(b)??-1)-(scoreVal(a)??-1));
+    const cols=fs.length<=2?1:fs.length<=6?2:3;
+    body.style.gridTemplateColumns='repeat('+cols+',minmax(0,1fr))';
+    body.style.gridAutoRows='minmax(42px,1fr)';
+    body.style.gap='2px';
+    fs.forEach(f=>{
+      const tile=document.createElement('a');
+      tile.className='fund-tile';
+      tile.href='./fund.html?id='+encodeURIComponent(S(f.fund_id));
+      const v=scoreVal(f);
+      tile.style.position='relative';
+      tile.style.left='auto';tile.style.top='auto';tile.style.width='auto';tile.style.height='auto';
+      tile.style.minHeight='42px';
+      tile.style.background=scoreColor(v);
+      if(v==null)tile.classList.add('unrated');
+      tile.title=S(f.canonical_name||f.fund_id)+(v==null?'':' · SmartScore '+v.toFixed(1));
+      tile.innerHTML='<span class="name">'+esc(f.canonical_name||S(f.fund_id))+'</span><span class="scorev">'+(v==null?'—':v.toFixed(1))+'</span><span class="meta">ID '+esc(f.fund_id)+'</span>';
+      body.appendChild(tile);
+    });
+    sec.appendChild(body);
+    sec.ondblclick=()=>{if(!state.heatCategory){state.heatCategory=g.name;render()}};
+    canvas.appendChild(sec);
+  });
+}
+'''
+          pattern=r'function renderHeatmap\(gs\)\{.*?\n\}\nfunction renderList'
+          repl=new+'function renderList'
+          out,n=re.subn(pattern,repl,s,count=1,flags=re.S)
+          if n!=1: raise SystemExit('renderHeatmap block not found')
+          out=out.replace('.fund-tile .name{width:100%;font-size:7px;', '.fund-tile .name{width:100%;font-size:9px;')
+          out=out.replace('.fund-tile .scorev{font-size:12px;', '.fund-tile .scorev{font-size:13px;')
+          p.write_text(out,encoding='utf-8')
+          PY
+      - name: Commit patch and remove workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/categories.html
+          git commit -m "Fix heatmap fund tile data rendering" || true
+          git rm .github/workflows/repair-heatmap-data-tiles.yml
+          git commit -m "Remove one-shot heatmap repair workflow"
+          git push
