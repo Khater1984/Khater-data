@@ -1,0 +1,12 @@
+(function(){'use strict';
+const q=new URLSearchParams(location.search),id=q.get('id')||q.get('fund_id'),C=window.KHATER||{},H={apikey:C.key,Authorization:'Bearer '+C.key};
+const HS=['weekly','4weeks','ytd','last12m','1y','2y','3y','4y','5y','6y'];
+const L={weekly:'أسبوعي','4weeks:'4 أسابيع',ytd:'منذ بداية العام',last12m:'12 شهراً','1y':'سنة','2y':'سنتان','3y':'3 سنوات','4y':'4 سنوات','5y':'5 سنوات','6y':'6 سنوات'};
+function esc(x){return String(x==null?'—':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function num(x){return x==null||!Number.isFinite(Number(x))?'—':Number(x).toLocaleString('en-US',{maximumFractionDigits:2})}
+function pct(x){return x==null||!Number.isFinite(Number(x))?'—':(Number(x)>=0?'+':'')+num(x)+'%'}
+function warnings(w){if(w==null)return[];if(Array.isArray(w))return w.map(x=>typeof x==='string'?x:(x&&x.message)||JSON.stringify(x));if(typeof w==='object')return Object.entries(w).map(([k,v])=>k+': '+JSON.stringify(v));return[String(w)]}
+async function get(path){const r=await fetch(C.url+path,{headers:H});const t=await r.text();let j;try{j=t?JSON.parse(t):null}catch(e){throw Error('استجابة غير صالحة من Supabase')}if(!r.ok)throw Error((j&&j.message)||'HTTP '+r.status);return j}
+async function loadFund(){if(!id)throw Error('معرّف الصندوق غير موجود في الرابط');if(!C.url||!C.key)throw Error('config.js غير متاح أو مفاتيح Supabase غير موجودة');const fr=await get('/rest/v1/funds?fund_id=eq.'+encodeURIComponent(id)+'&select=fund_id,canonical_name,management_company,category,metadata&limit=1');if(!fr.length)throw Error('الصندوق غير موجود: '+id);const [sr,pr]=await Promise.all([get('/rest/v1/fund_smartscore_latest?fund_id=eq.'+encodeURIComponent(id)+'&select=fund_id,final_score,raw_score,rating,data_tier,data_confidence,data_quality,score_as_of,signal_as_of,latest_day_change_pct,latest_signal_status,performance_score,risk_score,benchmark_score,consistency_score,inflation_score,score_explanation,risk_method,track_factor,warnings,qualification_status,calculation_inputs,methodology_version&limit=1'),get('/rest/v1/fund_performance_history?fund_id=eq.'+encodeURIComponent(id)+'&select=report_date,horizon,nav_value,return_pct,rank,currency,report_status,source_id&order=report_date.desc&limit=1000')]);return{fund:fr[0],score:sr[0]||{},performance:pr}}
+window.FUND={id,C,L,HS,esc,num,pct,warnings,get,loadFund};
+})();
