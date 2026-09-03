@@ -2,100 +2,184 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>الصناديق</title>
+<title>أداء الصناديق</title>
 <script src="config.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="css/app.css"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0C0D14;--card:#161821;--line:rgba(255,255,255,.08);--ink:#F3F4F6;--mute:#9CA3AF;--ok:#10B981;--bad:#EF4444}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",sans-serif}
+body{min-height:100vh;background:radial-gradient(900px 400px at 85% -10%,rgba(16,185,129,.10),transparent 50%),var(--bg)}
+.top{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#0C0D14ee;z-index:20}
+nav a{color:var(--mute);text-decoration:none;margin-inline-start:14px;font-size:13px}
+nav a.on{color:#fff}
+.page{max-width:1240px;margin:0 auto;padding:18px 18px 60px}
+h1{margin:0 0 6px;font-size:26px}
+.sub{color:var(--mute);font-size:13px}
+.glass{background:rgba(30,31,46,.82);border:1px solid var(--line);border-radius:14px}
+.float{display:flex;flex-wrap:wrap;gap:8px;padding:10px;position:sticky;top:56px;z-index:10;backdrop-filter:blur(10px)}
+select,input,button{background:#12131C;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit}
+button{cursor:pointer}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.kpi{padding:12px 14px}
+.kpi b{display:block;font-size:22px;margin-top:4px;font-family:"IBM Plex Sans",sans-serif;direction:ltr;text-align:right}
+.wraptable{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+th{color:#9CA3AF;font-weight:600;cursor:pointer;white-space:nowrap;position:sticky;top:0;background:#161821}
+tr{cursor:pointer}
+tr:hover td{background:rgba(16,185,129,.06)}
+.pos{color:#34D399} .neg{color:#F87171} .na{color:#6B7280}
+.name{font-weight:650} .mgr{color:var(--mute);font-size:12px;margin-top:2px}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;border:1px solid var(--line);color:#D1D5DB}
+.ltr{direction:ltr;font-family:"IBM Plex Sans",sans-serif}
+@media(max-width:800px){.kpis{grid-template-columns:1fr 1fr} th:nth-child(6),td:nth-child(6),th:nth-child(8),td:nth-child(8){display:none}}
+</style>
 </head>
 <body>
-<header class="site-header"><div class="wrap">
-  <div class="logo">خريطة الفلوس<span id="src">الصناديق</span></div>
+<header class="top">
+  <strong>أداء الصناديق المصرية</strong>
   <nav>
     <a href="./index.html">البداية</a>
-    <a href="./map.html">ماذا حدث للفلوس؟</a>
-    <a class="active" href="./funds.html">الصناديق</a>
-    <a href="./categories.html">خريطة الفئات</a>
+    <a href="./map.html">البوصلة</a>
+    <a class="on" href="./funds.html">الصناديق</a>
+    <a href="./categories.html">الفئات</a>
     <a href="./macro.html">الاقتصاد</a>
   </nav>
-</div></header>
-<div class="toolbar">
-  <input id="q" placeholder="بحث عن صندوق"/>
-  <select id="bucket"><option value="">كل الفئات</option></select>
-  <select id="horizon">
-    <option value="last12m">12 شهراً (سنوي)</option>
-    <option value="ytd">منذ بداية العام</option>
-    <option value="weekly">آخر أسبوع</option>
-    <option value="2y">سنتان</option>
-    <option value="3y">3 سنوات</option>
-  </select>
-  <span class="muted" id="meta"></span>
-</div>
-<p class="wrap muted" id="err"></p>
-<table><thead><tr><th>#</th><th>الصندوق</th><th>الفئة</th><th>العائد</th><th>التقييم</th><th>التصنيف</th><th>الثقة</th></tr></thead><tbody id="tb"></tbody></table>
+</header>
+<main class="page">
+  <h1>شاشة فرز الصناديق</h1>
+  <p class="sub">بيانات حية من funds + nav_official + fund_smartscore_latest. العائد من metadata.scores حسب الأفق المختار. التقييم من محرك V3 كما هو مخزّن.</p>
+  <div class="glass float">
+    <input id="q" placeholder="بحث بالاسم أو المدير" style="min-width:220px"/>
+    <select id="fb"><option value="">كل الفئات</option></select>
+    <select id="fm"><option value="">كل المديرين</option></select>
+    <select id="fr"><option value="">كل الدرجات</option><option value="90">90–100</option><option value="75">75–89</option><option value="50">50–74</option><option value="0">&lt;50</option><option value="na">بلا درجة</option></select>
+    <select id="hz"></select>
+    <button type="button" id="reset">إعادة ضبط</button>
+  </div>
+  <div class="kpis" id="kpis">جاري التحميل...</div>
+  <div class="glass wraptable">
+    <table>
+      <thead>
+        <tr>
+          <th data-k="#">#</th>
+          <th data-k="name">الصندوق</th>
+          <th data-k="bucket">الفئة</th>
+          <th data-k="nav">NAV</th>
+          <th data-k="ret">العائد</th>
+          <th data-k="ytd">YTD</th>
+          <th data-k="final">Smart Score</th>
+          <th data-k="rating">التصنيف</th>
+          <th data-k="tier">الثقة</th>
+        </tr>
+      </thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+  <p class="sub" id="foot"></p>
+</main>
 <script>
-const CFG = window.KHATER || {};
-const err = (m) => { document.getElementById("err").textContent = m; };
-function bucket(c){
-  c=(c||"").toLowerCase();
-  if(c.includes("gold")) return "ذهب";
-  if(c.includes("equity")||c.includes("index")||c.includes("thematic")||c.includes("sector")) return "أسهم";
-  if(c.includes("money market")) return "نقدي";
-  if(c.includes("fixed income")) return "دخل ثابت";
-  if(c.includes("balanced")||c.includes("mixed")||c.includes("allocator")) return "متوازن";
-  if(c.includes("etf")||c.includes("traded")) return "متداول";
-  if(c.includes("protected")||c.includes("guaranteed")) return "محمي";
-  if(c.includes("charitable")) return "خيري";
-  return "أخرى";
-}
-(async () => {
-  try {
-    if(!CFG.url || !CFG.key) throw new Error("لا مفتاح عام في config.js");
-    const r = await fetch(CFG.url + "/rest/v1/funds?select=fund_id,canonical_name,management_company,category,metadata&limit=1000", {
-      headers: { apikey: CFG.key, Authorization: "Bearer " + CFG.key }
+const CFG=window.KHATER||{};
+const HS=[["4weeks","شهر"],["ytd","YTD"],["last12m","12 شهراً"],["3y","3 سنوات"],["5y","5 سنوات"]];
+const AR=c=>{c=(c||"").toLowerCase();
+  if(c.includes("gold")) return "صناديق الذهب";
+  if(c.includes("money market")) return "صناديق النقد";
+  if(c.includes("fixed income")) return "صناديق الدخل الثابت";
+  if(c.includes("balanced")||c.includes("mixed")||c.includes("allocator")) return "الصناديق المتوازنة";
+  if(c.includes("index")||c.includes("etf")||c.includes("traded")||c.includes("passive")) return "صناديق المؤشرات";
+  if(c.includes("equity")||c.includes("thematic")||c.includes("sector")) return "صناديق الأسهم";
+  if(c.includes("protected")||c.includes("guaranteed")) return "صناديق محمية";
+  if(c.includes("charitable")) return "صناديق خيرية";
+  return "فئات أخرى";
+};
+const num=v=>v==null?"—":Number(v).toLocaleString("en-US",{maximumFractionDigits:1});
+const ret=(f,h)=>{const x=f.scores&&f.scores[h]; return x&&x.return_pct!=null?Number(x.return_pct):null;};
+const inRange=(score,sel)=>{
+  if(!sel) return true; if(sel==="na") return score==null; if(score==null) return false;
+  const n=+sel; if(n===90) return score>=90; if(n===75) return score>=75&&score<90; if(n===50) return score>=50&&score<75; return score<50;
+};
+(async()=>{
+  const kpis=document.getElementById("kpis");
+  try{
+    if(!CFG.url||!CFG.key) throw new Error("لا مفتاح عام في config.js");
+    const H={apikey:CFG.key,Authorization:"Bearer "+CFG.key};
+    const [funds,navs,latest]=await Promise.all([
+      fetch(CFG.url+"/rest/v1/funds?select=fund_id,canonical_name,management_company,category,metadata&limit=1000",{headers:H}).then(r=>r.json()),
+      fetch(CFG.url+"/rest/v1/nav_official?select=fund_id,nav,as_of_date&limit=1000",{headers:H}).then(r=>r.json()),
+      fetch(CFG.url+"/rest/v1/fund_smartscore_latest?select=fund_id,final_score,rating,data_tier,data_confidence,score_as_of,risk_score&limit=1000",{headers:H}).then(r=>r.json())
+    ]);
+    if(!Array.isArray(funds)) throw new Error("استجابة الصناديق غير متوقعة");
+    const navMap={}; (navs||[]).forEach(n=>navMap[n.fund_id]=n);
+    const ssMap={}; (latest||[]).forEach(n=>ssMap[n.fund_id]=n);
+    const ALL=funds.map(f=>{
+      const ss=ssMap[f.fund_id]||{};
+      return {
+        id:f.fund_id, name:f.canonical_name||"—", manager:f.management_company||"",
+        raw:f.category||"", bucket:AR(f.category), scores:(f.metadata||{}).scores||{},
+        nav:navMap[f.fund_id]?.nav??null, navd:navMap[f.fund_id]?.as_of_date||null,
+        final:ss.final_score??null, rating:ss.rating||"", tier:ss.data_tier||ss.data_confidence||"",
+        asof:ss.score_as_of||null, risk:ss.risk_score??null
+      };
     });
-    const raw = await r.json();
-    if(!Array.isArray(raw)) throw new Error("استجابة غير متوقعة " + r.status);
-    const latest = await (await fetch(CFG.url + "/rest/v1/fund_smartscore_latest?select=fund_id,final_score,rating,data_tier,data_confidence,score_as_of,performance_score,risk_score,benchmark_score,consistency_score,inflation_score&limit=1000", { headers: { apikey: CFG.key, Authorization: "Bearer " + CFG.key } })).json();
-    const L = {};
-    (Array.isArray(latest)?latest:[]).forEach(x => L[x.fund_id] = x);
-    const ALL = raw.map(f => ({
-      id: f.fund_id,
-      name: f.canonical_name,
-      manager: f.management_company || "",
-      category: f.category,
-      scores: (f.metadata || {}).scores || {},
-      asof: (f.metadata || {}).scores_as_of,
-      ss: L[f.fund_id] || null
-    }));
-    document.getElementById("src").textContent = "Smart Score V3 · " + ALL.length + " صندوق";
-    [...new Set(ALL.map(f => bucket(f.category)))].sort().forEach(b => {
-      document.getElementById("bucket").insertAdjacentHTML("beforeend", `<option>${b}</option>`);
-    });
-    const cell = (f,h) => f.scores[h] || {};
-    const draw = () => {
-      const q = document.getElementById("q").value.trim();
-      const b = document.getElementById("bucket").value;
-      const h = document.getElementById("horizon").value;
-      let rows = ALL.filter(f => (!q || (f.name+f.manager).includes(q)) && (!b || bucket(f.category)===b));
-      rows.sort((a,c) => ((c.ss&&c.ss.final_score) ?? -1) - ((a.ss&&a.ss.final_score) ?? -1));
-      document.getElementById("meta").textContent = rows.length + " صف";
-      document.getElementById("tb").innerHTML = rows.map((f,i) => {
-        const s = cell(f,h);
-        const ret = s.return_pct;
-        return `<tr onclick="location.href='fund.html?id=${encodeURIComponent(f.id)}&h=${h}'">
-          <td class="num">${i+1}</td>
-          <td>${f.name}<div class="muted">${f.manager}</div></td>
-          <td>${bucket(f.category)}</td>
-          <td class="num">${ret==null?"—":Number(ret).toLocaleString("en-US",{maximumFractionDigits:1})+"%"}<div class="muted">${s.source==="eima_annual"?"سنوي":s.source==="eima_weekly"?"أسبوعي":""}</div></td>
-          <td class="num score">${f.ss&&f.ss.final_score!=null?Number(f.ss.final_score).toFixed(1):"—"}</td>
-          <td>${(f.ss&&f.ss.rating)||"—"}</td>
-          <td>${(f.ss&&f.ss.data_confidence)||(s.conf)||"—"}</td>
+    document.getElementById("hz").innerHTML=HS.map(([k,l])=>`<option value="${k}">${l}</option>`).join("");
+    document.getElementById("hz").value="last12m";
+    [...new Set(ALL.map(f=>f.bucket))].sort().forEach(b=>document.getElementById("fb").insertAdjacentHTML("beforeend",`<option>${b}</option>`));
+    [...new Set(ALL.map(f=>f.manager).filter(Boolean))].sort().forEach(m=>document.getElementById("fm").insertAdjacentHTML("beforeend",`<option>${m}</option>`));
+    let sortKey="final", sortDir=-1;
+    const filtered=()=>{
+      const q=document.getElementById("q").value.trim();
+      const b=document.getElementById("fb").value, m=document.getElementById("fm").value, r=document.getElementById("fr").value;
+      return ALL.filter(f=>(!q||(f.name+f.manager).includes(q))&&(!b||f.bucket===b)&&(!m||f.manager===m)&&inRange(f.final,r));
+    };
+    const draw=()=>{
+      const h=document.getElementById("hz").value;
+      let rows=filtered();
+      rows.sort((a,c)=>{
+        const pick=x=>sortKey==="ret"?ret(x,h):sortKey==="ytd"?ret(x,"ytd"):sortKey==="#"?0:x[sortKey];
+        const av=pick(a), cv=pick(c);
+        if(av==null&&cv==null) return 0;
+        if(av==null) return 1; if(cv==null) return -1;
+        if(typeof av==="string") return sortDir*String(av).localeCompare(String(cv),"ar");
+        return sortDir*(cv-av);
+      });
+      const withRet=rows.filter(f=>ret(f,h)!=null);
+      const top=withRet[0];
+      const scored=rows.filter(f=>f.final!=null);
+      const navd=[...new Set(rows.map(f=>f.navd).filter(Boolean))].sort().at(-1)||"—";
+      const asof=[...new Set(rows.map(f=>f.asof).filter(Boolean))].sort().at(-1)||"—";
+      kpis.innerHTML=`
+        <div class="kpi glass">المعروض<b>${rows.length}</b><div class="sub">من ${ALL.length} صندوق</div></div>
+        <div class="kpi glass">آخر سعر معلن<b>${navd}</b><div class="sub">nav_official</div></div>
+        <div class="kpi glass">تقييم V3 حتى<b>${asof}</b><div class="sub">${scored.length} بدرجة</div></div>
+        <div class="kpi glass">أعلى عائد للأفق<b>${top?num(ret(top,h))+"%":"—"}</b><div class="sub">${top?top.name:""}</div></div>`;
+      document.getElementById("tb").innerHTML=rows.map((f,i)=>{
+        const rv=ret(f,h), ytd=ret(f,"ytd");
+        const src=(f.scores[h]&&f.scores[h].source)||"";
+        return `<tr data-id="${f.id}">
+          <td class="ltr">${i+1}</td>
+          <td><div class="name">${f.name}</div><div class="mgr">${f.manager||"—"}</div></td>
+          <td><span class="pill">${f.bucket}</span></td>
+          <td class="ltr">${f.nav==null?"—":Number(f.nav).toLocaleString("en-US",{maximumFractionDigits:4})}<div class="mgr">${f.navd||""}</div></td>
+          <td class="ltr ${rv==null?"na":rv>=0?"pos":"neg"}">${rv==null?"—":num(rv)+"%"}${src?`<div class="mgr">${src==="eima_annual"?"سنوي":src==="eima_weekly"?"أسبوعي":src}</div>`:""}</td>
+          <td class="ltr ${ytd==null?"na":ytd>=0?"pos":"neg"}">${ytd==null?"—":num(ytd)+"%"}</td>
+          <td class="ltr">${f.final==null?"—":Number(f.final).toFixed(1)}</td>
+          <td>${f.rating||"—"}</td>
+          <td>${f.tier||"—"}</td>
         </tr>`;
       }).join("");
+      document.querySelectorAll("#tb tr").forEach(tr=>tr.onclick=()=>location.href="fund.html?id="+encodeURIComponent(tr.dataset.id)+"&h="+h);
+      document.getElementById("foot").textContent="الأفق النشط: "+(HS.find(x=>x[0]===h)||[h,h])[1]+" · الترتيب الحالي لا يغيّر منهجية Smart Score.";
     };
-    ["q","bucket","horizon"].forEach(id => document.getElementById(id).oninput = draw);
+    document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{
+      const k=th.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=k==="name"||k==="bucket"||k==="rating"?1:-1;}
+      draw();
+    });
+    ["q","fb","fm","fr","hz"].forEach(id=>document.getElementById(id).oninput=draw);
+    document.getElementById("reset").onclick=()=>{["q","fb","fm","fr"].forEach(id=>document.getElementById(id).value="");document.getElementById("hz").value="last12m";draw();};
     draw();
-  } catch (e) { err(String(e)); console.error(e); }
+  }catch(e){kpis.textContent="تعذر التحميل: "+(e&&e.message?e.message:e); console.error(e);}
 })();
 </script>
-</body></html>
+</body>
+</html>
