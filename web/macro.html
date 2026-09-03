@@ -1,50 +1,51 @@
 <!DOCTYPE html>
-<html lang=\"ar\" dir=\"rtl\">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"/>
-<title>الاقتصاد</title>
-<script src=\"config.js\"></script>
-<link href=\"https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap\" rel=\"stylesheet\"/>
-<link rel=\"stylesheet\" href=\"css/app.css\"/>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>خريطة الفلوس — الاقتصاد منذ 2016</title>
+<script src="config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0e13;--panel:#11161d;--panel2:#151b23;--line:#26303b;--text:#eef2f6;--muted:#8d98a5;--gold:#e5b84b;--green:#35c98a;--red:#ef6262;--blue:#63a4ff;--cyan:#54d0d0;--purple:#ad8cff;--shadow:0 18px 60px rgba(0,0,0,.28)}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -20%,#17202b 0,#0b0e13 45%);color:var(--text);font-family:"IBM Plex Sans Arabic",sans-serif}a{color:inherit}.wrap{width:min(1180px,calc(100% - 32px));margin:auto}.site-header{border-bottom:1px solid var(--line);background:#0b0e13dd;backdrop-filter:blur(14px);position:sticky;top:0;z-index:20}.site-header .wrap{display:flex;align-items:center;justify-content:space-between;min-height:70px;gap:20px}.logo{font-weight:700;font-size:20px}.logo span{display:block;font-size:11px;color:var(--muted);font-weight:400}.site-header nav{display:flex;gap:18px;flex-wrap:wrap}.site-header nav a{text-decoration:none;color:var(--muted);font-size:13px}.site-header nav a.active,.site-header nav a:hover{color:var(--gold)}main{padding:42px 0 70px}.eyebrow{color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.04em}.hero{display:grid;grid-template-columns:1.35fr .65fr;gap:18px;align-items:stretch;margin-bottom:22px}.hero h1{font-size:clamp(32px,5vw,58px);line-height:1.08;margin:10px 0}.hero p{color:var(--muted);font-size:15px;max-width:720px;line-height:1.9;margin:0}.hero-note{background:linear-gradient(145deg,#171e27,#10151c);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:center}.hero-note strong{font-family:"IBM Plex Sans",sans-serif;font-size:28px}.hero-note span{color:var(--muted);font-size:12px;margin-top:5px}.section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:34px 0 12px}.section-title h2{margin:0;font-size:20px}.section-title p{margin:0;color:var(--muted);font-size:12px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:linear-gradient(150deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:17px;padding:17px;min-height:155px;box-shadow:var(--shadow)}.card .label{color:var(--muted);font-size:11px}.card h3{margin:5px 0 12px;font-size:16px}.big{font-family:"IBM Plex Sans",sans-serif;font-size:27px;font-weight:700;direction:ltr;text-align:right}.sub{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:11px;color:var(--muted)}.up{color:var(--green)}.down{color:var(--red)}.neutral{color:var(--gold)}.controls{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.controls button{border:1px solid var(--line);background:#0d1218;color:var(--muted);border-radius:999px;padding:8px 13px;cursor:pointer;font-family:inherit}.controls button.on{background:var(--gold);color:#101318;border-color:var(--gold);font-weight:700}.chartbox{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}.charthead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.charthead strong{font-size:14px}.charthead span{font-size:11px;color:var(--muted)}#chart{width:100%;height:390px;display:block}.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}.legend button{background:none;border:0;color:var(--muted);cursor:pointer;font-family:inherit;font-size:11px}.legend button.on{color:var(--text)}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:5px;background:currentColor}.insights{display:grid;grid-template-columns:1fr 1fr;gap:12px}.insight{border:1px solid var(--line);background:#10151c;border-radius:16px;padding:18px}.insight h3{font-size:15px;margin:0 0 8px}.insight p{font-size:12px;line-height:1.9;color:var(--muted);margin:0}.method{margin-top:22px;padding:15px 17px;border:1px dashed #34404d;border-radius:14px;color:var(--muted);font-size:11px;line-height:1.9}.loading{color:var(--muted);padding:40px;text-align:center}.error{color:var(--red);padding:20px}.source{font-size:10px;color:#687481;margin-top:9px}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.insights{grid-template-columns:1fr}.site-header .wrap{align-items:flex-start;padding:12px 0;flex-direction:column}.site-header nav{gap:11px}}
+@media(max-width:560px){.wrap{width:min(100% - 20px,1180px)}.cards{grid-template-columns:1fr}.hero h1{font-size:38px}#chart{height:300px}}
+</style>
 </head>
 <body>
-<header class=\"site-header\"><div class=\"wrap\">
-  <div class=\"logo\">خريطة الفلوس<span>الاقتصاد منذ 2016</span></div>
-  <nav>
-    <a href=\"./index.html\">البداية</a>
-    <a href=\"./map.html\">ماذا حدث للفلوس؟</a>
-    <a href=\"./funds.html\">الصناديق</a>
-    <a href=\"./categories.html\">خريطة الفئات</a>
-    <a class=\"active\" href=\"./macro.html\">الاقتصاد</a>
-  </nav>
-</div></header>
-<main class=\"wrap page\">
-  <h1>كيف وصل الرقم إلى هنا؟</h1>
-  <p class=\"muted\">القيمة الآن، والتغيّر منذ 2016 على نفس السلسلة.</p>
-  <div class=\"grid3\" id=\"cards\"></div>
+<header class="site-header"><div class="wrap"><div class="logo">خريطة الفلوس<span>الاقتصاد منذ 2016</span></div><nav><a href="./index.html">البداية</a><a href="./map.html">ماذا حدث للفلوس؟</a><a href="./funds.html">الصناديق</a><a href="./categories.html">خريطة الفئات</a><a class="active" href="./macro.html">الاقتصاد</a></nav></div></header>
+<main class="wrap">
+<section class="hero"><div><div class="eyebrow">ECONOMIC MONEY MAP · 2016 → LATEST AVAILABLE</div><h1>كيف وصل الرقم إلى هنا؟</h1><p>خريطة زمنية واحدة لفهم ما حدث للجنيه، والأسواق، والأصول، والتضخم، والعائد النقدي منذ 2016 — باستخدام السلاسل الموجودة فعليًا في قاعدة البيانات، مع احترام تاريخ آخر مشاهدة لكل سلسلة.</p></div><div class="hero-note"><strong id="coverage">—</strong><span>نطاق البيانات الفعلي المستخدم في الصفحة</span><div class="source" id="asof">جاري القراءة من Supabase…</div></div></section>
+<div class="section-title"><div><h2>المشهد الآن</h2><p>آخر مشاهدة فعلية لكل سلسلة، وليست قيمة مصطنعة أو توقعًا.</p></div></div>
+<div class="cards" id="cards"><div class="loading">جاري تحميل الاقتصاد…</div></div>
+<div class="section-title"><div><h2>القصة عبر الزمن</h2><p>يمكنك تغيير العدسة دون تغيير البيانات الأصلية.</p></div></div>
+<div class="controls" id="modes"><button class="on" data-mode="assets">قيمة الأصول · 100 = نقطة البداية</button><button data-mode="money">التضخم والقوة الشرائية</button><button data-mode="rates">العائد النقدي</button></div>
+<div class="chartbox"><div class="charthead"><strong id="chartTitle">ماذا أصبحت 100 جنيه على نفس السلسلة؟</strong><span id="chartMeta">2016 → آخر مشاهدة</span></div><svg id="chart" viewBox="0 0 1000 390" preserveAspectRatio="none" role="img" aria-label="رسم اقتصادي زمني"></svg><div class="legend" id="legend"></div></div>
+<div class="section-title"><div><h2>ثلاث قراءات أساسية</h2><p>استنتاجات حسابية من السلاسل نفسها، لا توصيات استثمارية.</p></div></div>
+<div class="insights"><div class="insight"><h3>القوة الشرائية</h3><p>في عدسة التضخم، يبدأ المؤشر عند 100 ثم تتراكم معدلات التضخم الشهرية الموجودة في قاعدة البيانات. النتيجة تعبر عن ما تبقى من القوة الشرائية الاسمية، وليست عائدًا استثماريًا.</p></div><div class="insight"><h3>الأصول مقابل النقد</h3><p>في عدسة الأصول، كل سلسلة سعرية تُعاد معايرتها إلى 100 عند أول مشاهدة متاحة من 2016 أو بعدها. هذا يسمح بالمقارنة على أساس مسار القيمة، دون خلط مستويات الأسعار الأصلية.</p></div><div class="insight"><h3>الفائدة والأذون</h3><p>عائد الودائع وأذون الخزانة يظهر كنسبة سنوية تاريخية. لا يتم التعامل معه كسعر أصل، ولا تُحسب له نسبة تغير منذ 2016 بقسمة آخر عائد على أول عائد.</p></div><div class="insight"><h3>التاريخ ليس موحدًا لكل السلاسل</h3><p id="historyNote">—</p></div></div>
+<div class="method"><strong>منهجية الصفحة:</strong> البيانات تُقرأ مباشرة من <code>public.macro_series</code>. لا توجد قيم fallback ولا بيانات مخترعة. لكل سلسلة يتم احترام تاريخها الفعلي. الأصول السعرية تُطبّع إلى 100 للمقارنة؛ التضخم الشهري يُراكم كمؤشر قوة شرائية؛ معدلات الودائع والأذون تُعرض كعائد سنوي تاريخي.</div>
 </main>
-<script type=\"module\">
-import { loadEngine } from \"./js/live.js\";
-import { fmt } from \"./js/engine.js\";
-const packed = await loadEngine();
-const keys = [
-  [\"usd_egp_mid\",\"دولار / جنيه\",\"سعر الصرف\"],
-  [\"egx30_close\",\"EGX30\",\"المؤشر\"],
-  [\"gold_egp_oz\",\"ذهب بالجنيه\",\"أونصة\"],
-  [\"silver_egp_oz\",\"فضة بالجنيه\",\"أونصة\"],
-  [\"btc_egp\",\"بيتكوين بالجنيه\",\"للمقارنة\"],
-  [\"tbill_91_avg_yield_pct\",\"أذون 91 يوماً\",\"% سنوي\"]
-];
-function near(pts,d){ if(!pts?.length) return null; let b=pts[0]; for(const p of pts){ if(p[0]<=d) b=p; else break;} return b; }
-document.getElementById(\"cards\").innerHTML = keys.map(([k,t,s])=>{
-  const pts = packed.series[k]||[];
-  const last = pts.at(-1);
-  const base = near(pts,\"2016-01-04\");
-  const chg = last && base && base[1] ? (last[1]/base[1]-1)*100 : null;
-  return `<div class=\"card\"><div class=\"kicker\">${s}</div><h3>${t}</h3>
-    <p class=\"num\" style=\"font-size:28px;color:var(--ink)\">${last?fmt(last[1]):\"—\"}</p>
-    <p>${last?last[0]:\"\"}</p>
-    <p class=\"${(chg||0)>=0?\"up\":\"dn\"}\">${chg==null?\"—\":((chg>=0?\"+\":\"\")+chg.toLocaleString(\"en-US\",{maximumFractionDigits:1})+\"٪ منذ 2016\")}</p></div>`;
-}).join(\"\");
+<script>
+const CFG=window.KHATER||{};const headers={apikey:CFG.key,Authorization:'Bearer '+CFG.key};
+const SERIES={usd_egp_mid:['الدولار / جنيه','سعر الصرف','asset'],gold_egp_oz:['الذهب بالجنيه','أونصة','asset'],silver_egp_oz:['الفضة بالجنيه','أونصة','asset'],egx30_close:['EGX30','المؤشر','asset'],spy_egp:['S&P 500 بالجنيه','SPY','asset'],qqq_egp:['ناسداك بالجنيه','QQQ','asset'],btc_egp:['بيتكوين بالجنيه','BTC','asset'],cpi_headline_mom_pct:['التضخم العام','تغير شهري %','inflation'],cpi_core_mom_pct:['التضخم الأساسي','تغير شهري %','inflation'],bank_deposit_1_3m_avg_pct:['وديعة 1–3 أشهر','% سنوي','rate'],bank_deposit_3_6m_avg_pct:['وديعة 3–6 أشهر','% سنوي','rate'],bank_deposit_6_12m_avg_pct:['وديعة 6–12 شهر','% سنوي','rate'],tbill_91_avg_yield_pct:['أذون 91 يومًا','% سنوي','rate'],tbill_364_avg_yield_pct:['أذون 364 يومًا','% سنوي','rate']};
+const palette=['#e5b84b','#54d0d0','#63a4ff','#35c98a','#ad8cff','#ef8d63','#d989b8','#9aa7b4'];
+let data={};let mode='assets';let visible=new Set();
+const esc=s=>String(s).replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\\':'&#92;','"':'&quot;'}[m]));
+async function getSeries(key){let out=[],offset=0;while(true){const u=new URL(CFG.url.replace(/\/$/,'')+'/rest/v1/macro_series');u.searchParams.set('select','ts_date,value');u.searchParams.set('series_key','eq.'+key);u.searchParams.set('order','ts_date.asc');u.searchParams.set('offset',offset);u.searchParams.set('limit','1000');const r=await fetch(u,{headers});if(!r.ok)throw Error(key+' HTTP '+r.status);const a=await r.json();out.push(...a.map(x=>[x.ts_date,Number(x.value)]));if(a.length<1000)break;offset+=1000}return out}
+function firstFrom(pts){return pts.find(p=>p[0]>='2016-01-01')||null}function last(pts){return pts.length?pts[pts.length-1]:null}
+function rebased(pts){const a=firstFrom(pts);if(!a||!Number.isFinite(a[1])||a[1]===0)return[];return pts.filter(p=>p[0]>=a[0]).map(p=>[p[0],100*p[1]/a[1]])}
+function purchasing(pts){let v=100,out=[];for(const [d,m] of pts.filter(p=>p[0]>='2016-01-01')){if(!Number.isFinite(m))continue;v/=1+m/100;out.push([d,v])}return out}
+function fmt(n,d=1){return Number.isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:d}):'—'}
+function fmtAr(n,d=1){return Number.isFinite(n)?n.toLocaleString('ar-EG',{maximumFractionDigits:d}):'—'}
+function colorFor(k){const ks=Object.keys(SERIES);return palette[ks.indexOf(k)%palette.length]}
+function drawCards(){const el=document.getElementById('cards');const cards=['usd_egp_mid','egx30_close','gold_egp_oz','silver_egp_oz','btc_egp','spy_egp','qqq_egp','bank_deposit_1_3m_avg_pct','tbill_91_avg_yield_pct'];el.innerHTML=cards.map(k=>{const pts=data[k]||[],l=last(pts),b=firstFrom(pts),type=SERIES[k][2];let change=null;if(type==='asset'&&l&&b&&b[1]!==0)change=(l[1]/b[1]-1)*100;const cls=change==null?'neutral':change>=0?'up':'down';const changeText=type==='asset'?(change==null?'—':(change>=0?'+':'')+fmt(change)+'% منذ أول مشاهدة 2016'):'سلسلة تاريخية · آخر مشاهدة '+(l?l[0]:'—');return `<div class="card"><div class="label">${SERIES[k][1]}</div><h3>${SERIES[k][0]}</h3><div class="big">${l?fmt(l[1],type==='rate'?2:2):'—'}${type==='rate'?'%':''}</div><div class="sub"><span class="${cls}">${changeText}</span><span>${l?l[0]:'—'}</span></div></div>`}).join('')}
+function activeKeys(){if(mode==='assets')return Object.keys(SERIES).filter(k=>SERIES[k][2]==='asset');if(mode==='money')return ['cpi_headline_mom_pct','cpi_core_mom_pct'];return Object.keys(SERIES).filter(k=>SERIES[k][2]==='rate')}
+function chartData(k){if(mode==='money')return purchasing(data[k]||[]);if(mode==='assets')return rebased(data[k]||[]);return data[k]||[]}
+function niceRange(values){let mn=Math.min(...values),mx=Math.max(...values);if(!Number.isFinite(mn)||!Number.isFinite(mx)||mn===mx){mn=0;mx=1}const pad=(mx-mn)*.08||1;return[mn-pad,mx+pad]}
+function drawChart(){const svg=document.getElementById('chart');const keys=activeKeys();visible=new Set([...visible].filter(k=>keys.includes(k)));if(!visible.size)visible=new Set(keys.slice(0,mode==='assets'?4:keys.length));document.getElementById('chartTitle').textContent=mode==='assets'?'ماذا أصبحت 100 جنيه على نفس السلسلة؟':mode==='money'?'كم تبقت القوة الشرائية؟':'كيف تحرك العائد السنوي؟';document.getElementById('chartMeta').textContent=mode==='assets'?'أول مشاهدة من 2016 = 100':mode==='money'?'تراكم التضخم الشهري':'% سنوي · دون تحويله إلى سعر أصل';const all=[];for(const k of visible)for(const p of chartData(k))if(Number.isFinite(p[1]))all.push(p[1]);if(!all.length){svg.innerHTML='<text x="500" y="190" text-anchor="middle" fill="#8d98a5" font-size="15">لا توجد بيانات متاحة</text>';return}const [ymin,ymax]=niceRange(all),W=1000,H=390,L=65,R=20,T=22,B=42;let minD='9999',maxD='0000';for(const k of visible){const p=chartData(k);if(p.length){minD=minD<p[0][0]?minD:p[0][0];maxD=maxD>p.at(-1)[0]?maxD:p.at(-1)[0]}}const x=d=>L+(Date.parse(d)-Date.parse(minD))/(Date.parse(maxD)-Date.parse(minD)||1)*(W-L-R);const y=v=T+(ymax-v)/(ymax-ymin)*(H-T-B);let out=`<rect x="0" y="0" width="1000" height="390" fill="#11161d"/>`;for(let i=0;i<5;i++){const yy=T+i*(H-T-B)/4;const val=ymax-i*(ymax-ymin)/4;out+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#26303b"/><text x="${L-10}" y="${yy+4}" text-anchor="end" fill="#74808c" font-size="11">${fmt(val,mode==='rates'?1:0)}</text>`}for(let i=0;i<6;i++){const xx=L+i*(W-L-R)/5;const d=new Date(Date.parse(minD)+(Date.parse(maxD)-Date.parse(minD))*i/5);out+=`<text x="${xx}" y="${H-12}" text-anchor="middle" fill="#74808c" font-size="11">${d.getUTCFullYear()}</text>`}for(const k of visible){const pts=chartData(k);let path='';pts.forEach((p,i)=>{const xx=x(p[0]),yy=y(p[1]);path+=(i?'L':'M')+xx.toFixed(1)+' '+yy.toFixed(1)+' '});out+=`<path d="${path}" fill="none" stroke="${colorFor(k)}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>`}svg.innerHTML=out;document.getElementById('legend').innerHTML=keys.map(k=>`<button class="${visible.has(k)?'on':''}" data-k="${k}"><span class="dot" style="color:${colorFor(k)}"></span>${SERIES[k][0]}</button>`).join('');document.querySelectorAll('#legend button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(visible.has(k)&&visible.size>1)visible.delete(k);else visible.add(k);drawChart()})}
+function renderModeButtons(){document.querySelectorAll('#modes button').forEach(b=>b.classList.toggle('on',b.dataset.mode===mode))}
+document.getElementById('modes').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.mode;renderModeButtons();drawChart()});
+async function boot(){try{if(!CFG.url||!CFG.key)throw Error('Supabase config غير موجود');const keys=Object.keys(SERIES);const rows=await Promise.all(keys.map(async k=>[k,await getSeries(k)]));for(const [k,v] of rows)data[k]=v;const dates=Object.values(data).flat().map(p=>p[0]).sort();const min=dates[0],max=dates.at(-1);document.getElementById('coverage').textContent=(min||'—')+' → '+(max||'—');document.getElementById('asof').textContent='مصدر مباشر: public.macro_series';document.getElementById('historyNote').textContent='أطول السلاسل تصل إلى سبتمبر 2026، بينما بعض السلاسل الشهرية تنتهي في يوليو 2026. الصفحة لا تمدّ أي سلسلة إلى الأمام.';drawCards();drawChart()}catch(e){document.getElementById('cards').innerHTML='<div class="error">تعذر تحميل بيانات الاقتصاد من Supabase: '+esc(e.message)+'</div>'}}
+boot();
 </script>
 </body></html>
