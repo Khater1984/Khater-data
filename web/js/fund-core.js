@@ -1,7 +1,7 @@
 (function(){'use strict';
 const q=new URLSearchParams(location.search),id=q.get('id')||q.get('fund_id'),C=window.KHATER||{},H={apikey:C.key,Authorization:'Bearer '+C.key};
 const HS=['weekly','4weeks','ytd','last12m','1y','2y','3y','4y','5y','6y'];
-const L={weekly:'أسبوعي','4weeks:'4 أسابيع',ytd:'منذ بداية العام',last12m:'12 شهراً','1y':'سنة','2y':'سنتان','3y':'3 سنوات','4y':'4 سنوات','5y':'5 سنوات','6y':'6 سنوات'};
+const L={weekly:'أسبوعي','4weeks':'4 أسابيع',ytd:'منذ بداية العام',last12m:'12 شهراً','1y':'سنة','2y':'سنتان','3y':'3 سنوات','4y':'4 سنوات','5y':'5 سنوات','6y':'6 سنوات'};
 function esc(x){return String(x==null?'—':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function num(x){return x==null||!Number.isFinite(Number(x))?'—':Number(x).toLocaleString('en-US',{maximumFractionDigits:2})}
 function pct(x){return x==null||!Number.isFinite(Number(x))?'—':(Number(x)>=0?'+':'')+num(x)+'%'}
