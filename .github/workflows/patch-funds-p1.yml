@@ -1,6 +1,9 @@
 name: Apply funds P1 guardrails
 on:
   workflow_dispatch:
+  push:
+    paths: ['web/js/funds-p1.js']
+    branches: [main]
 permissions:
   contents: write
 jobs:
