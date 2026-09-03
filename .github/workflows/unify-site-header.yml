@@ -1,0 +1,64 @@
+name: Unify site header
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  unify:
+    if: github.event.head_commit.message != 'chore: unify all site headers'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply one shared header
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('web')
+          pages = ['index.html','map.html','funds.html','categories.html','macro.html','why.html']
+          header = '''<header class="site-header"><div class="wrap"><div class="logo">خريطة الفلوس<span>السوق المصري مفهوماً</span></div><nav>
+          <a href="./index.html">البداية</a>
+          <a href="./map.html">ماذا حدث للفلوس؟</a>
+          <a href="./funds.html">الصناديق</a>
+          <a href="./categories.html">خريطة الفئات</a>
+          <a href="./macro.html">الاقتصاد</a>
+          <a href="./why.html">المنهج</a>
+          </nav></div></header>'''
+          link = '  <link rel="stylesheet" href="css/header.css"/>\n'
+
+          for name in pages:
+              p = root / name
+              s = p.read_text(encoding='utf-8')
+              s, n = re.subn(r'<header\b[^>]*>.*?</header>', header, s, count=1, flags=re.S|re.I)
+              if n != 1:
+                  raise SystemExit(f'Header replacement failed: {name}')
+              if 'href="css/header.css"' not in s:
+                  s, n = re.subn(r'</head>', link + '</head>', s, count=1, flags=re.I)
+                  if n != 1:
+                      raise SystemExit(f'Header CSS insertion failed: {name}')
+              p.write_text(s, encoding='utf-8')
+          PY
+      - name: Verify
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          pages=['index.html','map.html','funds.html','categories.html','macro.html','why.html']
+          expected='<a href="./categories.html">خريطة الفئات</a>'
+          for name in pages:
+              s=Path('web',name).read_text(encoding='utf-8')
+              assert s.count('href="css/header.css"') == 1, name
+              assert s.count('<header class="site-header">') == 1, name
+              assert expected in s, name
+              assert s.count('<nav>') >= 1, name
+          print('Verified one shared header markup + one shared header.css on all six pages.')
+          PY
+      - name: Commit and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/index.html web/map.html web/funds.html web/categories.html web/macro.html web/why.html
+          git rm .github/workflows/unify-site-header.yml
+          git commit -m "chore: unify all site headers"
+          git push
