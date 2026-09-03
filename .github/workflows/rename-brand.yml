@@ -1,0 +1,40 @@
+name: Rename site brand
+on:
+  push:
+    branches: [main]
+jobs:
+  rename:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update brand text
+        shell: python
+        run: |
+          from pathlib import Path
+          files = [Path('web') / x for x in ['index.html','map.html','funds.html','categories.html','macro.html','why.html']]
+          old = '<div class="logo">خريطة الفلوس<span>السوق المصري مفهوماً</span></div>'
+          new = '<div class="logo">رادار السوق المصري<span>منصة فهم الاقتصاد وتحليل صناديق الاستثمار</span></div>'
+          changed = []
+          for p in files:
+              s = p.read_text(encoding='utf-8')
+              t = s.replace(old, new)
+              if p.name == 'index.html':
+                  t = t.replace('<title>خريطة الفلوس — السوق المصري مفهوماً</title>', '<title>رادار السوق المصري — منصة فهم الاقتصاد وتحليل صناديق الاستثمار</title>')
+              if t != s:
+                  p.write_text(t, encoding='utf-8')
+                  changed.append(str(p))
+          print('Changed:', changed)
+      - name: Commit changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add web/index.html web/map.html web/funds.html web/categories.html web/macro.html web/why.html
+          if git diff --cached --quiet; then
+            echo 'No brand changes required.'
+          else
+            git commit -m 'brand: rename site to Radar of Egyptian Market'
+            git push
+          fi
