@@ -1,0 +1,41 @@
+name: Fund evidence v3
+on:
+  push:
+    paths: ['.github/workflows/fund-evidence-v3.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch fund profile evidence
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('web/fund.html')
+          s=p.read_text(encoding='utf-8')
+          marker='<!-- FUND_EVIDENCE_V3 -->'
+          if marker in s:
+              raise SystemExit('Evidence v3 already installed')
+          patch=r'''\n<!-- FUND_EVIDENCE_V3 -->\n<script>\n(function(){\n  const esc=v=>String(v==null?'—':v).replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m]));\n  const pretty=v=>{try{return JSON.stringify(v,null,2)}catch(e){return String(v)}};\n  async function load(){\n    try{\n      if(!window.KHATER||!window.KHATER.url||!window.KHATER.key)return;\n      const q=new URLSearchParams(location.search);\n      const id=q.get('id')||q.get('fund_id')||q.get('fund');\n      if(!id)return;\n      const base=window.KHATER.url.replace(/\\/$/,'');\n      const url=base+'/rest/v1/smartscore_evaluations?fund_id=eq.'+encodeURIComponent(id)+'&methodology_version=eq.V3.0&select=evaluation_id,fund_id,report_date,category,methodology_version,performance_score,risk_score,benchmark_score,consistency_score,inflation_score,smartscore,effective_weights,component_availability,data_confidence,peer_cohort_size,raw_rank,qualified_rank,qualification_status,calculation_inputs,warnings,calculated_at,data_tier,track_factor,final_score,rating,score_explanation,data_quality&order=report_date.desc,calculated_at.desc&limit=1';\n      const r=await fetch(url,{headers:{apikey:window.KHATER.key,Authorization:'Bearer '+window.KHATER.key}});\n      if(!r.ok)return;\n      const a=await r.json(), e=a[0];\n      const host=document.createElement('section');\n      host.className='section'; host.id='evidence-v3';\n      if(!e){host.innerHTML='<div class="section-head"><h2 class="section-title"><span class="section-no">07</span>سجل التقييم المحفوظ</h2></div><div class="empty">لا يوجد تقييم محفوظ لهذا الصندوق في الإصدار V3.0.</div>';document.body.appendChild(host);return;}\n      const availability=e.component_availability||{};\n      const weights=e.effective_weights||{};\n      host.innerHTML='<div class="section-head"><div><h2 class="section-title"><span class="section-no">07</span>دليل التقييم</h2><div class="section-note">المصدر: سجل التقييم المحفوظ في قاعدة البيانات — دون إعادة احتساب</div></div><div class="section-note">'+esc(e.report_date||e.calculated_at||'—')+'</div></div>' +\n      '<div class="card" style="padding:18px"><div class="integrity">'+\n      '<div class="integrity-item"><span class="k">Methodology</span><span class="v">'+esc(e.methodology_version)+'</span></div>'+\n      '<div class="integrity-item"><span class="k">Data Quality</span><span class="v">'+esc(e.data_quality)+'</span></div>'+\n      '<div class="integrity-item"><span class="k">Peer Cohort</span><span class="v">'+esc(e.peer_cohort_size)+'</span></div>'+\n      '<div class="integrity-item"><span class="k">Qualified Rank</span><span class="v">'+esc(e.qualified_rank)+'</span></div>'+\n      '</div><div class="evidence-side" style="margin-top:10px">'+\n      '<details open><summary>Effective Weights</summary><pre>'+esc(pretty(weights))+'</pre></details>'+\n      '<details><summary>Component Availability</summary><pre>'+esc(pretty(availability))+'</pre></details>'+\n      '<details><summary>Calculation Inputs</summary><pre>'+esc(pretty(e.calculation_inputs))+'</pre></details>'+\n      '<details><summary>Warnings</summary><pre>'+esc(pretty(e.warnings))+'</pre></details>'+\n      '<details><summary>Evaluation Record</summary><pre>'+esc(pretty({evaluation_id:e.evaluation_id,fund_id:e.fund_id,report_date:e.report_date,category:e.category,methodology_version:e.methodology_version,smartscore:e.smartscore,final_score:e.final_score,rating:e.rating,data_confidence:e.data_confidence,data_tier:e.data_tier,track_factor:e.track_factor,raw_rank:e.raw_rank,qualified_rank:e.qualified_rank,qualification_status:e.qualification_status,calculated_at:e.calculated_at}))+'</pre></details>'+\n      '</div></div>';\n      const dna=document.querySelector('.dna'); (dna||document.body).appendChild(host);\n    }catch(err){console.warn('FUND_EVIDENCE_V3',err);}\n  }\n  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();\n})();\n</script>\n'''
+          if '</body>' not in s:
+              raise SystemExit('body marker not found')
+          s=s.replace('</body>',patch+'</body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add web/fund.html
+          git commit -m 'feat: add database-backed fund evidence panel'
+          git push
+      - name: Remove temporary workflow
+        if: always()
+        run: |
+          rm -f .github/workflows/fund-evidence-v3.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --quiet || git commit -m 'chore: remove temporary evidence workflow'
+          git push || true
