@@ -1,0 +1,41 @@
+name: Apply funds P1 guardrails
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch funds page
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('web/funds.html')
+          s=p.read_text(encoding='utf-8')
+          tag='<script src="js/funds-p1.js"></script>'
+          if tag not in s:
+              s=s.replace('</body>', tag+'\n</body>', 1)
+          marker='.engine{color:var(--blue)}'
+          css='.engine{color:var(--blue)}.horizon-meta{display:block;flex-basis:100%;font-size:10px;color:var(--muted);padding:2px 4px;line-height:1.5}.horizon-meta b{color:var(--warn)}'
+          if '.horizon-meta{' not in s:
+              s=s.replace(marker, css, 1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add web/funds.html
+          git diff --cached --quiet || git commit -m 'feat: add funds horizon and benchmark guardrails'
+          git push
+      - name: Remove temporary workflow
+        if: always()
+        shell: bash
+        run: |
+          rm -f .github/workflows/patch-funds-p1.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/patch-funds-p1.yml
+          git diff --cached --quiet || git commit -m 'chore: remove temporary funds patch workflow'
+          git push || true
