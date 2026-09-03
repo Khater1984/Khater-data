@@ -2,7 +2,6 @@ name: Deploy engine pages
 on:
   workflow_dispatch:
   push:
-    paths: ['web/**']
     branches: [main]
 permissions:
   contents: read
