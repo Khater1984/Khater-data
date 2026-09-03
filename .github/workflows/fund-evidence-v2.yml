@@ -1,0 +1,49 @@
+name: Fund evidence v2
+on:
+  push:
+    paths: ['.github/workflows/fund-evidence-v2.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch fund evidence
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('web/fund.html')
+          s=p.read_text(encoding='utf-8')
+          old='select=fund_id,final_score,raw_score,rating,data_tier,data_confidence,score_as_of,performance_score,risk_score,benchmark_score,consistency_score,inflation_score,score_explanation,risk_method,track_factor,warnings,qualification_status,calculation_inputs,methodology_version'
+          new='select=fund_id,final_score,raw_score,rating,data_tier,data_confidence,data_quality,score_as_of,signal_as_of,latest_day_change_pct,latest_signal_status,performance_score,risk_score,benchmark_score,consistency_score,inflation_score,score_explanation,risk_method,track_factor,warnings,qualification_status,calculation_inputs,effective_weights,component_availability,methodology_version'
+          if old not in s:
+              raise SystemExit('SmartScore select marker not found; no changes made')
+          s=s.replace(old,new,1)
+          old="<span class=\"e-badge\">SMARTSCORE · ' + esc(s&&s.methodology_version||'—') + '</span><span class=\"e-badge\">CONFIDENCE · ' + esc(conf||'—') + '</span><span class=\"e-badge\">QUALIFICATION · ' + esc(s&&s.qualification_status||'—') + '</span>"
+          new="<span class=\"e-badge\">SMARTSCORE · ' + esc(s&&s.methodology_version||'—') + '</span><span class=\"e-badge\">CONFIDENCE · ' + esc(conf||'—') + '</span><span class=\"e-badge\">DATA QUALITY · ' + esc(s&&s.data_quality||'—') + '</span><span class=\"e-badge\">QUALIFICATION · ' + esc(s&&s.qualification_status||'—') + '</span><span class=\"e-badge\">SIGNAL AS OF · ' + esc(s&&s.signal_as_of||'—') + '</span>"
+          if old not in s:
+              raise SystemExit('Evidence badge marker not found; aborting')
+          s=s.replace(old,new,1)
+          old="<details><summary>Calculation Inputs</summary><pre>' + esc(s&&s.calculation_inputs?JSON.stringify(s.calculation_inputs,null,2):'لا توجد بيانات محفوظة') + '</pre></details><details><summary>Fund Metadata</summary>"
+          new="<details><summary>Calculation Inputs</summary><pre>' + esc(s&&s.calculation_inputs?JSON.stringify(s.calculation_inputs,null,2):'لا توجد بيانات محفوظة') + '</pre></details><details><summary>Effective Weights</summary><pre>' + esc(s&&s.effective_weights?JSON.stringify(s.effective_weights,null,2):'لا توجد بيانات محفوظة') + '</pre></details><details><summary>Component Availability</summary><pre>' + esc(s&&s.component_availability?JSON.stringify(s.component_availability,null,2):'لا توجد بيانات محفوظة') + '</pre></details><details><summary>Fund Metadata</summary>"
+          if old not in s:
+              raise SystemExit('Evidence details marker not found; aborting')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add web/fund.html
+          git diff --cached --quiet || git commit -m 'feat: expose stored fund evidence fields'
+          git push
+      - name: Remove temporary workflow
+        if: always()
+        run: |
+          rm -f .github/workflows/fund-evidence-v2.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --quiet || git commit -m 'chore: remove temporary evidence workflow'
+          git push || true
