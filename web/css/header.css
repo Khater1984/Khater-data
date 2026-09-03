@@ -1,4 +1,6 @@
 /* SHARED SITE HEADER / NAVIGATION — single source of truth */
+/* Typography: IBM Plex Sans Arabic — institutional, financial, highly legible */
+
 .site-header{
   position:sticky!important;top:0!important;z-index:100!important;
   background:rgba(10,14,18,.94)!important;
