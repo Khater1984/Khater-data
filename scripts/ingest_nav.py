@@ -443,6 +443,33 @@ def scrape_pfi(by_name):
     return out
 
 
+
+def scrape_snduk(funds):
+    """Per-fund SNDUK pages store currentPrice + lastPriceUpdate in the RSC payload."""
+    out = []
+    targets = [f for f in funds if "snduk.com" in (f.get("price_update_url") or "").lower()]
+    print(f"snduk targets {len(targets)}")
+    for f in targets:
+        url = f["price_update_url"]
+        try:
+            html = fetch(url)
+        except Exception as e:
+            print("snduk fail", f.get("canonical_name"), type(e).__name__)
+            continue
+        m = re.search(r'currentPrice\\":\\"([0-9.]+)\\"', html)
+        if not m:
+            m = re.search(r'currentPrice":"([0-9.]+)"', html)
+        d = re.search(r'lastPriceUpdate\\":\\"(\d{4}-\d{2}-\d{2})\\"', html)
+        if not d:
+            d = re.search(r'lastPriceUpdate":"(\d{4}-\d{2}-\d{2})"', html)
+        nav = parse_num(m.group(1)) if m else None
+        asof = d.group(1) if d else None
+        if nav is None or not asof:
+            print("snduk parse miss", f.get("canonical_name"), url)
+            continue
+        out.append(row(f["canonical_name"], nav, asof, url, "src_snduk", f, 1.0))
+    return out
+
 def scrape_granite(by_name):
     url = "https://www.granite.eg/"
     text = re.sub(r"\s+", " ", BeautifulSoup(fetch(url), "lxml").get_text(" ", strip=True))
@@ -518,6 +545,7 @@ def main():
         ("hc", lambda: scrape_hc(match)),
         ("pfi", lambda: scrape_pfi(by_name)),
         ("granite", lambda: scrape_granite(by_name)),
+        ("snduk", lambda: scrape_snduk(funds)),
     ]
     all_rows = []
     for name, fn in scrapers:
