@@ -49,6 +49,21 @@
 .site-header nav a.active{color:#11151a;background:var(--gold);border-color:var(--gold);box-shadow:0 5px 16px rgba(214,180,106,.22),inset 0 1px 0 rgba(255,255,255,.28)}
 .site-header nav a.active:after{content:"";position:absolute;left:22%;right:22%;bottom:3px;height:2px;border-radius:2px;background:rgba(17,21,26,.7);pointer-events:none}
 @media(max-width:700px){.site-header .wrap{height:auto;min-height:64px;padding-top:12px;padding-bottom:12px;align-items:flex-start;flex-direction:column;gap:10px}.site-header nav{width:100%;overflow-x:auto;overflow-y:hidden;padding:5px;flex-wrap:nowrap;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}.site-header nav a,.site-header nav a:hover,.site-header nav a:focus-visible,.site-header nav a.active{flex:0 0 128px;width:128px;min-width:128px;max-width:128px}}
+/* Heatmap redesign: deterministic category grid, readable tiles, no arbitrary absolute packing. */
+#pane-heat .heat-stage{height:650px;overflow:hidden;background:#05080d}
+#pane-heat .heat-canvas{position:relative;inset:auto;height:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(145px,auto);align-content:start;gap:10px;padding:9px;overflow:auto}
+#pane-heat .heat-canvas:has(.sector-box:only-child){grid-template-columns:1fr}
+#pane-heat .sector-box{position:relative!important;left:auto!important;top:auto!important;width:auto!important;height:auto!important;min-height:145px;max-height:310px;overflow:hidden;border:1px solid rgba(255,255,255,.16);border-radius:9px;background:linear-gradient(160deg,#0d151d,#080d13);display:flex;flex-direction:column}
+#pane-heat .sector-title{position:sticky;top:0;z-index:1;flex:0 0 35px;height:35px;background:#111b24;border-bottom:1px solid rgba(255,255,255,.14);font-size:10px;padding:0 10px;gap:8px}
+#pane-heat .sector-title b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#pane-heat .sector-title span{white-space:nowrap;color:#aeb8c0;font-size:9px}
+#pane-heat .sector-tiles{position:static!important;display:grid;grid-auto-rows:minmax(42px,1fr);gap:2px;padding:4px;overflow:auto;align-content:start;flex:1}
+#pane-heat .fund-tile{position:static!important;width:auto!important;height:auto!important;min-height:42px;max-height:60px;border-radius:4px;padding:4px 5px;background-image:none!important;border:1px solid rgba(255,255,255,.15);font-size:9px;line-height:1.15}
+#pane-heat .fund-tile:hover{border-color:#f1d38b;filter:brightness(1.15);z-index:2}
+#pane-heat .fund-tile .name{font-size:8px;line-height:1.15}.fund-tile .scorev{font-size:13px;margin-top:2px}.fund-tile .meta{font-size:7px;color:#c4ccd5}
+#pane-heat .fund-tile.unrated{background:#202934!important;color:#aeb8c0}
+@media(max-width:800px){#pane-heat .heat-stage{height:560px}#pane-heat .heat-canvas{grid-template-columns:1fr;grid-auto-rows:minmax(150px,auto)}#pane-heat .sector-box{max-height:280px}}
+
 </style>
   <link rel="stylesheet" href="css/header.css"/>
 </head>
@@ -89,39 +104,19 @@ function tileRects(funds,w,h){funds=A(funds);const n=funds.length;if(!n)return[]
 function scoreColor(v){if(v==null)return'#202934';const x=Math.max(0,Math.min(100,v))/100;return'hsl('+(8+x*145)+' 54% '+(28+x*9)+'%)'}
 function makeTile(f,r){const s=state.scores.get(f.fund_id)||{},v=N(s.final_score),a=document.createElement('a');a.className='fund-tile';a.href='./fund.html?id='+encodeURIComponent(f.fund_id);a.style.left=r.x+'px';a.style.top=r.y+'px';a.style.width=Math.max(16,r.w-2)+'px';a.style.height=Math.max(16,r.h-2)+'px';a.style.background=scoreColor(v);a.innerHTML='<div class="name">'+esc(f.canonical_name||'صندوق')+'</div><div class="scorev">'+(v==null?'—':v.toFixed(1))+'</div><div class="meta">'+esc(s.rating||s.data_confidence||'')+'</div>';return a}
 function renderHeatmap(gs){
-  gs=A(gs).filter(g=>g&&Array.isArray(g.funds)&&g.funds.length);
-  const canvas=$('heatCanvas');
-  if(!canvas)return;
-  canvas.innerHTML='';
-  const funds=A(state.filtered);
-  const scoreOf=f=>{const id=S(f&&f.fund_id);return state.scores.get(id)||state.scores.get(f&&f.fund_id)||null};
-  const scoreVal=f=>{const q=scoreOf(f);return N(q&&q.final_score)};
-  const rated=funds.filter(f=>scoreVal(f)!=null).length;
-  const vals=funds.map(scoreVal).filter(v=>v!=null);
+  gs=A(gs).filter(g=>g&&Array.isArray(g.funds)&&g.funds.length).slice().sort((a,b)=>A(b.funds).length-A(a.funds).length||String(a.name).localeCompare(String(b.name),'ar'));
+  const canvas=$('heatCanvas');if(!canvas)return;canvas.innerHTML='';
+  const funds=A(state.filtered),scoreOf=f=>state.scores.get(S(f&&f.fund_id))||state.scores.get(f&&f.fund_id)||null,scoreVal=f=>N((scoreOf(f)||{}).final_score),rated=funds.filter(f=>scoreVal(f)!=null).length,vals=funds.map(scoreVal).filter(v=>v!=null);
   text('heatFunds',funds.length);text('heatRated',rated);text('heatCoverage',funds.length?Math.round(rated/funds.length*100)+'%':'0%');text('heatTop',vals.length?Math.max(...vals).toFixed(1):'—');text('heatCats',gs.length);text('heatMode',state.heatCategory?'CATEGORY':'MARKET');
   const back=$('heatBack'),all=$('heatAll');if(back)back.style.display=state.heatCategory?'inline-block':'none';if(all)all.classList.toggle('active',!state.heatCategory);
   if(!gs.length){canvas.innerHTML='<div class="loading">لا توجد بيانات مطابقة للفلاتر الحالية.</div>';return}
-  const active=state.heatCategory?gs.filter(g=>g.name===state.heatCategory):gs;
-  const list=state.heatCategory&&active[0]?[active[0]]:gs;
-  const total=list.reduce((n,g)=>n+g.funds.length,0)||1;
-  canvas.style.display='flex';canvas.style.flexWrap='wrap';canvas.style.alignContent='stretch';canvas.style.gap='3px';canvas.style.overflow='hidden';
-  const H=Math.max(220,canvas.clientHeight||590);
+  const active=state.heatCategory?gs.filter(g=>g.name===state.heatCategory):gs,list=state.heatCategory&&active[0]?[active[0]]:gs;
   list.forEach(g=>{
-    const sec=document.createElement('section');sec.className='sector-box';
-    const share=g.funds.length/total;
-    sec.style.position='relative';sec.style.flex='0 0 '+(state.heatCategory?'100%':Math.max(12,Math.sqrt(share)*100))+'%';sec.style.height=(state.heatCategory?'100%':Math.max(105,Math.sqrt(share)*H*.92))+'px';sec.style.boxSizing='border-box';
-    const title=document.createElement('div');title.className='sector-title';title.innerHTML='<b>'+esc(g.name)+'</b><span>'+g.funds.length+' funds</span>';sec.appendChild(title);
-    const body=document.createElement('div');body.className='sector-tiles';body.style.position='absolute';body.style.left='4px';body.style.right='4px';body.style.top='34px';body.style.bottom='4px';sec.appendChild(body);
-    const fs=g.funds.slice().sort((a,b)=>(scoreVal(b)??-1)-(scoreVal(a)??-1));
-    const cols=Math.max(1,Math.ceil(Math.sqrt(fs.length)));const rows=Math.ceil(fs.length/cols);const cw=100/cols,ch=100/rows;
-    fs.forEach((f,i)=>{
-      const tile=document.createElement('a');tile.className='fund-tile';tile.href='./fund.html?id='+encodeURIComponent(S(f.fund_id));
-      tile.style.left=(i%cols)*cw+'%';tile.style.top=Math.floor(i/cols)*ch+'%';tile.style.width=Math.max(.1,cw-.6)+'%';tile.style.height=Math.max(.1,ch-.8)+'%';
-      const v=scoreVal(f);tile.style.background=scoreColor(v);if(v==null)tile.classList.add('unrated');tile.title=S(f.canonical_name)+(v==null?'':' · SmartScore '+v.toFixed(1));
-      tile.innerHTML='<span class="name">'+esc(f.canonical_name||'Unnamed Fund')+'</span><span class="scorev">'+(v==null?'—':v.toFixed(1))+'</span><span class="meta">'+(v==null?'Not Rated':'SmartScore')+'</span>';body.appendChild(tile);
-    });
-    sec.ondblclick=()=>{if(!state.heatCategory){state.heatCategory=g.name;render()}};
-    canvas.appendChild(sec);
+    const sec=document.createElement('section');sec.className='sector-box';sec.dataset.category=g.name;
+    const title=document.createElement('div');title.className='sector-title';title.innerHTML='<b>'+esc(g.name)+'</b><span>'+g.funds.length+' صناديق · '+(g.avg==null?'لا يوجد متوسط':'متوسط '+g.avg.toFixed(1))+'</span>';sec.appendChild(title);
+    const body=document.createElement('div');body.className='sector-tiles';const cols=g.funds.length>=30?5:g.funds.length>=15?4:g.funds.length>=8?3:Math.max(2,g.funds.length);body.style.gridTemplateColumns='repeat('+cols+',minmax(0,1fr))';sec.appendChild(body);
+    g.funds.slice().sort((a,b)=>(scoreVal(b)??-1)-(scoreVal(a)??-1)||String(a.canonical_name).localeCompare(String(b.canonical_name),'ar')).forEach(f=>{const tile=document.createElement('a');tile.className='fund-tile';tile.href='./fund.html?id='+encodeURIComponent(S(f.fund_id));const v=scoreVal(f);tile.style.background=scoreColor(v);if(v==null)tile.classList.add('unrated');tile.title=S(f.canonical_name)+(v==null?'':' · SmartScore '+v.toFixed(1));tile.innerHTML='<span class="name">'+esc(f.canonical_name||'صندوق بلا اسم')+'</span><span class="scorev">'+(v==null?'—':v.toFixed(1))+'</span><span class="meta">'+(v==null?'غير مقيم':'SmartScore')+'</span>';body.appendChild(tile)});
+    sec.addEventListener('dblclick',()=>{if(!state.heatCategory){state.heatCategory=g.name;render()}});canvas.appendChild(sec);
   });
 }
 function renderList(gs){gs=A(gs);if(!gs.length){html('categoryList','<div class="loading">لا توجد فئات تطابق الفلاتر الحالية.</div>');return}html('categoryList',gs.map(g=>'<div class="cat-row" data-name="'+esc(g.name)+'"><div><div class="cat-name">'+esc(g.name)+'</div><div class="cat-sub">'+g.rated+' من '+A(g.funds).length+' لديها SmartScore محفوظ</div></div><div class="num">'+A(g.funds).length+'</div><div class="num">'+(g.avg==null?'—':g.avg.toFixed(1))+'</div><div class="bar"><i style="width:'+Math.round(g.coverage*100)+'%"></i></div></div>').join(''));document.querySelectorAll('.cat-row').forEach(el=>el.onclick=()=>{state.selected=el.dataset.name;state.heatCategory=el.dataset.name;setView('heat');render()})}
