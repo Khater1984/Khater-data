@@ -83,3 +83,13 @@ footer.site{border-top:1px solid var(--line);padding:18px 0;color:var(--dim);fon
 .rate{border:1px solid #3a4450;padding:2px 8px;border-radius:6px;font-size:12px}
 .strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:8px 0 10px}
 @media(max-width:800px){.strip{grid-template-columns:1fr 1fr}}
+
+/* Shared platform states: consistent loading, empty and error feedback. */
+.platform-state{display:flex;align-items:center;justify-content:center;gap:10px;min-height:72px;padding:18px;text-align:center;border:1px solid var(--line);border-radius:14px;color:var(--mute);background:rgba(15,20,26,.72);font-size:12px;line-height:1.7}
+.platform-state strong{color:var(--ink);display:block}
+.platform-error{flex-direction:column;border-color:rgba(239,103,103,.35);color:#f2aaa5}
+.platform-error button{border:1px solid rgba(212,176,106,.55);border-radius:9px;background:transparent;color:var(--gold);padding:8px 14px;cursor:pointer;font:inherit}
+.platform-error button:hover,.platform-error button:focus-visible{background:rgba(212,176,106,.12);outline:2px solid rgba(212,176,106,.55);outline-offset:2px}
+.platform-spinner{width:14px;height:14px;border:2px solid rgba(212,176,106,.25);border-top-color:var(--gold);border-radius:50%;animation:platform-spin .7s linear infinite}
+@keyframes platform-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.platform-spinner{animation:none}}

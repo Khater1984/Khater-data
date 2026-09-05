@@ -5,7 +5,7 @@
   const HDR={apikey:C.key,Authorization:'Bearer '+C.key};
   const $=id=>document.getElementById(id);
   const esc=s=>String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
-  const get=async path=>{const r=await fetch(C.url+path,{headers:HDR});const j=await r.json();if(!r.ok)throw Error(j.message||('HTTP '+r.status));return j};
+  const get=window.Platform&&window.Platform.api&&window.Platform.api.get?window.Platform.api.get:async path=>{const r=await fetch(C.url+path,{headers:HDR});const j=await r.json();if(!r.ok)throw Error(j.message||('HTTP '+r.status));return j};
   const BENCH={inflation:{type:'inflation',series:'cpi_headline_mom_pct'},tbill:{type:'tbill',series:'tbill_364_avg_yield_pct'},btc:{type:'level',series:'btc_egp'},qqq:{type:'level',series:'qqq_egp'},spy:{type:'level',series:'spy_egp'},usd:{type:'level',series:'usd_egp_mid'},silver:{type:'level',series:'silver_egp_oz'},gold:{type:'level',series:'gold_egp_oz'},egx30:{type:'level',series:'egx30_close'}};
   window.benchmark=async function(k,h,end){
     const b=BENCH[k];if(!b)return null;

@@ -23,11 +23,7 @@ jobs:
       - name: Check JSON and local assets
         run: python scripts/verify_baseline.py
       - name: Check JavaScript syntax
-        shell: bash
         run: |
           set -euo pipefail
           for file in web/js/*.js; do node --check "$file"; done
-          for file in web/*.html; do
-            awk '/<script>/{on=1;next}/<\/script>/{on=0}on' "$file" > /tmp/inline.js
-            if [ -s /tmp/inline.js ]; then node --check /tmp/inline.js; fi
-          done
+          python scripts/check_inline_js.py
