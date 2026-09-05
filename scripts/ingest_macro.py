@@ -60,12 +60,12 @@ def last_mid():
     return rows[0]["ts_date"], float(rows[0]["value"])
 
 
-def yahoo_daily(symbol, n=8):
+def yahoo_daily(symbol, n=8, range_days=10):
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
     r = requests.get(
         url,
         headers=UA,
-        params={"interval": "1d", "range": "10d"},
+        params={"interval": "1d", "range": f"{range_days}d"},
         timeout=30,
     )
     r.raise_for_status()
@@ -143,11 +143,29 @@ def fetch_egp_yahoo_fallback():
 
 
 def fetch_egx30():
+    """Fetch EGX30 daily closes from Yahoo Finance (^CASE30), with EGX official fallback."""
+    try:
+        pts = yahoo_daily("^CASE30", n=15, range_days=30)
+        if pts:
+            return [
+                {
+                    "series_key": "egx30_close",
+                    "ts_date": d,
+                    "value": float(v),
+                    "unit": "index_points",
+                    "source_id": "src_egx30_yahoo_case30",
+                    "raw": {"yahoo": "^CASE30", "note": "EGX30 Price Return Index; daily close"},
+                }
+                for d, v in pts
+            ]
+    except Exception as e:
+        print("egx yahoo", type(e).__name__, e)
+
+    # Fallback to the Egyptian Exchange page if Yahoo is unavailable.
     url = "https://www.egx.com.eg/en/indexdata.aspx?type=1"
     try:
         r = requests.get(url, headers=UA, timeout=40)
         html = r.text
-        # Date Value High Low repeating
         pairs = re.findall(
             r"(\d{2}/\d{2}/\d{4})\s+([\d,]+\.\d+)",
             html,
@@ -166,7 +184,7 @@ def fetch_egx30():
                     "value": float(vs.replace(",", "")),
                     "unit": "index_points",
                     "source_id": "src_egx30_reference",
-                    "raw": {"url": url},
+                    "raw": {"url": url, "note": "EGX official fallback"},
                 }
             )
         if rows:
