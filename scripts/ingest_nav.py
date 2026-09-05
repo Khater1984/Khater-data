@@ -65,7 +65,7 @@ def parse_num(s):
 
 def parse_date(s):
     s = (s or "").replace(",", "").strip()
-    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y", "%d %b %Y", "%d %B %Y"):
+    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%d-%m-%Y", "%d %b %Y", "%d %B %Y"):
         try:
             return datetime.strptime(s, fmt).date().isoformat()
         except ValueError:
@@ -470,6 +470,57 @@ def scrape_snduk(funds):
         out.append(row(f["canonical_name"], nav, asof, url, "src_snduk", f, 1.0))
     return out
 
+
+def scrape_abk(funds):
+    """ABK Egypt Equity Fund page: table Price / Last Update."""
+    url = "https://w1.abkegypt.com/Business/Treasury/Investments/Equity-Fund"
+    html = fetch(url)
+    m = re.search(r"Today.?s ABK-Egypt Equity Fund Price:.*?<td>([0-9.]+)</td>\s*<td>([0-9/]+)</td>", html, re.S|re.I)
+    if not m:
+        m = re.search(r"<th[^>]*>Price</th>\s*<th[^>]*>Last Update</th>.*?<td>([0-9.]+)</td>\s*<td>([0-9/]+)</td>", html, re.S|re.I)
+    if not m:
+        print("abk parse miss")
+        return []
+    nav, raw_d = float(m.group(1)), m.group(2)
+    asof = parse_date(raw_d)
+    if not asof:
+        # US-style m/d/yyyy
+        try:
+            asof = datetime.strptime(raw_d, "%m/%d/%Y").date().isoformat()
+        except ValueError:
+            try:
+                asof = datetime.strptime(raw_d, "%d/%m/%Y").date().isoformat()
+            except ValueError:
+                asof = None
+    fund = next((f for f in funds if "kuwait" in (f.get("canonical_name") or "").lower() and "fund i" in (f.get("canonical_name") or "").lower() and "ii" not in (f.get("canonical_name") or "").lower()), None)
+    if not fund:
+        fund = next((f for f in funds if "abkegypt.com" in (f.get("price_update_url") or "").lower()), None)
+    print("abk", nav, asof, fund["canonical_name"] if fund else None)
+    return [row("ABK Egypt Equity Fund", nav, asof, url, "src_abk_equity", fund, 1.0 if fund else 0)]
+
+
+def scrape_zaldi(funds):
+    """Zaldi homepage lists live certificate prices next to fund names."""
+    url = "https://zaldi-capital.com/"
+    text = re.sub(r"\s+", " ", BeautifulSoup(fetch(url), "lxml").get_text(" ", strip=True))
+    patterns = [
+        (r"Zaldi-?Elmasry\s+EGP\s+([0-9.]+)", "Zaldi El Masry"),
+        (r"zaldi star[^0-9]{0,20}EGP\s+EGP\s+([0-9.]+)", "Zaldi Star"),
+        (r"zaldi star[^0-9]{0,40}?([0-9]+\.[0-9]+)", "Zaldi Star"),
+    ]
+    out = []
+    for pat, name in patterns:
+        m = re.search(pat, text, re.I)
+        if not m:
+            continue
+        nav = float(m.group(1))
+        fund = next((f for f in funds if f.get("canonical_name") == name), None)
+        if not fund:
+            fund = next((f for f in funds if name.lower() in (f.get("canonical_name") or "").lower()), None)
+        print("zaldi", name, nav, fund["canonical_name"] if fund else None)
+        out.append(row(name, nav, None, url, "src_zaldi", fund, 1.0 if fund else 0))
+    return out
+
 def scrape_granite(by_name):
     url = "https://www.granite.eg/"
     text = re.sub(r"\s+", " ", BeautifulSoup(fetch(url), "lxml").get_text(" ", strip=True))
@@ -546,6 +597,8 @@ def main():
         ("pfi", lambda: scrape_pfi(by_name)),
         ("granite", lambda: scrape_granite(by_name)),
         ("snduk", lambda: scrape_snduk(funds)),
+        ("abk", lambda: scrape_abk(funds)),
+        ("zaldi", lambda: scrape_zaldi(funds)),
     ]
     all_rows = []
     for name, fn in scrapers:
