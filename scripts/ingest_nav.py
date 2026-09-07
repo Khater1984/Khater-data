@@ -233,6 +233,10 @@ def scrape_ci(by_name, match):
     if len(tables) < 3:
         return []
     out = []
+    page_asof = None
+    mdt = re.search(r'article:modified_time" content="(\d{4}-\d{2}-\d{2})', str(soup))
+    if mdt:
+        page_asof = mdt.group(1)
     for tr in tables[2].find_all("tr")[1:]:
         cells = [c.get_text(" ", strip=True) for c in tr.find_all(["td", "th"])]
         if len(cells) == 3:
@@ -244,18 +248,18 @@ def scrape_ci(by_name, match):
         nav = parse_num(price)
         if not name or not nav:
             continue
-        # skip currency collisions onto USD-only EIMA row
         low = name.lower()
+        # products not in funds registry — do not pollute staging
         if "banque misr money market" in low and "(usd)" not in low:
-            out.append(row(name, nav, None, url, "src_cicapital_fundprice", None, 0, {"skip": "currency"}))
             continue
         if "al wefak" in low:
-            out.append(row(name, nav, None, url, "src_cicapital_fundprice", None, 0, {"skip": "wrong fund"}))
             continue
         f, sc = match(name, "CI Asset Management")
         if not f:
             f, sc = match(name)
-        out.append(row(name, nav, None, url, "src_cicapital_fundprice", f, sc))
+        if not f:
+            continue
+        out.append(row(name, nav, page_asof, url, "src_cicapital_fundprice", f, sc))
     return out
 
 
@@ -294,6 +298,8 @@ def scrape_aaim(by_name, match):
         sc = 1.0 if f else 0
         if not f:
             f, sc = match(name)
+        if not f:
+            continue
         r = row(name, nav, dt, url, "src_aaim_funds", f, sc, currency=cur)
         out.append(r)
     return out
@@ -309,7 +315,9 @@ def scrape_beltone_en(by_name):
     for name, nav, _inc, asof in pat.findall(text):
         alias = BELTONE_ALIAS.get(norm(name))
         f = by_name.get(alias) if alias else None
-        out.append(row(name, float(nav), asof, url, "src_beltone_funds", f, 1.0 if f else 0))
+        if not f:
+            continue
+        out.append(row(name, float(nav), asof, url, "src_beltone_funds", f, 1.0))
     return out
 
 
@@ -343,13 +351,17 @@ def scrape_azimut(by_name):
         if not ln.get("nav"):
             continue
         canon = AZIMUT_ID.get(fid)
-        f = by_name.get(canon) if canon else None
+        if not canon:
+            seen.add(fid)
+            continue
+        f = by_name.get(canon)
         cur = (item.get("currency") or {}).get("symbol") or "EGP"
+        asof = (ln.get("date") or "")[:10] or None
         out.append(
             row(
                 item.get("name"),
                 ln["nav"],
-                ln.get("date"),
+                asof,
                 url,
                 "src_azimut_funds",
                 f,
@@ -413,7 +425,7 @@ def scrape_hc(match):
     pat = re.compile(r"([A-Za-z][A-Za-z0-9 «»'’\-(),./]+?)\s+\{(\d+\.\d+)\}\s+(\d{4}-\d{2}-\d{2})")
     out = []
     for name, nav, asof in pat.findall(text):
-        if "YOUR TRUSTED" in name:
+        if "YOUR TRUSTED" in name or len(name) > 80:
             continue
         f, sc = match(name)
         out.append(row(name.strip(), float(nav), asof, url, "src_hc_si", f, sc))
@@ -434,6 +446,8 @@ def scrape_pfi(by_name):
             continue
         heading = table.find_previous(["h2", "h3", "h1"])
         title = heading.get_text(" ", strip=True) if heading else ""
+        if norm(title) in {"contact us", "funds", "fund", ""}:
+            continue
         f = None
         for k, canon in PFI_ALIAS.items():
             if k in norm(title):
