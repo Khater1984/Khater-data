@@ -1,0 +1,520 @@
+{
+  "generated_at": "2026-09-08T20:22:03.335707+00:00",
+  "mapped": 19,
+  "rows": [
+    {
+      "fund_id": "azimut_target_maturity_fund_target_2029_usd__azimut_egypt_asset_management",
+      "name": "Azimut Target Maturity Fund-Target 2029 USD",
+      "slug": "az-asthkak-t29-usd-2",
+      "page": "https://azimut.eg/fundpage;name=az-asthkak-t29-usd-2",
+      "extracted": {
+        "type": "Fixed Income",
+        "currency": "USD",
+        "inception": "04 AUG 2024",
+        "sub_freq": "During the initial subs. phase or if the investment manager decided to make a re-open for a limited period",
+        "sub_min": null,
+        "sub_fee": null,
+        "red_freq": "Monthly",
+        "red_fee": null,
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": null
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "az_lv__azimut_egypt_asset_management",
+      "name": "AZ-LV",
+      "slug": "az-lv-1",
+      "page": "https://azimut.eg/fundpage;name=az-lv-1",
+      "extracted": {
+        "type": "Equity",
+        "currency": "EGP",
+        "inception": "23 NOV 2025",
+        "sub_freq": "Daily",
+        "sub_min": null,
+        "sub_fee": "0",
+        "red_freq": "Daily",
+        "red_fee": "Contingent Deferred Fees applies",
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": null
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "ebank_fund_ii__azimut_egypt_asset_management",
+      "name": "Ebank Fund II",
+      "slug": "ebank-2",
+      "page": "https://azimut.eg/fundpage;name=ebank-2",
+      "extracted": {
+        "type": "Money Market",
+        "currency": "EGP",
+        "inception": "14 Nov 2006",
+        "sub_freq": "Daily",
+        "sub_min": null,
+        "sub_fee": "0",
+        "red_freq": "Daily",
+        "red_fee": "0.0",
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": "0.25%"
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "az_gold__azimut_egypt_asset_management",
+      "name": "AZ Gold",
+      "slug": "az-gold-2",
+      "page": "https://azimut.eg/fundpage;name=az-gold-2",
+      "extracted": {
+        "type": "Precious Metals",
+        "currency": "EGP",
+        "inception": "21 May 2023",
+        "sub_freq": "Daily",
+        "sub_min": null,
+        "sub_fee": null,
+        "red_freq": "Daily",
+        "red_fee": null,
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": null
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "ataa__azimut_egypt_asset_management",
+      "name": "Ataa",
+      "slug": "ataa-charity-fund-2",
+      "page": "https://azimut.eg/fundpage;name=ataa-charity-fund-2",
+      "extracted": {
+        "type": "Balanced",
+        "currency": "EGP",
+        "inception": "04 Jan 2020",
+        "sub_freq": "Weekly",
+        "sub_min": null,
+        "sub_fee": "0",
+        "red_freq": "Monthly",
+        "red_fee": "0",
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": "0"
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "az_halan__azimut_egypt_asset_management",
+      "name": "AZ Halan",
+      "slug": "az-hala-2",
+      "page": "https://azimut.eg/fundpage;name=az-hala-2",
+      "extracted": {
+        "type": "Money Market",
+        "currency": "EGP",
+        "inception": "28 May 2023",
+        "sub_freq": "Daily",
+        "sub_min": null,
+        "sub_fee": null,
+        "red_freq": "Daily",
+        "red_fee": null,
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": null
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "az_thndr__azimut_egypt_asset_management",
+      "name": "AZ Thndr",
+      "slug": "az-thndr-1",
+      "page": "https://azimut.eg/fundpage;name=az-thndr-1",
+      "extracted": {
+        "type": "Fixed Income",
+        "currency": "EGP",
+        "inception": "21 JAN 2025",
+        "sub_freq": "Daily",
+        "sub_min": null,
+        "sub_fee": null,
+        "red_freq": "Daily",
+        "red_fee": null,
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": null
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "bank_abc_fund_i__azimut_egypt_asset_management",
+      "name": "Bank ABC Fund I",
+      "slug": "abc-2",
+      "page": "https://azimut.eg/fundpage;name=abc-2",
+      "extracted": {
+        "type": "Equity",
+        "currency": "EGP",
+        "inception": "10 Aug 2008",
+        "sub_freq": "Weekly",
+        "sub_min": null,
+        "sub_fee": "0.0",
+        "red_freq": "Weekly",
+        "red_fee": "0",
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": "0.50%"
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "azimut_target_maturity_fund_target_2030_usd__azimut_egypt_asset_management",
+      "name": "Azimut Target Maturity Fund-Target 2030 USD",
+      "slug": "az-asthkak-t30-usd-1",
+      "page": "https://azimut.eg/fundpage;name=az-asthkak-t30-usd-1",
+      "extracted": {
+        "type": "Fixed Income",
+        "currency": "USD",
+        "inception": "28 SEP 2025",
+        "sub_freq": "During the initial subs. phase or if the investment manager decided to make a re-open for a limited period",
+        "sub_min": null,
+        "sub_fee": null,
+        "red_freq": "Monthly",
+        "red_fee": null,
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": null
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "ebank_fund_el_khabeer__azimut_egypt_asset_management",
+      "name": "Ebank Fund (El Khabeer)",
+      "slug": "ebank-el-khabeer-2",
+      "page": "https://azimut.eg/fundpage;name=ebank-el-khabeer-2",
+      "extracted": {
+        "type": "Equity",
+        "currency": "EGP",
+        "inception": null,
+        "sub_freq": "Weekly",
+        "sub_min": "1 / 1 Units",
+        "sub_fee": "0",
+        "red_freq": "Weekly",
+        "red_fee": "0",
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": "0.50%"
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "edkhar__azimut_egypt_asset_management",
+      "name": "Edkhar",
+      "slug": "az-adkhar-1",
+      "page": "https://azimut.eg/fundpage;name=az-adkhar-1",
+      "extracted": {
+        "type": "Fixed Income",
+        "currency": "EGP",
+        "inception": "22 OCT 2020",
+        "sub_freq": "Daily",
+        "sub_min": null,
+        "sub_fee": "0",
+        "red_freq": "Daily",
+        "red_fee": "0",
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": "0.35%"
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "azimut_target_maturity_fund_target_2027_usd__azimut_egypt_asset_management",
+      "name": "Azimut Target Maturity Fund-Target 2027 USD",
+      "slug": "az-asthkak-t27-usd-2",
+      "page": "https://azimut.eg/fundpage;name=az-asthkak-t27-usd-2",
+      "extracted": {
+        "type": "Fixed Income",
+        "currency": "USD",
+        "inception": "02 JAN 2022",
+        "sub_freq": "During the initial subs. phase or if the investment manager decided to make a re-open for a limited period",
+        "sub_min": null,
+        "sub_fee": null,
+        "red_freq": "Monthly",
+        "red_fee": null,
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": null
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "az_foras__azimut_egypt_asset_management",
+      "name": "AZ Foras",
+      "slug": "az-frs-2",
+      "page": "https://azimut.eg/fundpage;name=az-frs-2",
+      "extracted": {
+        "type": "Equity",
+        "currency": "EGP",
+        "inception": "23 MAY 2021",
+        "sub_freq": "Daily",
+        "sub_min": null,
+        "sub_fee": "0",
+        "red_freq": "Daily",
+        "red_fee": "Contingent Deferred Fees applies",
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": null
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "bank_nxt_fund_iii_sanady__azimut_egypt_asset_management",
+      "name": "Bank Nxt Fund III (Sanady)",
+      "slug": "bank-nxt-sanady-1",
+      "page": "https://azimut.eg/fundpage;name=bank-nxt-sanady-1",
+      "extracted": {
+        "type": "Balanced",
+        "currency": "EGP",
+        "inception": "27 APR 2022",
+        "sub_freq": "Daily",
+        "sub_min": null,
+        "sub_fee": "0",
+        "red_freq": "Weekly",
+        "red_fee": "0",
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": "0.4%"
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "az_foras_shariah__azimut_egypt_asset_management",
+      "name": "AZ-Foras Shariah",
+      "slug": "az-frs-alshryaa-1",
+      "page": "https://azimut.eg/fundpage;name=az-frs-alshryaa-1",
+      "extracted": {
+        "type": "Equity",
+        "currency": "EGP",
+        "inception": "23 Jul 2024",
+        "sub_freq": "Daily",
+        "sub_min": null,
+        "sub_fee": "0",
+        "red_freq": "Daily",
+        "red_fee": "Contingent Deferred Fees applies",
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": null
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "maashy__azimut_egypt_asset_management",
+      "name": "*Maashy",
+      "slug": "maashy-2",
+      "page": "https://azimut.eg/fundpage;name=maashy-2",
+      "extracted": {
+        "type": "Equity",
+        "currency": "EGP",
+        "inception": "15 Nov 2018",
+        "sub_freq": "Daily",
+        "sub_min": "100/1 Units",
+        "sub_fee": "0",
+        "red_freq": "Monthly",
+        "red_fee": "0.25%",
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": "0.28%"
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "az_naser__azimut_egypt_asset_management",
+      "name": "AZ Naser",
+      "slug": "az-nasr-2",
+      "page": "https://azimut.eg/fundpage;name=az-nasr-2",
+      "extracted": {
+        "type": "Money Market",
+        "currency": "EGP",
+        "inception": "05 MAR 2023",
+        "sub_freq": "Daily",
+        "sub_min": null,
+        "sub_fee": null,
+        "red_freq": "Daily",
+        "red_fee": null,
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": null
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "az_value__azimut_egypt_asset_management",
+      "name": "AZ Value",
+      "slug": "az-falyo-1",
+      "page": "https://azimut.eg/fundpage;name=az-falyo-1",
+      "extracted": {
+        "type": "Money Market",
+        "currency": "EGP",
+        "inception": "19 MAR 2023",
+        "sub_freq": "Daily",
+        "sub_min": null,
+        "sub_fee": null,
+        "red_freq": "Daily",
+        "red_fee": null,
+        "prospectus": true,
+        "factsheet": false,
+        "mgmt_fee_noted_separately": null
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    },
+    {
+      "fund_id": "menthum__azimut_egypt_asset_management",
+      "name": "Menthum",
+      "slug": "menthum-2",
+      "page": "https://azimut.eg/fundpage;name=menthum-2",
+      "extracted": {
+        "type": "Money Market",
+        "currency": "EGP",
+        "inception": "29 MAY 2022",
+        "sub_freq": "Daily",
+        "sub_min": null,
+        "sub_fee": "0",
+        "red_freq": "Daily",
+        "red_fee": "0",
+        "prospectus": true,
+        "factsheet": true,
+        "mgmt_fee_noted_separately": "0.5%"
+      },
+      "null_fields": [
+        "cutoff",
+        "custodian",
+        "administrator",
+        "auditor",
+        "sponsor"
+      ],
+      "patch": 204
+    }
+  ],
+  "logo": "https://api.azimut.eg/storage/entities/November2023/q5uh5R2ygOQfrAsaTOXC.jpg"
+}
