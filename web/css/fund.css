@@ -9,3 +9,5 @@
 .doc-btn{display:inline-block;padding:8px 12px;border-radius:8px;background:#11141c;border:1px solid #10B981;color:#10B981;text-decoration:none;font-size:12px}
 .doc-btn.disabled{border-color:#374151;color:#6B7280}
 .ops-note{color:#8f98a8;font-size:12px;margin-top:14px}
+
+.src-badge{margin-inline-start:8px;font-size:10px;font-style:normal;color:#10B981;border:1px solid #10B981;border-radius:999px;padding:1px 6px}
