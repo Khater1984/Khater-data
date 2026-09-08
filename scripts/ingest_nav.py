@@ -152,6 +152,63 @@ AZIMUT_ID = {
     23: "AZ-LV",
 }
 
+CI_ALIAS = {
+    "cib money market fund ossoul": "CIB Fund I (Osoul)",
+    "united bank egypt money market fund rakhaa": "The United Bank Fund (Rakhaa)",
+    "banque misr money market fund usd": "Misr Money Market ($)",
+    "sarwa life insurance co fund": "Sarwa Life Insurance Fund",
+    "fawry ci capital money market fund yawmy": "Fawry",
+    "allianz co money market fund": "Allianz",
+    "suez canale bank money market fund": "Suez Canal Bank ( Al Suez Al Youmi)",
+    "ciam money market fund misr al youmy": "CI Misr Al Youmy",
+    "misr life insurance co money market fund": "Misr Life Insurance Fund",
+    "basata fund": "Basata",
+    "cib fixed income fund thabat": "CIB (Thabat)",
+    "ciam fixed income fund kol shahr": "*CI Fixed Income Fund",
+    "banque du caire fixed income fund el thabet": "Banque Du Caire (Al Thabet)",
+    "shefa orman charity fund": "Shefa Orman Charity Fund",
+    "ciam fixed income fund misr al yomy usd": "CIAM ($)",
+    "menthum fixed income fund usd": "Menthum USD $",
+    "cib fund 4 hemaya": "CIB Fund IV (Hamaya)",
+    "banque misr 5 capital protected": "Misr Capital Guaranteed (Al Omr)",
+    "banque misr first fund": "Banque Misr Fund I",
+    "cib balanced fund takamol": "CIB Fund (Takamol)",
+    "banque misr third fund": "Banque Misr Fund III",
+    "banque misr second fund": "Banque Misr Fund II",
+    "misr equity fund": "CIAM Misr Equity",
+    "cib fund 2 istethmar": "CIB Fund II (Istthmar)",
+    "ci real estate value chain": "CIAM 1st Issue (Real Estate)",
+    "ci telecoms and it": "CIAM 2nd Issue (Technology)",
+    "ci exporters": "CIAM 3rd Issue (Export)",
+    "ci consumer and basic needs": "CIAM 4th Issue (Consumption)",
+    "ci financials and fintech": "CIAM 5th Issue (Electronic Payments)",
+    "ci the quant": "CIAM 6th Issue (The Quant)",
+    "ci 20hd": "CIAM 7th Issue (HD 20)",
+    "ci ipo": "CIAM 8th Issue (IPOs)",
+    "misr esg fund": "CIAM ESG",
+    "banque misr fourth fund": "Banque Misr Fund IV",
+    "faisal cib fund al aman": "FIBE & CIB (Aman)",
+    "sanabel islamic fund": "SAIB & ADIB Fund (Sanabel)",
+    "ciam shariaa index equity fund egx 33": "CIAM Misr Shariah Equity",
+    "ciam gold fund gold masr": "CIAM Gold Fund",
+}
+
+AFIM_ALIAS = {
+    "صندوق الواعد": "National Bank of Egypt Fund IV",
+    "صندوق حورس": "Hourus",
+    "صندوق تميز": "Tamayoz",
+    "صندوق الرابع": "National Bank of Egypt Fund IV",
+    "صندوق وثاق": "Wethaq",
+    "صندوق بشائر": "NBE & Al Baraka Bank Egypt Fund (Bashayer)",
+    "صندوق الأول": "National Bank of Egypt Fund I",
+    "صندوق الأهلي حياة": "Al Ahly Hayat",
+    "صندوق الثاني": "National Bank of Egypt Fund II",
+    "صندوق الثالث": "National Bank of Egypt Fund III",
+    "صندوق الخامس": "National Bank of Egypt Fund V",
+    "صندوق السابع": "National Bank of Egypt VII",
+    "صندوق دهب": "Dahab",
+}
+
 
 def load_funds():
     return sb_get("funds", select="fund_id,canonical_name,management_company,price_update_url,metadata", limit="1000")
@@ -254,7 +311,11 @@ def scrape_ci(by_name, match):
             continue
         if "al wefak" in low:
             continue
-        f, sc = match(name, "CI Asset Management")
+        alias = CI_ALIAS.get(norm(name))
+        f = by_name.get(alias) if alias else None
+        sc = 1.0 if f else 0
+        if not f:
+            f, sc = match(name, "CI Asset Management")
         if not f:
             f, sc = match(name)
         if not f:
@@ -458,6 +519,26 @@ def scrape_pfi(by_name):
 
 
 
+def scrape_afim(by_name):
+    url = "https://www.afim.com.eg/public/index.php/investment"
+    html = fetch(url)
+    out = []
+    for ar, canon in AFIM_ALIAS.items():
+        idx = html.find(ar)
+        if idx < 0:
+            continue
+        chunk = html[idx:idx + 800]
+        m = re.search(r"سعر الوثيقة:\s*<span>([^<]+)</span>", chunk)
+        if not m:
+            continue
+        nav = parse_num(m.group(1))
+        if not nav:
+            continue
+        f = by_name.get(canon)
+        out.append(row(ar, nav, None, url, "src_afim_investment", f, 1.0 if f else 0))
+    return out
+
+
 def scrape_snduk(funds):
     """Per-fund SNDUK pages store currentPrice + lastPriceUpdate in the RSC payload."""
     out = []
@@ -613,6 +694,7 @@ def main():
         ("snduk", lambda: scrape_snduk(funds)),
         ("abk", lambda: scrape_abk(funds)),
         ("zaldi", lambda: scrape_zaldi(funds)),
+        ("afim", lambda: scrape_afim(by_name)),
     ]
     all_rows = []
     for name, fn in scrapers:
