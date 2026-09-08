@@ -252,7 +252,7 @@ def row(extracted, nav, asof, url, sid, fund, score, extra=None, currency="EGP")
         "extracted_name": extracted,
         "nav": float(nav),
         "currency": currency,
-        "as_of_date": asof,
+        "as_of_date": (asof or datetime.now(timezone.utc).date().isoformat()),
         "source_url": url,
         "source_id": sid,
         "fund_id": None if not fund else fund["fund_id"],
@@ -637,14 +637,18 @@ def upsert_official(matched_rows):
         prev = best.get(fid)
         if not prev or (r.get("as_of_date") or "") >= (prev.get("as_of_date") or ""):
             best[fid] = r
+    existing = {x["fund_id"]: x for x in sb_get("nav_official", select="fund_id,as_of_date", limit="1000")}
     payload = []
     for r in best.values():
+        asof = r.get("as_of_date") or (existing.get(r["fund_id"]) or {}).get("as_of_date")
+        if not asof:
+            asof = datetime.now(timezone.utc).date().isoformat()
         payload.append(
             {
                 "fund_id": r["fund_id"],
                 "nav": r["nav"],
                 "currency": r.get("currency") or "EGP",
-                "as_of_date": r.get("as_of_date"),
+                "as_of_date": asof,
                 "source_id": r.get("source_id"),
                 "source_url": r.get("source_url"),
                 "verified_at": now,
