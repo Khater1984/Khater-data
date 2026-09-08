@@ -1,0 +1,48 @@
+{
+  "generated_at": "2026-09-08T20:08:10.266052+00:00",
+  "funds": 205,
+  "managers_defined": 21,
+  "coverage": {
+    "manager": {
+      "count": 194,
+      "pct": 94.6
+    },
+    "logo": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "official_url": {
+      "count": 205,
+      "pct": 100.0
+    },
+    "prospectus": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "subscription": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "redemption": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "documents": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "verified_source": {
+      "count": 205,
+      "pct": 100.0
+    }
+  },
+  "missing": {
+    "logo": 205,
+    "prospectus": 205,
+    "subscription_terms": 205,
+    "redemption_terms": 205,
+    "sponsor_custodian_auditor": 205,
+    "unassigned_manager": 11
+  },
+  "note": "No subscription/redemption/document fields invented. Only DB-backed identity + existing price_update_url."
+}
