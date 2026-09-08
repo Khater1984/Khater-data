@@ -1,0 +1,224 @@
+{
+  "rows": [
+    {
+      "name": "Agricultural Bank of Egypt Fund (Al Massy)",
+      "slug": "elmassy",
+      "freq": null,
+      "min": "5",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Faisal Islamic Bank of Egypt Fund",
+      "slug": "faisal",
+      "freq": "Weekly",
+      "min": null,
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "SAIB Fund III (Al Rabeh)",
+      "slug": "saib",
+      "freq": null,
+      "min": null,
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "SAIB Fund II",
+      "slug": "SAIB2",
+      "freq": "Weekly",
+      "min": null,
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Al Baraka Bank Egypt (Al Barakat)",
+      "slug": "albarakat",
+      "freq": "Daily",
+      "min": null,
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "ALEXBANK Fund I",
+      "slug": "boafund",
+      "freq": "Weekly",
+      "min": "10",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "ALEXBANK Fund II",
+      "slug": "BOA_FI",
+      "freq": "Daily",
+      "min": "100",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "ALEXBANK Fund III",
+      "slug": "boa-mmf",
+      "freq": "Daily",
+      "min": "100",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Hermes Gold",
+      "slug": "GOLD",
+      "freq": null,
+      "min": null,
+      "kind": "prospectus",
+      "status": 204
+    },
+    {
+      "name": "Bank Nxt Fund II (Helal)",
+      "slug": "HELAL",
+      "freq": "Weekly",
+      "min": null,
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Bank Nxt Fund I",
+      "slug": "NXT-mmf",
+      "freq": "Daily",
+      "min": "100",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Manasek",
+      "slug": "MANASEK",
+      "freq": null,
+      "min": null,
+      "kind": "prospectus",
+      "status": 204
+    },
+    {
+      "name": "Emirates NBD (Mazid)",
+      "slug": "mazid",
+      "freq": "Daily",
+      "min": "100",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Hermes Equity",
+      "slug": "EFG-Hermes-EQ",
+      "freq": "Weekly",
+      "min": null,
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Hermes",
+      "slug": "EFG-Hermes-MM",
+      "freq": "Daily",
+      "min": null,
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Hermes Fixed Income USD Fund",
+      "slug": "EFG-Hermes-FI-USD",
+      "freq": null,
+      "min": null,
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Hermes Shariah",
+      "slug": "EFG-EQShariah",
+      "freq": null,
+      "min": null,
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Egyptian Gulf Bank Fund I",
+      "slug": "EGB1",
+      "freq": "Weekly",
+      "min": "10",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Credit Agricole Egypt Fund I",
+      "slug": "CA-1",
+      "freq": "Weekly",
+      "min": "10",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Credit Agricole Egypt Fund II",
+      "slug": "CA-2",
+      "freq": "Weekly",
+      "min": "5",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Credit Agricole Egypt Fund III",
+      "slug": "ca-mmf",
+      "freq": "Daily",
+      "min": "100",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "FAB Misr (Modkharaty)",
+      "slug": "fab-mmf",
+      "freq": "Daily",
+      "min": "100",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "Banque Du Caire Fund I",
+      "slug": "cairo1",
+      "freq": "Weekly",
+      "min": null,
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "KFH Bank (Alpha)",
+      "slug": "Alpha",
+      "freq": "Weekly",
+      "min": "10",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "HSBC Egypt Bank Fund",
+      "slug": "hsbcmmf",
+      "freq": null,
+      "min": null,
+      "kind": "prospectus",
+      "status": 204
+    },
+    {
+      "name": "Ahli United Bank (Tharwa)",
+      "slug": "tharwa",
+      "freq": "Daily",
+      "min": "100",
+      "kind": "factsheet",
+      "status": 204
+    },
+    {
+      "name": "QNB AlAhli (Themar)",
+      "slug": "themar",
+      "freq": "Daily",
+      "min": "100",
+      "kind": "factsheet",
+      "status": 204
+    }
+  ],
+  "unmapped": [
+    "Al Baraka Bank Egypt",
+    "Ahli United Bank (Alpha)"
+  ]
+}
