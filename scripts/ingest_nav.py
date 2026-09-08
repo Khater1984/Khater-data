@@ -200,7 +200,7 @@ AFIM_ALIAS = {
     "صندوق الرابع": "National Bank of Egypt Fund IV",
     "صندوق وثاق": "Wethaq",
     "صندوق بشائر": "NBE & Al Baraka Bank Egypt Fund (Bashayer)",
-    "صندوق الأول": "National Bank of Egypt Fund I",
+    "صندوق الأول –": "National Bank of Egypt Fund I",
     "صندوق الأهلي حياة": "Al Ahly Hayat",
     "صندوق الثاني": "National Bank of Egypt Fund II",
     "صندوق الثالث": "National Bank of Egypt Fund III",
@@ -527,7 +527,7 @@ def scrape_afim(by_name):
         idx = html.find(ar)
         if idx < 0:
             continue
-        chunk = html[idx:idx + 800]
+        chunk = html[idx:idx + 1600]
         m = re.search(r"سعر الوثيقة:\s*<span>([^<]+)</span>", chunk)
         if not m:
             continue
@@ -710,6 +710,97 @@ def main():
     matched = [r for r in all_rows if r.get("fund_id")]
     ok, n = upsert_official(matched)
     print(f"official upserted {ok}/{n} run={RUN_ID}")
+    audit_coverage(funds, matched)
+
+
+SUPPORTED_HOSTS = {
+    "efgholding.com": "hermes",
+    "cicapital.com": "ci",
+    "primeholdingco.com": "prime",
+    "aaim.com.eg": "aaim",
+    "beltoneholding.com": "beltone",
+    "azimut.eg": "azimut",
+    "nicapital.com.eg": "ni",
+    "hc-si.com": "hc",
+    "pfi-am.com.eg": "pfi",
+    "granite.eg": "granite",
+    "snduk.com": "snduk",
+    "w1.abkegypt.com": "abk",
+    "zaldi-capital.com": "zaldi",
+    "afim.com.eg": "afim",
+}
+
+DATE_OPTIONAL_HOSTS = {
+    "afim.com.eg",
+    "zaldi-capital.com",
+    "primeholdingco.com",
+    "cicapital.com",
+}
+
+
+def host_of(url):
+    if not url or "://" not in url:
+        return ""
+    return url.split("/")[2].replace("www.", "")
+
+
+def audit_coverage(funds, matched_rows):
+    import json
+    from pathlib import Path
+    got = {r["fund_id"] for r in matched_rows if r.get("fund_id") and r.get("nav") is not None}
+    official = {x["fund_id"]: x for x in sb_get("nav_official", select="fund_id,nav,as_of_date,source_id", limit="1000")}
+    rows = []
+    missing_supported = 0
+    for f in funds:
+        url = f.get("price_update_url") or ""
+        host = host_of(url)
+        rule = SUPPORTED_HOSTS.get(host)
+        off = official.get(f["fund_id"]) or {}
+        has_nav = off.get("nav") is not None
+        has_date = bool(off.get("as_of_date"))
+        if rule:
+            if not has_nav:
+                status = "FAIL_NO_NAV"
+                missing_supported += 1
+            elif not has_date and host not in DATE_OPTIONAL_HOSTS:
+                status = "FAIL_NO_DATE"
+                missing_supported += 1
+            elif not has_date:
+                status = "NAV_NO_DATE"
+            else:
+                status = "OK"
+        else:
+            status = "UNSUPPORTED_HOST" if not has_nav else "OK_UNOFFICIAL_HOST"
+        rows.append(
+            {
+                "fund_id": f["fund_id"],
+                "name": f.get("canonical_name"),
+                "host": host,
+                "rule": rule,
+                "status": status,
+                "this_run": f["fund_id"] in got,
+                "nav": off.get("nav"),
+                "as_of_date": off.get("as_of_date"),
+            }
+        )
+    out = {
+        "run_id": RUN_ID,
+        "funds": len(funds),
+        "ok": sum(1 for r in rows if r["status"].startswith("OK")),
+        "fail": sum(1 for r in rows if r["status"].startswith("FAIL")),
+        "unsupported": sum(1 for r in rows if r["status"] == "UNSUPPORTED_HOST"),
+        "rows": rows,
+    }
+    dest = Path("web/data/nav_coverage.json")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(json.dumps(out, ensure_ascii=False, indent=2))
+    print(
+        f"coverage ok={out['ok']} fail={out['fail']} unsupported={out['unsupported']} file={dest}"
+    )
+    for r in rows:
+        if r["status"].startswith("FAIL") or r["status"] == "UNSUPPORTED_HOST":
+            print(f"  {r['status']}: {r['name']} [{r['host']}]")
+    return missing_supported
 
 
 if __name__ == "__main__":
