@@ -1,0 +1,40 @@
+name: Fund Profile QA
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'web/fund.html'
+      - 'web/js/fund-core.js'
+      - 'web/js/fund-performance.js'
+      - 'web/js/fund-risk.js'
+      - 'web/js/fund-benchmark.js'
+      - 'web/js/fund-smartscore.js'
+      - 'web/js/fund-evidence.js'
+      - 'web/css/fund.css'
+    branches: [main]
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: |
+          set -e
+          for f in web/js/fund-core.js web/js/fund-performance.js web/js/fund-risk.js web/js/fund-benchmark.js web/js/fund-smartscore.js web/js/fund-evidence.js; do
+            node --check "$f"
+          done
+      - name: Check required tab contracts
+        run: |
+          set -e
+          grep -q 'FUND_TABS.performance' web/js/fund-performance.js
+          grep -q 'FUND_TABS.risk' web/js/fund-risk.js
+          grep -q 'FUND_TABS.benchmark' web/js/fund-benchmark.js
+          grep -q 'FUND_TABS.smartscore' web/js/fund-smartscore.js
+          grep -q 'FUND_TABS.evidence' web/js/fund-evidence.js
+          grep -q 'fund-performance.js' web/fund.html
+          grep -q 'fund-risk.js' web/fund.html
+          grep -q 'fund-benchmark.js' web/fund.html
+          grep -q 'fund-smartscore.js' web/fund.html
+          grep -q 'fund-evidence.js' web/fund.html
