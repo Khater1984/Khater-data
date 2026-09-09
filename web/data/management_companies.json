@@ -1,0 +1,156 @@
+[
+  {
+    "id": "mc_ci",
+    "name_en": "CI Asset Management",
+    "name_ar": "سي آي لإدارة الأصول",
+    "website": "https://www.cicapital.com/fundprice/",
+    "logo_url": null
+  },
+  {
+    "id": "mc_hermes",
+    "name_en": "Hermes Portfolio and Fund Management",
+    "name_ar": "هيرميس لإدارة المحافظ وصناديق الاستثمار",
+    "website": "https://efgholding.com/en/our-services/mutual-funds",
+    "logo_url": null
+  },
+  {
+    "id": "mc_beltone",
+    "name_en": "Beltone Asset Management",
+    "name_ar": "بلتون لإدارة الأصول",
+    "website": "https://www.beltoneholding.com/en/business-line/asset-management-1",
+    "logo_url": null
+  },
+  {
+    "id": "mc_azimut",
+    "name_en": "Azimut Egypt Asset Management",
+    "name_ar": "أزيموت مصر لإدارة الأصول",
+    "website": "https://azimut.eg/funds",
+    "logo_url": null
+  },
+  {
+    "id": "mc_aaim",
+    "name_en": "Arab African Investment Management",
+    "name_ar": "العربي الأفريقي لإدارة الاستثمارات",
+    "website": "https://aaim.com.eg/en/what-we-offer/funds",
+    "logo_url": null
+  },
+  {
+    "id": "mc_ahly",
+    "name_en": "Al Ahly Financial Investments Management",
+    "name_ar": "الأهلي لإدارة الاستثمارات المالية",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_ni",
+    "name_en": "NI Capital",
+    "name_ar": "إن آي كابيتال",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_hc",
+    "name_en": "HC Securities & Investment",
+    "name_ar": "إتش سي للأوراق المالية والاستثمار",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_cfh",
+    "name_en": "CFH Asset Management",
+    "name_ar": "سي إف إتش لإدارة الأصول",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_mubasher",
+    "name_en": "Mubasher Asset Management",
+    "name_ar": "مباشر لإدارة الأصول",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_prime",
+    "name_en": "Prime Investments",
+    "name_ar": "برايم للاستثمارات",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_pfi",
+    "name_en": "PFI Asset Management",
+    "name_ar": "بي إف آي لإدارة الأصول",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_nbk",
+    "name_en": "NBK Capital Asset Management Egypt",
+    "name_ar": "الوطني مصر للاستثمارات المالية",
+    "website": "https://www.nbk.com/egypt/financial-markets/investment/mutual-funds.html",
+    "logo_url": null
+  },
+  {
+    "id": "mc_zaldi",
+    "name_en": "Zaldi Investments",
+    "name_ar": "زالدي للاستثمارات",
+    "website": "https://zaldi-capital.com/",
+    "logo_url": null
+  },
+  {
+    "id": "mc_sigma",
+    "name_en": "Sigma Asset Management",
+    "name_ar": "سيجما لإدارة الأصول",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_bokra",
+    "name_en": "Bokra",
+    "name_ar": "بكرة",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_granite",
+    "name_en": "Granite Fund Management",
+    "name_ar": "جرانيت لإدارة الصناديق",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_acumen",
+    "name_en": "Acumen Asset Management",
+    "name_ar": "أكيومن لإدارة الأصول",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_target",
+    "name_en": "Target Asset Management",
+    "name_ar": "تارجت لإدارة الأصول",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_pharos",
+    "name_en": "Pharos Asset Management",
+    "name_ar": "فاروس لإدارة الأصول",
+    "website": "https://snduk.com/eg/funds/pharos-fund-1?lang=ar",
+    "logo_url": null
+  },
+  {
+    "id": "mc_naeem",
+    "name_en": "Naeem for Financial Investments",
+    "name_ar": "النعيم للاستثمارات المالية",
+    "website": null,
+    "logo_url": null
+  },
+  {
+    "id": "mc_unknown",
+    "name_en": "Unknown / Unassigned",
+    "name_ar": "غير محدد",
+    "website": null,
+    "logo_url": null
+  }
+]

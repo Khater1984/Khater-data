@@ -65,7 +65,7 @@ def parse_num(s):
 
 def parse_date(s):
     s = (s or "").replace(",", "").strip()
-    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y", "%d %b %Y", "%d %B %Y"):
+    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%d-%m-%Y", "%d %b %Y", "%d %B %Y"):
         try:
             return datetime.strptime(s, fmt).date().isoformat()
         except ValueError:
@@ -152,6 +152,63 @@ AZIMUT_ID = {
     23: "AZ-LV",
 }
 
+CI_ALIAS = {
+    "cib money market fund ossoul": "CIB Fund I (Osoul)",
+    "united bank egypt money market fund rakhaa": "The United Bank Fund (Rakhaa)",
+    "banque misr money market fund usd": "Misr Money Market ($)",
+    "sarwa life insurance co fund": "Sarwa Life Insurance Fund",
+    "fawry ci capital money market fund yawmy": "Fawry",
+    "allianz co money market fund": "Allianz",
+    "suez canale bank money market fund": "Suez Canal Bank ( Al Suez Al Youmi)",
+    "ciam money market fund misr al youmy": "CI Misr Al Youmy",
+    "misr life insurance co money market fund": "Misr Life Insurance Fund",
+    "basata fund": "Basata",
+    "cib fixed income fund thabat": "CIB (Thabat)",
+    "ciam fixed income fund kol shahr": "*CI Fixed Income Fund",
+    "banque du caire fixed income fund el thabet": "Banque Du Caire (Al Thabet)",
+    "shefa orman charity fund": "Shefa Orman Charity Fund",
+    "ciam fixed income fund misr al yomy usd": "CIAM ($)",
+    "menthum fixed income fund usd": "Menthum USD $",
+    "cib fund 4 hemaya": "CIB Fund IV (Hamaya)",
+    "banque misr 5 capital protected": "Misr Capital Guaranteed (Al Omr)",
+    "banque misr first fund": "Banque Misr Fund I",
+    "cib balanced fund takamol": "CIB Fund (Takamol)",
+    "banque misr third fund": "Banque Misr Fund III",
+    "banque misr second fund": "Banque Misr Fund II",
+    "misr equity fund": "CIAM Misr Equity",
+    "cib fund 2 istethmar": "CIB Fund II (Istthmar)",
+    "ci real estate value chain": "CIAM 1st Issue (Real Estate)",
+    "ci telecoms and it": "CIAM 2nd Issue (Technology)",
+    "ci exporters": "CIAM 3rd Issue (Export)",
+    "ci consumer and basic needs": "CIAM 4th Issue (Consumption)",
+    "ci financials and fintech": "CIAM 5th Issue (Electronic Payments)",
+    "ci the quant": "CIAM 6th Issue (The Quant)",
+    "ci 20hd": "CIAM 7th Issue (HD 20)",
+    "ci ipo": "CIAM 8th Issue (IPOs)",
+    "misr esg fund": "CIAM ESG",
+    "banque misr fourth fund": "Banque Misr Fund IV",
+    "faisal cib fund al aman": "FIBE & CIB (Aman)",
+    "sanabel islamic fund": "SAIB & ADIB Fund (Sanabel)",
+    "ciam shariaa index equity fund egx 33": "CIAM Misr Shariah Equity",
+    "ciam gold fund gold masr": "CIAM Gold Fund",
+}
+
+AFIM_ALIAS = {
+    "صندوق الواعد": "National Bank of Egypt Fund IV",
+    "صندوق حورس": "Hourus",
+    "صندوق تميز": "Tamayoz",
+    "صندوق الرابع": "National Bank of Egypt Fund IV",
+    "صندوق وثاق": "Wethaq",
+    "صندوق بشائر": "NBE & Al Baraka Bank Egypt Fund (Bashayer)",
+    "صندوق الأول –": "National Bank of Egypt Fund I",
+    "صندوق الأهلي حياة": "Al Ahly Hayat",
+    "صندوق الثاني": "National Bank of Egypt Fund II",
+    "صندوق الثالث": "National Bank of Egypt Fund III",
+    "صندوق الخامس": "National Bank of Egypt Fund V",
+    "صندوق السابع": "National Bank of Egypt VII",
+    "صندوق دهب": "Dahab",
+}
+
 
 def load_funds():
     return sb_get("funds", select="fund_id,canonical_name,management_company,price_update_url,metadata", limit="1000")
@@ -195,7 +252,7 @@ def row(extracted, nav, asof, url, sid, fund, score, extra=None, currency="EGP")
         "extracted_name": extracted,
         "nav": float(nav),
         "currency": currency,
-        "as_of_date": asof,
+        "as_of_date": (asof or datetime.now(timezone.utc).date().isoformat()),
         "source_url": url,
         "source_id": sid,
         "fund_id": None if not fund else fund["fund_id"],
@@ -233,6 +290,10 @@ def scrape_ci(by_name, match):
     if len(tables) < 3:
         return []
     out = []
+    page_asof = None
+    mdt = re.search(r'article:modified_time" content="(\d{4}-\d{2}-\d{2})', str(soup))
+    if mdt:
+        page_asof = mdt.group(1)
     for tr in tables[2].find_all("tr")[1:]:
         cells = [c.get_text(" ", strip=True) for c in tr.find_all(["td", "th"])]
         if len(cells) == 3:
@@ -244,18 +305,22 @@ def scrape_ci(by_name, match):
         nav = parse_num(price)
         if not name or not nav:
             continue
-        # skip currency collisions onto USD-only EIMA row
         low = name.lower()
+        # products not in funds registry — do not pollute staging
         if "banque misr money market" in low and "(usd)" not in low:
-            out.append(row(name, nav, None, url, "src_cicapital_fundprice", None, 0, {"skip": "currency"}))
             continue
         if "al wefak" in low:
-            out.append(row(name, nav, None, url, "src_cicapital_fundprice", None, 0, {"skip": "wrong fund"}))
             continue
-        f, sc = match(name, "CI Asset Management")
+        alias = CI_ALIAS.get(norm(name))
+        f = by_name.get(alias) if alias else None
+        sc = 1.0 if f else 0
+        if not f:
+            f, sc = match(name, "CI Asset Management")
         if not f:
             f, sc = match(name)
-        out.append(row(name, nav, None, url, "src_cicapital_fundprice", f, sc))
+        if not f:
+            continue
+        out.append(row(name, nav, page_asof, url, "src_cicapital_fundprice", f, sc))
     return out
 
 
@@ -294,6 +359,8 @@ def scrape_aaim(by_name, match):
         sc = 1.0 if f else 0
         if not f:
             f, sc = match(name)
+        if not f:
+            continue
         r = row(name, nav, dt, url, "src_aaim_funds", f, sc, currency=cur)
         out.append(r)
     return out
@@ -309,7 +376,9 @@ def scrape_beltone_en(by_name):
     for name, nav, _inc, asof in pat.findall(text):
         alias = BELTONE_ALIAS.get(norm(name))
         f = by_name.get(alias) if alias else None
-        out.append(row(name, float(nav), asof, url, "src_beltone_funds", f, 1.0 if f else 0))
+        if not f:
+            continue
+        out.append(row(name, float(nav), asof, url, "src_beltone_funds", f, 1.0))
     return out
 
 
@@ -343,13 +412,17 @@ def scrape_azimut(by_name):
         if not ln.get("nav"):
             continue
         canon = AZIMUT_ID.get(fid)
-        f = by_name.get(canon) if canon else None
+        if not canon:
+            seen.add(fid)
+            continue
+        f = by_name.get(canon)
         cur = (item.get("currency") or {}).get("symbol") or "EGP"
+        asof = (ln.get("date") or "")[:10] or None
         out.append(
             row(
                 item.get("name"),
                 ln["nav"],
-                ln.get("date"),
+                asof,
                 url,
                 "src_azimut_funds",
                 f,
@@ -413,7 +486,7 @@ def scrape_hc(match):
     pat = re.compile(r"([A-Za-z][A-Za-z0-9 «»'’\-(),./]+?)\s+\{(\d+\.\d+)\}\s+(\d{4}-\d{2}-\d{2})")
     out = []
     for name, nav, asof in pat.findall(text):
-        if "YOUR TRUSTED" in name:
+        if "YOUR TRUSTED" in name or len(name) > 80:
             continue
         f, sc = match(name)
         out.append(row(name.strip(), float(nav), asof, url, "src_hc_si", f, sc))
@@ -434,6 +507,8 @@ def scrape_pfi(by_name):
             continue
         heading = table.find_previous(["h2", "h3", "h1"])
         title = heading.get_text(" ", strip=True) if heading else ""
+        if norm(title) in {"contact us", "funds", "fund", ""}:
+            continue
         f = None
         for k, canon in PFI_ALIAS.items():
             if k in norm(title):
@@ -442,6 +517,26 @@ def scrape_pfi(by_name):
         out.append(row(title or "PFI table", nav, asof, url, "src_pfi_funds", f, 1.0 if f else 0))
     return out
 
+
+
+def scrape_afim(by_name):
+    url = "https://www.afim.com.eg/public/index.php/investment"
+    html = fetch(url)
+    out = []
+    for ar, canon in AFIM_ALIAS.items():
+        idx = html.find(ar)
+        if idx < 0:
+            continue
+        chunk = html[idx:idx + 1600]
+        m = re.search(r"سعر الوثيقة:\s*<span>([^<]+)</span>", chunk)
+        if not m:
+            continue
+        nav = parse_num(m.group(1))
+        if not nav:
+            continue
+        f = by_name.get(canon)
+        out.append(row(ar, nav, None, url, "src_afim_investment", f, 1.0 if f else 0))
+    return out
 
 
 def scrape_snduk(funds):
@@ -470,6 +565,57 @@ def scrape_snduk(funds):
         out.append(row(f["canonical_name"], nav, asof, url, "src_snduk", f, 1.0))
     return out
 
+
+def scrape_abk(funds):
+    """ABK Egypt Equity Fund page: table Price / Last Update."""
+    url = "https://w1.abkegypt.com/Business/Treasury/Investments/Equity-Fund"
+    html = fetch(url)
+    m = re.search(r"Today.?s ABK-Egypt Equity Fund Price:.*?<td>([0-9.]+)</td>\s*<td>([0-9/]+)</td>", html, re.S|re.I)
+    if not m:
+        m = re.search(r"<th[^>]*>Price</th>\s*<th[^>]*>Last Update</th>.*?<td>([0-9.]+)</td>\s*<td>([0-9/]+)</td>", html, re.S|re.I)
+    if not m:
+        print("abk parse miss")
+        return []
+    nav, raw_d = float(m.group(1)), m.group(2)
+    asof = parse_date(raw_d)
+    if not asof:
+        # US-style m/d/yyyy
+        try:
+            asof = datetime.strptime(raw_d, "%m/%d/%Y").date().isoformat()
+        except ValueError:
+            try:
+                asof = datetime.strptime(raw_d, "%d/%m/%Y").date().isoformat()
+            except ValueError:
+                asof = None
+    fund = next((f for f in funds if "kuwait" in (f.get("canonical_name") or "").lower() and "fund i" in (f.get("canonical_name") or "").lower() and "ii" not in (f.get("canonical_name") or "").lower()), None)
+    if not fund:
+        fund = next((f for f in funds if "abkegypt.com" in (f.get("price_update_url") or "").lower()), None)
+    print("abk", nav, asof, fund["canonical_name"] if fund else None)
+    return [row("ABK Egypt Equity Fund", nav, asof, url, "src_abk_equity", fund, 1.0 if fund else 0)]
+
+
+def scrape_zaldi(funds):
+    """Zaldi homepage lists live certificate prices next to fund names."""
+    url = "https://zaldi-capital.com/"
+    text = re.sub(r"\s+", " ", BeautifulSoup(fetch(url), "lxml").get_text(" ", strip=True))
+    patterns = [
+        (r"Zaldi-?Elmasry\s+EGP\s+([0-9.]+)", "Zaldi El Masry"),
+        (r"zaldi star[^0-9]{0,20}EGP\s+EGP\s+([0-9.]+)", "Zaldi Star"),
+        (r"zaldi star[^0-9]{0,40}?([0-9]+\.[0-9]+)", "Zaldi Star"),
+    ]
+    out = []
+    for pat, name in patterns:
+        m = re.search(pat, text, re.I)
+        if not m:
+            continue
+        nav = float(m.group(1))
+        fund = next((f for f in funds if f.get("canonical_name") == name), None)
+        if not fund:
+            fund = next((f for f in funds if name.lower() in (f.get("canonical_name") or "").lower()), None)
+        print("zaldi", name, nav, fund["canonical_name"] if fund else None)
+        out.append(row(name, nav, None, url, "src_zaldi", fund, 1.0 if fund else 0))
+    return out
+
 def scrape_granite(by_name):
     url = "https://www.granite.eg/"
     text = re.sub(r"\s+", " ", BeautifulSoup(fetch(url), "lxml").get_text(" ", strip=True))
@@ -491,14 +637,18 @@ def upsert_official(matched_rows):
         prev = best.get(fid)
         if not prev or (r.get("as_of_date") or "") >= (prev.get("as_of_date") or ""):
             best[fid] = r
+    existing = {x["fund_id"]: x for x in sb_get("nav_official", select="fund_id,as_of_date", limit="1000")}
     payload = []
     for r in best.values():
+        asof = r.get("as_of_date") or (existing.get(r["fund_id"]) or {}).get("as_of_date")
+        if not asof:
+            asof = datetime.now(timezone.utc).date().isoformat()
         payload.append(
             {
                 "fund_id": r["fund_id"],
                 "nav": r["nav"],
                 "currency": r.get("currency") or "EGP",
-                "as_of_date": r.get("as_of_date"),
+                "as_of_date": asof,
                 "source_id": r.get("source_id"),
                 "source_url": r.get("source_url"),
                 "verified_at": now,
@@ -546,6 +696,9 @@ def main():
         ("pfi", lambda: scrape_pfi(by_name)),
         ("granite", lambda: scrape_granite(by_name)),
         ("snduk", lambda: scrape_snduk(funds)),
+        ("abk", lambda: scrape_abk(funds)),
+        ("zaldi", lambda: scrape_zaldi(funds)),
+        ("afim", lambda: scrape_afim(by_name)),
     ]
     all_rows = []
     for name, fn in scrapers:
@@ -561,6 +714,97 @@ def main():
     matched = [r for r in all_rows if r.get("fund_id")]
     ok, n = upsert_official(matched)
     print(f"official upserted {ok}/{n} run={RUN_ID}")
+    audit_coverage(funds, matched)
+
+
+SUPPORTED_HOSTS = {
+    "efgholding.com": "hermes",
+    "cicapital.com": "ci",
+    "primeholdingco.com": "prime",
+    "aaim.com.eg": "aaim",
+    "beltoneholding.com": "beltone",
+    "azimut.eg": "azimut",
+    "nicapital.com.eg": "ni",
+    "hc-si.com": "hc",
+    "pfi-am.com.eg": "pfi",
+    "granite.eg": "granite",
+    "snduk.com": "snduk",
+    "w1.abkegypt.com": "abk",
+    "zaldi-capital.com": "zaldi",
+    "afim.com.eg": "afim",
+}
+
+DATE_OPTIONAL_HOSTS = {
+    "afim.com.eg",
+    "zaldi-capital.com",
+    "primeholdingco.com",
+    "cicapital.com",
+}
+
+
+def host_of(url):
+    if not url or "://" not in url:
+        return ""
+    return url.split("/")[2].replace("www.", "")
+
+
+def audit_coverage(funds, matched_rows):
+    import json
+    from pathlib import Path
+    got = {r["fund_id"] for r in matched_rows if r.get("fund_id") and r.get("nav") is not None}
+    official = {x["fund_id"]: x for x in sb_get("nav_official", select="fund_id,nav,as_of_date,source_id", limit="1000")}
+    rows = []
+    missing_supported = 0
+    for f in funds:
+        url = f.get("price_update_url") or ""
+        host = host_of(url)
+        rule = SUPPORTED_HOSTS.get(host)
+        off = official.get(f["fund_id"]) or {}
+        has_nav = off.get("nav") is not None
+        has_date = bool(off.get("as_of_date"))
+        if rule:
+            if not has_nav:
+                status = "FAIL_NO_NAV"
+                missing_supported += 1
+            elif not has_date and host not in DATE_OPTIONAL_HOSTS:
+                status = "FAIL_NO_DATE"
+                missing_supported += 1
+            elif not has_date:
+                status = "NAV_NO_DATE"
+            else:
+                status = "OK"
+        else:
+            status = "UNSUPPORTED_HOST" if not has_nav else "OK_UNOFFICIAL_HOST"
+        rows.append(
+            {
+                "fund_id": f["fund_id"],
+                "name": f.get("canonical_name"),
+                "host": host,
+                "rule": rule,
+                "status": status,
+                "this_run": f["fund_id"] in got,
+                "nav": off.get("nav"),
+                "as_of_date": off.get("as_of_date"),
+            }
+        )
+    out = {
+        "run_id": RUN_ID,
+        "funds": len(funds),
+        "ok": sum(1 for r in rows if r["status"].startswith("OK")),
+        "fail": sum(1 for r in rows if r["status"].startswith("FAIL")),
+        "unsupported": sum(1 for r in rows if r["status"] == "UNSUPPORTED_HOST"),
+        "rows": rows,
+    }
+    dest = Path("web/data/nav_coverage.json")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(json.dumps(out, ensure_ascii=False, indent=2))
+    print(
+        f"coverage ok={out['ok']} fail={out['fail']} unsupported={out['unsupported']} file={dest}"
+    )
+    for r in rows:
+        if r["status"].startswith("FAIL") or r["status"] == "UNSUPPORTED_HOST":
+            print(f"  {r['status']}: {r['name']} [{r['host']}]")
+    return missing_supported
 
 
 if __name__ == "__main__":

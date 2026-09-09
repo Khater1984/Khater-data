@@ -1,0 +1,319 @@
+{
+  "generated_at": "2026-09-08T20:17:58.427865+00:00",
+  "phase": 3,
+  "manager_coverage": {
+    "CI Asset Management": {
+      "n": 41,
+      "filled": {
+        "logo": 41,
+        "factsheet": 13,
+        "prospectus": 0,
+        "subscription": 6,
+        "redemption": 6,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 4
+      }
+    },
+    "Beltone Asset Management": {
+      "n": 29,
+      "filled": {
+        "logo": 29,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Hermes Portfolio and Fund Management": {
+      "n": 29,
+      "filled": {
+        "logo": 29,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Azimut Egypt Asset Management": {
+      "n": 19,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Arab African Investment Management": {
+      "n": 17,
+      "filled": {
+        "logo": 0,
+        "factsheet": 12,
+        "prospectus": 15,
+        "subscription": 17,
+        "redemption": 17,
+        "custodian": 17,
+        "administrator": 17,
+        "auditor": 0
+      }
+    },
+    "Al Ahly Financial Investments Management": {
+      "n": 13,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "(blank)": {
+      "n": 11,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "NI Capital": {
+      "n": 7,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "HC Securities & Investment": {
+      "n": 7,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "CFH Asset Management": {
+      "n": 5,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Mubasher Asset Management": {
+      "n": 4,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "NBK Capital Asset Management Egypt": {
+      "n": 4,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "PFI Asset Management": {
+      "n": 4,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Prime Investments": {
+      "n": 4,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Zaldi Investments": {
+      "n": 3,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Sigma Asset Management": {
+      "n": 2,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Naeem for Financial Investments": {
+      "n": 1,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Bokra": {
+      "n": 1,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Granite Fund Management": {
+      "n": 1,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Pharos Asset Management": {
+      "n": 1,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Acumen Asset Management": {
+      "n": 1,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    },
+    "Target Asset Management": {
+      "n": 1,
+      "filled": {
+        "logo": 0,
+        "factsheet": 0,
+        "prospectus": 0,
+        "subscription": 0,
+        "redemption": 0,
+        "custodian": 0,
+        "administrator": 0,
+        "auditor": 0
+      }
+    }
+  },
+  "logo_registry": [
+    {
+      "management_company": "CI Asset Management",
+      "logo_url": "https://www.cicapital.com/wp-content/uploads/2024/07/CICapitalLogo-En.png",
+      "logo_source_url": "https://www.cicapital.com/fundprice/",
+      "verified_at": "2026-09-08T20:17:16.194862+00:00"
+    },
+    {
+      "management_company": "Beltone Asset Management",
+      "logo_url": "https://www.beltoneholding.com/assets/logo-dark.svg",
+      "logo_source_url": "https://www.beltoneholding.com/en/business-line/asset-management-1",
+      "verified_at": "2026-09-08T20:17:16.194862+00:00"
+    },
+    {
+      "management_company": "Hermes Portfolio and Fund Management",
+      "logo_url": "https://efgholding.com/uploads/logo_84cc2a9a06.svg",
+      "logo_source_url": "https://efgholding.com/en/our-services/mutual-funds",
+      "verified_at": "2026-09-08T20:17:16.194862+00:00"
+    }
+  ],
+  "notes": {
+    "CI": "Reusable pattern: FactSheet-{FundKey}-{MonYYYY}-En.pdf on cicapital wp-uploads. Latest public batch is Jan/Feb 2025 sheets uploaded Mar 2025 — recorded with document_date, not as current.",
+    "Hermes": "Official SVG logo from efgholding.com only. No reusable per-fund prospectus index found on listing page.",
+    "Beltone": "Official SVG from beltoneholding.com. Listing is marketing; no structured subscription table.",
+    "Azimut": "No logo asset found in /funds HTML this run. Per-fund pages exist as /fundpage;name=SLUG — next parser target.",
+    "AAIM": "Already structured HTML pages from Phase 2."
+  }
+}
