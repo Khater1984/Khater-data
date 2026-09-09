@@ -1,74 +1,85 @@
-/* KHATER PLATFORM — DESIGN TOKENS + SHARED BASE */
+/* KHATER PLATFORM — tokens + type. Pages add layout only. */
 :root{
-  --bg:#0a0e12;
-  --bg2:#10151c;
-  --card:#151b24;
+  --bg:#07090d;
+  --bg2:#0d1118;
+  --card:#12171f;
   --panel:var(--card);
-  --panel2:#171c26;
-  --line:#273140;
-  --ink:#eef2f6;
+  --panel2:#171d26;
+  --line:rgba(255,255,255,.08);
+  --ink:#f3f5f7;
   --text:var(--ink);
-  --mute:#8b95a5;
+  --mute:#93a0ae;
   --muted:var(--mute);
-  --dim:#5c6673;
+  --dim:#6b7682;
   --gold:#d4b06a;
-  --gold2:#f4d991;
-  --accent:#65e6b2;
-  --good:#3ddc8a;
+  --gold2:#efd39a;
+  --accent:#3ee0a0;
+  --good:#3ee0a0;
   --green:var(--good);
-  --bad:#ef7a6e;
+  --bad:#f07167;
   --red:var(--bad);
-  --warn:#f5c76a;
-  --amber:#e9c66e;
+  --warn:#e8c36a;
+  --amber:var(--warn);
   --link:var(--gold);
   --violet:#b794f6;
-  --blue:#79a9ff;
-  --cyan:#58d0d0;
-  --purple:#ad8cff;
-  --focus:#d4b06a55;
-  --radius:16px;
-  --header-h:64px;
-  --font:"IBM Plex Sans Arabic",system-ui,sans-serif;
-  --font-num:"IBM Plex Sans",ui-sans-serif,system-ui;
+  --blue:#7eb0ff;
+  --focus:rgba(212,176,106,.45);
+  --radius:14px;
+  --header-h:68px;
+  --font:"IBM Plex Sans Arabic","Noto Sans Arabic",system-ui,sans-serif;
+  --font-num:"IBM Plex Sans","IBM Plex Sans Arabic",ui-sans-serif,system-ui;
+  --fs-xs:12px;
+  --fs-sm:13px;
+  --fs-md:15px;
+  --fs-lg:17px;
+  --fs-xl:22px;
+  --fs-2xl:28px;
+  --fs-3xl:clamp(28px,3.2vw,40px);
+  --lh:1.55;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.65}
+html{
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+html,body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font);
+  font-size:15px;
+  line-height:var(--lh);
+  letter-spacing:0;
+}
 body{min-height:100vh}
+h1,h2,h3{text-wrap:balance;letter-spacing:0;line-height:1.25}
 a{color:var(--link);text-decoration:none}
-a:hover{opacity:.88}
-.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
-.logo{font-weight:700;letter-spacing:.01em}
-.logo span{display:block;font-size:11px;color:var(--mute);font-weight:400;margin-top:1px}
-.hero{padding:64px 0 20px}
-.hero h1{font-size:clamp(30px,4.8vw,52px);line-height:1.22;margin:0 0 14px;letter-spacing:-.02em}
-.hero p{color:var(--mute);max-width:40em;font-size:18px}
+a:hover{opacity:.9}
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px}
+.logo{font-weight:700;font-size:16px;line-height:1.25}
+.logo span{display:block;font-size:12px;color:var(--mute);font-weight:400;margin-top:2px;line-height:1.4}
+.hero{padding:36px 0 12px}
+.hero h1{font-size:var(--fs-3xl);margin:0 0 12px;font-weight:700}
+.hero p,.sub{color:var(--mute);max-width:46em;font-size:var(--fs-md);line-height:1.75;text-wrap:pretty}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:18px 0 48px}
 @media(max-width:860px){.grid3{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 16px;transition:border-color .15s,transform .15s}
-a.card:hover{border-color:#3d4b5e;transform:translateY(-1px);opacity:1}
-.card h3{margin:0 0 8px;font-size:17px}
-.card p{margin:0;color:var(--mute)}
-.kicker,.eyebrow{color:var(--gold);font-size:12px;letter-spacing:.12em;margin-bottom:10px}
-.btn{display:inline-block;background:var(--gold);color:#16110a;font-weight:700;border-radius:11px;padding:11px 16px;margin-top:16px}
-.muted{color:var(--mute);font-size:13px}
-.num{font-family:var(--font-num);direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.kicker,.eyebrow{color:var(--gold);font-size:12px;font-weight:600;margin-bottom:8px}
+.btn{display:inline-block;background:var(--gold);color:#16110a;font-weight:700;border-radius:10px;padding:11px 16px}
+.muted{color:var(--mute)}
+.num{
+  font-family:var(--font-num);
+  direction:ltr;
+  unicode-bidi:isolate;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1,"lnum" 1;
+}
 .up,.pos{color:var(--good)}
 .dn,.neg,.down{color:var(--bad)}
-.controls,.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--bg2)}
-input,select,button{background:#121822;color:var(--ink);border:1px solid var(--line);border-radius:10px;min-height:38px;padding:0 11px;font:inherit}
-input:focus,select:focus,button:focus{outline:2px solid var(--focus);border-color:#4a5a70}
-button{cursor:pointer}
-button.primary{background:var(--gold);color:#16110a;border:0;font-weight:700}
-table{width:100%;border-collapse:collapse;font-size:13.5px}
-th{position:sticky;top:0;background:#121822;color:var(--mute);font-weight:500;text-align:right;padding:11px 12px;border-bottom:1px solid var(--line);font-size:11px}
-td{padding:12px;border-bottom:1px solid #1c2430;vertical-align:top}
-.page{padding:32px 0 72px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid #3a4450;background:#12161c;color:#d7dde6;border-radius:999px;padding:8px 12px;cursor:pointer;font-size:13px}
-.chip.on{border-color:var(--gold);color:#fff;background:#1b1710}
-.kpi{background:linear-gradient(180deg,#171d27,#12171f);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
-.platform-state{display:flex;align-items:center;justify-content:center;gap:10px;min-height:72px;padding:18px;text-align:center;border:1px solid var(--line);border-radius:14px;color:var(--mute);background:rgba(15,20,26,.72);font-size:12px}
-.platform-error{flex-direction:column;border-color:rgba(239,103,103,.35);color:#f2aaa5}
-.platform-spinner{width:14px;height:14px;border:2px solid rgba(212,176,106,.25);border-top-color:var(--gold);border-radius:50%;animation:platform-spin .7s linear infinite}
-@keyframes platform-spin{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion:reduce){.platform-spinner{animation:none}}
+.page{padding:24px 0 64px}
+footer.site{border-top:1px solid var(--line);padding:18px 0;color:var(--dim);font-size:13px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.platform-state,.empty,.loading{padding:40px;text-align:center;color:var(--mute);font-size:15px}
+button:not(:disabled),[role="button"]:not(:disabled){cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
