@@ -49,36 +49,19 @@
 .site-header nav a.active{color:#11151a;background:var(--gold);border-color:var(--gold);box-shadow:0 5px 16px rgba(214,180,106,.22),inset 0 1px 0 rgba(255,255,255,.28)}
 .site-header nav a.active:after{content:"";position:absolute;left:22%;right:22%;bottom:3px;height:2px;border-radius:2px;background:rgba(17,21,26,.7);pointer-events:none}
 @media(max-width:700px){.site-header .wrap{height:auto;min-height:64px;padding-top:12px;padding-bottom:12px;align-items:flex-start;flex-direction:column;gap:10px}.site-header nav{width:100%;overflow-x:auto;overflow-y:hidden;padding:5px;flex-wrap:nowrap;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}.site-header nav a,.site-header nav a:hover,.site-header nav a:focus-visible,.site-header nav a.active{flex:0 0 128px;width:128px;min-width:128px;max-width:128px}}
-/* Heatmap redesign: deterministic category grid, readable tiles, no arbitrary absolute packing. */
+/* FINAL TRUE TREEMAP: absolute rectangles retain the original squarified layout. */
 #pane-heat .heat-stage{height:650px;overflow:hidden;background:#05080d}
-#pane-heat .heat-canvas{position:relative;inset:auto;height:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(145px,auto);align-content:start;gap:10px;padding:9px;overflow:auto}
-#pane-heat .heat-canvas:has(.sector-box:only-child){grid-template-columns:1fr}
-#pane-heat .sector-box{position:relative!important;left:auto!important;top:auto!important;width:auto!important;height:auto!important;min-height:145px;max-height:310px;overflow:hidden;border:1px solid rgba(255,255,255,.16);border-radius:9px;background:linear-gradient(160deg,#0d151d,#080d13);display:flex;flex-direction:column}
-#pane-heat .sector-title{position:sticky;top:0;z-index:1;flex:0 0 35px;height:35px;background:#111b24;border-bottom:1px solid rgba(255,255,255,.14);font-size:10px;padding:0 10px;gap:8px}
-#pane-heat .sector-title b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#pane-heat .sector-title span{white-space:nowrap;color:#aeb8c0;font-size:9px}
-#pane-heat .sector-tiles{position:static!important;display:grid;grid-auto-rows:minmax(42px,1fr);gap:2px;padding:4px;overflow:auto;align-content:start;flex:1}
-#pane-heat .fund-tile{position:static!important;width:auto!important;height:auto!important;min-height:42px;max-height:60px;border-radius:4px;padding:4px 5px;background-image:none!important;border:1px solid rgba(255,255,255,.15);font-size:9px;line-height:1.15}
-#pane-heat .fund-tile:hover{border-color:#f1d38b;filter:brightness(1.15);z-index:2}
-#pane-heat .fund-tile .name{font-size:8px;line-height:1.15}.fund-tile .scorev{font-size:13px;margin-top:2px}.fund-tile .meta{font-size:7px;color:#c4ccd5}
-#pane-heat .fund-tile.unrated{background:#202934!important;color:#aeb8c0}
-@media(max-width:800px){#pane-heat .heat-stage{height:560px}#pane-heat .heat-canvas{grid-template-columns:1fr;grid-auto-rows:minmax(150px,auto)}#pane-heat .sector-box{max-height:280px}}
-
-/* FINVIZ-style treemap: category area = fund count; tile color = SmartScore. */
-#pane-heat .heat-stage{height:650px;overflow:hidden;background:#05080d}
-#pane-heat .heat-canvas{position:relative;inset:auto;height:100%;display:flex;flex-wrap:wrap;align-content:stretch;gap:3px;padding:3px;overflow:auto;background:#05080d}
-#pane-heat .sector-box{position:relative!important;left:auto!important;top:auto!important;width:calc(var(--sector-share)*100% - 3px)!important;height:calc(50% - 3px)!important;min-width:170px;min-height:145px;max-height:none;overflow:hidden;border:1px solid rgba(255,255,255,.22);border-radius:2px;background:#0b1118;display:flex;flex-direction:column;box-shadow:inset 0 0 0 1px #0008}
-#pane-heat .sector-box:nth-child(1),#pane-heat .sector-box:nth-child(2){height:calc(55% - 3px)!important}
-#pane-heat .sector-box:nth-child(n+3){height:calc(45% - 3px)!important}
-#pane-heat .sector-title{position:relative;z-index:1;flex:0 0 27px;height:27px;background:rgba(7,12,17,.9);border-bottom:1px solid rgba(255,255,255,.18);font-size:9px;padding:0 7px;gap:6px}
-#pane-heat .sector-title b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 2px #000;font-weight:700}
+#pane-heat .heat-canvas{position:relative!important;inset:4px!important;height:calc(100% - 8px)!important;display:block!important;overflow:hidden!important;padding:0!important}
+#pane-heat .sector-box{position:absolute!important;box-sizing:border-box!important;display:block!important;min-width:0!important;min-height:0!important;max-height:none!important;overflow:hidden!important;border:1px solid rgba(255,255,255,.25)!important;border-radius:2px!important;background:#0b1118!important;box-shadow:inset 0 0 0 1px #0008}
+#pane-heat .sector-title{position:absolute!important;left:0;right:0;top:0;z-index:5;display:flex!important;height:30px!important;min-height:30px!important;background:rgba(7,12,17,.92)!important;border-bottom:1px solid rgba(255,255,255,.2)!important;font-size:9px!important;padding:0 7px!important;gap:6px}
+#pane-heat .sector-title b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 2px #000}
 #pane-heat .sector-title span{white-space:nowrap;color:#c1cad2;font-size:8px}
-#pane-heat .sector-tiles{position:static!important;display:grid;grid-template-columns:repeat(auto-fit,minmax(54px,1fr));grid-auto-rows:minmax(34px,1fr);gap:1px;padding:2px;overflow:hidden;align-content:stretch;flex:1}
-#pane-heat .fund-tile{position:static!important;width:auto!important;height:auto!important;min-height:0;max-height:none;border:1px solid rgba(0,0,0,.3);border-radius:1px;padding:2px 3px;background-image:none!important;box-shadow:inset 0 1px #ffffff18;color:#fff;font-size:8px;line-height:1.05;transition:filter .12s,outline .12s}
-#pane-heat .fund-tile:hover{filter:brightness(1.22);outline:2px solid #f1d38b;outline-offset:-1px;z-index:2}
+#pane-heat .sector-tiles{position:absolute!important;left:4px!important;right:4px!important;top:34px!important;bottom:4px!important;display:block!important;overflow:hidden!important;padding:0!important}
+#pane-heat .fund-tile{position:absolute!important;box-sizing:border-box!important;min-width:0!important;min-height:0!important;max-height:none!important;border:1px solid rgba(0,0,0,.35)!important;border-radius:1px!important;padding:3px!important;background-image:none!important;box-shadow:inset 0 1px #ffffff18;color:#fff;font-size:8px;line-height:1.05;transition:filter .12s,outline .12s}
+#pane-heat .fund-tile:hover{filter:brightness(1.22);outline:2px solid #f1d38b;outline-offset:-1px;z-index:10}
 #pane-heat .fund-tile .name{font-size:7px;line-height:1.05;text-shadow:0 1px 2px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fund-tile .scorev{font-size:12px;margin-top:1px;text-shadow:0 1px 2px #000}.fund-tile .meta{font-size:6px;color:#e1e6ea;text-shadow:0 1px 2px #000}
 #pane-heat .fund-tile.unrated{background:#252e38!important;color:#b9c3cc}
-@media(max-width:800px){#pane-heat .heat-stage{height:560px}#pane-heat .sector-box{min-width:145px}#pane-heat .sector-title{font-size:8px}#pane-heat .fund-tile .name{font-size:6px}}
+@media(max-width:800px){#pane-heat .heat-stage{height:560px}#pane-heat .fund-tile .name{font-size:6px}}
 
 </style>
   <link rel="stylesheet" href="css/header.css"/>
@@ -127,15 +110,11 @@ function renderHeatmap(gs){
   const back=$('heatBack'),all=$('heatAll');if(back)back.style.display=state.heatCategory?'inline-block':'none';if(all)all.classList.toggle('active',!state.heatCategory);
   if(!gs.length){canvas.innerHTML='<div class="loading">لا توجد بيانات مطابقة للفلاتر الحالية.</div>';return}
   const active=state.heatCategory?gs.filter(g=>g.name===state.heatCategory):gs,list=state.heatCategory&&active[0]?[active[0]]:gs;
-  const sectorTotal=list.reduce((sum,g)=>sum+A(g.funds).length,0)||1;
-  list.forEach((g,index)=>{
-    const sec=document.createElement('section');sec.className='sector-box';sec.dataset.category=g.name;sec.style.setProperty('--sector-share',(A(g.funds).length/sectorTotal).toFixed(4));
+  const W=Math.max(320,canvas.clientWidth||1000),H=Math.max(420,canvas.clientHeight||600),rects=sectorRects(list,W,H);
+  rects.forEach(({item:g,x,y,w,h})=>{
+    const sec=document.createElement('section');sec.className='sector-box';sec.dataset.category=g.name;sec.style.position='absolute';sec.style.left=x+'px';sec.style.top=y+'px';sec.style.width=w+'px';sec.style.height=h+'px';
     const title=document.createElement('div');title.className='sector-title';title.innerHTML='<b>'+esc(g.name)+'</b><span>'+g.funds.length+' صناديق · '+(g.avg==null?'لا يوجد متوسط':'متوسط '+g.avg.toFixed(1))+'</span>';sec.appendChild(title);
-    const body=document.createElement('div');body.className='sector-tiles';
-    const sorted=g.funds.slice().sort((a,b)=>(scoreVal(b)??-1)-(scoreVal(a)??-1)||String(a.canonical_name).localeCompare(String(b.canonical_name),'ar'));
-    const tileTotal=sorted.length||1;
-    sorted.forEach((f,i)=>{const tile=document.createElement('a');tile.className='fund-tile';tile.href='./fund.html?id='+encodeURIComponent(S(f.fund_id));tile.style.setProperty('--tile-share',(1/tileTotal).toFixed(4));const v=scoreVal(f);tile.style.background=scoreColor(v);if(v==null)tile.classList.add('unrated');tile.title=S(f.canonical_name)+(v==null?'':' · SmartScore '+v.toFixed(1));tile.innerHTML='<span class="name">'+esc(f.canonical_name||'صندوق بلا اسم')+'</span><span class="scorev">'+(v==null?'—':v.toFixed(1))+'</span><span class="meta">'+(v==null?'غير مقيم':'SmartScore')+'</span>';body.appendChild(tile)});
-    sec.appendChild(body);sec.addEventListener('dblclick',()=>{if(!state.heatCategory){state.heatCategory=g.name;render()}});canvas.appendChild(sec);
+    const body=document.createElement('div');body.className='sector-tiles';body.style.position='absolute';body.style.left='4px';body.style.right='4px';body.style.top='34px';body.style.bottom='4px';const innerW=Math.max(20,w-8),innerH=Math.max(20,h-38),tiles=tileRects(g.funds.slice().sort((a,b)=>(scoreVal(b)??-1)-(scoreVal(a)??-1)||String(a.canonical_name).localeCompare(String(b.canonical_name),'ar')),innerW,innerH);tiles.forEach(({item:f,x:tx,y:ty,w:tw,h:th})=>{const tile=makeTile(f,{x:tx,y:ty,w:tw,h:th});tile.title=S(f.canonical_name)+(scoreVal(f)==null?'':' · SmartScore '+scoreVal(f).toFixed(1));body.appendChild(tile)});sec.appendChild(body);sec.addEventListener('dblclick',()=>{if(!state.heatCategory){state.heatCategory=g.name;render()}});canvas.appendChild(sec);
   });
 }
 function renderList(gs){gs=A(gs);if(!gs.length){html('categoryList','<div class="loading">لا توجد فئات تطابق الفلاتر الحالية.</div>');return}html('categoryList',gs.map(g=>'<div class="cat-row" data-name="'+esc(g.name)+'"><div><div class="cat-name">'+esc(g.name)+'</div><div class="cat-sub">'+g.rated+' من '+A(g.funds).length+' لديها SmartScore محفوظ</div></div><div class="num">'+A(g.funds).length+'</div><div class="num">'+(g.avg==null?'—':g.avg.toFixed(1))+'</div><div class="bar"><i style="width:'+Math.round(g.coverage*100)+'%"></i></div></div>').join(''));document.querySelectorAll('.cat-row').forEach(el=>el.onclick=()=>{state.selected=el.dataset.name;state.heatCategory=el.dataset.name;setView('heat');render()})}
