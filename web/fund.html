@@ -7,8 +7,8 @@
   <script src="config.js"></script>
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/header.css">
-  <link rel="stylesheet" href="css/fund.css?v=20260909p">
-  <link rel="stylesheet" href="css/fund-chart.css?v=20260909p">
+  <link rel="stylesheet" href="css/fund.css?v=20260910a">
+  <link rel="stylesheet" href="css/fund-chart.css?v=20260910a">
 </head>
 <body>
 <header class="site-header">
@@ -27,13 +27,13 @@
 <main class="wrap fund-page" id="app">
   <div class="empty">جاري تحميل FUND DNA…</div>
 </main>
-<script src="js/fund-core.js?v=20260909p"></script>
-<script src="js/fund-performance.js?v=20260909p"></script>
-<script src="js/fund-risk.js"></script>
-<script src="js/fund-benchmark.js"></script>
-<script src="js/fund-smartscore.js"></script>
-<script src="js/fund-evidence.js"></script>
-<script src="js/fund-profile.js"></script>
+<script src="js/fund-core.js?v=20260910a"></script>
+<script src="js/fund-performance.js?v=20260910a"></script>
+<script src="js/fund-risk.js?v=20260910a"></script>
+<script src="js/fund-benchmark.js?v=20260910a"></script>
+<script src="js/fund-smartscore.js?v=20260910a"></script>
+<script src="js/fund-evidence.js?v=20260910a"></script>
+<script src="js/fund-profile.js?v=20260910a"></script>
 <script>
 (async function () {
   'use strict';
@@ -50,7 +50,7 @@
     F.score = s;
     const score = s.final_score == null ? '—' : Number(s.final_score).toFixed(1);
     const h = new URLSearchParams(location.search).get('h') || 'last12m';
-    const windowPts = F.sliceNav(F.navSeries, h);
+    const windowPts = F.sliceNav(F.navSeries, h, null);
     const seriesRet = F.seriesReturn(windowPts);
     app.innerHTML =
       '<section class="hero"><div class="eyebrow">FUND DNA · INSTITUTIONAL PROFILE</div>' +
