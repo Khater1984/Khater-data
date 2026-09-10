@@ -29,6 +29,7 @@
 </main>
 <script src="js/fund-core.js?v=20260910b"></script>
 <script src="js/fund-performance.js?v=20260910b"></script>
+<script src="js/fund-performance-v3.js?v=20260910b"></script>
 <script src="js/fund-risk.js?v=20260910b"></script>
 <script src="js/fund-benchmark.js?v=20260910b"></script>
 <script src="js/fund-smartscore.js?v=20260910b"></script>
@@ -50,8 +51,9 @@
     F.score = s;
     const score = s.final_score == null ? '—' : Number(s.final_score).toFixed(1);
     const h = new URLSearchParams(location.search).get('h') || 'last12m';
-    const windowPts = F.sliceNav(F.navSeries, h, null);
-    const seriesRet = F.seriesReturn(windowPts);
+    const official = (d.performance || []).filter(x => x.horizon === h && x.return_pct != null).sort((a,b)=>String(b.report_date).localeCompare(String(a.report_date)))[0];
+    const heroReturn = official ? F.pct(official.return_pct) : '—';
+    const heroDate = official ? official.report_date : 'بيانات غير متاحة';
     app.innerHTML =
       '<section class="hero"><div class="eyebrow">FUND DNA · INSTITUTIONAL PROFILE</div>' +
       '<h1>' + F.esc(f.canonical_name) + '</h1>' +
@@ -59,7 +61,7 @@
       '<div class="tags"><span class="tag">' + F.esc(f.category) + '</span><span class="tag">' + F.esc(s.data_tier) + '</span><span class="tag">' + F.esc(s.methodology_version) + '</span></div></section>' +
       '<section class="pulse">' +
         '<div class="metric primary"><div class="muted">SMART SCORE</div><span class="metric-value">' + score + '</span><span class="pill">' + F.esc(s.rating || 'NOT RATED') + '</span></div>' +
-        '<div class="metric"><div class="muted">RETURN · ' + F.esc(F.L[h] || h) + '</div><span class="metric-value">' + F.pct(seriesRet) + '</span><div class="note">' + (windowPts.length >= 2 ? F.esc(windowPts[0].date + ' → ' + windowPts[windowPts.length - 1].date) : 'بيانات غير كافية') + '</div></div>' +
+        '<div class="metric"><div class="muted">RETURN · ' + F.esc(F.L[h] || h) + '</div><span class="metric-value">' + heroReturn + '</span><div class="note">' + F.esc(heroDate) + '</div></div>' +
         '<div class="metric"><div class="muted">DATA CONFIDENCE</div><span class="metric-value" style="font-size:24px">' + F.esc(s.data_confidence) + '</span><div class="note">' + F.esc(s.data_quality) + '</div></div>' +
         '<div class="metric"><div class="muted">QUALIFICATION</div><span class="metric-value" style="font-size:22px">' + F.esc(s.qualification_status) + '</span><div class="note">Track Factor · ' + (s.track_factor == null ? '—' : Number(s.track_factor).toFixed(2)) + '</div></div>' +
       '</section>' +
