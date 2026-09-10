@@ -63,14 +63,15 @@
         '<div class="metric"><div class="muted">DATA CONFIDENCE</div><span class="metric-value" style="font-size:24px">' + F.esc(s.data_confidence) + '</span><div class="note">' + F.esc(s.data_quality) + '</div></div>' +
         '<div class="metric"><div class="muted">QUALIFICATION</div><span class="metric-value" style="font-size:22px">' + F.esc(s.qualification_status) + '</span><div class="note">Track Factor · ' + (s.track_factor == null ? '—' : Number(s.track_factor).toFixed(2)) + '</div></div>' +
       '</section>' +
-      '<div class="tabs" role="tablist">' +
-        '<button class="active" data-tab="performance">01 · PERFORMANCE</button>' +
-        '<button data-tab="risk">02 · RISK</button>' +
-        '<button data-tab="benchmark">03 · BENCHMARK</button>' +
-        '<button data-tab="smartscore">04 · SMARTSCORE</button>' +
-        '<button data-tab="evidence">05 · EVIDENCE</button>' +
-        '<button data-tab="profile">06 · FUND PROFILE</button>' +
+      '<div class="tabs" role="tablist" aria-label="Fund DNA analytical sections">' +
+        '<button class="active" role="tab" aria-selected="true" data-tab="performance"><b>01</b><span>PERFORMANCE</span><small>العائد والحركة</small></button>' +
+        '<button role="tab" aria-selected="false" data-tab="risk"><b>02</b><span>RISK</span><small>مؤشر المخاطر</small></button>' +
+        '<button role="tab" aria-selected="false" data-tab="benchmark"><b>03</b><span>BENCHMARK</span><small>مقارنة السوق</small></button>' +
+        '<button role="tab" aria-selected="false" data-tab="smartscore"><b>04</b><span>SMARTSCORE</span><small>مكونات التقييم</small></button>' +
+        '<button role="tab" aria-selected="false" data-tab="evidence"><b>05</b><span>EVIDENCE</span><small>الدليل والمنهج</small></button>' +
+        '<button role="tab" aria-selected="false" data-tab="profile"><b>06</b><span>FUND PROFILE</span><small>بيانات الصندوق</small></button>' +
       '</div>' +
+      '<div class="tab-context"><div><strong id="tab-context-title">Performance Intelligence</strong><span id="tab-context-copy">تحليل العائد وسجل الأداء المتاح فعليًا.</span></div><span class="tab-context-status">LIVE DATA</span></div>' +
       '<section id="performance-panel" class="tab-panel active"><div id="performance-tab"></div></section>' +
       '<section id="risk-panel" class="tab-panel"><div id="risk-tab"></div></section>' +
       '<section id="benchmark-panel" class="tab-panel"><div id="benchmark-tab"></div></section>' +
@@ -79,14 +80,18 @@
       '<section id="profile-panel" class="tab-panel"><div id="profile-tab"></div></section>';
     document.querySelectorAll('.tabs button').forEach(function (b) {
       b.addEventListener('click', async function () {
-        document.querySelectorAll('.tabs button').forEach(function (x) { x.classList.toggle('active', x === b); });
+        document.querySelectorAll('.tabs button').forEach(function (x) { const on = x === b; x.classList.toggle('active', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
         document.querySelectorAll('.tab-panel').forEach(function (x) { x.classList.toggle('active', x.id === b.dataset.tab + '-panel'); });
+        const info = {performance:['Performance Intelligence','تحليل العائد وسجل الأداء المتاح فعليًا.'],risk:['Risk Intelligence','قراءة مركزة للمخاطر والعوامل المؤثرة.'],benchmark:['Market Context','مقارنة الصندوق بالمؤشرات والبدائل.'],smartscore:['SmartScore Architecture','تفكيك الدرجة إلى مكوناتها الأساسية.'],evidence:['Evidence & Method','مصادر البيانات والمنهجية وقابلية التحقق.'],profile:['Fund Profile','الهوية التشغيلية والمستندات والبيانات الرسمية.']}[b.dataset.tab] || [];
+        document.getElementById('tab-context-title').textContent = info[0] || '';
+        document.getElementById('tab-context-copy').textContent = info[1] || '';
+        const target = document.getElementById(b.dataset.tab + '-tab'); target.classList.add('is-loading');
         try {
           const fn = FUND_TABS[b.dataset.tab];
           if (fn) await fn();
         } catch (e) {
-          document.getElementById(b.dataset.tab + '-tab').innerHTML = '<div class="empty">تعذر تحميل هذا التبويب: ' + F.esc(e.message) + '</div>';
-        }
+          target.innerHTML = '<div class="empty"><strong>تعذر تحميل هذا المحور</strong><p>' + F.esc(e.message) + '</p></div>';
+        } finally { target.classList.remove('is-loading'); }
       });
     });
     await FUND_TABS.performance();
