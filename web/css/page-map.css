@@ -1,0 +1,30 @@
+/* map.html page layout — tokens from app.css */
+.page-map{background:var(--bg)}
+.hero-mini{padding:28px 0 6px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 18px}
+@media(max-width:900px){.tiles{grid-template-columns:1fr}}
+.tiles{align-items:stretch}
+button.tile, .tile{
+  height:auto!important; min-height:148px; display:flex; flex-direction:column; align-items:flex-start; justify-content:space-between;
+  background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; cursor:pointer;
+  text-align:right; width:100%; white-space:normal; line-height:1.45; font:inherit; color:inherit;
+}
+.tile .kicker{margin-bottom:8px}
+.tile .v{font-size:24px; font-family:var(--font-num); margin:6px 0}
+.tile .asof{color:var(--dim);font-size:12px;margin-top:8px}
+.pill{display:inline-block;border-radius:999px;padding:3px 8px;font-size:12px}
+.pill.up{background:#0b3b2e;color:var(--good)}
+.pill.dn{background:#3a1515;color:var(--bad)}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:40;align-items:center;justify-content:center;padding:18px}
+.modal.on{display:flex}
+.modal .box{background:var(--bg);border:1px solid var(--line);border-radius:16px;max-width:860px;width:100%;max-height:90vh;overflow:auto;padding:18px}
+#dchart{height:320px;direction:ltr}
+.badge-g{color:var(--good);font-size:13px} .badge-r{color:var(--bad);font-size:13px}
+.seg,.ranges{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.seg button,.ranges button{cursor:pointer}
+.seg button.on,.ranges button.on{background:var(--gold);color:#12131C;border:0}
+.chart-wrap{position:relative}
+#chart{height:440px;direction:ltr;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+#tip{display:none;position:absolute;top:12px;left:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:12px;min-width:200px;z-index:5;direction:rtl}
+.why{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}
+@media(max-width:800px){.why{grid-template-columns:1fr}}

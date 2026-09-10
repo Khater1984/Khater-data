@@ -1,1 +1,100 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FUND DNA · Institutional Profile</title><script src="config.js"></script><link rel="stylesheet" href="css/app.css"><link rel="stylesheet" href="css/fund.css"></head><body><header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>منصة فهم الاقتصاد وتحليل صناديق الاستثمار</span></div><nav><a href="./index.html">البداية</a><a href="./map.html">ماذا حدث للفلوس؟</a><a href="./funds.html">الصناديق</a><a href="./categories.html">خريطة الفئات</a><a href="./macro.html">الاقتصاد</a><a href="./why.html">المنهج</a></nav></div></header><main class="wrap fund-page" id="app"><div class="empty">جاري تحميل FUND DNA…</div></main><script src="js/fund-core.js"></script><script src="js/fund-performance.js"></script><script src="js/fund-risk.js"></script><script src="js/fund-benchmark.js"></script><script src="js/fund-smartscore.js"></script><script src="js/fund-evidence.js"></script><script src="js/fund-ops.js"></script><script>(async function(){'use strict';const F=window.FUND;const app=document.getElementById('app');try{const d=await F.loadFund(),f=d.fund,s=d.score;F.performance=d.performance;F.fund=f;F.score=s;const score=s.final_score==null?'—':Number(s.final_score).toFixed(1);const h=new URLSearchParams(location.search).get('h')||'last12m';const selected=d.performance.find(x=>x.horizon===h)||d.performance.find(x=>x.horizon==='last12m');app.innerHTML='<section class="hero"><div class="eyebrow">FUND DNA · INSTITUTIONAL PROFILE</div><h1>'+F.esc(f.canonical_name)+'</h1><div class="manager">'+F.esc((f.metadata&&f.metadata.profile&&(f.metadata.profile.manager_name_ar||f.metadata.profile.manager_name_en))||f.management_company)+'</div><div class="tags"><span class="tag">'+F.esc(f.category)+'</span><span class="tag">'+F.esc(s.data_tier)+'</span><span class="tag">'+F.esc(s.methodology_version)+'</span></div></section><section class="pulse"><div class="metric primary"><div class="muted">SMART SCORE</div><span class="metric-value">'+score+'</span><span class="pill">'+F.esc(s.rating||'NOT RATED')+'</span></div><div class="metric"><div class="muted">RETURN · '+F.esc(F.L[h]||h)+'</div><span class="metric-value">'+F.pct(selected&&selected.return_pct)+'</span><div class="note">'+(selected?F.esc(selected.report_date):'لا توجد بيانات')+'</div></div><div class="metric"><div class="muted">DATA CONFIDENCE</div><span class="metric-value" style="font-size:24px">'+F.esc(s.data_confidence)+'</span><div class="note">'+F.esc(s.data_quality)+'</div></div><div class="metric"><div class="muted">QUALIFICATION</div><span class="metric-value" style="font-size:22px">'+F.esc(s.qualification_status)+'</span><div class="note">Track Factor · '+(s.track_factor==null?'—':Number(s.track_factor).toFixed(2))+'</div></div></section><div class="tabs" role="tablist" aria-label="Fund DNA analytical sections"><button class="active" role="tab" aria-selected="true" data-tab="performance"><b>01</b><span>PERFORMANCE</span><small>العائد والحركة</small></button><button role="tab" aria-selected="false" data-tab="risk"><b>02</b><span>RISK</span><small>مؤشر المخاطر</small></button><button role="tab" aria-selected="false" data-tab="benchmark"><b>03</b><span>BENCHMARK</span><small>مقارنة السوق</small></button><button role="tab" aria-selected="false" data-tab="smartscore"><b>04</b><span>SMARTSCORE</span><small>مكونات التقييم</small></button><button role="tab" aria-selected="false" data-tab="evidence"><b>05</b><span>EVIDENCE</span><small>الدليل والمنهج</small></button><button role="tab" aria-selected="false" data-tab="ops"><b>06</b><span>FUND PROFILE</span><small>بيانات الصندوق</small></button></div><div class="tab-context"><div><strong id="tab-context-title">Performance Intelligence</strong><span id="tab-context-copy">تحليل العائد وسجل الأداء المتاح فعليًا.</span></div><span class="tab-context-status">LIVE DATA</span></div><section id="performance-panel" class="tab-panel active"><div id="performance-tab"></div></section><section id="risk-panel" class="tab-panel"><div id="risk-tab"></div></section><section id="benchmark-panel" class="tab-panel"><div id="benchmark-tab"></div></section><section id="smartscore-panel" class="tab-panel"><div id="smartscore-tab"></div></section><section id="evidence-panel" class="tab-panel"><div id="evidence-tab"></div></section><section id="ops-panel" class="tab-panel"><div id="ops-tab"></div></section>';const tabInfo={performance:['Performance Intelligence','تحليل العائد وسجل الأداء المتاح فعليًا.'],risk:['Risk Intelligence','قراءة مركزة للمخاطر والعوامل المؤثرة.'],benchmark:['Market Context','مقارنة الصندوق بالمؤشرات والبدائل.'],smartscore:['SmartScore Architecture','تفكيك الدرجة إلى مكوناتها الأساسية.'],evidence:['Evidence & Method','مصادر البيانات والمنهجية وقابلية التحقق.'],ops:['Fund Profile','الهوية التشغيلية والمستندات والبيانات الرسمية.']};document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',async()=>{document.querySelectorAll('.tabs button').forEach(x=>{const on=x===b;x.classList.toggle('active',on);x.setAttribute('aria-selected',on?'true':'false')});document.querySelectorAll('.tab-panel').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab+'-panel'));const info=tabInfo[b.dataset.tab]||[];document.getElementById('tab-context-title').textContent=info[0]||'';document.getElementById('tab-context-copy').textContent=info[1]||'';const target=document.getElementById(b.dataset.tab+'-tab');target.classList.add('is-loading');try{const fn=FUND_TABS[b.dataset.tab];if(fn)await fn()}catch(e){target.innerHTML='<div class="empty"><strong>تعذر تحميل هذا المحور</strong><p>'+F.esc(e.message)+'</p></div>'}finally{target.classList.remove('is-loading')}}));await FUND_TABS.performance()}catch(e){app.innerHTML='<div class="empty"><h2>تعذر تحميل FUND DNA</h2><p>'+F.esc(e.message)+'</p><p><a href="./funds.html">العودة إلى الصناديق</a></p></div>';console.error(e)}})();</script></main></body></html>
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FUND DNA · Institutional Profile</title>
+  <script src="config.js"></script>
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/fund.css?v=20260909p">
+  <link rel="stylesheet" href="css/fund-chart.css?v=20260909p">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <div class="logo">رادار السوق المصري<span>منصة فهم الاقتصاد وتحليل صناديق الاستثمار</span></div>
+    <nav>
+      <a href="./index.html">البداية</a>
+      <a href="./map.html">ماذا حدث للفلوس؟</a>
+      <a href="./funds.html">الصناديق</a>
+      <a href="./categories.html">خريطة الفئات</a>
+      <a href="./macro.html">الاقتصاد</a>
+      <a href="./why.html">المنهج</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap fund-page" id="app">
+  <div class="empty">جاري تحميل FUND DNA…</div>
+</main>
+<script src="js/fund-core.js?v=20260909p"></script>
+<script src="js/fund-performance.js?v=20260909p"></script>
+<script src="js/fund-risk.js"></script>
+<script src="js/fund-benchmark.js"></script>
+<script src="js/fund-smartscore.js"></script>
+<script src="js/fund-evidence.js"></script>
+<script src="js/fund-profile.js"></script>
+<script>
+(async function () {
+  'use strict';
+  const F = window.FUND;
+  const app = document.getElementById('app');
+  try {
+    const d = await F.loadFund();
+    const f = d.fund;
+    const s = d.score;
+    F.performance = d.performance;
+    F.navSeries = d.navSeries || [];
+    F.prices = d.prices || [];
+    F.fund = f;
+    F.score = s;
+    const score = s.final_score == null ? '—' : Number(s.final_score).toFixed(1);
+    const h = new URLSearchParams(location.search).get('h') || 'last12m';
+    const windowPts = F.sliceNav(F.navSeries, h);
+    const seriesRet = F.seriesReturn(windowPts);
+    app.innerHTML =
+      '<section class="hero"><div class="eyebrow">FUND DNA · INSTITUTIONAL PROFILE</div>' +
+      '<h1>' + F.esc(f.canonical_name) + '</h1>' +
+      '<div class="manager">' + F.esc((f.metadata && f.metadata.profile && (f.metadata.profile.manager_name_ar || f.metadata.profile.manager_name_en)) || f.management_company) + '</div>' +
+      '<div class="tags"><span class="tag">' + F.esc(f.category) + '</span><span class="tag">' + F.esc(s.data_tier) + '</span><span class="tag">' + F.esc(s.methodology_version) + '</span></div></section>' +
+      '<section class="pulse">' +
+        '<div class="metric primary"><div class="muted">SMART SCORE</div><span class="metric-value">' + score + '</span><span class="pill">' + F.esc(s.rating || 'NOT RATED') + '</span></div>' +
+        '<div class="metric"><div class="muted">RETURN · ' + F.esc(F.L[h] || h) + '</div><span class="metric-value">' + F.pct(seriesRet) + '</span><div class="note">' + (windowPts.length >= 2 ? F.esc(windowPts[0].date + ' → ' + windowPts[windowPts.length - 1].date) : 'بيانات غير كافية') + '</div></div>' +
+        '<div class="metric"><div class="muted">DATA CONFIDENCE</div><span class="metric-value" style="font-size:24px">' + F.esc(s.data_confidence) + '</span><div class="note">' + F.esc(s.data_quality) + '</div></div>' +
+        '<div class="metric"><div class="muted">QUALIFICATION</div><span class="metric-value" style="font-size:22px">' + F.esc(s.qualification_status) + '</span><div class="note">Track Factor · ' + (s.track_factor == null ? '—' : Number(s.track_factor).toFixed(2)) + '</div></div>' +
+      '</section>' +
+      '<div class="tabs" role="tablist">' +
+        '<button class="active" data-tab="performance">01 · PERFORMANCE</button>' +
+        '<button data-tab="risk">02 · RISK</button>' +
+        '<button data-tab="benchmark">03 · BENCHMARK</button>' +
+        '<button data-tab="smartscore">04 · SMARTSCORE</button>' +
+        '<button data-tab="evidence">05 · EVIDENCE</button>' +
+        '<button data-tab="profile">06 · FUND PROFILE</button>' +
+      '</div>' +
+      '<section id="performance-panel" class="tab-panel active"><div id="performance-tab"></div></section>' +
+      '<section id="risk-panel" class="tab-panel"><div id="risk-tab"></div></section>' +
+      '<section id="benchmark-panel" class="tab-panel"><div id="benchmark-tab"></div></section>' +
+      '<section id="smartscore-panel" class="tab-panel"><div id="smartscore-tab"></div></section>' +
+      '<section id="evidence-panel" class="tab-panel"><div id="evidence-tab"></div></section>' +
+      '<section id="profile-panel" class="tab-panel"><div id="profile-tab"></div></section>';
+    document.querySelectorAll('.tabs button').forEach(function (b) {
+      b.addEventListener('click', async function () {
+        document.querySelectorAll('.tabs button').forEach(function (x) { x.classList.toggle('active', x === b); });
+        document.querySelectorAll('.tab-panel').forEach(function (x) { x.classList.toggle('active', x.id === b.dataset.tab + '-panel'); });
+        try {
+          const fn = FUND_TABS[b.dataset.tab];
+          if (fn) await fn();
+        } catch (e) {
+          document.getElementById(b.dataset.tab + '-tab').innerHTML = '<div class="empty">تعذر تحميل هذا التبويب: ' + F.esc(e.message) + '</div>';
+        }
+      });
+    });
+    await FUND_TABS.performance();
+  } catch (e) {
+    app.innerHTML = '<div class="empty"><h2>تعذر تحميل FUND DNA</h2><p>' + F.esc(e.message) + '</p><p><a href="./funds.html">العودة إلى الصناديق</a></p></div>';
+    console.error(e);
+  }
+})();
+</script>
+</body>
+</html>

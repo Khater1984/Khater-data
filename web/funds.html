@@ -2,57 +2,70 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>شاشة ذكاء الصناديق</title><script src="config.js"></script>
-<style>
-:root{--bg:#090b10;--panel:#11151d;--panel2:#171c26;--line:#ffffff14;--text:#f4f6f8;--muted:#8e99a8;--accent:#65e6b2;--warn:#f5c76a;--bad:#f37b86;--blue:#79a9ff}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% -10%,#18302b33,transparent 35%),var(--bg);color:var(--text);font-family:Arial,"Segoe UI",sans-serif}.top{position:sticky;top:0;z-index:20;height:58px;padding:0 22px;background:#090b10ed;backdrop-filter:blur(18px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.brand{font-weight:800}.nav a{color:var(--muted);text-decoration:none;margin-right:18px;font-size:12px}.nav a:hover{color:var(--text)}.page{max-width:1440px;margin:auto;padding:24px}.hero{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:18px}.eyebrow{font-size:10px;letter-spacing:2px;color:var(--accent);font-weight:700}.hero h1{font-size:30px;margin:7px 0}.sub{color:var(--muted);font-size:13px;max-width:780px;line-height:1.7}.protection{max-width:390px;padding:13px 15px;border:1px solid #65e6b233;background:#65e6b20b;border-radius:14px;font-size:12px;line-height:1.6}.protection b{color:var(--accent)}.toolbar,.bench,.table{background:linear-gradient(180deg,#151a23,#10141b);border:1px solid var(--line);border-radius:16px}.toolbar{position:sticky;top:58px;z-index:15;padding:12px;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.toolbar>*{min-height:38px}input,select,button{background:#0c1017;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:12px}input{min-width:210px}button{cursor:pointer}button:hover{border-color:#65e6b255}.bench{padding:15px;margin-bottom:12px}.benchhead{display:flex;justify-content:space-between;align-items:center;gap:10px}.benchtitle{font-size:14px;font-weight:800}.hint{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}.and{padding:5px 10px;border:1px solid #65e6b255;color:var(--accent);border-radius:999px;font-size:10px;font-weight:800}.benchgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.benchcard{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--line);border-radius:12px;background:#0c1017;cursor:pointer}.benchcard:hover{border-color:#ffffff2b}.benchcard.off{opacity:.42;cursor:not-allowed}.benchcard input{min-width:17px;width:17px;height:17px}.benchname{font-size:12px;font-weight:700}.benchval{font-size:18px;font-weight:800;direction:ltr;margin-top:3px}.benchdate{font-size:9px;color:var(--muted);direction:ltr;margin-top:3px}.calculated{font-size:9px;color:var(--warn);margin-right:5px}.status{font-size:11px;color:var(--muted);margin-top:9px}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px}.kpi{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:12px}.kpi span{font-size:10px;color:var(--muted)}.kpi b{display:block;font-size:18px;margin-top:6px;direction:ltr}.table{overflow:auto}.tablebar{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}table{width:100%;border-collapse:collapse;min-width:1050px}th,td{padding:11px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-size:12px}th{font-size:10px;color:var(--muted);font-weight:600}tbody tr{cursor:pointer}tbody tr:hover td{background:#65e6b208}.fund b{font-size:13px}.muted{color:var(--muted);font-size:10px;margin-top:3px}.num{direction:ltr}.pos{color:var(--accent)}.neg{color:var(--bad)}.score{font-weight:800;font-size:15px}.rating{padding:4px 8px;border:1px solid var(--line);border-radius:999px;font-size:10px}.confidence{font-size:10px}.high{color:var(--accent)}.moderate{color:var(--warn)}.limited,.insufficient{color:var(--bad)}.na{color:var(--muted)}.warning{color:var(--warn);max-width:260px;white-space:normal;line-height:1.4}.empty{padding:45px;text-align:center;color:var(--muted)}.loading{padding:45px;text-align:center;color:var(--muted)}.error-state{border:1px solid #f37b8644;background:#f37b860d;color:var(--bad);border-radius:12px;padding:18px;text-align:center}.fresh{color:var(--accent)!important}.stale{color:var(--warn)!important}.foot{margin-top:10px;color:var(--muted);font-size:10px;line-height:1.6}.engine{color:var(--blue)}.horizon-meta{display:block;flex-basis:100%;font-size:10px;color:var(--muted);padding:2px 4px;line-height:1.5}.horizon-meta b{color:var(--warn)}
-@media(max-width:900px){.hero{display:block}.protection{margin-top:12px;max-width:none}.benchgrid{grid-template-columns:1fr 1fr}.kpis{grid-template-columns:repeat(3,1fr)}}@media(max-width:560px){.page{padding:12px}.nav{display:none}.benchgrid,.kpis{grid-template-columns:1fr}.toolbar{position:static}.toolbar input,.toolbar select{width:100%;min-width:0}}
-</style>  <link rel="stylesheet" href="css/header.css"/>
+<title>فرز الصناديق — رادار السوق المصري</title>
+<script src="config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/app.css"/>
+<link rel="stylesheet" href="css/header.css"/>
+<link rel="stylesheet" href="css/page-funds.css"/>
 </head>
-<body>
+<body class="page-funds">
 <header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>منصة فهم الاقتصاد وتحليل صناديق الاستثمار</span></div><nav>
 <a href="./index.html">البداية</a>
 <a href="./map.html">ماذا حدث للفلوس؟</a>
-<a href="./funds.html">الصناديق</a>
+<a href="./funds.html" class="active">الصناديق</a>
 <a href="./categories.html">خريطة الفئات</a>
 <a href="./macro.html">الاقتصاد</a>
 <a href="./why.html">المنهج</a>
 </nav></div></header>
 <main class="page">
-<section class="hero"><div><div class="eyebrow">FUND UNIVERSE / DISCOVERY</div><h1>شاشة فرز الصناديق</h1><div class="sub">اكتشف الصناديق حسب العائد الفعلي، ثم اختبرها مقابل المعايير المتاحة في قاعدة البيانات. بعد ذلك نعرض تقييم محرك SmartScore كما هو، دون إعادة حسابه داخل الواجهة.</div></div><div class="protection"><b>طبقة الحماية</b><br>العائد وحده ليس حكمًا. التقييم النهائي، جودة البيانات، المخاطر، التحذيرات وإشارات التأهل تأتي من محرك التقييم في Supabase.</div></section>
-<section class="toolbar" aria-label="فلاتر الصناديق"><input id="q" aria-label="بحث باسم الصندوق أو المدير" placeholder="بحث باسم الصندوق أو المدير"><select id="cat" aria-label="الفئة"><option value="">كل الفئات</option></select><select id="mgr" aria-label="مدير الصندوق"><option value="">كل المديرين</option></select><select id="score" aria-label="نطاق SmartScore"><option value="">كل الدرجات</option><option value="90">90–100</option><option value="75">75–89.99</option><option value="50">50–74.99</option><option value="0">أقل من 50</option><option value="na">غير مقيم</option></select><select id="h" aria-label="الفترة الزمنية"></select><button id="reset" type="button">إعادة ضبط</button></section>
-<section class="bench"><div class="benchhead"><div><div class="benchtitle">اختبر الصندوق مقابل البدائل</div><div class="hint">اختر معيارًا أو أكثر. عند اختيار أكثر من معيار يجب أن يتفوق الصندوق على <b>جميع</b> المعايير المحددة. المعايير المعروضة هي فقط التي تتوافر لها بيانات فعلية للفترة المختارة.</div></div><span class="and">AND</span></div><div id="bench" class="benchgrid">جاري تحميل المعايير...</div><div id="msg" class="status"></div></section>
+<section class="hero">
+  <div>
+    <div class="eyebrow">اكتشاف · مقارنة · حكم</div>
+    <h1>أي صندوق تفوّق على البدائل؟</h1>
+    <div class="sub">العائد من سجلات الأداء في القاعدة. المقارنة مع التضخم والدولار والذهب والأسهم وأذون الخزانة تتم على نفس الأفق. SmartScore يُقرأ من المحرك ولا يُعاد حسابه هنا.</div>
+  </div>
+  <div class="protection"><b>هذه ليست توصية شراء</b>العائد المرتفع لا يكفي. انظر الثقة، التأهل، التحذير، وهل الصندوق هزم المعايير التي اخترتها جميعًا.</div>
+</section>
+
+<section class="toolbar" aria-label="فلاتر الصناديق">
+  <label class="field"><span>بحث</span><input id="q" aria-label="بحث" placeholder="اسم الصندوق أو المدير"></label>
+  <label class="field"><span>الفئة</span><select id="cat" aria-label="الفئة"><option value="">الكل</option></select></label>
+  <label class="field"><span>مدير الاستثمار</span><select id="mgr" aria-label="مدير الصندوق"><option value="">الكل</option></select></label>
+  <label class="field"><span>التقييم</span><select id="score" aria-label="نطاق التقييم"><option value="">كل الدرجات</option><option value="90">ممتاز 90–100</option><option value="75">جيد جدًا 75–89</option><option value="50">متوسط 50–74</option><option value="0">ضعيف أقل من 50</option><option value="na">غير مقيم</option></select></label>
+  <label class="field"><span>الأفق</span><select id="h" aria-label="الأفق الزمني"></select></label>
+  <label class="field"><span>الترتيب</span><select id="viewSort" aria-label="ترتيب النتائج"><option value="return">العائد</option><option value="score">التقييم</option></select></label>
+  <button id="reset" type="button">إعادة ضبط</button>
+  <div id="horizonMeta" class="horizon-meta"></div>
+</section>
+
 <section id="kpis" class="kpis"></section>
-<section class="table"><div class="tablebar"><b>النتائج</b><span id="resultInfo" class="muted" aria-live="polite"></span></div><table><thead><tr><th>#</th><th>الصندوق</th><th>الفئة</th><th>العائد</th><th>SmartScore</th><th>التصنيف</th><th>المخاطر</th><th>Benchmark</th><th>الثقة</th><th>التأهل</th><th>تحذير</th></tr></thead><tbody id="rows"><tr><td colspan="11" class="loading">جاري تحميل بيانات الصناديق والمعايير…</td></tr></tbody></table></section>
-<div class="foot"><span class="engine">محرك التقييم: Supabase SmartScore</span> · الإصدار المعروض مأخوذ من السجل الفعلي لكل صندوق. الشاشة لا تنشئ درجات أو تحذيرات أو معايير بديلة.</div>
+
+<section class="bench">
+  <div class="benchhead">
+    <div>
+      <div class="benchtitle">اختبر مقابل البدائل</div>
+      <div class="hint">يظهر هنا فقط ما يملك بيانات فعلية لهذا الأفق. اختيار أكثر من معيار يعني أن الصندوق يجب أن يتفوق عليها جميعًا.</div>
+    </div>
+    <span class="and">يجب التفوق على الكل</span>
+  </div>
+  <div id="bench" class="benchgrid">جاري تحميل المعايير…</div>
+  <div id="msg" class="status"></div>
+</section>
+
+<section class="table">
+  <div class="tablebar"><b>النتائج</b><span id="resultInfo" class="muted" aria-live="polite"></span></div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>الصندوق</th><th>الفئة</th><th>العائد</th><th>مقابل المعايير</th>
+        <th>التقييم</th><th>التصنيف</th><th>المخاطرة</th><th>الثقة</th><th>التأهل</th><th>ملاحظة</th>
+      </tr>
+    </thead>
+    <tbody id="rows"><tr><td colspan="11" class="loading">جاري تحميل بيانات الصناديق والمعايير…</td></tr></tbody>
+  </table>
+</section>
+<div class="foot"><span class="engine">المصدر: funds + fund_performance_history + fund_smartscore_latest + macro_series</span> · لا تُنشأ درجات بديلة في المتصفح.</div>
 </main>
-<script>
-const C=window.KHATER||{};
-const $=id=>document.getElementById(id);
-if(!C.url||!C.key){document.body.innerHTML='<main class="page"><h2>خطأ في الاتصال</h2><p>تحقق من config.js</p></main>';throw Error('config missing')}
-const HDR={apikey:C.key,Authorization:'Bearer '+C.key};
-const esc=s=>String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
-const fmt=x=>x==null?'—':Number(x).toLocaleString('en-US',{maximumFractionDigits:2});
-const pct=x=>x==null?'—':fmt(x)+'%';
-const LABEL={weekly:'أسبوعي','4weeks':'4 أسابيع',ytd:'منذ بداية العام',last12m:'12 شهرًا','1y':'سنة','2y':'سنتان','3y':'3 سنوات','4y':'4 سنوات','5y':'5 سنوات','6y':'6 سنوات'};
-const ORDER=['weekly','4weeks','ytd','last12m','1y','2y','3y','4y','5y','6y'];
-const BENCH={inflation:{label:'التضخم',type:'inflation',series:'cpi_headline_mom_pct'},tbill:{label:'أذون الخزانة 364 يوم',type:'tbill',series:'tbill_364_avg_yield_pct'},btc:{label:'Bitcoin / EGP',type:'level',series:'btc_egp'},qqq:{label:'Nasdaq / EGP',type:'level',series:'qqq_egp'},spy:{label:'S&P 500 / EGP',type:'level',series:'spy_egp'},usd:{label:'USD / EGP',type:'level',series:'usd_egp_mid'},silver:{label:'Silver / EGP',type:'level',series:'silver_egp_oz'},gold:{label:'Gold / EGP',type:'level',series:'gold_egp_oz'},egx30:{label:'EGX 30',type:'level',series:'egx30_close'},rate:{label:'أسعار الفائدة (ودائع 1–3 أشهر)',type:'tbill',series:'bank_deposit_1_3m_avg_pct'}};
-const arCategory=c=>{c=(c||'').toLowerCase();if(c.includes('gold'))return'صناديق الذهب';if(c.includes('money market'))return'صناديق النقد';if(c.includes('fixed income'))return'صناديق الدخل الثابت';if(c.includes('balanced')||c.includes('mixed')||c.includes('allocator'))return'الصناديق المتوازنة';if(c.includes('index')||c.includes('etf')||c.includes('traded')||c.includes('passive'))return'صناديق المؤشرات';if(c.includes('equity')||c.includes('thematic')||c.includes('sector'))return'صناديق الأسهم';if(c.includes('protected')||c.includes('guaranteed'))return'صناديق محمية';return c||'غير مصنف'};
-async function get(path){const r=await fetch(C.url+path,{headers:HDR});const j=await r.json();if(!r.ok)throw Error(j.message||('HTTP '+r.status));return j}
-let A=[],perfCache={},benchCache={},selected=new Set(),BENCHVAL={};
-function horizonStart(end,h){const d=new Date(end+'T00:00:00Z');if(h==='weekly')d.setUTCDate(d.getUTCDate()-7);else if(h==='4weeks')d.setUTCDate(d.getUTCDate()-28);else if(h==='last12m')d.setUTCFullYear(d.getUTCFullYear()-1);else if(h==='ytd'){d.setUTCMonth(0,1);return d.toISOString().slice(0,10)}else if(/^\dy$/.test(h))d.setUTCFullYear(d.getUTCFullYear()-Number(h[0]));else return null;return d.toISOString().slice(0,10)}
-async function performance(h){if(perfCache[h])return perfCache[h];const d=await get('/rest/v1/fund_performance_history?select=report_date&horizon=eq.'+encodeURIComponent(h)+'&order=report_date.desc&limit=1');if(!d.length)throw Error('لا توجد بيانات للفترة');const date=d[0].report_date;const r=await get('/rest/v1/fund_performance_history?select=fund_id,return_pct&horizon=eq.'+encodeURIComponent(h)+'&report_date=eq.'+date+'&limit=1000');const map={};r.forEach(x=>map[x.fund_id]=x.return_pct==null?null:Number(x.return_pct));return perfCache[h]=({date,map})}
-async function benchmark(k,h,end){const b=BENCH[k],start=horizonStart(end,h);if(!start)return null;const cache=k+'|'+h+'|'+end;if(benchCache[cache])return benchCache[cache];const r=await get('/rest/v1/macro_series?select=ts_date,value,unit&series_key=eq.'+encodeURIComponent(b.series)+'&ts_date=gte.'+start+'&ts_date=lte.'+end+'&order=ts_date.asc&limit=5000');const v=r.filter(x=>x.value!=null);if(!v.length)return null;let out=null;if(b.type==='level'){const a=Number(v[0].value),z=Number(v[v.length-1].value);if(a)out={value:(z/a-1)*100,start:v[0].ts_date,end:v[v.length-1].ts_date,unit:v[v.length-1].unit}}else if(b.type==='inflation'){let f=1;v.forEach(x=>f*=1+Number(x.value)/100);out={value:(f-1)*100,start:v[0].ts_date,end:v[v.length-1].ts_date,unit:v[v.length-1].unit}}else{const avg=v.reduce((s,x)=>s+Number(x.value),0)/v.length;const days=Math.max(1,(new Date(end)-new Date(start))/86400000);out={value:avg*days/365,start:v[0].ts_date,end:v[v.length-1].ts_date,unit:v[v.length-1].unit,calculated:true}}return benchCache[cache]=out}
-async function renderBench(h,end){const out={};await Promise.all(Object.keys(BENCH).map(async k=>{try{out[k]=await benchmark(k,h,end)}catch(e){out[k]=null}}));BENCHVAL=out;$('bench').innerHTML=Object.entries(BENCH).map(([k,b])=>{const x=out[k];return '<label class="benchcard '+(x?'':'off')+'"><input type="checkbox" data-b="'+k+'" '+(x&&selected.has(k)?'checked':'')+' '+(x?'':'disabled')+'><div><div class="benchname">'+b.label+'</div><div class="benchval">'+(x?pct(x.value):'—')+(x?.calculated?'<span class="calculated">محسوب</span>':'')+'</div><div class="benchdate">'+(x?esc(x.start)+' → '+esc(x.end):'لا توجد بيانات')+'</div></div></label>'}).join('');$('bench').querySelectorAll('[data-b]').forEach(el=>el.onchange=()=>{el.checked?selected.add(el.dataset.b):selected.delete(el.dataset.b);draw(false)});
-$('bench').insertAdjacentHTML('beforeend','<label class="benchcard"><input type="checkbox" id="bestcat" '+(window.BESTCAT?'checked':'')+'><div><div class="benchname">Best in Category</div><div class="benchval">أعلى عائد في فئته</div><div class="benchdate">منطق AND مع المعايير</div></div></label>');
-const bcel=$('bestcat'); if(bcel) bcel.onchange=()=>{window.BESTCAT=bcel.checked;draw(false)}
-}
-function scorePass(f,s){if(!s)return true;if(s==='na')return f.score==null;if(s==='90')return f.score!=null&&f.score>=90;if(s==='75')return f.score!=null&&f.score>=75&&f.score<90;if(s==='50')return f.score!=null&&f.score>=50&&f.score<75;return f.score!=null&&f.score<50}
-function confidenceClass(x){return String(x||'').toLowerCase().replace(/[^a-z]/g,'')}
-function firstWarning(f){if(!Array.isArray(f.warnings)||!f.warnings.length)return '—';return String(f.warnings[0]).replace(/_/g,' ')}
-function rating(f){return f.rating||'غير مقيم'}
-function drawKpis(r,p,h){const scored=r.filter(x=>x.score!=null);const avg=scored.length?scored.reduce((s,x)=>s+Number(x.score),0)/scored.length:null;const age=Math.round((Date.now()-new Date(p.date+'T00:00:00Z'))/86400000);const freshness=age<=2?'fresh':age<=7?'stale':'';const freshnessText=age<=2?'محدّث حديثًا':age<=7?'آخر تحديث منذ '+age+' أيام':'بيانات قديمة نسبيًا';$('kpis').innerHTML='<div class="kpi"><span>الصناديق المعروضة</span><b>'+r.length+' / '+A.length+'</b></div><div class="kpi"><span>الفترة</span><b>'+LABEL[h]+'</b></div><div class="kpi"><span>تاريخ التقرير</span><b class="'+freshness+'">'+p.date+'</b><span class="'+freshness+'">'+freshnessText+'</span></div><div class="kpi"><span>متوسط SmartScore</span><b>'+fmt(avg)+'</b></div><div class="kpi"><span>أعلى عائد معروض</span><b>'+(r[0]?pct(r[0].ret):'—')+'</b></div>'}
-async function draw(reload=true){const h=$('h').value;if(!h)return;const p=await performance(h);A.forEach(f=>f.ret=p.map[f.id]??null);await renderBench(h,p.date);const active=[...selected].filter(k=>BENCHVAL[k]?.value!=null);const qv=$('q').value.trim().toLowerCase(),cv=$('cat').value,mv=$('mgr').value,sv=$('score').value;let r=A.filter(f=>(!qv||(f.name+' '+f.manager).toLowerCase().includes(qv))&&(!cv||f.cat===cv)&&(!mv||f.manager===mv)&&scorePass(f,sv));r=r.filter(f=>!active.length||active.every(k=>f.ret!=null&&f.ret>BENCHVAL[k].value));if(window.BESTCAT){const mx={};r.forEach(f=>{if(f.ret==null)return;if(mx[f.cat]==null||f.ret>mx[f.cat])mx[f.cat]=f.ret});r=r.filter(f=>f.ret!=null&&f.ret===mx[f.cat]);}r.sort((a,b)=>(b.ret??-Infinity)-(a.ret??-Infinity));drawKpis(r,p,h);$('resultInfo').textContent='الفلاتر AND: '+[...active.map(k=>BENCH[k].label),...(window.BESTCAT?['Best in Category']:[])].join(' + ')||'لا يوجد معيار محدد';$('rows').innerHTML=r.length?r.map((f,i)=>{const cc=confidenceClass(f.confidence);return '<tr onclick="location.href=\'fund.html?id='+encodeURIComponent(f.id)+'\'"><td>'+(i+1)+'</td><td class="fund"><b>'+esc(f.name)+'</b><div class="muted">'+esc(f.manager)+'</div></td><td>'+esc(f.cat)+'</td><td class="num '+(f.ret!=null?(f.ret>=0?'pos':'neg'):'')+'">'+pct(f.ret)+'</td><td class="num score">'+fmt(f.score)+'</td><td><span class="rating">'+esc(rating(f))+'</span></td><td class="num">'+fmt(f.risk)+'</td><td class="num">'+fmt(f.benchmark)+'</td><td class="confidence '+cc+'">'+esc(f.confidence||'—')+'</td><td>'+esc(f.qualification||'—')+'</td><td class="warning">'+esc(firstWarning(f))+'</td></tr>'}).join(''):'<tr><td colspan="11" class="empty">لا توجد صناديق تطابق الشروط الحالية.</td></tr>';$('msg').textContent=active.length?'تم تطبيق AND: الصندوق يجب أن يتفوق على جميع المعايير المختارة.':''}
-(async()=>{try{const [funds,navs,ss,hs]=await Promise.all([get('/rest/v1/funds?select=fund_id,canonical_name,management_company,category&limit=1000'),get('/rest/v1/nav_official?select=fund_id,nav,as_of_date&limit=1000'),get('/rest/v1/fund_smartscore_latest?select=fund_id,final_score,rating,risk_score,benchmark_score,data_confidence,qualification_status,warnings,methodology_version&limit=1000'),get('/rest/v1/fund_performance_history?select=horizon&limit=1000')]);const nm={},sm={};navs.forEach(x=>nm[x.fund_id]=x);ss.forEach(x=>sm[x.fund_id]=x);A=funds.map(f=>{const s=sm[f.fund_id]||{};return{id:f.fund_id,name:f.canonical_name||'—',manager:f.management_company||'',cat:arCategory(f.category),nav:nm[f.fund_id]?.nav??null,navd:nm[f.fund_id]?.as_of_date||'',score:s.final_score==null?null:Number(s.final_score),rating:s.rating||'',risk:s.risk_score==null?null:Number(s.risk_score),benchmark:s.benchmark_score==null?null:Number(s.benchmark_score),confidence:s.data_confidence||'',qualification:s.qualification_status||'',warnings:s.warnings||[],methodology:s.methodology_version||'',ret:null}});const horizons=[...new Set(hs.map(x=>x.horizon).filter(x=>LABEL[x]))].sort((a,b)=>ORDER.indexOf(a)-ORDER.indexOf(b));$('h').innerHTML=horizons.map(x=>'<option value="'+x+'">'+LABEL[x]+'</option>').join('');$('h').value=horizons.includes('last12m')?'last12m':horizons[0];[...new Set(A.map(x=>x.cat))].sort().forEach(x=>$('cat').insertAdjacentHTML('beforeend','<option value="'+esc(x)+'">'+esc(x)+'</option>'));[...new Set(A.map(x=>x.manager).filter(Boolean))].sort().forEach(x=>$('mgr').insertAdjacentHTML('beforeend','<option value="'+esc(x)+'">'+esc(x)+'</option>'));['q','cat','mgr','score','h'].forEach(id=>$(id).addEventListener('input',()=>draw(false)));$('reset').onclick=()=>{selected.clear();window.BESTCAT=false;$('q').value='';$('cat').value='';$('mgr').value='';$('score').value='';draw(true)};await draw(true)}catch(e){console.error(e);$('rows').innerHTML='<tr><td colspan="11" class="error-state">تعذر تحميل بيانات الصناديق.<br><small>'+esc(e.message)+'</small><br><button type="button" onclick="location.reload()">إعادة المحاولة</button></td></tr>';$('resultInfo').textContent='تعذر الاتصال بقاعدة البيانات'}})();
-</script><script src="js/platform-core.js?v=foundation1"></script><script src="js/funds-p1.js?v=foundation1"></script>
+<script src="js/funds-screen.js"></script>
 </body></html>
