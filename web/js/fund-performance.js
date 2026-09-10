@@ -95,7 +95,7 @@
     const incomplete = !!(wantedStart && first && first.date > wantedStart);
 
     const tabs = PERIODS.map(function (x) {
-      return '<button type="button" data-h="' + x + '" class="' + (x === horizon ? 'active' : '') + '">' + F.esc(F.L[x] || x) + '</button>';
+      return '<button type="button" data-h="' + x + '" aria-pressed="' + (x === horizon ? 'true' : 'false') + '" class="' + (x === horizon ? 'active' : '') + '">' + F.esc(F.L[x] || x) + '</button>';
     }).join('');
 
     let chartBody;
@@ -113,11 +113,12 @@
 
     const table = F.HS.filter(function (x) { return official[x]; }).map(function (x) {
       const r = official[x];
-      return '<tr class="' + (x === horizon ? 'selected' : '') + '"><td>' + F.L[x] + '</td><td class="num">' + F.pct(r.return_pct) + '</td><td class="num">' + F.num(r.nav_value) + '</td><td>' + F.esc(r.report_date) + '</td></tr>';
+      return '<tr data-h="' + x + '" class="' + (x === horizon ? 'selected' : '') + '"><td>' + F.L[x] + '</td><td class="num">' + F.pct(r.return_pct) + '</td><td class="num">' + F.num(r.nav_value) + '</td><td>' + F.esc(r.report_date) + '</td></tr>';
     }).join('');
 
     host.innerHTML =
-      '<div class="tab-nav" id="perf-horizons">' + tabs + '</div>' +
+      '<div class="tab-nav perf-horizons" id="perf-horizons">' + tabs + '</div>' +
+      '<div class="perf-strip"><div><span>مشاهدات NAV</span><strong>' + windowPts.length + '</strong><small>نقطة فعلية</small></div><div><span>بداية الأفق</span><strong>' + (first ? F.num(first.nav) : '—') + '</strong><small>' + (first ? F.esc(first.date) : 'غير متاح') + '</small></div><div><span>نهاية الأفق</span><strong>' + (last ? F.num(last.nav) : '—') + '</strong><small>' + (last ? F.esc(last.date) : 'غير متاح') + '</small></div><div><span>التغير المحسوب</span><strong class="' + (headline != null && headline >= 0 ? 'positive' : 'negative') + '">' + F.pct(headline) + '</strong><small>من أول نقطة إلى آخر نقطة</small></div></div>' +
       '<div class="perf-grid">' +
         '<div class="card chart-card">' +
           '<div class="chart-top">' +
@@ -125,6 +126,7 @@
             '<strong>' + F.pct(headline) + '</strong>' +
           '</div>' +
           chartBody +
+          '<div class="perf-legend"><span><i></i>NAV الفعلي</span><span>الأفق: ' + F.esc(F.L[horizon]) + '</span><span>' + (incomplete ? 'سلسلة أقصر من الأفق' : 'سلسلة مكتملة') + '</span></div>' +
           '<p class="note">' +
             (windowPts.length >= 2
               ? ('مشاهدات فعلية: ' + windowPts.length + ' · من ' + first.date + ' إلى ' + last.date + ' · العائد = (آخر NAV ÷ أول NAV) − 1. لا يتم توليد فجوات.')
@@ -133,7 +135,7 @@
           '</p>' +
         '</div>' +
         '<div class="card table-card">' +
-          '<h3>Performance Record</h3>' +
+          '<div class="record-head"><div><h3>Performance Record</h3><span>اضغط على زر زمني لتحديث الصف والرسم معًا</span></div><b>' + F.esc(F.L[horizon]) + '</b></div>' +
           '<div class="table-scroll"><table><thead><tr><th>الأفق</th><th>العائد الرسمي</th><th>NAV</th><th>التاريخ</th></tr></thead><tbody>' + table + '</tbody></table></div>' +
           '<p class="note">جدول الأفق يعرض آخر تقرير رسمي لكل أفق. الرسم البياني مستقل ويُحسب من سلسلة NAV.</p>' +
         '</div>' +
@@ -151,6 +153,9 @@
         setHorizon(btn.getAttribute('data-h'));
         render();
       });
+    });
+    host.querySelectorAll('.table-card tbody tr[data-h]').forEach(function (tr) {
+      tr.addEventListener('click', function () { setHorizon(tr.getAttribute('data-h')); render(); });
     });
     bindTooltip(host, windowPts);
   }
