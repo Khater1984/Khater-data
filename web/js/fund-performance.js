@@ -16,12 +16,13 @@
     try { sessionStorage.setItem('khater.horizon', h); } catch (e) {}
   }
 
-  function officialByHorizon(rows) {
-    const by = {};
-    (rows || []).forEach(function (x) {
-      if (x.horizon && !by[x.horizon]) by[x.horizon] = x;
+  function recordFor(rows, horizon) {
+    const matches = (rows || []).filter(function (x) {
+      return x.horizon === horizon && x.return_pct != null;
     });
-    return by;
+    return matches.sort(function (a, b) {
+      return String(b.report_date).localeCompare(String(a.report_date));
+    })[0] || null;
   }
 
   function svgChart(points) {
@@ -37,14 +38,16 @@
     function Y(v) {
       return h - p - ((v - mn) / rg) * (h - 2 * p);
     }
-    const line = points.map(function (pt, i) { return X(i).toFixed(2) + ',' + Y(pt.nav).toFixed(2); }).join(' ');
+    const line = points.map(function (pt, i) {
+      return X(i).toFixed(2) + ',' + Y(pt.nav).toFixed(2);
+    }).join(' ');
     const last = points[points.length - 1];
     const area = p + ',' + (h - p) + ' ' + line + ' ' + X(points.length - 1).toFixed(2) + ',' + (h - p);
     const dots = points.map(function (pt, i) {
       return '<circle class="chart-hit" data-i="' + i + '" cx="' + X(i).toFixed(2) + '" cy="' + Y(pt.nav).toFixed(2) + '" r="9" fill="transparent"></circle>';
     }).join('');
     return (
-      '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" role="img">' +
+      '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" role="img" aria-label="Actual NAV series">' +
         '<line class="axis" x1="0" y1="' + (h / 2) + '" x2="' + w + '" y2="' + (h / 2) + '"/>' +
         '<polyline class="chart-fill" points="' + area + '"/>' +
         '<polyline class="chart-line" points="' + line + '"/>' +
@@ -81,11 +84,6 @@
     wrap.addEventListener('mouseleave', function () { tip.hidden = true; });
   }
 
-  function recordFor(rows, horizon) {
-    const matches = (rows || []).filter(function (x) { return x.horizon === horizon && x.return_pct != null; });
-    return matches.sort(function (a, b) { return String(b.report_date).localeCompare(String(a.report_date)); })[0] || null;
-  }
-
   function performanceRecord(rows, horizon, windowPts) {
     const official = recordFor(rows, horizon);
     let html = '<div class="pf-official">';
@@ -99,7 +97,9 @@
     const recent = windowPts.slice(-8).reverse();
     html += '<div class="pf-actual-head"><span>ACTUAL NAV OBSERVATIONS</span><small>آخر ' + recent.length + ' نقاط محفوظة</small></div>';
     html += '<div class="table-scroll"><table><thead><tr><th>التاريخ</th><th>NAV</th><th>المصدر</th></tr></thead><tbody>';
-    html += recent.map(function (x) { return '<tr><td>' + F.esc(x.date) + '</td><td class="num">' + F.num(x.nav) + '</td><td>' + F.esc(x.source || '—') + '</td></tr>'; }).join('');
+    html += recent.map(function (x) {
+      return '<tr><td>' + F.esc(x.date) + '</td><td class="num">' + F.num(x.nav) + '</td><td>' + F.esc(x.source || '—') + '</td></tr>';
+    }).join('');
     html += '</tbody></table></div>';
     return html;
   }
@@ -108,13 +108,17 @@
     const host = document.getElementById('performance-tab');
     if (!host) return;
     const horizon = currentHorizon();
+    const rows = F.performance || [];
+    const official = recordFor(rows, horizon);
     const series = F.navSeries || [];
-    const windowPts = F.sliceNav(series, horizon);
+    const anchorDate = official && official.report_date ? official.report_date : null;
+    const windowPts = F.sliceNav(series, horizon, anchorDate);
     const headline = F.seriesReturn(windowPts);
     const first = windowPts[0];
     const last = windowPts[windowPts.length - 1];
-    const wantedStart = F.windowStart(horizon, last && last.date);
+    const wantedStart = F.windowStart(horizon, anchorDate || (last && last.date));
     const incomplete = !!(wantedStart && first && first.date > wantedStart);
+    const anchorMismatch = !!(official && last && last.date !== official.report_date);
 
     const tabs = PERIODS.map(function (x) {
       return '<button type="button" data-h="' + x + '" aria-pressed="' + (x === horizon ? 'true' : 'false') + '" class="' + (x === horizon ? 'active' : '') + '">' + F.esc(F.L[x] || x) + '</button>';
@@ -126,7 +130,7 @@
         '<div class="empty data-gap">' +
           '<strong>فجوة بيانات / Insufficient Data</strong>' +
           '<p>لا توجد مشاهدات NAV كافية لرسم الأفق «' + F.esc(F.L[horizon]) + '» لهذا الصندوق. لم يتم توليد أي نقطة.</p>' +
-          '<p>النقاط المتاحة للصندوق كله: ' + series.length + '</p>' +
+          '<p>النقاط المتاحة ضمن السلسلة الفعلية: ' + series.length + '</p>' +
         '</div>';
     } else {
       chartBody = '<div class="chart-wrap">' + svgChart(windowPts) + '<div class="chart-tip" hidden></div></div>';
@@ -151,14 +155,15 @@
                 ? ('مشاهدات فعلية: ' + windowPts.length + ' · من ' + first.date + ' إلى ' + last.date + ' · التغير = (آخر NAV ÷ أول NAV) − 1.')
                 : 'الرسم لا يُعرض إلا من مشاهدات NAV الحقيقية المحفوظة في قاعدة البيانات.') +
               (incomplete ? ' تنبيه: السلسلة المتاحة أقصر من الأفق الزمني المطلوب.' : '') +
+              (anchorMismatch ? ' نهاية السلسلة المتاحة تختلف عن تاريخ التقرير الرسمي؛ لم تتم إضافة نقطة مصطنعة.' : '') +
             '</p>' +
           '</div>' +
           '<div class="card table-card">' +
             '<div class="record-head"><div><span class="perf-kicker">PERFORMANCE RECORD</span><h3>' + F.esc(F.L[horizon]) + '</h3><small>السجل الرسمي + نقاط NAV الفعلية لنفس الأفق</small></div><b>' + F.esc(F.L[horizon]) + '</b></div>' +
-            performanceRecord(F.performance || [], horizon, windowPts) +
+            performanceRecord(rows, horizon, windowPts) +
           '</div>' +
         '</div>' +
-        '<div class="pf-footnote">كل زر زمني يعيد بناء الرسم والملخص وPerformance Record من البيانات المحملة فعليًا لهذا الصندوق. لا يتم إنشاء نقاط مفقودة أو نسخ بيانات من أفق آخر.</div>' +
+        '<div class="pf-footnote">كل زر زمني يعيد بناء الرسم والملخص وPerformance Record من بيانات Supabase الفعلية، مع تثبيت نهاية السلسلة على تاريخ التقرير الرسمي عند توفره. لا يتم إنشاء نقاط مفقودة.</div>' +
       '</div>';
 
     const heroRet = document.querySelector('.pulse .metric:nth-child(2) .metric-value');
