@@ -6,7 +6,7 @@
   const SELECT = {
     fund: 'fund_id,canonical_name,management_company,category,currency,inception_date,price_update_url,metadata',
     score: 'fund_id,final_score,raw_score,rating,data_tier,data_confidence,data_quality,score_as_of,signal_as_of,latest_day_change_pct,latest_signal_status,performance_score,risk_score,benchmark_score,consistency_score,inflation_score,score_explanation,risk_method,track_factor,warnings,qualification_status,calculation_inputs,methodology_version',
-    performance: 'report_date,horizon,nav_value,return_pct,rank,currency,report_status,source_id',
+    performance: 'fund_id,report_date,horizon,nav_value,return_pct,rank,currency,report_status,source_id',
     nav: 'as_of_date,nav,source_id,currency',
     evidence: 'evaluation_id,report_date,category,methodology_version,performance_score,risk_score,benchmark_score,consistency_score,inflation_score,smartscore,effective_weights,component_availability,data_confidence,peer_cohort_size,raw_rank,qualified_rank,qualification_status,calculation_inputs,warnings,calculated_at,data_tier,track_factor,final_score,rating,score_explanation,data_quality'
   };
@@ -50,13 +50,15 @@
   function canonicalPerformance(rows) {
     const map = Object.create(null), conflicts = [];
     (rows || []).forEach(function (row) {
-      if (!row || !row.horizon || !currentOrPast(row.report_date) || validReturn(row.return_pct) == null) return;
-      const key = String(row.horizon) + '|' + String(row.report_date);
+      if (!row || !row.fund_id || !row.horizon || !currentOrPast(row.report_date) || validReturn(row.return_pct) == null) return;
+      // A performance point belongs to a fund + horizon + report date. The fund_id is mandatory
+      // in the key so one fund cannot overwrite every other fund sharing the same report date.
+      const key = String(row.fund_id) + '|' + String(row.horizon) + '|' + String(row.report_date);
       const normalized = Object.assign({}, row, {return_pct: validReturn(row.return_pct)});
       if (!map[key]) map[key] = normalized;
       else if (Number(map[key].return_pct) !== Number(normalized.return_pct)) conflicts.push({key:key,kept:map[key].source_id||null,conflicting:normalized.source_id||null});
     });
-    const data = Object.values(map).sort((a,b) => String(a.horizon).localeCompare(String(b.horizon)) || String(a.report_date).localeCompare(String(b.report_date)));
+    const data = Object.values(map).sort((a,b) => String(a.fund_id).localeCompare(String(b.fund_id)) || String(a.horizon).localeCompare(String(b.horizon)) || String(a.report_date).localeCompare(String(b.report_date)));
     return {data, conflicts};
   }
   function performanceSeries(rows, horizon) {
