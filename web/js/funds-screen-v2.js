@@ -4,7 +4,7 @@
 const $=id=>document.getElementById(id), D=window.KHATER_DATA||{}, F=D.funds;
 if(!F) throw new Error('Funds data service is not loaded');
 
-const LABEL={weekly:'أسبوع', '4weeks':'4 أسابيع', ytd:'منذ بداية العام', last12m:'12 شهرًا', '1y':'سنة', '2y':'سنتان', '3y':'3 سنوات', '4y':'4 سنوات', '5y':'5 سنوات', '6y':'6 سنوات'};
+const LABEL={weekly:'أسبوع','4weeks':'4 أسابيع',ytd:'منذ بداية العام',last12m:'12 شهرًا','1y':'سنة','2y':'سنتان','3y':'3 سنوات','4y':'4 سنوات','5y':'5 سنوات','6y':'6 سنوات'};
 const esc=D.escape||((s)=>String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c])));
 const fmt=x=>x==null?'—':Number(x).toLocaleString('en-US',{maximumFractionDigits:2});
 const pct=x=>x==null?'—':fmt(x)+'%';
@@ -24,8 +24,14 @@ function scorePass(f,s){
   return f.score!=null&&f.score<50;
 }
 
+function activeBenchmarkKeys(){
+  const keys=[...selected];
+  if(bestCat)keys.push('bestCategory');
+  return keys;
+}
+
 function selectedLabels(){
-  return [...selected].map(k=>k==='bestCategory'?'الأعلى في فئته':F.BENCH[k]?.label||k);
+  return activeBenchmarkKeys().map(k=>k==='bestCategory'?'الأعلى في فئته':F.BENCH[k]?.label||k);
 }
 
 function drawKpis(rows,p,h){
@@ -37,16 +43,14 @@ function drawKpis(rows,p,h){
     '<div class="kpi"><span>المعروض الآن</span><b>'+rows.length+' / '+universe.length+'</b></div>'+
     '<div class="kpi"><span>الأفق</span><b>'+LABEL[h]+'</b></div>'+
     '<div class="kpi"><span>بيانات العائد الرسمي</span><b>'+p.fundsWithReturn+' / '+universe.length+'</b><em>'+p.records.toLocaleString('en-US')+' نقطة رسمية</em></div>'+
-    '<div class="kpi"><span>تاريخ آخر تقرير رسمي</span><b>'+p.date+'</b><em>'+ (age<=14?'تقرير حديث نسبيًا':'تقرير أقدم نسبيًا') +'</em></div>'+
-    '<div class="kpi"><span>متوسط التقييم</span><b>'+fmt(avg)+'</b></div>'+
+    '<div class="kpi"><span>تاريخ آخر تقرير رسمي</span><b>'+p.date+'</b><em>'+ (age<=14?'تقرير حديث نسبيًا':'تقرير أقدم نسبيًا') +'</em></div>'+\
+    '<div class="kpi"><span>متوسط التقييم</span><b>'+fmt(avg)+'</b></div>'+\
     '<div class="kpi"><span>أعلى عائد في النتيجة</span><b>'+(top?pct(top.ret):'—')+'</b></div>';
 }
 
 async function refreshBench(h,end){
   benchmarkValues=await F.getBenchmarks(h,end);
-  // A selected external benchmark that has no real observations on the new
-  // horizon is never left silently active.
-  [...selected].forEach(k=>{if(k!=='bestCategory'&&!benchmarkValues[k])selected.delete(k);});
+  [...selected].forEach(k=>{if(!benchmarkValues[k])selected.delete(k);});
   renderBench();
 }
 
@@ -57,11 +61,11 @@ function renderBench(){
       const x=benchmarkValues[k];
       return '<label class="benchcard '+(selected.has(k)?'on':'')+'">'+
         '<input type="checkbox" data-b="'+k+'" '+(selected.has(k)?'checked':'')+'>'+
-        '<div><div class="benchname">'+esc(b.label)+'</div>'+
+        '<div><div class="benchname">'+esc(b.label)+'</div>'+\
         '<div class="benchval">'+pct(x.value)+'<span class="calculated">محسوب من السلسلة</span></div>'+\
         '<div class="benchdate">'+esc(x.start)+' → '+esc(x.end)+'</div></div></label>';
     }).join('');
-  const bestAvailable=universe.some(f=>f.ret!=null);
+  const bestAvailable=!!currentSnapshot&&currentSnapshot.fundsWithReturn>0;
   const bestCard=bestAvailable?'<label class="benchcard '+(bestCat?'on':'')+'"><input type="checkbox" id="bestcat" '+(bestCat?'checked':'')+'><div><div class="benchname">الأعلى في فئته</div><div class="benchval">أفضل عائد داخل الفئة</div><div class="benchdate">نفس الأفق · مقارنة داخل الفئة</div></div></label>':'';
   $('bench').innerHTML=(cards||'<div class="empty">لا تتوفر معايير خارجية ببيانات فعلية لهذا الأفق.</div>')+bestCard;
   $('bench').querySelectorAll('[data-b]').forEach(el=>el.onchange=()=>{el.checked?selected.add(el.dataset.b):selected.delete(el.dataset.b);drawRows()});
@@ -82,8 +86,8 @@ function applyFilters(){
   const mgr=$('mgr').value;
   const sc=$('score').value;
   const base=buildDerivedRows();
-  const benchmarkKeys=[...selected];
-  benchmarkMatrix=F.evaluateBenchmarks(base,benchmarkValues,benchmarkKeys,bestCat);
+  const benchmarkKeys=activeBenchmarkKeys();
+  benchmarkMatrix=F.evaluateBenchmarks(base,benchmarkValues,benchmarkKeys,false);
 
   const rowsBeforeFilters=base.filter(f=>
     (!q||(f.name+' '+f.manager).toLowerCase().includes(q))&&
@@ -97,8 +101,6 @@ function applyFilters(){
     return !benchmarkKeys.length || (evaln && evaln.allPassed);
   });
 
-  // Integrity guard: with no active filters the result set must equal the
-  // universe. Never silently turn a data-flow failure into "1 result".
   const noBaseFilters=!q&&!cat&&!mgr&&!sc&&!benchmarkKeys.length;
   if(noBaseFilters&&rowsBeforeFilters.length!==universe.length){
     throw new Error('سلامة البيانات: وصل '+rowsBeforeFilters.length+' صندوقًا إلى طبقة العرض بينما قاعدة الصناديق تحتوي '+universe.length+'.');
