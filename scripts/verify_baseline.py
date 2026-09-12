@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Baseline checks for the static platform before the foundation rebuild."""
+"""Baseline checks for the platform foundation."""
 from pathlib import Path
 import json
 import re
@@ -10,15 +10,10 @@ WEB = ROOT / "web"
 errors: list[str] = []
 
 required = [
-    WEB / "index.html",
-    WEB / "funds.html",
-    WEB / "fund.html",
-    WEB / "categories.html",
-    WEB / "macro.html",
-    WEB / "map.html",
-    WEB / "why.html",
-    WEB / "config.js",
-    WEB / "css/header.css",
+    WEB / "index.html", WEB / "funds.html", WEB / "fund.html", WEB / "categories.html",
+    WEB / "macro.html", WEB / "map.html", WEB / "why.html", WEB / "config.js",
+    WEB / "css/header.css", WEB / "js/data/supabase-client.js", WEB / "js/data/fund-service.js",
+    ROOT / "package.json", ROOT / "ARCHITECTURE.md",
 ]
 for path in required:
     if not path.is_file() or path.stat().st_size == 0:
