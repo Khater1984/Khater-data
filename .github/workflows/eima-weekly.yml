@@ -2,14 +2,16 @@ name: EIMA Weekly Safety Pipeline
 
 on:
   schedule:
-    # Egypt 08:00 Friday during standard time (UTC+2)
-    - cron: "0 6 * 1-3,11-12 5"
-    # Egypt 08:00 Friday during daylight saving time (UTC+3)
-    - cron: "0 5 * 4-10 5"
+    # Egypt 08:00 local time: 05:00 UTC during UTC+3 period, 06:00 UTC during UTC+2 period.
+    - cron: "0 5 * * 5"
+    - cron: "0 6 * * 5"
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  EIMA_TIMEZONE: Africa/Cairo
 
 jobs:
   eima:
@@ -27,21 +29,42 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: |
+          set -o pipefail
           python scripts/eima_weekly_ingest.py --dry-run > /tmp/eima_validation.json
           cat /tmp/eima_validation.json
           python - <<'PY'
           import json, os
-          d=json.load(open('/tmp/eima_validation.json'))
-          errors=d.get('errors',[])
-          if errors == ['REPORT_ALREADY_EXISTS']:
+          d = json.load(open('/tmp/eima_validation.json'))
+          errors = d.get('errors', [])
+          report_date = d.get('report_date', 'unknown')
+          run_id = d.get('run_id', 'unknown')
+          source_url = d.get('source_url', 'unknown')
+
+          # An already-imported report is an idempotent no-op, not a failure.
+          if 'REPORT_ALREADY_EXISTS' in errors:
               print('NO_NEW_REPORT')
-              open(os.environ['GITHUB_OUTPUT'],'a').write('new_report=false\n')
+              print(f'EIMA REPORT: {report_date}')
+              print('STATUS: ALREADY_IMPORTED')
+              print('ACTION: SKIPPED')
+              print('DATABASE: UNCHANGED')
+              print(f'RUN_ID: {run_id}')
+              print(f'SOURCE: {source_url}')
+              open(os.environ['GITHUB_OUTPUT'], 'a').write('new_report=false\n')
+              open(os.environ['GITHUB_OUTPUT'], 'a').write('status=already_imported\n')
           elif errors:
               print('BLOCKED:', errors)
+              print(f'EIMA REPORT: {report_date}')
+              print('STATUS: VALIDATION_BLOCKED')
+              print('ACTION: NO_WRITE')
+              print('DATABASE: UNCHANGED')
               raise SystemExit(1)
           else:
               print('VALIDATION_PASS')
-              open(os.environ['GITHUB_OUTPUT'],'a').write('new_report=true\n')
+              print(f'EIMA REPORT: {report_date}')
+              print('STATUS: VALIDATED_NEW_REPORT')
+              print('ACTION: READY_FOR_ATOMIC_IMPORT')
+              open(os.environ['GITHUB_OUTPUT'], 'a').write('new_report=true\n')
+              open(os.environ['GITHUB_OUTPUT'], 'a').write('status=validated_new_report\n')
           PY
       - name: Import validated report atomically
         if: ${{ steps.validate.outputs.new_report == 'true' }}
