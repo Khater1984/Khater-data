@@ -1,19 +1,19 @@
 (function () {
   'use strict';
   const F = window.FUND;
-  const S = window.KHATER_DATA && window.KHATER_DATA.fund;
   const PERIODS = ['weekly','4weeks','ytd','last12m','1y','2y','3y','4y','5y','6y'];
+  function service() { const s = window.KHATER_DATA && window.KHATER_DATA.fund; if (!s) throw new Error('طبقة بيانات الصندوق غير متاحة'); return s; }
   function selectedHorizon() { const h = new URLSearchParams(location.search).get('h') || 'last12m'; return PERIODS.indexOf(h) >= 0 ? h : 'last12m'; }
   function n(v) { if (v == null || String(v).trim() === '') return null; const x = Number(v); return Number.isFinite(x) ? x : null; }
   function setHorizon(h) { const u = new URL(location.href); u.searchParams.set('id', F.id); u.searchParams.set('h', h); history.replaceState({}, '', u); render(); }
-  function selectedPerformanceRows(horizon) { return S.performanceSeries(F.performance || [], horizon); }
+  function selectedPerformanceRows(horizon) { return service().performanceSeries(F.performance || [], horizon); }
   function validate(rows, horizon) {
     if (!rows.length) return 'لا توجد سجلات أداء رسمية صالحة لهذا الأفق.';
     if (rows.some(r => String(r.horizon) !== horizon || !r.report_date || n(r.return_pct) == null)) return 'Performance data integrity check failed: horizon mismatch.';
     for (let i=1;i<rows.length;i++) if (String(rows[i-1].report_date) >= String(rows[i].report_date)) return 'Performance data integrity check failed: dates are not strictly ascending.';
     return null;
   }
-  function svgChart(rows) { const w=820,h=300,p=32,vals=rows.map(r=>n(r.return_pct)); let mn=Math.min(...vals),mx=Math.max(...vals); if(mn===mx){mn-=1;mx+=1;} const range=mx-mn,X=i=>rows.length===1?w/2:p+i*(w-2*p)/(rows.length-1),Y=v=>h-p-((v-mn)/range)*(h-2*p); const line=rows.map((r,i)=>X(i).toFixed(2)+','+Y(Number(r.return_pct)).toFixed(2)).join(' '),area=p+','+(h-p)+' '+line+' '+X(rows.length-1).toFixed(2)+','+(h-p); const hits=rows.map((r,i)=>'<circle class="chart-hit" data-i="'+i+'" cx="'+X(i).toFixed(2)+'" cy="'+Y(Number(r.return_pct)).toFixed(2)+'" r="10" fill="transparent"></circle>').join(''); return '<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" role="img" aria-label="Official rolling return history"><line class="axis" x1="0" y1="'+Y(0).toFixed(2)+'" x2="'+w+'" y2="'+Y(0).toFixed(2)+'"/><polyline class="chart-fill" points="'+area+'"/><polyline class="chart-line" points="'+line+'"/>'+hits+'</svg>'; }
+  function svgChart(rows) { const w=820,h=300,p=32,vals=rows.map(r=>n(r.return_pct)); let mn=Math.min(...vals),mx=Math.max(...vals); if(mn===mx){mn-=1;mx+=1;} const range=mx-mn,X=i=>rows.length===1?w/2:p+i*(w-2*p)/(rows.length-1),Y=v=>h-p-((v-mn)/range)*(h-2*p); const line=rows.map((r,i)=>X(i).toFixed(2)+','+Y(Number(r.return_pct)).toFixed(2)).join(' '),area=p+','+(h-p)+' '+line+' '+X(rows.length-1).toFixed(2)+','+(h-p); const hits=rows.map((r,i)=>'<circle class="chart-hit" data-i="'+i+'" cx="'+X(i).toFixed(2)+'" cy="'+Y(Number(r.return_pct).toFixed(2))+'" r="10" fill="transparent"></circle>').join(''); return '<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" role="img" aria-label="Official rolling return history"><line class="axis" x1="0" y1="'+Y(0).toFixed(2)+'" x2="'+w+'" y2="'+Y(0).toFixed(2)+'"/><polyline class="chart-fill" points="'+area+'"/><polyline class="chart-line" points="'+line+'"/>'+hits+'</svg>'; }
   function bindTooltip(host,rows){const wrap=host.querySelector('.chart-wrap'),tip=host.querySelector('.chart-tip');if(!wrap||!tip)return;wrap.querySelectorAll('.chart-hit').forEach(el=>el.addEventListener('mouseenter',e=>{const r=rows[Number(el.dataset.i)];tip.hidden=false;tip.innerHTML='<b>'+F.esc(r.report_date)+'</b><span>العائد الرسمي '+F.pct(r.return_pct)+'</span><span>الأفق: '+F.esc(F.L[r.horizon]||r.horizon)+'</span><span>المصدر: fund_performance_history</span>';const box=wrap.getBoundingClientRect();tip.style.left=Math.min(Math.max(12,e.clientX-box.left+12),Math.max(12,box.width-220))+'px';tip.style.top=Math.max(8,e.clientY-box.top-90)+'px';}));wrap.addEventListener('mouseleave',()=>{tip.hidden=true;});}
   function navSnapshot(){const prices=(F.prices||[]).filter(x=>x&&x.as_of_date&&n(x.nav)>0).sort((a,b)=>String(a.as_of_date).localeCompare(String(b.as_of_date)));return {latest:prices[prices.length-1],previous:prices[prices.length-2]};}
   function render(){
