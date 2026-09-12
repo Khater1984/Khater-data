@@ -6,30 +6,12 @@
   const H = { apikey: C.key, Authorization: 'Bearer ' + C.key, Accept: 'application/json' };
   const HS = ['weekly', '4weeks', 'ytd', 'last12m', '1y', '2y', '3y', '4y', '5y', '6y', 'max'];
   const L = {
-    weekly: 'أسبوعي',
-    '4weeks': '4 أسابيع',
-    ytd: 'منذ بداية العام',
-    last12m: '12 شهراً',
-    '1y': 'سنة',
-    '2y': 'سنتان',
-    '3y': '3 سنوات',
-    '4y': '4 سنوات',
-    '5y': '5 سنوات',
-    '6y': '6 سنوات',
-    max: 'الأقصى'
+    weekly: 'أسبوعي', '4weeks': '4 أسابيع', ytd: 'منذ بداية العام', last12m: '12 شهراً',
+    '1y': 'سنة', '2y': 'سنتان', '3y': '3 سنوات', '4y': '4 سنوات', '5y': '5 سنوات', '6y': '6 سنوات', max: 'الأقصى'
   };
-
-  function esc(x) {
-    return String(x == null ? '—' : x).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
-  }
-  function num(x) {
-    return x == null || !Number.isFinite(Number(x)) ? '—' : Number(x).toLocaleString('en-US', { maximumFractionDigits: 2 });
-  }
-  function pct(x) {
-    return x == null || !Number.isFinite(Number(x)) ? '—' : (Number(x) >= 0 ? '+' : '') + num(x) + '%';
-  }
+  function esc(x) { return String(x == null ? '—' : x).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function num(x) { return x == null || !Number.isFinite(Number(x)) ? '—' : Number(x).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
+  function pct(x) { return x == null || !Number.isFinite(Number(x)) ? '—' : (Number(x) >= 0 ? '+' : '') + num(x) + '%'; }
   function warnings(w) {
     if (w == null) return [];
     if (Array.isArray(w)) return w.map(function (x) { return typeof x === 'string' ? x : (x && x.message) || JSON.stringify(x); });
@@ -44,16 +26,10 @@
     if (!r.ok) throw Error((j && j.message) || 'HTTP ' + r.status);
     return j;
   }
-
-  function finiteNav(v) {
-    const n = Number(v);
-    return Number.isFinite(n) && n > 0 ? n : null;
-  }
-  function finiteReturn(v) {
-    if (v == null || String(v).trim() === '') return null;
-    const n = Number(v);
-    return Number.isFinite(n) ? n : null;
-  }
+  function finiteNav(v) { const n = Number(v); return Number.isFinite(n) && n > 0 ? n : null; }
+  function finiteReturn(v) { if (v == null || String(v).trim() === '') return null; const n = Number(v); return Number.isFinite(n) ? n : null; }
+  function todayISO() { return new Date().toISOString().slice(0, 10); }
+  function isCurrentOrPast(date) { return !!date && String(date).slice(0, 10) <= todayISO(); }
   function sourcePriority(source) {
     const s = String(source || '');
     if (s.indexOf('weekly') >= 0 || s.indexOf('live') >= 0) return 20;
@@ -63,88 +39,55 @@
   function buildOfficialSeries(perfRows) {
     const byHorizon = Object.create(null);
     (perfRows || []).forEach(function (row) {
-      if (!row || !row.horizon || !row.report_date || finiteReturn(row.return_pct) == null) return;
-      const horizon = String(row.horizon);
-      const date = String(row.report_date);
+      if (!row || !row.horizon || !row.report_date || !isCurrentOrPast(row.report_date) || finiteReturn(row.return_pct) == null) return;
+      const horizon = String(row.horizon), date = String(row.report_date);
       byHorizon[horizon] = byHorizon[horizon] || Object.create(null);
       const previous = byHorizon[horizon][date];
       if (!previous || sourcePriority(row.source_id) >= sourcePriority(previous.source_id)) {
-        byHorizon[horizon][date] = Object.assign({}, row, {
-          return_pct: finiteReturn(row.return_pct),
-          series_role: sourcePriority(row.source_id) >= 20 ? 'live' : 'historical'
-        });
+        byHorizon[horizon][date] = Object.assign({}, row, { return_pct: finiteReturn(row.return_pct), series_role: sourcePriority(row.source_id) >= 20 ? 'live' : 'historical' });
       }
     });
     Object.keys(byHorizon).forEach(function (horizon) {
-      byHorizon[horizon] = Object.keys(byHorizon[horizon]).sort().map(function (date) {
-        return byHorizon[horizon][date];
-      });
+      byHorizon[horizon] = Object.keys(byHorizon[horizon]).sort().map(function (date) { return byHorizon[horizon][date]; });
     });
     return byHorizon;
   }
-
   function buildNavSeries(perfRows, priceRows) {
     const byDate = Object.create(null);
-    // The chart must use observed NAV prices. Official performance rows are
-    // kept for the record table and are used only as a controlled fallback
-    // when a fund has no price-history observations at all.
     (priceRows || []).forEach(function (row) {
-      const date = row.as_of_date;
-      const nav = finiteNav(row.nav);
-      if (!date || nav == null) return;
+      const date = row.as_of_date, nav = finiteNav(row.nav);
+      if (!date || !isCurrentOrPast(date) || nav == null) return;
       byDate[date] = { date: date, nav: nav, source: row.source_id || 'fund_price_history' };
     });
     if (!Object.keys(byDate).length) {
       (perfRows || []).forEach(function (row) {
-        const date = row.report_date;
-        const nav = finiteNav(row.nav_value);
-        if (!date || nav == null || byDate[date]) return;
+        const date = row.report_date, nav = finiteNav(row.nav_value);
+        if (!date || !isCurrentOrPast(date) || nav == null || byDate[date]) return;
         byDate[date] = { date: date, nav: nav, source: row.source_id || 'fund_performance_history', fallback: true };
       });
     }
     return Object.keys(byDate).sort().map(function (d) { return byDate[d]; });
   }
-
   function windowStart(horizon, endDate) {
     const end = endDate ? new Date(endDate + 'T00:00:00') : new Date();
     if (Number.isNaN(end.getTime())) return null;
     if (horizon === 'max' || !horizon) return null;
     if (horizon === 'ytd') return end.getFullYear() + '-01-01';
-    const days = {
-      weekly: 7,
-      '4weeks': 28,
-      last12m: 365,
-      '1y': 365,
-      '2y': 730,
-      '3y': 1095,
-      '4y': 1460,
-      '5y': 1825,
-      '6y': 2190
-    }[horizon];
+    const days = { weekly: 7, '4weeks': 28, last12m: 365, '1y': 365, '2y': 730, '3y': 1095, '4y': 1460, '5y': 1825, '6y': 2190 }[horizon];
     if (!days) return null;
-    const start = new Date(end.getTime());
-    start.setDate(start.getDate() - days);
-    return start.toISOString().slice(0, 10);
+    const start = new Date(end.getTime()); start.setDate(start.getDate() - days); return start.toISOString().slice(0, 10);
   }
-
   function sliceNav(series, horizon, endDate) {
-    const all = series || [];
-    if (!all.length) return [];
-    const end = endDate || all[all.length - 1].date;
-    const start = windowStart(horizon, end);
-    const capped = all.filter(function (p) { return p.date <= end; });
-    if (!start) return capped;
-    return capped.filter(function (p) { return p.date >= start; });
+    const all = series || []; if (!all.length) return [];
+    const end = endDate || all[all.length - 1].date, start = windowStart(horizon, end);
+    const capped = all.filter(function (p) { return p.date <= end && isCurrentOrPast(p.date); });
+    if (!start) return capped; return capped.filter(function (p) { return p.date >= start; });
   }
-
   function seriesReturn(points) {
     if (!points || points.length < 2) return null;
-    const first = points[0].nav;
-    const last = points[points.length - 1].nav;
-    if (!first) return null;
-    return ((last / first) - 1) * 100;
+    const first = points[0].nav, last = points[points.length - 1].nav;
+    if (!first) return null; return ((last / first) - 1) * 100;
   }
-
   async function loadFund() {
     if (!id) throw Error('معرّف الصندوق غير موجود في الرابط');
     if (!C.url || !C.key) throw Error('config.js غير متاح أو مفاتيح Supabase غير موجودة');
@@ -158,10 +101,5 @@
     const navSeries = buildNavSeries(pr, nh);
     return { fund: fr[0], score: sr[0] || {}, performance: pr || [], prices: nh || [], navSeries: navSeries, officialPerformance: pr || [], officialSeriesByHorizon: buildOfficialSeries(pr) };
   }
-
-  window.FUND = {
-    id: id, C: C, L: L, HS: HS, esc: esc, num: num, pct: pct, warnings: warnings,
-    get: get, loadFund: loadFund, buildNavSeries: buildNavSeries, buildOfficialSeries: buildOfficialSeries,
-    windowStart: windowStart, sliceNav: sliceNav, seriesReturn: seriesReturn
-  };
+  window.FUND = { id: id, C: C, L: L, HS: HS, esc: esc, num: num, pct: pct, warnings: warnings, get: get, loadFund: loadFund, buildNavSeries: buildNavSeries, buildOfficialSeries: buildOfficialSeries, windowStart: windowStart, sliceNav: sliceNav, seriesReturn: seriesReturn };
 })();
