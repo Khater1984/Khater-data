@@ -21,8 +21,8 @@ REQUIRED = {
     "official performance table": ("fund_performance_history", "service"),
     "future observations rejected": ("currentOrPast", "service"),
     "official rows grouped by horizon": ("officialSeriesByHorizon", "service"),
-    "performance filters requested horizon": ("performanceSeries(rows, horizon)", "performance"),
-    "performance selects requested horizon": ("performanceSeries(F.performance || [], horizon)", "performance"),
+    "performance filters requested horizon": ("performanceSeries", "performance"),
+    "performance selects requested horizon": ("service().performanceSeries(F.performance || [],horizon)", "performance"),
     "chart plots official return_pct": ("r.return_pct", "performance"),
     "NAV is explicitly separate": ("LATEST NAV · منفصل", "performance"),
     "NAV is a separate table": ("fund_price_history", "service"),
@@ -44,7 +44,6 @@ for name in ("core", "performance", "risk", "benchmark", "smartscore", "evidence
 if "seriesReturn(" in TEXT["performance"]:
     raise SystemExit("Financial contract failed: performance UI must not calculate official return from NAV")
 
-# The page must load transport + canonical domain before any Fund Profile UI module.
 html = TEXT["html"]
 required_order = [
     "js/data/supabase-client.js",
