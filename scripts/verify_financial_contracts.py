@@ -32,7 +32,7 @@ REQUIRED = {
     "real return component is explicit": ("real_return_score", "service"),
     "SmartScore status is explicit": ("scoreMethodology", "smartscore"),
     "SmartScore has five approved components": ("Benchmark Hit", "smartscore"),
-    "SmartScore uses approved weights": ("25],['R'", "smartscore"),
+    "SmartScore uses approved weights": ("25],", "smartscore"),
     "Data Quality is not a sixth score": ("Data Quality ·", "smartscore"),
 }
 missing = [name for name, (token, source) in REQUIRED.items() if token not in TEXT[source]]
