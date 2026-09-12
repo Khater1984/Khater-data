@@ -31,13 +31,15 @@
 <main class="wrap fund-page" id="app">
   <div class="empty">جاري تحميل FUND DNA…</div>
 </main>
-<script src="js/fund-core.js?v=20260912bundle2"></script>
-<script src="js/fund-performance.js?v=20260912bundle2"></script>
-<script src="js/fund-risk.js?v=20260910c"></script>
-<script src="js/fund-benchmark.js?v=20260910c"></script>
-<script src="js/fund-smartscore.js?v=20260910c"></script>
-<script src="js/fund-evidence.js?v=20260912bundle2"></script>
-<script src="js/fund-profile.js?v=20260910c"></script>
+<script src="js/data/supabase-client.js"></script>
+<script src="js/data/fund-service.js"></script>
+<script src="js/fund-core.js?v=20260912bundle3"></script>
+<script src="js/fund-performance.js?v=20260912bundle3"></script>
+<script src="js/fund-risk.js?v=20260912bundle3"></script>
+<script src="js/fund-benchmark.js?v=20260912bundle3"></script>
+<script src="js/fund-smartscore.js?v=20260912bundle3"></script>
+<script src="js/fund-evidence.js?v=20260912bundle3"></script>
+<script src="js/fund-profile.js?v=20260912bundle3"></script>
 <script>
 (async function () {
   'use strict';
@@ -66,6 +68,7 @@
     F.evidence = d.evidence || null;
     F.fund = f;
     F.score = s;
+    F.bundle = d;
     const profile = (f.metadata && f.metadata.profile) || {};
     const manager = (profile.manager_name_ar || profile.manager_name_en || f.management_company || '—');
     const score = s.final_score == null ? '—' : Number(s.final_score).toFixed(1);
