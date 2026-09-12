@@ -2,7 +2,10 @@ name: EIMA Weekly Safety Pipeline
 
 on:
   schedule:
-    - cron: "0 8 * * 5"
+    # Egypt 08:00 Friday during standard time (UTC+2)
+    - cron: "0 6 * 1-3,11-12 5"
+    # Egypt 08:00 Friday during daylight saving time (UTC+3)
+    - cron: "0 5 * 4-10 5"
   workflow_dispatch:
 
 permissions:
