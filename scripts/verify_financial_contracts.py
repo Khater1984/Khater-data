@@ -23,7 +23,7 @@ REQUIRED = {
     "future observations rejected": ("currentOrPast", "service"),
     "official rows grouped by horizon": ("officialSeriesByHorizon", "service"),
     "performance filters requested horizon": ("performanceSeries", "performance"),
-    "performance uses canonical official series": ("officialSeriesByHorizon", "performance"),
+    "performance uses canonical official series": ("service().performanceSeries(F.performance || [], horizon)", "performance"),
     "chart plots official return_pct": ("r.return_pct", "performance"),
     "NAV is explicitly separate": ("LATEST NAV · منفصل", "performance"),
     "NAV is a separate table": ("fund_price_history", "service"),
