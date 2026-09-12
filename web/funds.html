@@ -2,48 +2,26 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>رادار الصناديق — Egyptian Funds Intelligence Terminal</title>
+<title>رادار الصناديق | Egyptian Funds Intelligence</title>
 <script src="config.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="css/app.css"/><link rel="stylesheet" href="css/header.css"/><link rel="stylesheet" href="css/page-funds.css"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css"><link rel="stylesheet" href="css/header.css"><link rel="stylesheet" href="css/page-funds.css">
 </head>
 <body class="page-funds">
 <div class="terminal-glow terminal-glow-a"></div><div class="terminal-glow terminal-glow-b"></div>
 <header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>منصة فهم الاقتصاد وتحليل صناديق الاستثمار</span></div><nav><a href="./index.html">البداية</a><a href="./map.html">ماذا حدث للفلوس؟</a><a href="./funds.html" class="active">الصناديق</a><a href="./categories.html">خريطة الفئات</a><a href="./macro.html">الاقتصاد</a><a href="./why.html">المنهج</a></nav></div></header>
-<main class="page">
+<main class="terminal">
 <section class="terminal-hero">
-  <div class="hero-main">
-    <div class="eyebrow"><span class="live-dot"></span> EGYPTIAN FUNDS INTELLIGENCE · FUND UNIVERSE</div>
-    <div class="hero-title-row"><div><h1>رادار الصناديق</h1><p class="hero-lede">منصة مقارنة مؤسسية تكشف أين يقف كل صندوق مقابل السوق — باستخدام <strong>العائد الرسمي المنشور</strong> وتاريخ التقرير الفعلي لكل صندوق، دون إعادة بناء أو اختلاق بيانات.</p></div><div class="hero-stamp"><span>DATA INTEGRITY</span><b>VERIFIED LAYER</b><i>SUPABASE · OFFICIAL SERIES</i></div></div>
-    <div class="hero-chips"><span><b>01</b> اكتشاف</span><span><b>02</b> مقارنة</span><span><b>03</b> تحليل</span><span class="chip-accent">OFFICIAL RETURN ONLY</span></div>
-  </div>
-  <aside class="hero-rail">
-    <div class="rail-kicker">METHODOLOGY GUARDRAIL</div>
-    <div class="rail-title">لا تاريخ موحد مفروض على السوق</div>
-    <p>لكل صندوق تاريخ تقرير رسمي خاص به. تُربط مراجع السوق بهذا التاريخ ثم تُعاد النتائج إلى الصندوق نفسه.</p>
-    <div class="rail-rule"><span></span><b>REFERENCE YIELD</b><em>أذون الخزانة والودائع = متوسط سنوي، لا عائد تراكمي مفترض.</em></div>
-  </aside>
+ <div class="hero-main"><div class="eyebrow"><span class="live-dot"></span> EGYPTIAN FUNDS INTELLIGENCE · FUND UNIVERSE</div><div class="hero-title-row"><div><h1>رادار الصناديق</h1><p class="hero-lede">محطة تحليل مؤسسية لاكتشاف الصناديق ومقارنتها بالسوق باستخدام <strong>العائد الرسمي المنشور</strong> وتاريخ التقرير الفعلي لكل صندوق.</p></div><div class="hero-stamp"><span>DATA INTEGRITY</span><b>VERIFIED</b><i>SUPABASE · OFFICIAL SERIES</i></div></div><div class="hero-chips"><span><b>01</b> اكتشاف</span><span><b>02</b> مقارنة</span><span><b>03</b> تحليل</span><span class="chip-accent">OFFICIAL RETURN ONLY</span></div></div>
+ <aside class="hero-rail"><div class="rail-kicker">METHODOLOGY GUARDRAIL</div><div class="rail-title">التاريخ يتبع الصندوق</div><p>لكل صندوق تاريخ تقرير رسمي خاص به. تُربط مراجع السوق بهذا التاريخ ثم تُعاد النتيجة إلى الصندوق نفسه.</p><div class="rail-rule"><b>REFERENCE YIELD</b><span>أذون الخزانة والودائع = متوسط سنوي، لا عائد تراكمي مفترض.</span></div></aside>
 </section>
-
-<section class="terminal-strip" aria-label="حالة البيانات">
-  <div class="strip-cell"><span>ENGINE</span><b>OFFICIAL SERIES</b></div>
-  <div class="strip-cell"><span>DATE LOGIC</span><b>PER-FUND REPORT DATE</b></div>
-  <div class="strip-cell"><span>BENCHMARK</span><b>CANONICAL REGISTRY</b></div>
-  <div class="strip-cell"><span>DATA POLICY</span><b>NO FABRICATION</b></div>
-</section>
-
-<section class="toolbar-shell">
-  <div class="section-label"><span>CONTROL DECK</span><b>تصفية الكون الاستثماري</b></div>
-  <section class="toolbar" aria-label="فلاتر الصناديق"><label class="field search-field"><span>بحث سريع</span><div class="input-wrap"><i>⌕</i><input id="q" aria-label="بحث" placeholder="اسم الصندوق أو مدير الاستثمار"></div></label><label class="field"><span>الفئة</span><select id="cat" aria-label="الفئة"><option value="">كل الفئات</option></select></label><label class="field"><span>مدير الاستثمار</span><select id="mgr" aria-label="مدير الصندوق"><option value="">كل المديرين</option></select></label><label class="field"><span>التقييم</span><select id="score" aria-label="نطاق التقييم"><option value="">كل الدرجات</option><option value="90">ممتاز 90–100</option><option value="75">جيد جدًا 75–89</option><option value="50">متوسط 50–74</option><option value="0">ضعيف أقل من 50</option><option value="na">غير مقيم</option></select></label><label class="field horizon-field"><span>الأفق الزمني</span><select id="h" aria-label="الأفق الزمني"></select></label><label class="field"><span>منظور الترتيب</span><select id="viewSort" aria-label="ترتيب النتائج"><option value="return">العائد الرسمي</option><option value="score">SmartScore</option></select></label><button id="reset" type="button">إعادة الضبط</button><div id="horizonMeta" class="horizon-meta"></div></section>
-</section>
-
-<section class="intel-section"><div class="section-label"><span>MARKET PULSE</span><b>لقطة الكون الحالية</b></div><section id="kpis" class="kpis"></section></section>
-
-<section class="bench"><div class="benchhead"><div><div class="section-label compact"><span>REFERENCE MATRIX</span><b>مراجع السوق</b></div><div class="hint">كل بطاقة مرتبطة بتاريخ التقرير الرسمي للصناديق الداخلة في الكون. المراجع التراكمية تصلح للمقارنة المباشرة؛ مراجع العائد السنوي تبقى مرجعًا مستقلًا ولا تتحول إلى عائد تراكمي مفترض.</div></div><div class="bench-legend"><span class="legend-item"><i class="legend-dot cumulative"></i>قابل للمقارنة تراكميًا</span><span class="legend-item"><i class="legend-dot reference"></i>مرجع سنوي</span></div></div><div id="bench" class="benchgrid">جاري تحميل المعايير…</div><div id="msg" class="status"></div></section>
-
-<section class="results-shell"><div class="tablebar"><div><div class="section-label compact"><span>RANKING ENGINE</span><b>نتائج الصناديق</b></div><span id="resultInfo" class="muted" aria-live="polite"></span></div><div class="table-actions"><span class="table-note">العائد الرسمي هو المصدر الوحيد لرقم العائد</span><span class="table-note">انقر على الصف لفتح الملف الكامل</span></div></div><div class="table-scroll"><table><thead><tr><th>#</th><th>الصندوق / المصدر</th><th>الفئة</th><th>العائد الرسمي</th><th>مقارنة السوق</th><th>SmartScore</th><th>التصنيف</th><th>المخاطرة</th><th>الثقة</th><th>التأهل</th><th>ملاحظة</th></tr></thead><tbody id="rows"><tr><td colspan="11" class="loading">جاري تحميل البيانات الرسمية…</td></tr></tbody></table></div></section>
-
-<footer class="terminal-footer"><div><b>رادار السوق المصري</b><span>Financial intelligence interface · Arabic first · Institutional data discipline</span></div><span class="engine">الأداء الرسمي: fund_performance_history · المقارنة: benchmark registry / central engine · لا تُعرض أرقام بديلة عند غياب البيانات.</span></footer>
+<section class="terminal-strip"><div><span>ENGINE</span><b>OFFICIAL SERIES</b></div><div><span>DATE LOGIC</span><b>PER-FUND REPORT DATE</b></div><div><span>BENCHMARK</span><b>CANONICAL REGISTRY</b></div><div><span>POLICY</span><b>NO FABRICATION</b></div></section>
+<section class="controlbar"><div class="control-title"><span>CONTROL DECK</span><b>تصفية الكون</b></div><label class="field search-field"><span>بحث</span><div class="input-wrap"><i>⌕</i><input id="q" placeholder="اسم الصندوق أو مدير الاستثمار"></div></label><label class="field"><span>الفئة</span><select id="cat"><option value="">كل الفئات</option></select></label><label class="field"><span>مدير الاستثمار</span><select id="mgr"><option value="">كل المديرين</option></select></label><label class="field"><span>التقييم</span><select id="score"><option value="">كل الدرجات</option><option value="90">ممتاز 90–100</option><option value="75">جيد جدًا 75–89</option><option value="50">متوسط 50–74</option><option value="0">ضعيف أقل من 50</option><option value="na">غير مقيم</option></select></label><label class="field"><span>الأفق</span><select id="h"></select></label><label class="field"><span>الترتيب</span><select id="viewSort"><option value="return">العائد الرسمي</option><option value="score">SmartScore</option></select></label><button id="reset" type="button">إعادة ضبط</button></section>
+<div id="horizonMeta" class="horizon-strip">جاري مزامنة الأفق…</div>
+<section class="intel-section"><div class="section-heading"><div><span>MARKET PULSE</span><h2>لقطة الكون الحالية</h2></div><em>OFFICIAL SNAPSHOT</em></div><section id="kpis" class="kpis"></section></section>
+<section class="bench"><div class="benchhead"><div><div class="section-heading"><div><span>REFERENCE MATRIX</span><h2>مراجع السوق</h2></div></div><div class="hint">التراكمي للمقارنة المباشرة. أذون الخزانة والودائع تظهر كمرجع سنوي مستقل ولا تتحول إلى عائد تراكمي مفترض.</div></div><div class="bench-legend"><span><i class="legend-dot cumulative"></i>تراكمي</span><span><i class="legend-dot reference"></i>مرجع سنوي</span></div></div><div id="bench" class="benchgrid">جاري تحميل المعايير…</div><div id="msg" class="status"></div></section>
+<section class="results-shell"><div class="tablebar"><div><div class="section-heading"><div><span>RANKING ENGINE</span><h2>كون الصناديق</h2></div></div><span id="resultInfo" class="muted"></span></div><div class="table-actions"><span>العائد الرسمي فقط</span><span>اضغط لفتح FUND PROFILE</span></div></div><div class="table-scroll"><table><thead><tr><th>#</th><th>الصندوق / المدير</th><th>الفئة</th><th>العائد الرسمي</th><th>السوق</th><th>SmartScore</th><th>التصنيف</th><th>المخاطرة</th><th>الثقة</th><th>التأهل</th><th>ملاحظة</th></tr></thead><tbody id="rows"><tr><td colspan="11" class="loading">جاري تحميل البيانات الرسمية…</td></tr></tbody></table></div></section>
+<footer class="terminal-footer"><b>KHATER MARKET RADAR</b><span>Official performance · Fund-specific report date · Canonical benchmark engine</span><span>DATA FIRST / DECISION READY</span></footer>
 </main>
-<script src="js/data/supabase-client.js?v=20260912-5"></script><script src="js/data/fund-service.js?v=20260912-5"></script><script src="js/data/funds-service.js?v=20260912-5"></script><script src="js/data/benchmark-service.js?v=20260912-1"></script><script src="js/funds-screen-v2.js?v=20260912-5"></script>
+<script src="js/data/supabase-client.js?v=20260912-7"></script><script src="js/data/fund-service.js?v=20260912-7"></script><script src="js/data/funds-service.js?v=20260912-7"></script><script src="js/data/benchmark-service.js?v=20260912-3"></script><script src="js/funds-screen-v2.js?v=20260912-7"></script>
 </body></html>
