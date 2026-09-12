@@ -6,6 +6,9 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="css/app.css"/>
   <script src="config.js"></script>
+  <script src="js/data/supabase-client.js"></script>
+  <script src="js/data/macro-service.js"></script>
+  <script src="js/data/funds-service.js"></script>
   <link rel="stylesheet" href="css/header.css"/>
 </head>
 <body>
@@ -32,22 +35,27 @@
     </section>
   </main>
   <footer class="site"><div class="wrap">البيانات من سوبربيس · التحديث اليومي عبر GitHub Actions · ليست نصيحة استثمارية</div></footer>
-  <script type="module">
-    import { loadEngine, loadFundBook } from "./js/live.js";
-    const fmt = n => n.toLocaleString("en-US", {maximumFractionDigits: 2});
-    try {
-      const [m, f] = await Promise.all([loadEngine(), loadFundBook()]);
-      const last = k => (m.series[k]||[]).at(-1);
-      const usd = last("usd_egp_mid");
-      const egx = last("egx30_close");
-      const priced = f.funds.filter(x => x.nav != null).length;
-      document.getElementById("strip").innerHTML = `
-        <div class="kpi"><em>USD / EGP</em><b class="num">${usd?fmt(usd[1]):"—"}</b><span class="muted">${usd?usd[0]:""}</span></div>
-        <div class="kpi"><em>EGX30</em><b class="num">${egx?fmt(egx[1]):"—"}</b><span class="muted">${egx?egx[0]:""}</span></div>
-        <div class="kpi"><em>صناديق مسعّرة</em><b class="num">${priced} / ${f.funds.length}</b><span class="muted">${f.source}</span></div>
-        <div class="kpi"><em>مصدر المحرّك</em><b>${m.source==="supabase"?"مباشر":"لقطة"}</b><span class="muted">macro_series</span></div>`;
-    } catch(e) {
-      document.getElementById("strip").innerHTML = '<div class="muted">تعذر تحميل الملخص</div>';
-    }
+  <script>
+    (async function(){
+      const fmt=n=>Number(n).toLocaleString('en-US',{maximumFractionDigits:2});
+      const strip=document.getElementById('strip');
+      try{
+        const [usdData,egxData,universe]=await Promise.all([
+          window.KHATER_DATA.macro.getSeries('usd_egp_mid'),
+          window.KHATER_DATA.macro.getSeries('egx30_close'),
+          window.KHATER_DATA.funds.getUniverse()
+        ]);
+        const last=s=>s&&s.rows&&s.rows.length?s.rows[s.rows.length-1]:null;
+        const usd=last(usdData),egx=last(egxData);
+        const priced=universe.list.filter(x=>x.nav!=null).length;
+        strip.innerHTML=`
+          <div class="kpi"><em>USD / EGP</em><b class="num">${usd?fmt(usd.value):'—'}</b><span class="muted">${usd?usd.ts_date:''}</span></div>
+          <div class="kpi"><em>EGX30</em><b class="num">${egx?fmt(egx.value):'—'}</b><span class="muted">${egx?egx.ts_date:''}</span></div>
+          <div class="kpi"><em>صناديق مسعّرة</em><b class="num">${priced} / ${universe.list.length}</b><span class="muted">Supabase</span></div>
+          <div class="kpi"><em>مصدر البيانات</em><b>مباشر</b><span class="muted">public.macro_series + funds</span></div>`;
+      }catch(e){
+        strip.innerHTML='<div class="muted">تعذر تحميل الملخص من قاعدة البيانات</div>';
+      }
+    })();
   </script>
 </body></html>
