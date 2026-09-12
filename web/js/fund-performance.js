@@ -126,18 +126,18 @@
             '<strong>' + F.pct(headline) + '</strong>' +
           '</div>' +
           chartBody +
-          '<div class="perf-legend"><span><i></i>NAV الفعلي</span><span>الأفق: ' + F.esc(F.L[horizon]) + '</span><span>' + (incomplete ? 'سلسلة أقصر من الأفق' : 'سلسلة مكتملة') + '</span></div>' +
+          '<div class="perf-legend"><span><i></i>NAV الفعلي</span><span>المصدر: fund_price_history' + (windowPts.some(function (x) { return x.fallback; }) ? ' · fallback' : '') + '</span><span>الأفق: ' + F.esc(F.L[horizon]) + '</span><span>' + (incomplete ? 'سلسلة أقصر من الأفق' : 'سلسلة مكتملة') + '</span></div>' +
           '<p class="note">' +
             (windowPts.length >= 2
               ? ('مشاهدات فعلية: ' + windowPts.length + ' · من ' + first.date + ' إلى ' + last.date + ' · العائد = (آخر NAV ÷ أول NAV) − 1. لا يتم توليد فجوات.')
-              : 'الرسم لا يُعرض إلا من مشاهدات NAV الحقيقية في fund_price_history و fund_performance_history.') +
+              : 'الرسم لا يُعرض إلا من مشاهدات NAV الحقيقية في fund_price_history؛ ويُستخدم fund_performance_history كمرجع رسمي مستقل للتحقق.') +
             (incomplete ? ' تنبيه: السلسلة المتاحة أقصر من الأفق المختار.' : '') +
           '</p>' +
         '</div>' +
         '<div class="card table-card">' +
           '<div class="record-head"><div><h3>Performance Record</h3><span>اضغط على زر زمني لتحديث الصف والرسم معًا</span></div><b>' + F.esc(F.L[horizon]) + '</b></div>' +
           '<div class="table-scroll"><table><thead><tr><th>الأفق</th><th>العائد الرسمي</th><th>NAV</th><th>التاريخ</th></tr></thead><tbody>' + table + '</tbody></table></div>' +
-          '<p class="note">جدول الأفق يعرض آخر تقرير رسمي لكل أفق. الرسم البياني مستقل ويُحسب من سلسلة NAV.</p>' +
+          '<p class="note">السجل الرسمي مأخوذ من fund_performance_history. الرسم البياني يعرض حركة NAV الفعلية من fund_price_history، ولا يخلط بين العائد الرسمي وحركة السعر.</p>' +
         '</div>' +
       '</div>';
 

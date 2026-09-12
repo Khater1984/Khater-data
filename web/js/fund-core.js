@@ -52,18 +52,23 @@
 
   function buildNavSeries(perfRows, priceRows) {
     const byDate = Object.create(null);
-    (perfRows || []).forEach(function (row) {
-      const date = row.report_date;
-      const nav = finiteNav(row.nav_value);
-      if (!date || nav == null) return;
-      if (!byDate[date]) byDate[date] = { date: date, nav: nav, source: 'fund_performance_history' };
-    });
+    // The chart must use observed NAV prices. Official performance rows are
+    // kept for the record table and are used only as a controlled fallback
+    // when a fund has no price-history observations at all.
     (priceRows || []).forEach(function (row) {
       const date = row.as_of_date;
       const nav = finiteNav(row.nav);
       if (!date || nav == null) return;
       byDate[date] = { date: date, nav: nav, source: row.source_id || 'fund_price_history' };
     });
+    if (!Object.keys(byDate).length) {
+      (perfRows || []).forEach(function (row) {
+        const date = row.report_date;
+        const nav = finiteNav(row.nav_value);
+        if (!date || nav == null || byDate[date]) return;
+        byDate[date] = { date: date, nav: nav, source: row.source_id || 'fund_performance_history', fallback: true };
+      });
+    }
     return Object.keys(byDate).sort().map(function (d) { return byDate[d]; });
   }
 
@@ -117,7 +122,7 @@
       get('/rest/v1/fund_price_history?fund_id=eq.' + encodeURIComponent(id) + '&select=as_of_date,nav,source_id,currency&order=as_of_date.asc&limit=5000')
     ]);
     const navSeries = buildNavSeries(pr, nh);
-    return { fund: fr[0], score: sr[0] || {}, performance: pr || [], prices: nh || [], navSeries: navSeries };
+    return { fund: fr[0], score: sr[0] || {}, performance: pr || [], prices: nh || [], navSeries: navSeries, officialPerformance: pr || [] };
   }
 
   window.FUND = {
