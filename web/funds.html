@@ -11,61 +11,17 @@
 </head>
 <body class="page-funds">
 <header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>منصة فهم الاقتصاد وتحليل صناديق الاستثمار</span></div><nav>
-<a href="./index.html">البداية</a>
-<a href="./map.html">ماذا حدث للفلوس؟</a>
-<a href="./funds.html" class="active">الصناديق</a>
-<a href="./categories.html">خريطة الفئات</a>
-<a href="./macro.html">الاقتصاد</a>
-<a href="./why.html">المنهج</a>
+<a href="./index.html">البداية</a><a href="./map.html">ماذا حدث للفلوس؟</a><a href="./funds.html" class="active">الصناديق</a><a href="./categories.html">خريطة الفئات</a><a href="./macro.html">الاقتصاد</a><a href="./why.html">المنهج</a>
 </nav></div></header>
 <main class="page">
-<section class="hero">
-  <div>
-    <div class="eyebrow">اكتشاف · مقارنة · حكم</div>
-    <h1>أي صندوق تفوّق على البدائل؟</h1>
-    <div class="sub">العائد من سجلات الأداء في القاعدة. المقارنة مع التضخم والدولار والذهب والأسهم وأذون الخزانة تتم على نفس الأفق. SmartScore يُقرأ من المحرك ولا يُعاد حسابه هنا.</div>
-  </div>
-  <div class="protection"><b>هذه ليست توصية شراء</b>العائد المرتفع لا يكفي. انظر الثقة، التأهل، التحذير، وهل الصندوق هزم المعايير التي اخترتها جميعًا.</div>
-</section>
-
-<section class="toolbar" aria-label="فلاتر الصناديق">
-  <label class="field"><span>بحث</span><input id="q" aria-label="بحث" placeholder="اسم الصندوق أو المدير"></label>
-  <label class="field"><span>الفئة</span><select id="cat" aria-label="الفئة"><option value="">الكل</option></select></label>
-  <label class="field"><span>مدير الاستثمار</span><select id="mgr" aria-label="مدير الصندوق"><option value="">الكل</option></select></label>
-  <label class="field"><span>التقييم</span><select id="score" aria-label="نطاق التقييم"><option value="">كل الدرجات</option><option value="90">ممتاز 90–100</option><option value="75">جيد جدًا 75–89</option><option value="50">متوسط 50–74</option><option value="0">ضعيف أقل من 50</option><option value="na">غير مقيم</option></select></label>
-  <label class="field"><span>الأفق</span><select id="h" aria-label="الأفق الزمني"></select></label>
-  <label class="field"><span>الترتيب</span><select id="viewSort" aria-label="ترتيب النتائج"><option value="return">العائد</option><option value="score">التقييم</option></select></label>
-  <button id="reset" type="button">إعادة ضبط</button>
-  <div id="horizonMeta" class="horizon-meta"></div>
-</section>
-
+<section class="hero"><div><div class="eyebrow">اكتشاف · مقارنة · حكم</div><h1>أي صندوق تفوّق على البدائل؟</h1><div class="sub">العائد من سجلات الأداء في القاعدة. المقارنة مع التضخم والدولار والذهب والأسهم وأذون الخزانة تتم على نفس الأفق. SmartScore يُقرأ من المحرك ولا يُعاد حسابه هنا.</div></div><div class="protection"><b>هذه ليست توصية شراء</b>العائد المرتفع لا يكفي. انظر الثقة، التأهل، التحذير، وهل الصندوق هزم المعايير التي اخترتها جميعًا.</div></section>
+<section class="toolbar" aria-label="فلاتر الصناديق"><label class="field"><span>بحث</span><input id="q" aria-label="بحث" placeholder="اسم الصندوق أو المدير"></label><label class="field"><span>الفئة</span><select id="cat" aria-label="الفئة"><option value="">الكل</option></select></label><label class="field"><span>مدير الاستثمار</span><select id="mgr" aria-label="مدير الصندوق"><option value="">الكل</option></select></label><label class="field"><span>التقييم</span><select id="score" aria-label="نطاق التقييم"><option value="">كل الدرجات</option><option value="90">ممتاز 90–100</option><option value="75">جيد جدًا 75–89</option><option value="50">متوسط 50–74</option><option value="0">ضعيف أقل من 50</option><option value="na">غير مقيم</option></select></label><label class="field"><span>الأفق</span><select id="h" aria-label="الأفق الزمني"></select></label><label class="field"><span>الترتيب</span><select id="viewSort" aria-label="ترتيب النتائج"><option value="return">العائد</option><option value="score">التقييم</option></select></label><button id="reset" type="button">إعادة ضبط</button><div id="horizonMeta" class="horizon-meta"></div></section>
 <section id="kpis" class="kpis"></section>
-
-<section class="bench">
-  <div class="benchhead">
-    <div>
-      <div class="benchtitle">اختبر مقابل البدائل</div>
-      <div class="hint">يظهر هنا فقط ما يملك بيانات فعلية لهذا الأفق. اختيار أكثر من معيار يعني أن الصندوق يجب أن يتفوق عليها جميعًا.</div>
-    </div>
-    <span class="and">يجب التفوق على الكل</span>
-  </div>
-  <div id="bench" class="benchgrid">جاري تحميل المعايير…</div>
-  <div id="msg" class="status"></div>
-</section>
-
-<section class="table">
-  <div class="tablebar"><b>النتائج</b><span id="resultInfo" class="muted" aria-live="polite"></span></div>
-  <table>
-    <thead>
-      <tr>
-        <th>#</th><th>الصندوق</th><th>الفئة</th><th>العائد</th><th>مقابل المعايير</th>
-        <th>التقييم</th><th>التصنيف</th><th>المخاطرة</th><th>الثقة</th><th>التأهل</th><th>ملاحظة</th>
-      </tr>
-    </thead>
-    <tbody id="rows"><tr><td colspan="11" class="loading">جاري تحميل بيانات الصناديق والمعايير…</td></tr></tbody>
-  </table>
-</section>
-<div class="foot"><span class="engine">المصدر: funds + fund_performance_history + fund_smartscore_latest + macro_series</span> · لا تُنشأ درجات بديلة في المتصفح.</div>
+<section class="bench"><div class="benchhead"><div><div class="benchtitle">اختبر مقابل البدائل</div><div class="hint">يظهر هنا فقط ما يملك بيانات فعلية لهذا الأفق. اختيار أكثر من معيار يعني أن الصندوق يجب أن يتفوق عليها جميعًا.</div></div><span class="and">يجب التفوق على الكل</span></div><div id="bench" class="benchgrid">جاري تحميل المعايير…</div><div id="msg" class="status"></div></section>
+<section class="table"><div class="tablebar"><b>النتائج</b><span id="resultInfo" class="muted" aria-live="polite"></span></div><table><thead><tr><th>#</th><th>الصندوق</th><th>الفئة</th><th>العائد</th><th>مقابل المعايير</th><th>التقييم</th><th>التصنيف</th><th>المخاطرة</th><th>الثقة</th><th>التأهل</th><th>ملاحظة</th></tr></thead><tbody id="rows"><tr><td colspan="11" class="loading">جاري تحميل بيانات الصناديق والمعايير…</td></tr></tbody></table></section>
+<div class="foot"><span class="engine">المصدر: طبقة البيانات الموحدة في Supabase · لا تُنشأ درجات بديلة في المتصفح.</span></div>
 </main>
-<script src="js/funds-screen.js"></script>
+<script src="js/data/supabase-client.js"></script>
+<script src="js/data/funds-service.js"></script>
+<script src="js/funds-screen-v2.js"></script>
 </body></html>
