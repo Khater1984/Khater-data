@@ -11,6 +11,13 @@
     nav: 'as_of_date,nav,source_id,currency',
     evidence: 'evaluation_id,report_date,category,methodology_version,performance_score,risk_score,benchmark_score,consistency_score,inflation_score,smartscore,effective_weights,component_availability,data_confidence,peer_cohort_size,raw_rank,qualified_rank,qualification_status,calculation_inputs,warnings,calculated_at,data_tier,track_factor,final_score,rating,score_explanation,data_quality'
   };
+  const SMARTSCORE_V2 = Object.freeze({
+    performance: 0.25,
+    risk: 0.25,
+    benchmark: 0.20,
+    consistency: 0.15,
+    real_return: 0.15
+  });
   const BENCHMARKS = [
     {label:'التضخم',series:'cpi_headline_mom_pct',type:'inflation',icon:'CPI'},
     {label:'أذون الخزانة · 364 يوم',series:'tbill_364_avg_yield_pct',type:'yield',icon:'T-BILL'},
@@ -74,6 +81,36 @@
     return d.toISOString().slice(0,10);
   }
 
+  function normalizeSmartScore(row) {
+    const source = row || {};
+    const out = Object.assign({}, source);
+    out.real_return_score = source.inflation_score == null ? null : Number(source.inflation_score);
+    out.smartscore_components = {
+      performance: source.performance_score == null ? null : Number(source.performance_score),
+      risk: source.risk_score == null ? null : Number(source.risk_score),
+      benchmark: source.benchmark_score == null ? null : Number(source.benchmark_score),
+      consistency: source.consistency_score == null ? null : Number(source.consistency_score),
+      real_return: out.real_return_score
+    };
+    return out;
+  }
+
+  function methodologyStatus(row) {
+    const source = row || {};
+    const stored = source.calculation_inputs && source.calculation_inputs.effective_weights
+      ? source.calculation_inputs.effective_weights
+      : null;
+    const weights = stored || null;
+    if (!weights) return {target:'SmartScore 2.0',matches:false,reason:'لا توجد أوزان محفوظة يمكن التحقق منها'};
+    const aliases = {performance:'performance',risk:'risk',benchmark:'benchmark',consistency:'consistency',real_return:'real_return',inflation:'real_return'};
+    const keys = Object.keys(SMARTSCORE_V2);
+    const matches = keys.every(function (key) {
+      const sourceKey = Object.keys(aliases).find(k => aliases[k] === key && Object.prototype.hasOwnProperty.call(weights,k));
+      return sourceKey ? Math.abs(Number(weights[sourceKey]) - SMARTSCORE_V2[key]) < 0.000001 : false;
+    });
+    return {target:'SmartScore 2.0',matches,reason:matches?'الأوزان المحفوظة متوافقة مع SmartScore 2.0':'التقييم المحفوظ يستخدم أوزانًا مختلفة عن SmartScore 2.0',stored:weights,targetWeights:SMARTSCORE_V2};
+  }
+
   async function getBenchmark(benchmark, endDate, horizon) {
     const start = horizonStart(endDate, horizon);
     if (!start || (benchmark.type === 'inflation' && (horizon === 'weekly' || horizon === '4weeks'))) return null;
@@ -105,21 +142,24 @@
       api.get(path('fund_price_history',{fund_id:fundId},SELECT.nav,'as_of_date.asc',5000),{cacheKey:base+'/nav'}),
       api.get(path('smartscore_evaluations',{fund_id:fundId},SELECT.evidence,'report_date.desc,calculated_at.desc',1),{cacheKey:base+'/evidence'})
     ]);
+    const score=normalizeSmartScore(results[1][0]||{});
+    const evidence=normalizeSmartScore(results[4][0]||null);
     const performanceResult=canonicalPerformance(results[2]),navResult=canonicalNAV(results[3]);
     const officialSeriesByHorizon=Object.create(null);
     performanceResult.data.forEach(row=>{(officialSeriesByHorizon[row.horizon]=officialSeriesByHorizon[row.horizon]||[]).push(row);});
     return {
       fund:results[0][0]||null,
-      score:results[1][0]||{},
+      score,
+      scoreMethodology:methodologyStatus(score),
       performance:performanceResult.data,
       officialPerformance:performanceResult.data,
       officialSeriesByHorizon,
       prices:navResult.data,
       navSeries:navResult.data,
-      evidence:results[4][0]||null,
+      evidence,
       dataQuality:{performanceConflicts:performanceResult.conflicts,navConflicts:navResult.conflicts}
     };
   }
 
-  window.KHATER_DATA.fund={getFundBundle,canonicalPerformance,performanceSeries,canonicalNAV,getBenchmark,BENCHMARKS};
+  window.KHATER_DATA.fund={getFundBundle,canonicalPerformance,performanceSeries,canonicalNAV,getBenchmark,BENCHMARKS,SMARTSCORE_V2,normalizeSmartScore,methodologyStatus};
 })(window);
