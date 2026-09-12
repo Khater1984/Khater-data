@@ -2,7 +2,8 @@ name: EIMA Weekly Safety Pipeline
 
 on:
   schedule:
-    # Egypt 08:00 local time: 05:00 UTC during UTC+3 period, 06:00 UTC during UTC+2 period.
+    # Two UTC triggers cover Egypt's UTC+2 / UTC+3 periods.
+    # The local-time gate below ensures exactly one run proceeds at 08:00 Africa/Cairo.
     - cron: "0 5 * * 5"
     - cron: "0 6 * * 5"
   workflow_dispatch:
@@ -18,11 +19,27 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - run: pip install -r requirements-eima.txt
+
+      - name: Gate scheduled run to 08:00 Egypt time
+        if: ${{ github.event_name == 'schedule' }}
+        run: |
+          HOUR=$(TZ=":$EIMA_TIMEZONE" date +"%H")
+          LOCAL_NOW=$(TZ=":$EIMA_TIMEZONE" date +"%Y-%m-%d %H:%M:%S %Z")
+          echo "Egypt local time: $LOCAL_NOW"
+          if [ "$HOUR" != "08" ]; then
+            echo "SCHEDULE_SKIP: this UTC trigger is not the active 08:00 Egypt slot."
+            exit 0
+          fi
+          echo "SCHEDULE_CONTINUE: active 08:00 Egypt slot."
+
+      - name: Install EIMA pipeline dependencies
+        if: ${{ github.event_name == 'workflow_dispatch' || success() }}
+        run: pip install -r requirements-eima.txt
+
       - name: Validate newest EIMA report (no write)
         id: validate
         env:
@@ -66,12 +83,14 @@ jobs:
               open(os.environ['GITHUB_OUTPUT'], 'a').write('new_report=true\n')
               open(os.environ['GITHUB_OUTPUT'], 'a').write('status=validated_new_report\n')
           PY
+
       - name: Import validated report atomically
         if: ${{ steps.validate.outputs.new_report == 'true' }}
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python scripts/eima_weekly_ingest.py
+
       - name: Refresh SmartScore and public snapshots
         if: ${{ steps.validate.outputs.new_report == 'true' }}
         env:
