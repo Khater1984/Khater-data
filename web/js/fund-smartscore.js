@@ -6,18 +6,18 @@
   function render(){
     const s=F.score||{}, c=s.smartscore_components||{}, status=F.scoreMethodology||{};
     const items=[
-      ['P','Performance','الأداء',c.performance,25],
-      ['R','Risk Adjusted','المخاطر المعدلة',c.risk,25],
-      ['B','Benchmark Hit','تحقيق المرجع العام',c.benchmark,20],
-      ['C','Consistency','الاتساق',c.consistency,15],
-      ['I','Real Return','العائد الحقيقي',c.real_return,15]
+      ['P','Performance','الأداء',c.performance,30],
+      ['R','Risk','المخاطر',c.risk,25],
+      ['B','Benchmark','تحقيق المرجع',c.benchmark,25],
+      ['I','Inflation','الحماية من التضخم',c.inflation,10],
+      ['C','Consistency','الاتساق',c.consistency,10]
     ];
     const statusClass=status.matches?'ok':'warn';
-    const statusText=status.matches?'متوافق مع SmartScore 2.0':'التقييم المحفوظ ليس SmartScore 2.0';
+    const statusText=status.matches?'متوافق مع المنهجية النشطة V3.0':'التقييم المحفوظ لا يحمل إصدار V3.0';
     document.getElementById('smartscore-tab').innerHTML=
       '<div class="score-contract '+statusClass+'">'+
-        '<div><b>SMARTSCORE 2.0</b><span>'+esc(statusText)+'</span></div>'+
-        '<small>الأوزان المستهدفة: P 25% · R 25% · B 20% · C 15% · I 15%</small>'+ 
+        '<div><b>SMARTSCORE V3.0</b><span>'+esc(statusText)+'</span></div>'+
+        '<small>الأوزان: P 30% · R 25% · B 25% · I 10% · C 10%</small>'+ 
       '</div>'+ 
       '<div class="score-grid">'+items.map(function(x){
         const value=x[3];
@@ -32,6 +32,7 @@
         '<span>Raw Score · '+F.num(s.raw_score)+'</span>'+ 
         '<span>Final Score · '+F.num(s.final_score)+'</span>'+ 
         '<span>Rating · '+esc(s.rating||'غير متاح')+'</span>'+ 
+        '<span>Track Factor · '+F.num(s.track_factor)+'</span>'+ 
         '<span>Methodology · '+esc(s.methodology_version||'غير متاح')+'</span>'+ 
         '<span>Data Quality · '+esc(s.data_quality||'غير متاح')+'</span>'+ 
       '</div>'+ 
