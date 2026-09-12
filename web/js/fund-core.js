@@ -1,4 +1,4 @@
-/* Fund UI compatibility facade. Financial data access and canonicalization live in web/js/data/fund-service.js. */
+/* Fund UI compatibility facade. The canonical fund-domain service is loaded by fund.html before UI modules. */
 (function () {
   'use strict';
   const q = new URLSearchParams(location.search);
@@ -10,23 +10,15 @@
   function num(x){return x==null||!Number.isFinite(Number(x))?'—':Number(x).toLocaleString('en-US',{maximumFractionDigits:2});}
   function pct(x){return x==null||!Number.isFinite(Number(x))?'—':(Number(x)>=0?'+':'')+num(x)+'%';}
   function warnings(w){if(w==null)return[];if(Array.isArray(w))return w.map(x=>typeof x==='string'?x:(x&&x.message)||JSON.stringify(x));if(typeof w==='object')return Object.entries(w).map(e=>e[0]+': '+JSON.stringify(e[1]));return[String(w)];}
-  function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=false;s.onload=resolve;s.onerror=()=>reject(new Error('تعذر تحميل طبقة البيانات: '+src));document.head.appendChild(s);});}
-  async function ensureDataLayer(){
-    if(!window.KHATER_DATA?.supabase) await loadScript('js/data/supabase-client.js');
-    if(!window.KHATER_DATA?.fund) await loadScript('js/data/fund-service.js');
-  }
+  function service(){const s=window.KHATER_DATA&&window.KHATER_DATA.fund;if(!s)throw new Error('طبقة البيانات الموحدة للصندوق غير محملة');return s;}
   async function loadFund(){
     if(!id)throw Error('معرّف الصندوق غير موجود في الرابط');
     if(!C.url||!C.key)throw Error('config.js غير متاح أو مفاتيح Supabase غير موجودة');
-    await ensureDataLayer();
-    const d=await window.KHATER_DATA.fund.getFundBundle(id);
-    if(!d.fund)throw Error('الصندوق غير موجود: '+id);
-    return d;
+    return service().getFundBundle(id);
   }
-  function service(){return window.KHATER_DATA&&window.KHATER_DATA.fund;}
   window.FUND={id,C,L,HS,esc,num,pct,warnings,loadFund,
-    buildOfficialSeries:rows=>{const s=service();return s?Object.fromEntries(HS.map(h=>[h,s.performanceSeries(rows,h)])):{};},
-    buildNavSeries:(perfRows,priceRows)=>{const s=service();return s?s.canonicalNAV(priceRows||[]).data:[];},
-    getCanonicalPerformance:(rows,h)=>{const s=service();return s?s.performanceSeries(rows,h):[]}
+    buildOfficialSeries:rows=>Object.fromEntries(HS.map(h=>[h,service().performanceSeries(rows,h)])),
+    buildNavSeries:(perfRows,priceRows)=>service().canonicalNAV(priceRows||[]).data,
+    getCanonicalPerformance:(rows,h)=>service().performanceSeries(rows,h)
   };
 })();
