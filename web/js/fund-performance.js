@@ -7,7 +7,11 @@
     const h = new URLSearchParams(location.search).get('h') || 'last12m';
     return PERIODS.indexOf(h) >= 0 ? h : 'last12m';
   }
-  function n(v) { const x = Number(v); return Number.isFinite(x) ? x : null; }
+  function n(v) {
+    if (v == null || String(v).trim() === '') return null;
+    const x = Number(v);
+    return Number.isFinite(x) ? x : null;
+  }
   function setHorizon(h) {
     const u = new URL(location.href); u.searchParams.set('id', F.id); u.searchParams.set('h', h);
     history.replaceState({}, '', u); render();
