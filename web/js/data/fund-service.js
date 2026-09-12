@@ -25,24 +25,34 @@
 
   function canonicalPerformance(rows) {
     const map = Object.create(null);
+    const conflicts = [];
     (rows || []).forEach(function (row) {
       if (!row || !row.horizon || !currentOrPast(row.report_date) || validReturn(row.return_pct) == null) return;
       const key = String(row.horizon) + '|' + String(row.report_date);
-      if (!map[key]) map[key] = Object.assign({}, row, { return_pct: validReturn(row.return_pct) });
+      const normalized = Object.assign({}, row, { return_pct: validReturn(row.return_pct) });
+      if (!map[key]) {
+        map[key] = normalized;
+      } else if (Number(map[key].return_pct) !== Number(normalized.return_pct)) {
+        conflicts.push({ key: key, kept: map[key].source_id || null, conflicting: normalized.source_id || null });
+      }
     });
-    return Object.values(map).sort(function (a, b) {
+    const data = Object.values(map).sort(function (a, b) {
       return String(a.horizon).localeCompare(String(b.horizon)) || String(a.report_date).localeCompare(String(b.report_date));
     });
+    return { data: data, conflicts: conflicts };
   }
 
   function canonicalNAV(rows) {
     const map = Object.create(null);
+    const conflicts = [];
     (rows || []).forEach(function (row) {
       if (!row || !currentOrPast(row.as_of_date) || validNav(row.nav) == null) return;
       const key = String(row.as_of_date);
-      if (!map[key]) map[key] = Object.assign({}, row, { nav: validNav(row.nav) });
+      const normalized = Object.assign({}, row, { nav: validNav(row.nav) });
+      if (!map[key]) map[key] = normalized;
+      else if (Number(map[key].nav) !== Number(normalized.nav)) conflicts.push({ key: key, kept: map[key].source_id || null, conflicting: normalized.source_id || null });
     });
-    return Object.values(map).sort(function (a, b) { return String(a.as_of_date).localeCompare(String(b.as_of_date)); });
+    return { data: Object.values(map).sort(function (a, b) { return String(a.as_of_date).localeCompare(String(b.as_of_date)); }), conflicts: conflicts };
   }
 
   async function getFundBundle(fundId) {
@@ -54,20 +64,19 @@
       api.get(path('fund_performance_history', { fund_id: fundId }, SELECT.performance, 'report_date.desc', 2000), { cacheKey: base + '/performance' }),
       api.get(path('fund_price_history', { fund_id: fundId }, SELECT.nav, 'as_of_date.asc', 5000), { cacheKey: base + '/nav' })
     ]);
-    const performance = canonicalPerformance(results[2]);
-    const prices = canonicalNAV(results[3]);
+    const performanceResult = canonicalPerformance(results[2]);
+    const navResult = canonicalNAV(results[3]);
     const officialSeriesByHorizon = Object.create(null);
-    performance.forEach(function (row) {
-      (officialSeriesByHorizon[row.horizon] = officialSeriesByHorizon[row.horizon] || []).push(row);
-    });
+    performanceResult.data.forEach(function (row) { (officialSeriesByHorizon[row.horizon] = officialSeriesByHorizon[row.horizon] || []).push(row); });
     return {
       fund: results[0][0] || null,
       score: results[1][0] || {},
-      performance: performance,
-      officialPerformance: performance,
+      performance: performanceResult.data,
+      officialPerformance: performanceResult.data,
       officialSeriesByHorizon: officialSeriesByHorizon,
-      prices: prices,
-      navSeries: prices
+      prices: navResult.data,
+      navSeries: navResult.data,
+      dataQuality: { performanceConflicts: performanceResult.conflicts, navConflicts: navResult.conflicts }
     };
   }
 
