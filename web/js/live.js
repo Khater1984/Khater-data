@@ -1,12 +1,11 @@
-/* Compatibility facade for legacy pages. No JSON snapshot fallback is allowed here. */
+/* Thin compatibility adapter for map.html. Financial data access remains in macro-service.js. */
 import { bucket } from "./engine.js";
 
 export const CFG = window.KHATER || {};
 
-async function ensureDataLayer() {
+async function ensureMacroDataLayer() {
   if (!window.KHATER_DATA?.supabase) await load("./data/supabase-client.js");
   if (!window.KHATER_DATA?.macro) await load("./data/macro-service.js");
-  if (!window.KHATER_DATA?.funds) await load("./data/funds-service.js");
 }
 
 function load(src) {
@@ -23,13 +22,21 @@ export function hasLive() {
   return Boolean(CFG.url && CFG.key);
 }
 
+export async function loadEngine() {
+  if (!hasLive()) throw new Error("Supabase configuration is required; JSON snapshots are disabled");
+  await ensureMacroDataLayer();
+  const packed = await window.KHATER_DATA.macro.getAll();
+  const series = {};
+  Object.entries(packed.series).forEach(([key, data]) => {
+    series[key] = data.rows.map(r => [r.ts_date, Number(r.value)]);
+  });
+  return { source: "supabase", series, conflicts: packed.conflicts || [] };
+}
+
+/* Retained only for any legacy caller outside map.html; no JSON fallback. */
 export async function loadSeries(from = "2016-01-01") {
-  await ensureDataLayer();
-  const keys = [
-    "egx30_close","usd_egp_mid","btc_egp","spy_egp","qqq_egp",
-    "gold_egp_oz","silver_egp_oz","cpi_headline_mom_pct",
-    "bank_deposit_1_3m_avg_pct","tbill_91_avg_yield_pct"
-  ];
+  await ensureMacroDataLayer();
+  const keys = Object.keys(window.KHATER_DATA.macro.SERIES);
   const result = {};
   for (const key of keys) {
     const data = await window.KHATER_DATA.macro.getSeries(key);
@@ -40,8 +47,11 @@ export async function loadSeries(from = "2016-01-01") {
   return result;
 }
 
+/* Legacy fund adapter is kept isolated until all external callers are migrated. */
 export async function loadFunds() {
-  await ensureDataLayer();
+  if (!hasLive()) throw new Error("Supabase configuration is required; JSON snapshots are disabled");
+  if (!window.KHATER_DATA?.supabase) await load("./data/supabase-client.js");
+  if (!window.KHATER_DATA?.funds) await load("./data/funds-service.js");
   const universe = await window.KHATER_DATA.funds.getUniverse();
   return universe.list.map(f => ({
     id:f.id,
@@ -55,11 +65,6 @@ export async function loadFunds() {
     nav_asof:null,
     bucket:bucket(f.cat)
   }));
-}
-
-export async function loadEngine() {
-  if (!hasLive()) throw new Error("Supabase configuration is required; JSON snapshots are disabled");
-  return { source:"supabase", series:await loadSeries() };
 }
 
 export async function loadFundBook() {
