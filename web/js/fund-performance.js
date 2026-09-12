@@ -21,10 +21,27 @@
       return row && row.horizon === horizon && row.report_date && n(row.return_pct) != null;
     }).sort(function (a,b) { return String(a.report_date).localeCompare(String(b.report_date)); });
   }
+  function expectedDays(horizon, latestDate) {
+    if (horizon === 'weekly') return 7;
+    if (horizon === '4weeks') return 28;
+    if (horizon === 'ytd') {
+      const latest = new Date(String(latestDate) + 'T00:00:00Z');
+      return Math.max(1, Math.round((latest - new Date(Date.UTC(latest.getUTCFullYear(), 0, 1))) / 86400000));
+    }
+    const years = {last12m: 1, '1y': 1, '2y': 2, '3y': 3, '4y': 4, '5y': 5, '6y': 6};
+    return (years[horizon] || 0) * 365;
+  }
   function validate(rows, horizon) {
     if (!rows.length) return 'لا توجد سجلات أداء رسمية صالحة لهذا الأفق.';
     if (rows.some(function (r) { return r.horizon !== horizon || !r.report_date || n(r.return_pct) == null; })) return 'Performance data integrity check failed: horizon mismatch.';
     for (let i=1;i<rows.length;i++) if (String(rows[i-1].report_date) >= String(rows[i].report_date)) return 'Performance data integrity check failed: dates are not strictly ascending.';
+    const first = new Date(String(rows[0].report_date) + 'T00:00:00Z');
+    const last = new Date(String(rows[rows.length - 1].report_date) + 'T00:00:00Z');
+    const observedDays = Math.max(0, Math.round((last - first) / 86400000));
+    const requiredDays = expectedDays(horizon, rows[rows.length - 1].report_date);
+    if (requiredDays > 28 && observedDays < requiredDays * 0.8) {
+      return 'البيانات الرسمية المتاحة تغطي ' + observedDays + ' يومًا فقط من أصل أفق ' + (requiredDays / 365).toFixed(1) + ' سنة؛ لا يمكن عرض رسم ناقص.';
+    }
     return null;
   }
   function svgChart(rows) {
@@ -63,7 +80,7 @@
     }
     host.querySelectorAll('#perf-horizons button,.perf-horizons button').forEach(function(btn){btn.addEventListener('click',function(){setHorizon(btn.dataset.h);});});
     const heroRet=document.querySelector('.pulse .metric:nth-child(2) .metric-value'),heroNote=document.querySelector('.pulse .metric:nth-child(2) .note'),heroMuted=document.querySelector('.pulse .metric:nth-child(2) .muted');
-    if(!error&&heroRet){heroRet.textContent=F.pct(latest.return_pct);heroNote.textContent=latest.report_date;heroMuted.textContent='OFFICIAL RETURN · '+(F.L[horizon]||horizon);}
+    if(heroRet){heroRet.textContent=error?'—':F.pct(latest.return_pct);heroNote.textContent=error?'بيانات رسمية غير مكتملة':latest.report_date;heroMuted.textContent='OFFICIAL RETURN · '+(F.L[horizon]||horizon);}
   }
   window.addEventListener('popstate',render); window.FUND_TABS=window.FUND_TABS||{}; window.FUND_TABS.performance=render;
 })();
