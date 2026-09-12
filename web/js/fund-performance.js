@@ -27,31 +27,13 @@
       .sort(function (a, b) { return String(b.report_date).localeCompare(String(a.report_date)); })[0] || null;
   }
 
-  /*
-   * IMPORTANT DATA RULE:
-   * - For every horizon except MAX, the historical backbone comes from
-   *   fund_performance_history for THAT SAME horizon, using its real nav_value.
-   * - Newer observations from fund_price_history are appended only after the
-   *   last historical report date.
-   * - MAX uses the complete canonical NAV timeline.
-   * No horizon is created by mathematically slicing another horizon.
-   */
+  /* IMPORTANT DATA RULE: performance history is a validation source, not a
+   * time-series of the selected horizon. The graph uses the complete observed
+   * NAV timeline, then applies the selected date window. */
   function historicalHorizonSeries(rows, prices, horizon) {
     const byDate = Object.create(null);
-
-    if (horizon === 'max') {
-      return (prices || []).map(function (x) {
-        const nav = n(x.nav);
-        return nav != null && nav > 0 && x.as_of_date
-          ? { date: x.as_of_date, nav: nav, source: x.source_id || 'fund_price_history' }
-          : null;
-      }).filter(Boolean).sort(function (a, b) {
-        return String(a.date).localeCompare(String(b.date));
-      });
-    }
-
     (rows || []).forEach(function (x) {
-      if (x.horizon !== horizon || !x.report_date) return;
+      if (!x.report_date) return;
       const nav = n(x.nav_value);
       if (nav == null || nav <= 0) return;
       byDate[x.report_date] = {
@@ -61,15 +43,10 @@
       };
     });
 
-    const historical = Object.keys(byDate).sort().map(function (d) { return byDate[d]; });
-    const lastHistoricalDate = historical.length ? historical[historical.length - 1].date : null;
-
     (prices || []).forEach(function (x) {
       const nav = n(x.nav);
       const date = x.as_of_date;
       if (nav == null || nav <= 0 || !date) return;
-      if (lastHistoricalDate && date <= lastHistoricalDate) return;
-      if (!lastHistoricalDate) return;
       byDate[date] = {
         date: date,
         nav: nav,
@@ -77,7 +54,11 @@
       };
     });
 
-    return Object.keys(byDate).sort().map(function (d) { return byDate[d]; });
+    const all = Object.keys(byDate).sort().map(function (d) { return byDate[d]; });
+    if (horizon === 'max') return all;
+    const end = all.length ? all[all.length - 1].date : null;
+    const start = F.windowStart(horizon, end);
+    return start ? all.filter(function (x) { return x.date >= start; }) : all;
   }
 
   function svgChart(points) {
@@ -184,18 +165,12 @@
     const first = points[0];
     const last = points[points.length - 1];
 
-    // The headline for a real performance horizon is the latest official
-    // return from that horizon. MAX is calculated only from NAV points.
-    const headline = horizon === 'max'
-      ? (first && last && first.nav ? ((last.nav / first.nav) - 1) * 100 : null)
-      : (official ? n(official.return_pct) : null);
+    // Headline is always the observed NAV movement of the selected window.
+    // Official return_pct remains a separate validation value in the record.
+    const headline = first && last && first.nav ? ((last.nav / first.nav) - 1) * 100 : null;
 
-    const historicalPoints = rows.filter(function (x) {
-      return x.horizon === horizon && x.report_date && n(x.nav_value) != null && Number(x.nav_value) > 0;
-    }).length;
-    const appendedPrices = horizon === 'max'
-      ? 0
-      : points.filter(function (x) { return x.source !== 'fund_performance_history'; }).length;
+    const historicalPoints = points.length;
+    const appendedPrices = points.filter(function (x) { return x.source !== 'fund_performance_history'; }).length;
 
     const tabs = PERIODS.map(function (x) {
       return '<button type="button" data-h="' + x + '" aria-pressed="' + (x === horizon ? 'true' : 'false') + '" class="' + (x === horizon ? 'active' : '') + '">' + F.esc(F.L[x] || x) + '</button>';
@@ -217,19 +192,19 @@
       '<div class="pf-shell">' +
         '<div class="tab-nav perf-horizons" id="perf-horizons">' + tabs + '</div>' +
         '<div class="perf-strip">' +
-          '<div><span>العائد الرسمي</span><strong>' + F.pct(headline) + '</strong><small>' + (official ? F.esc(official.report_date) : 'غير متاح') + '</small></div>' +
+          '<div><span>تغير NAV الفعلي</span><strong>' + F.pct(headline) + '</strong><small>' + (first && last ? F.esc(first.date + ' → ' + last.date) : 'غير متاح') + '</small></div>' +
           '<div><span>NAV البداية</span><strong>' + (first ? F.num(first.nav) : '—') + '</strong><small>' + (first ? F.esc(first.date) : 'غير متاح') + '</small></div>' +
           '<div><span>آخر NAV</span><strong>' + (last ? F.num(last.nav) : '—') + '</strong><small>' + (last ? F.esc(last.date) : 'غير متاح') + '</small></div>' +
           '<div><span>النقاط التاريخية</span><strong>' + historicalPoints + '</strong><small>هذا الأفق فقط</small></div>' +
         '</div>' +
         '<div class="perf-grid">' +
           '<div class="card chart-card">' +
-            '<div class="chart-top"><div><span class="perf-kicker">ACTUAL NAV + HISTORICAL DATA</span><h3>' + F.esc(F.L[horizon]) + ' · NAV التاريخي</h3></div><strong>' + F.pct(headline) + '</strong></div>' +
+            '<div class="chart-top"><div><span class="perf-kicker">ACTUAL NAV HISTORY</span><h3>' + F.esc(F.L[horizon]) + ' · حركة NAV الفعلية</h3></div><strong>' + F.pct(headline) + '</strong></div>' +
             chartBody +
             '<div class="perf-legend"><span><i></i>NAV الفعلي</span><span>تاريخي + أحدث NAV</span><span>المصدر: Supabase</span></div>' +
             '<p class="note">' +
               (points.length >= 2
-                ? ('السلسلة تبدأ من بيانات NAV التاريخية الخاصة بأفق ' + F.esc(F.L[horizon]) + ' وتستكمل فقط بـ NAV أحدث من fund_price_history. إجمالي النقاط المضافة حديثاً: ' + appendedPrices + '.')
+                ? ('السلسلة من كامل NAV المرصود ثم تُقص حسب أفق ' + F.esc(F.L[horizon]) + '. نقاط fund_price_history ضمن النافذة: ' + appendedPrices + '.')
                 : 'لا توجد نقاط كافية للرسم؛ لم يتم توليد بيانات بديلة.') +
             '</p>' +
           '</div>' +
@@ -238,7 +213,7 @@
             performanceRecord(rows, horizon, points, official) +
           '</div>' +
         '</div>' +
-        '<div class="pf-footnote">قاعدة الربط: fund_performance_history يوفر التاريخ الخاص بكل أفق مع NAV الفعلي، وfund_price_history يضيف أحدث NAV فقط بعد آخر تقرير تاريخي. لا يتم حساب عائد جديد من نافذة زمنية غير موجودة ولا يتم نسخ بيانات من أفق آخر.</div>' +
+        '<div class="pf-footnote">قاعدة الربط: الرسم يعرض حركة NAV الفعلية من fund_performance_history + fund_price_history بعد تطبيق نافذة التاريخ المختارة. العائد الرسمي من fund_performance_history يظهر منفصلاً للتحقق، ولا يُستخدم كسلسلة نقاط للرسم.</div>' +
       '</div>';
 
     const heroRet = document.querySelector('.pulse .metric:nth-child(2) .metric-value');
