@@ -1,0 +1,22 @@
+/* Macro screen controller. Financial data access stays inside macro-service.js. */
+(function(window){
+'use strict';
+const svc=window.KHATER_DATA&&window.KHATER_DATA.macro;if(!svc)throw new Error('macro-screen-v2.js requires macro-service.js');
+const $=id=>document.getElementById(id);let state={mode:'assets',data:null,visible:new Set()};
+const fmt=n=>new Intl.NumberFormat('ar-EG',{maximumFractionDigits:2}).format(n);
+const pct=n=>fmt(n)+'%';
+function colorClass(v){return v>0?'up':v<0?'down':'neutral'}
+function normalize(row){return row.rows||[]}
+function latest(rows){return rows.length?rows[rows.length-1]:null}
+function index100(rows){if(!rows.length)return[];const base=rows[0].value;if(!Number.isFinite(base)||base===0)return[];return rows.map(r=>({date:r.as_of_date,value:r.value/base*100}))}
+function purchasingPower(rows){let level=100;return rows.map(r=>{level*=1/(1+r.value/100);return{date:r.as_of_date,value:level}})}
+function rateSeries(rows){return rows.map(r=>({date:r.as_of_date,value:r.value}))}
+function rangeText(all){const dates=all.flatMap(x=>normalize(x)).map(x=>x.as_of_date).sort();return dates.length?dates[0]+' → '+dates[dates.length-1]:'—'}
+function renderCards(){const cards=$('cards');const keys=Object.keys(svc.SERIES);cards.innerHTML=keys.map(k=>{const s=state.data.series[k],r=latest(s.rows),m=svc.SERIES[k];return '<article class="card"><div class="label">'+m[1]+'</div><h3>'+m[0]+'</h3><div class="value num">'+(r?fmt(r.value):'—')+'</div><div class="meta"><span>'+m[2]+'</span><span>'+(r?r.as_of_date:'—')+'</span></div></article>'}).join('')}
+function datasets(){const keys=Object.keys(svc.SERIES);if(state.mode==='assets')return keys.filter(k=>svc.SERIES[k][2]==='asset');if(state.mode==='money')return keys.filter(k=>svc.SERIES[k][2]==='inflation');return keys.filter(k=>svc.SERIES[k][2]==='rate')}
+function seriesFor(k){const rows=state.data.series[k].rows;return state.mode==='assets'?index100(rows):state.mode==='money'?purchasingPower(rows):rateSeries(rows)}
+function renderChart(){const svg=$('chart');const keys=datasets();state.visible=new Set(keys);if(!keys.length){svg.innerHTML='';return}const all=keys.flatMap(k=>seriesFor(k));const xs=all.map(p=>new Date(p.date).getTime());const ys=all.map(p=>p.value);const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);const w=1000,h=390,pad=38;const x=v=>pad+(v-minX)/Math.max(1,maxX-minX)*(w-pad*2);const y=v=>h-pad-(v-minY)/Math.max(1e-9,maxY-minY)*(h-pad*2);svg.innerHTML='<line x1="'+pad+'" y1="'+(h-pad)+'" x2="'+(w-pad)+'" y2="'+(h-pad)+'" stroke="rgba(255,255,255,.12)"/><line x1="'+pad+'" y1="'+pad+'" x2="'+pad+'" y2="'+(h-pad)+'" stroke="rgba(255,255,255,.12)"/>'+keys.map((k,i)=>{const pts=seriesFor(k).map(p=>x(new Date(p.date).getTime())+','+y(p.value)).join(' ');return '<polyline fill="none" stroke="'+['#e5b84b','#54d0d0','#63a4ff','#35c98a','#ad8cff','#ef8d63','#d989b8','#9aa7b4'][i%8]+'" stroke-width="2" points="'+pts+'"/>'}).join('');$('chartMeta').textContent=rangeText(keys.map(k=>state.data.series[k]));$('legend').innerHTML=keys.map((k,i)=>'<button class="on"><span class="dot" style="color:'+['#e5b84b','#54d0d0','#63a4ff','#35c98a','#ad8cff','#ef8d63','#d989b8','#9aa7b4'][i%8]+'"></span>'+svc.SERIES[k][0]+'</button>').join('')}
+function renderMode(){document.querySelectorAll('#modes button').forEach(b=>b.classList.toggle('on',b.dataset.mode===state.mode));$('chartTitle').textContent=state.mode==='assets'?'ماذا أصبحت 100 وحدة عند بداية السلسلة؟':state.mode==='money'?'ما الذي تبقى من القوة الشرائية؟':'كيف تحرك العائد النقدي سنويًا؟';renderChart()}
+async function init(){try{$('source').textContent='جاري القراءة من Supabase…';state.data=await svc.getAll();$('coverage').textContent=rangeText(Object.values(state.data.series));$('source').textContent='المصدر: Supabase · public.macro_series';renderCards();renderMode();$('historyNote').textContent='السلاسل لا تبدأ وتنتهي في نفس اليوم؛ الرسم يحترم التاريخ الفعلي لكل سلسلة ولا يملأ الفجوات بقيم مصطنعة.';if(state.data.conflicts.length)$('source').textContent+=' · تم رصد '+state.data.conflicts.length+' تعارض زمني يحتاج مراجعة';}catch(e){$('cards').innerHTML='<div class="error">تعذر تحميل البيانات: '+window.KHATER_DATA.escape(e.message)+'</div>';$('source').textContent='فشل الاتصال بقاعدة البيانات'}}
+document.addEventListener('click',e=>{const b=e.target.closest('#modes button');if(b){state.mode=b.dataset.mode;renderMode()}});init();
+})(window);
