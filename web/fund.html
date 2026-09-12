@@ -10,9 +10,9 @@
   <script src="config.js"></script>
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/header.css">
-  <link rel="stylesheet" href="css/fund.css?v=20260910c">
-  <link rel="stylesheet" href="css/fund-chart.css?v=20260910c">
-  <link rel="stylesheet" href="css/fund-profile.css?v=20260910c">
+  <link rel="stylesheet" href="css/fund.css?v=20260912price1">
+  <link rel="stylesheet" href="css/fund-chart.css?v=20260912price1">
+  <link rel="stylesheet" href="css/fund-profile.css?v=20260912price1">
 </head>
 <body>
 <header class="site-header">
@@ -33,13 +33,13 @@
 </main>
 <script src="js/data/supabase-client.js"></script>
 <script src="js/data/fund-service.js"></script>
-<script src="js/fund-core.js?v=20260912bundle3"></script>
-<script src="js/fund-performance.js?v=20260912bundle3"></script>
-<script src="js/fund-risk.js?v=20260912bundle3"></script>
-<script src="js/fund-benchmark.js?v=20260912bundle3"></script>
-<script src="js/fund-smartscore.js?v=20260912bundle3"></script>
-<script src="js/fund-evidence.js?v=20260912bundle3"></script>
-<script src="js/fund-profile.js?v=20260912bundle3"></script>
+<script src="js/fund-core.js?v=20260912bundle4"></script>
+<script src="js/fund-performance.js?v=20260912bundle4"></script>
+<script src="js/fund-risk.js?v=20260912bundle4"></script>
+<script src="js/fund-benchmark.js?v=20260912bundle4"></script>
+<script src="js/fund-smartscore.js?v=20260912bundle4"></script>
+<script src="js/fund-evidence.js?v=20260912bundle4"></script>
+<script src="js/fund-profile.js?v=20260912bundle4"></script>
 <script>
 (async function () {
   'use strict';
@@ -55,6 +55,20 @@
     const ini = initials(name);
     if (!has(url)) return '<div class="hero-logo-box fallback">' + F.esc(ini) + '</div>';
     return '<div class="hero-logo-box"><img src="' + F.esc(url) + '" alt="' + F.esc(name) + '" loading="lazy" decoding="async" onerror="var p=this.parentNode;this.remove();if(p){p.classList.add(\'fallback\');p.textContent=\'' + F.esc(ini) + '\'}"></div>';
+  }
+  function navPrice(series) {
+    const rows = Array.isArray(series) ? series.filter(function (r) {
+      return r && r.nav != null && Number.isFinite(Number(r.nav)) && r.as_of_date;
+    }) : [];
+    if (!rows.length) return null;
+    rows.sort(function (a, b) { return String(a.as_of_date).localeCompare(String(b.as_of_date)); });
+    return rows[rows.length - 1];
+  }
+  function priceDate(value) {
+    if (!value) return 'غير متاح';
+    const d = new Date(String(value) + 'T00:00:00Z');
+    if (Number.isNaN(d.getTime())) return String(value);
+    return new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(d);
   }
 
   try {
@@ -78,9 +92,19 @@
     const heroReturn = official ? F.pct(official.return_pct) : '—';
     const heroDate = official ? official.report_date : 'بيانات غير متاحة';
     const retClass = official && Number(official.return_pct) < 0 ? 'neg' : 'pos';
+    const latestNav = navPrice(F.navSeries || F.prices);
+    const navValue = latestNav ? F.num(latestNav.nav) : '—';
+    const navDate = latestNav ? priceDate(latestNav.as_of_date) : 'غير متاح';
+    const navCurrency = latestNav && latestNav.currency ? latestNav.currency : 'ج.م.‏';
 
     app.innerHTML =
       '<section class="hero hero-pro">' +
+        '<div class="hero-price-panel" aria-label="سعر الوثيقة">' +
+          '<div class="hero-price-label">سعر الوثيقة</div>' +
+          '<div class="hero-price-value">' + navValue + ' <span>' + F.esc(navCurrency) + '</span></div>' +
+          '<div class="hero-price-meta">آخر تحديث: ' + F.esc(navDate) + '</div>' +
+          '<a class="hero-price-compare" href="./funds.html?compare=' + encodeURIComponent(F.id) + '">قارن</a>' +
+        '</div>' +
         logoBox(profile.manager_logo_url, manager) +
         '<div class="hero-copy">' +
           '<div class="eyebrow">FUND DNA · INSTITUTIONAL PROFILE</div>' +
