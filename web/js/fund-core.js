@@ -1,6 +1,10 @@
 /* Fund UI compatibility facade. The canonical fund-domain service is loaded by fund.html before UI modules. */
 (function () {
   'use strict';
+  const priceCss = document.createElement('link');
+  priceCss.rel = 'stylesheet';
+  priceCss.href = 'css/fund-price.css?v=20260912price1';
+  document.head.appendChild(priceCss);
   const q = new URLSearchParams(location.search);
   const id = q.get('id') || q.get('fund_id');
   const C = window.KHATER || {};
