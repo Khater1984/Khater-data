@@ -1,0 +1,63 @@
+name: EIMA Weekly Safety Pipeline
+
+on:
+  schedule:
+    - cron: "0 8 * * 5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  eima:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Validate newest EIMA report (no write)
+        id: validate
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          set +e
+          python scripts/eima_weekly_ingest.py --dry-run > /tmp/eima_validation.json
+          rc=$?
+          cat /tmp/eima_validation.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/eima_validation.json'))
+          errors=d.get('errors',[])
+          if errors == ['REPORT_ALREADY_EXISTS']:
+              print('NO_NEW_REPORT')
+              open('/tmp/no_new','w').write('1')
+          elif errors:
+              print('BLOCKED:', errors)
+              raise SystemExit(1)
+          else:
+              print('VALIDATION_PASS')
+              open('/tmp/new_report','w').write('1')
+          PY
+      - name: Import validated report atomically
+        if: ${{ success() }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          if [ -f /tmp/new_report ]; then
+            python scripts/eima_weekly_ingest.py
+          else
+            echo "No new EIMA report. No database change."
+          fi
+      - name: Refresh SmartScore and public snapshots
+        if: ${{ success() && hashFiles('/tmp/new_report') != '' }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          python scripts/fix_effective_weights.py
+          python scripts/export_public.py
