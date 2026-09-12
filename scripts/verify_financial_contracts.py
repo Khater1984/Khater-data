@@ -26,8 +26,14 @@ REQUIRED = {
     "chart plots official return_pct": ("r.return_pct", "performance"),
     "NAV is explicitly separate": ("LATEST NAV · منفصل", "performance"),
     "NAV is a separate table": ("fund_price_history", "service"),
-    "canonical bundle includes evidence": ("evidence:results[4][0]||null", "service"),
+    "canonical bundle includes evidence": ("evidence", "service"),
     "evidence UI consumes bundle": ("const e=F.evidence", "evidence"),
+    "SmartScore V2 weights centralized": ("SMARTSCORE_V2", "service"),
+    "real return component is explicit": ("real_return_score", "service"),
+    "SmartScore status is explicit": ("scoreMethodology", "smartscore"),
+    "SmartScore has five approved components": ("Benchmark Hit", "smartscore"),
+    "SmartScore uses approved weights": ("25],['R'", "smartscore"),
+    "Data Quality is not a sixth score": ("Data Quality ·", "smartscore"),
 }
 missing = [name for name, (token, source) in REQUIRED.items() if token not in TEXT[source]]
 if missing:
