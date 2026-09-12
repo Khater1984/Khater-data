@@ -3,7 +3,6 @@
   'use strict';
   const api = window.KHATER_DATA && window.KHATER_DATA.supabase;
   if (!api) throw new Error('fund-service.js requires supabase-client.js');
-
   const SELECT = {
     fund: 'fund_id,canonical_name,management_company,category,currency,inception_date,price_update_url,metadata',
     score: 'fund_id,final_score,raw_score,rating,data_tier,data_confidence,data_quality,score_as_of,signal_as_of,latest_day_change_pct,latest_signal_status,performance_score,risk_score,benchmark_score,consistency_score,inflation_score,score_explanation,risk_method,track_factor,warnings,qualification_status,calculation_inputs,methodology_version',
@@ -11,13 +10,18 @@
     nav: 'as_of_date,nav,source_id,currency',
     evidence: 'evaluation_id,report_date,category,methodology_version,performance_score,risk_score,benchmark_score,consistency_score,inflation_score,smartscore,effective_weights,component_availability,data_confidence,peer_cohort_size,raw_rank,qualified_rank,qualification_status,calculation_inputs,warnings,calculated_at,data_tier,track_factor,final_score,rating,score_explanation,data_quality'
   };
-  const SMARTSCORE_V2 = Object.freeze({
-    performance: 0.25,
+
+  // Active production methodology in Supabase. Do not substitute an unapproved UI methodology.
+  const SMARTSCORE_V3 = Object.freeze({
+    version: 'V3.0',
+    performance: 0.30,
     risk: 0.25,
-    benchmark: 0.20,
-    consistency: 0.15,
-    real_return: 0.15
+    benchmark: 0.25,
+    inflation: 0.10,
+    consistency: 0.10,
+    data_quality_in_score: false
   });
+
   const BENCHMARKS = [
     {label:'التضخم',series:'cpi_headline_mom_pct',type:'inflation',icon:'CPI'},
     {label:'أذون الخزانة · 364 يوم',series:'tbill_364_avg_yield_pct',type:'yield',icon:'T-BILL'},
@@ -84,31 +88,35 @@
   function normalizeSmartScore(row) {
     const source = row || {};
     const out = Object.assign({}, source);
-    out.real_return_score = source.inflation_score == null ? null : Number(source.inflation_score);
+    out.inflation_score = source.inflation_score == null ? null : Number(source.inflation_score);
     out.smartscore_components = {
       performance: source.performance_score == null ? null : Number(source.performance_score),
       risk: source.risk_score == null ? null : Number(source.risk_score),
       benchmark: source.benchmark_score == null ? null : Number(source.benchmark_score),
-      consistency: source.consistency_score == null ? null : Number(source.consistency_score),
-      real_return: out.real_return_score
+      inflation: out.inflation_score,
+      consistency: source.consistency_score == null ? null : Number(source.consistency_score)
     };
     return out;
   }
 
   function methodologyStatus(row) {
     const source = row || {};
-    const stored = source.calculation_inputs && source.calculation_inputs.effective_weights
-      ? source.calculation_inputs.effective_weights
-      : null;
-    const weights = stored || null;
-    if (!weights) return {target:'SmartScore 2.0',matches:false,reason:'لا توجد أوزان محفوظة يمكن التحقق منها'};
-    const aliases = {performance:'performance',risk:'risk',benchmark:'benchmark',consistency:'consistency',real_return:'real_return',inflation:'real_return'};
-    const keys = Object.keys(SMARTSCORE_V2);
-    const matches = keys.every(function (key) {
-      const sourceKey = Object.keys(aliases).find(k => aliases[k] === key && Object.prototype.hasOwnProperty.call(weights,k));
-      return sourceKey ? Math.abs(Number(weights[sourceKey]) - SMARTSCORE_V2[key]) < 0.000001 : false;
-    });
-    return {target:'SmartScore 2.0',matches,reason:matches?'الأوزان المحفوظة متوافقة مع SmartScore 2.0':'التقييم المحفوظ يستخدم أوزانًا مختلفة عن SmartScore 2.0',stored:weights,targetWeights:SMARTSCORE_V2};
+    const version = String(source.methodology_version || '').toUpperCase();
+    const matches = version === SMARTSCORE_V3.version;
+    return {
+      target: SMARTSCORE_V3.version,
+      matches: matches,
+      storedVersion: source.methodology_version || null,
+      reason: matches ? 'التقييم المحفوظ محسوب وفق المنهجية النشطة V3.0' : 'التقييم المحفوظ لا يحمل إصدار المنهجية النشطة V3.0',
+      weights: {
+        performance: SMARTSCORE_V3.performance,
+        risk: SMARTSCORE_V3.risk,
+        benchmark: SMARTSCORE_V3.benchmark,
+        inflation: SMARTSCORE_V3.inflation,
+        consistency: SMARTSCORE_V3.consistency
+      },
+      dataQualityInScore: SMARTSCORE_V3.data_quality_in_score
+    };
   }
 
   async function getBenchmark(benchmark, endDate, horizon) {
@@ -161,5 +169,5 @@
     };
   }
 
-  window.KHATER_DATA.fund={getFundBundle,canonicalPerformance,performanceSeries,canonicalNAV,getBenchmark,BENCHMARKS,SMARTSCORE_V2,normalizeSmartScore,methodologyStatus};
+  window.KHATER_DATA.fund={getFundBundle,canonicalPerformance,performanceSeries,canonicalNAV,getBenchmark,BENCHMARKS,SMARTSCORE_V3,normalizeSmartScore,methodologyStatus};
 })(window);
