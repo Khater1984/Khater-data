@@ -24,37 +24,30 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: |
-          set +e
           python scripts/eima_weekly_ingest.py --dry-run > /tmp/eima_validation.json
-          rc=$?
           cat /tmp/eima_validation.json
           python - <<'PY'
-          import json
+          import json, os
           d=json.load(open('/tmp/eima_validation.json'))
           errors=d.get('errors',[])
           if errors == ['REPORT_ALREADY_EXISTS']:
               print('NO_NEW_REPORT')
-              open('/tmp/no_new','w').write('1')
+              open(os.environ['GITHUB_OUTPUT'],'a').write('new_report=false\n')
           elif errors:
               print('BLOCKED:', errors)
               raise SystemExit(1)
           else:
               print('VALIDATION_PASS')
-              open('/tmp/new_report','w').write('1')
+              open(os.environ['GITHUB_OUTPUT'],'a').write('new_report=true\n')
           PY
       - name: Import validated report atomically
-        if: ${{ success() }}
+        if: ${{ steps.validate.outputs.new_report == 'true' }}
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-        run: |
-          if [ -f /tmp/new_report ]; then
-            python scripts/eima_weekly_ingest.py
-          else
-            echo "No new EIMA report. No database change."
-          fi
+        run: python scripts/eima_weekly_ingest.py
       - name: Refresh SmartScore and public snapshots
-        if: ${{ success() && hashFiles('/tmp/new_report') != '' }}
+        if: ${{ steps.validate.outputs.new_report == 'true' }}
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
