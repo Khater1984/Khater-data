@@ -6,7 +6,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CORE = (ROOT / "web/js/fund-core.js").read_text(encoding="utf-8")
 PERF = (ROOT / "web/js/fund-performance.js").read_text(encoding="utf-8")
 SERVICE = (ROOT / "web/js/data/fund-service.js").read_text(encoding="utf-8")
-ALL = CORE + "\n" + PERF + "\n" + SERVICE
+EVIDENCE = (ROOT / "web/js/fund-evidence.js").read_text(encoding="utf-8")
+ALL = CORE + "\n" + PERF + "\n" + SERVICE + "\n" + EVIDENCE
 
 REQUIRED = {
     "canonical service exists": "getFundBundle",
@@ -19,6 +20,8 @@ REQUIRED = {
     "performance identifies official source": "fund_performance_history",
     "NAV is explicitly separate": "LATEST NAV · منفصل",
     "NAV is a separate table": "fund_price_history",
+    "canonical bundle includes evidence": "evidence:results[4][0]||null",
+    "evidence UI consumes bundle": "const e=F.evidence",
 }
 
 missing = [name for name, token in REQUIRED.items() if token not in ALL]
@@ -27,5 +30,8 @@ if missing:
 
 if "seriesReturn(" in PERF:
     raise SystemExit("Financial contract failed: performance UI must not calculate official return from NAV")
+
+if "smartscore_evaluations?" in EVIDENCE or "smartscore_evaluations?" in CORE:
+    raise SystemExit("Financial contract failed: Fund Profile UI must not query smartscore_evaluations directly")
 
 print("Financial contract checks passed")
