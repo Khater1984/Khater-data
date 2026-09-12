@@ -1,22 +1,22 @@
-name: Monthly macro check (CPI / deposits / T-bills)
+name: Monthly macro ingest (CPI / deposits / T-bills)
 
 on:
   schedule:
-    # 09:00 Egypt on the 8th of each month
-    - cron: "0 6 8 * *"
+    - cron: "0 6 8,10,12,15 * *"
+    - cron: "0 6 * * 0"
   workflow_dispatch:
 
 jobs:
   monthly:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - name: Print last monthly observations
+      - name: Ingest monthly macro
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
