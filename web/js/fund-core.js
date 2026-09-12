@@ -94,13 +94,14 @@
     return start.toISOString().slice(0, 10);
   }
 
-  function sliceNav(series, horizon) {
+  function sliceNav(series, horizon, endDate) {
     const all = series || [];
     if (!all.length) return [];
-    const end = all[all.length - 1].date;
+    const end = endDate || all[all.length - 1].date;
     const start = windowStart(horizon, end);
-    if (!start) return all.slice();
-    return all.filter(function (p) { return p.date >= start; });
+    const capped = all.filter(function (p) { return p.date <= end; });
+    if (!start) return capped;
+    return capped.filter(function (p) { return p.date >= start; });
   }
 
   function seriesReturn(points) {

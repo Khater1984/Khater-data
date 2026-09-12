@@ -1,0 +1,111 @@
+name: EIMA Weekly Safety Pipeline
+
+on:
+  schedule:
+    # Two UTC triggers cover Egypt's UTC+2 / UTC+3 periods.
+    # The local-time gate ensures exactly one trigger proceeds at 08:00 Africa/Cairo.
+    - cron: "0 5 * * 5"
+    - cron: "0 6 * * 5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EIMA_TIMEZONE: Africa/Cairo
+
+jobs:
+  eima:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Gate scheduled run to 08:00 Egypt time
+        id: schedule_gate
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "MANUAL_RUN: continuing regardless of scheduled time."
+            echo "continue=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          HOUR=$(TZ=":$EIMA_TIMEZONE" date +"%H")
+          LOCAL_NOW=$(TZ=":$EIMA_TIMEZONE" date +"%Y-%m-%d %H:%M:%S %Z")
+          echo "Egypt local time: $LOCAL_NOW"
+
+          if [ "$HOUR" = "08" ]; then
+            echo "SCHEDULE_CONTINUE: active 08:00 Egypt slot."
+            echo "continue=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "SCHEDULE_SKIP: inactive UTC trigger; no EIMA work will run."
+            echo "continue=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install EIMA pipeline dependencies
+        if: ${{ steps.schedule_gate.outputs.continue == 'true' }}
+        run: pip install -r requirements-eima.txt
+
+      - name: Validate newest EIMA report (no write)
+        id: validate
+        if: ${{ steps.schedule_gate.outputs.continue == 'true' }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          set -o pipefail
+          python scripts/eima_weekly_ingest.py --dry-run > /tmp/eima_validation.json
+          cat /tmp/eima_validation.json
+          python - <<'PY'
+          import json, os
+          d = json.load(open('/tmp/eima_validation.json'))
+          errors = d.get('errors', [])
+          report_date = d.get('report_date', 'unknown')
+          run_id = d.get('run_id', 'unknown')
+          source_url = d.get('source_url', 'unknown')
+
+          # An already-imported report is an idempotent no-op, not a failure.
+          if 'REPORT_ALREADY_EXISTS' in errors:
+              print('NO_NEW_REPORT')
+              print(f'EIMA REPORT: {report_date}')
+              print('STATUS: ALREADY_IMPORTED')
+              print('ACTION: SKIPPED')
+              print('DATABASE: UNCHANGED')
+              print(f'RUN_ID: {run_id}')
+              print(f'SOURCE: {source_url}')
+              open(os.environ['GITHUB_OUTPUT'], 'a').write('new_report=false\n')
+              open(os.environ['GITHUB_OUTPUT'], 'a').write('status=already_imported\n')
+          elif errors:
+              print('BLOCKED:', errors)
+              print(f'EIMA REPORT: {report_date}')
+              print('STATUS: VALIDATION_BLOCKED')
+              print('ACTION: NO_WRITE')
+              print('DATABASE: UNCHANGED')
+              raise SystemExit(1)
+          else:
+              print('VALIDATION_PASS')
+              print(f'EIMA REPORT: {report_date}')
+              print('STATUS: VALIDATED_NEW_REPORT')
+              print('ACTION: READY_FOR_ATOMIC_IMPORT')
+              open(os.environ['GITHUB_OUTPUT'], 'a').write('new_report=true\n')
+              open(os.environ['GITHUB_OUTPUT'], 'a').write('status=validated_new_report\n')
+          PY
+
+      - name: Import validated report atomically
+        if: ${{ steps.validate.outputs.new_report == 'true' }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scripts/eima_weekly_ingest.py
+
+      - name: Refresh SmartScore and public snapshots
+        if: ${{ steps.validate.outputs.new_report == 'true' }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          python scripts/fix_effective_weights.py
+          python scripts/export_public.py

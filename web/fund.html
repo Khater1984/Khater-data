@@ -4,11 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>FUND DNA · Institutional Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=IBM+Plex+Sans:wght@500;600;700&display=swap" rel="stylesheet">
   <script src="config.js"></script>
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/header.css">
-  <link rel="stylesheet" href="css/fund.css?v=20260909p">
-  <link rel="stylesheet" href="css/fund-chart.css?v=20260909p">
+  <link rel="stylesheet" href="css/fund.css?v=20260910c">
+  <link rel="stylesheet" href="css/fund-chart.css?v=20260910c">
+  <link rel="stylesheet" href="css/fund-profile.css?v=20260910c">
 </head>
 <body>
 <header class="site-header">
@@ -27,18 +31,31 @@
 <main class="wrap fund-page" id="app">
   <div class="empty">جاري تحميل FUND DNA…</div>
 </main>
-<script src="js/fund-core.js?v=20260909p"></script>
-<script src="js/fund-performance.js?v=20260909p"></script>
-<script src="js/fund-risk.js"></script>
-<script src="js/fund-benchmark.js"></script>
-<script src="js/fund-smartscore.js"></script>
-<script src="js/fund-evidence.js"></script>
-<script src="js/fund-profile.js"></script>
+<script src="js/fund-core.js?v=20260910c"></script>
+<script src="js/fund-performance.js?v=20260910c"></script>
+<script src="js/fund-performance-v3.js?v=20260910c"></script>
+<script src="js/fund-risk.js?v=20260910c"></script>
+<script src="js/fund-benchmark.js?v=20260910c"></script>
+<script src="js/fund-smartscore.js?v=20260910c"></script>
+<script src="js/fund-evidence.js?v=20260910c"></script>
+<script src="js/fund-profile.js?v=20260910c"></script>
 <script>
 (async function () {
   'use strict';
   const F = window.FUND;
   const app = document.getElementById('app');
+
+  function has(v) { return v != null && String(v).trim() !== ''; }
+  function initials(name) {
+    return String(name || 'F').replace(/[()]/g, ' ').split(/\s+/).filter(Boolean).slice(0, 2)
+      .map(function (w) { return w.charAt(0); }).join('').toUpperCase() || 'F';
+  }
+  function logoBox(url, name) {
+    const ini = initials(name);
+    if (!has(url)) return '<div class="hero-logo-box fallback">' + F.esc(ini) + '</div>';
+    return '<div class="hero-logo-box"><img src="' + F.esc(url) + '" alt="' + F.esc(name) + '" loading="lazy" decoding="async" onerror="var p=this.parentNode;this.remove();if(p){p.classList.add(\'fallback\');p.textContent=\'' + F.esc(ini) + '\'}"></div>';
+  }
+
   try {
     const d = await F.loadFund();
     const f = d.fund;
@@ -48,20 +65,35 @@
     F.prices = d.prices || [];
     F.fund = f;
     F.score = s;
+    const profile = (f.metadata && f.metadata.profile) || {};
+    const manager = (profile.manager_name_ar || profile.manager_name_en || f.management_company || '—');
     const score = s.final_score == null ? '—' : Number(s.final_score).toFixed(1);
     const h = new URLSearchParams(location.search).get('h') || 'last12m';
-    const windowPts = F.sliceNav(F.navSeries, h);
-    const seriesRet = F.seriesReturn(windowPts);
+    const official = (d.performance || []).filter(function (x) { return x.horizon === h && x.return_pct != null; })
+      .sort(function (a, b) { return String(b.report_date).localeCompare(String(a.report_date)); })[0];
+    const heroReturn = official ? F.pct(official.return_pct) : '—';
+    const heroDate = official ? official.report_date : 'بيانات غير متاحة';
+    const retClass = official && Number(official.return_pct) < 0 ? 'neg' : 'pos';
+
     app.innerHTML =
-      '<section class="hero"><div class="eyebrow">FUND DNA · INSTITUTIONAL PROFILE</div>' +
-      '<h1>' + F.esc(f.canonical_name) + '</h1>' +
-      '<div class="manager">' + F.esc((f.metadata && f.metadata.profile && (f.metadata.profile.manager_name_ar || f.metadata.profile.manager_name_en)) || f.management_company) + '</div>' +
-      '<div class="tags"><span class="tag">' + F.esc(f.category) + '</span><span class="tag">' + F.esc(s.data_tier) + '</span><span class="tag">' + F.esc(s.methodology_version) + '</span></div></section>' +
+      '<section class="hero hero-pro">' +
+        logoBox(profile.manager_logo_url, manager) +
+        '<div class="hero-copy">' +
+          '<div class="eyebrow">FUND DNA · INSTITUTIONAL PROFILE</div>' +
+          '<h1>' + F.esc(f.canonical_name) + '</h1>' +
+          '<div class="manager">' + F.esc(manager) + '</div>' +
+          '<div class="tags">' +
+            '<span class="tag">' + F.esc(f.category) + '</span>' +
+            '<span class="tag">' + F.esc(s.data_tier || '—') + '</span>' +
+            '<span class="tag">' + F.esc(s.methodology_version || '—') + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</section>' +
       '<section class="pulse">' +
         '<div class="metric primary"><div class="muted">SMART SCORE</div><span class="metric-value">' + score + '</span><span class="pill">' + F.esc(s.rating || 'NOT RATED') + '</span></div>' +
-        '<div class="metric"><div class="muted">RETURN · ' + F.esc(F.L[h] || h) + '</div><span class="metric-value">' + F.pct(seriesRet) + '</span><div class="note">' + (windowPts.length >= 2 ? F.esc(windowPts[0].date + ' → ' + windowPts[windowPts.length - 1].date) : 'بيانات غير كافية') + '</div></div>' +
-        '<div class="metric"><div class="muted">DATA CONFIDENCE</div><span class="metric-value" style="font-size:24px">' + F.esc(s.data_confidence) + '</span><div class="note">' + F.esc(s.data_quality) + '</div></div>' +
-        '<div class="metric"><div class="muted">QUALIFICATION</div><span class="metric-value" style="font-size:22px">' + F.esc(s.qualification_status) + '</span><div class="note">Track Factor · ' + (s.track_factor == null ? '—' : Number(s.track_factor).toFixed(2)) + '</div></div>' +
+        '<div class="metric"><div class="muted">RETURN · ' + F.esc(F.L[h] || h) + '</div><span class="metric-value ' + retClass + '">' + heroReturn + '</span><div class="note">' + F.esc(heroDate) + '</div></div>' +
+        '<div class="metric"><div class="muted">DATA CONFIDENCE</div><span class="metric-value" style="font-size:24px">' + F.esc(s.data_confidence || '—') + '</span><div class="note">' + F.esc(s.data_quality || '') + '</div></div>' +
+        '<div class="metric"><div class="muted">QUALIFICATION</div><span class="metric-value" style="font-size:22px">' + F.esc(s.qualification_status || '—') + '</span><div class="note">Track Factor · ' + (s.track_factor == null ? '—' : Number(s.track_factor).toFixed(2)) + '</div></div>' +
       '</section>' +
       '<div class="tabs" role="tablist" aria-label="Fund DNA analytical sections">' +
         '<button class="active" role="tab" aria-selected="true" data-tab="performance"><b>01</b><span>PERFORMANCE</span><small>العائد والحركة</small></button>' +
@@ -78,20 +110,37 @@
       '<section id="smartscore-panel" class="tab-panel"><div id="smartscore-tab"></div></section>' +
       '<section id="evidence-panel" class="tab-panel"><div id="evidence-tab"></div></section>' +
       '<section id="profile-panel" class="tab-panel"><div id="profile-tab"></div></section>';
+
     document.querySelectorAll('.tabs button').forEach(function (b) {
       b.addEventListener('click', async function () {
-        document.querySelectorAll('.tabs button').forEach(function (x) { const on = x === b; x.classList.toggle('active', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
-        document.querySelectorAll('.tab-panel').forEach(function (x) { x.classList.toggle('active', x.id === b.dataset.tab + '-panel'); });
-        const info = {performance:['Performance Intelligence','تحليل العائد وسجل الأداء المتاح فعليًا.'],risk:['Risk Intelligence','قراءة مركزة للمخاطر والعوامل المؤثرة.'],benchmark:['Market Context','مقارنة الصندوق بالمؤشرات والبدائل.'],smartscore:['SmartScore Architecture','تفكيك الدرجة إلى مكوناتها الأساسية.'],evidence:['Evidence & Method','مصادر البيانات والمنهجية وقابلية التحقق.'],profile:['Fund Profile','الهوية التشغيلية والمستندات والبيانات الرسمية.']}[b.dataset.tab] || [];
+        document.querySelectorAll('.tabs button').forEach(function (x) {
+          const on = x === b;
+          x.classList.toggle('active', on);
+          x.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(function (x) {
+          x.classList.toggle('active', x.id === b.dataset.tab + '-panel');
+        });
+        const info = {
+          performance: ['Performance Intelligence', 'تحليل العائد وسجل الأداء المتاح فعليًا.'],
+          risk: ['Risk Intelligence', 'قراءة مركزة للمخاطر والعوامل المؤثرة.'],
+          benchmark: ['Market Context', 'مقارنة الصندوق بالمؤشرات والبدائل.'],
+          smartscore: ['SmartScore Architecture', 'تفكيك الدرجة إلى مكوناتها الأساسية.'],
+          evidence: ['Evidence & Method', 'مصادر البيانات والمنهجية وقابلية التحقق.'],
+          profile: ['Fund Profile', 'الهوية التشغيلية والمستندات والبيانات الرسمية.']
+        }[b.dataset.tab] || [];
         document.getElementById('tab-context-title').textContent = info[0] || '';
         document.getElementById('tab-context-copy').textContent = info[1] || '';
-        const target = document.getElementById(b.dataset.tab + '-tab'); target.classList.add('is-loading');
+        const target = document.getElementById(b.dataset.tab + '-tab');
+        target.classList.add('is-loading');
         try {
           const fn = FUND_TABS[b.dataset.tab];
           if (fn) await fn();
         } catch (e) {
           target.innerHTML = '<div class="empty"><strong>تعذر تحميل هذا المحور</strong><p>' + F.esc(e.message) + '</p></div>';
-        } finally { target.classList.remove('is-loading'); }
+        } finally {
+          target.classList.remove('is-loading');
+        }
       });
     });
     await FUND_TABS.performance();
