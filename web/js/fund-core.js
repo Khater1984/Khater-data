@@ -49,6 +49,39 @@
     const n = Number(v);
     return Number.isFinite(n) && n > 0 ? n : null;
   }
+  function finiteReturn(v) {
+    if (v == null || String(v).trim() === '') return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+  function sourcePriority(source) {
+    const s = String(source || '');
+    if (s.indexOf('weekly') >= 0 || s.indexOf('live') >= 0) return 20;
+    if (s.indexOf('integrated') >= 0 || s.indexOf('historical') >= 0 || s.indexOf('eima_') >= 0) return 10;
+    return 0;
+  }
+  function buildOfficialSeries(perfRows) {
+    const byHorizon = Object.create(null);
+    (perfRows || []).forEach(function (row) {
+      if (!row || !row.horizon || !row.report_date || finiteReturn(row.return_pct) == null) return;
+      const horizon = String(row.horizon);
+      const date = String(row.report_date);
+      byHorizon[horizon] = byHorizon[horizon] || Object.create(null);
+      const previous = byHorizon[horizon][date];
+      if (!previous || sourcePriority(row.source_id) >= sourcePriority(previous.source_id)) {
+        byHorizon[horizon][date] = Object.assign({}, row, {
+          return_pct: finiteReturn(row.return_pct),
+          series_role: sourcePriority(row.source_id) >= 20 ? 'live' : 'historical'
+        });
+      }
+    });
+    Object.keys(byHorizon).forEach(function (horizon) {
+      byHorizon[horizon] = Object.keys(byHorizon[horizon]).sort().map(function (date) {
+        return byHorizon[horizon][date];
+      });
+    });
+    return byHorizon;
+  }
 
   function buildNavSeries(perfRows, priceRows) {
     const byDate = Object.create(null);
@@ -123,12 +156,12 @@
       get('/rest/v1/fund_price_history?fund_id=eq.' + encodeURIComponent(id) + '&select=as_of_date,nav,source_id,currency&order=as_of_date.asc&limit=5000')
     ]);
     const navSeries = buildNavSeries(pr, nh);
-    return { fund: fr[0], score: sr[0] || {}, performance: pr || [], prices: nh || [], navSeries: navSeries, officialPerformance: pr || [] };
+    return { fund: fr[0], score: sr[0] || {}, performance: pr || [], prices: nh || [], navSeries: navSeries, officialPerformance: pr || [], officialSeriesByHorizon: buildOfficialSeries(pr) };
   }
 
   window.FUND = {
     id: id, C: C, L: L, HS: HS, esc: esc, num: num, pct: pct, warnings: warnings,
-    get: get, loadFund: loadFund, buildNavSeries: buildNavSeries,
+    get: get, loadFund: loadFund, buildNavSeries: buildNavSeries, buildOfficialSeries: buildOfficialSeries,
     windowStart: windowStart, sliceNav: sliceNav, seriesReturn: seriesReturn
   };
 })();
