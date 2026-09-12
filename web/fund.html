@@ -31,12 +31,12 @@
 <main class="wrap fund-page" id="app">
   <div class="empty">جاري تحميل FUND DNA…</div>
 </main>
-<script src="js/fund-core.js?v=20260912unified727b666"></script>
-<script src="js/fund-performance.js?v=20260912unified727b666"></script>
+<script src="js/fund-core.js?v=20260912bundle2"></script>
+<script src="js/fund-performance.js?v=20260912bundle2"></script>
 <script src="js/fund-risk.js?v=20260910c"></script>
 <script src="js/fund-benchmark.js?v=20260910c"></script>
 <script src="js/fund-smartscore.js?v=20260910c"></script>
-<script src="js/fund-evidence.js?v=20260910c"></script>
+<script src="js/fund-evidence.js?v=20260912bundle2"></script>
 <script src="js/fund-profile.js?v=20260910c"></script>
 <script>
 (async function () {
@@ -63,6 +63,7 @@
     F.officialSeriesByHorizon = d.officialSeriesByHorizon || {};
     F.navSeries = d.navSeries || [];
     F.prices = d.prices || [];
+    F.evidence = d.evidence || null;
     F.fund = f;
     F.score = s;
     const profile = (f.metadata && f.metadata.profile) || {};
