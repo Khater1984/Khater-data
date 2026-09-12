@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static guards for the Fund Profile canonical financial-data contract."""
+"""Static guards for the canonical Fund Profile and Funds financial-data contract."""
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -13,6 +13,7 @@ FILES = {
     "evidence": ROOT / "web/js/fund-evidence.js",
     "profile": ROOT / "web/js/fund-profile.js",
     "service": ROOT / "web/js/data/fund-service.js",
+    "funds_service": ROOT / "web/js/data/funds-service.js",
 }
 TEXT = {k: p.read_text(encoding="utf-8") for k, p in FILES.items()}
 
@@ -22,7 +23,7 @@ REQUIRED = {
     "future observations rejected": ("currentOrPast", "service"),
     "official rows grouped by horizon": ("officialSeriesByHorizon", "service"),
     "performance filters requested horizon": ("performanceSeries", "performance"),
-    "performance selects requested horizon": ("service().performanceSeries(F.performance || [],horizon)", "performance"),
+    "performance uses canonical official series": ("officialSeriesByHorizon", "performance"),
     "chart plots official return_pct": ("r.return_pct", "performance"),
     "NAV is explicitly separate": ("LATEST NAV · منفصل", "performance"),
     "NAV is a separate table": ("fund_price_history", "service"),
@@ -40,12 +41,13 @@ REQUIRED = {
     "V3 inflation component is explicit": ("c.inflation", "smartscore"),
     "V3 track factor is visible": ("Track Factor", "smartscore"),
     "Data Quality is not a sixth score": ("Data Quality ·", "smartscore"),
+    "funds screen selects fund id": ("fund_id,report_date,return_pct,horizon", "funds_service"),
+    "funds screen maps return per fund": ("latestByFund", "funds_service"),
 }
 missing = [name for name, (token, source) in REQUIRED.items() if token not in TEXT[source]]
 if missing:
     raise SystemExit("Financial contract failed:\n- " + "\n- ".join(missing))
 
-# Fund Profile UI must never bypass the canonical service or compete with JSON snapshots.
 for name in ("core", "performance", "risk", "benchmark", "smartscore", "evidence", "profile"):
     source = TEXT[name]
     forbidden = ["window.KHATER_DATA.supabase", "/rest/v1/", "supabase.from(", "./data/", "../data/", "web/data/"]
