@@ -1,0 +1,16 @@
+{
+  "name": "khater-market-radar",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Egyptian mutual-fund and macro intelligence platform",
+  "scripts": {
+    "check": "npm run check:js && npm run check:financial",
+    "check:js": "node scripts/check_js.mjs",
+    "check:financial": "python scripts/verify_financial_contracts.py",
+    "test": "npm run check",
+    "build": "node scripts/build_check.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
