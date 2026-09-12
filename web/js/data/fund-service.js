@@ -8,7 +8,8 @@
     fund: 'fund_id,canonical_name,management_company,category,currency,inception_date,price_update_url,metadata',
     score: 'fund_id,final_score,raw_score,rating,data_tier,data_confidence,data_quality,score_as_of,signal_as_of,latest_day_change_pct,latest_signal_status,performance_score,risk_score,benchmark_score,consistency_score,inflation_score,score_explanation,risk_method,track_factor,warnings,qualification_status,calculation_inputs,methodology_version',
     performance: 'report_date,horizon,nav_value,return_pct,rank,currency,report_status,source_id',
-    nav: 'as_of_date,nav,source_id,currency'
+    nav: 'as_of_date,nav,source_id,currency',
+    evidence: 'evaluation_id,report_date,category,methodology_version,performance_score,risk_score,benchmark_score,consistency_score,inflation_score,smartscore,effective_weights,component_availability,data_confidence,peer_cohort_size,raw_rank,qualified_rank,qualification_status,calculation_inputs,warnings,calculated_at,data_tier,track_factor,final_score,rating,score_explanation,data_quality'
   };
   const BENCHMARKS = [
     {label:'التضخم',series:'cpi_headline_mom_pct',type:'inflation',icon:'CPI'},
@@ -101,12 +102,23 @@
       api.get(path('funds',{fund_id:fundId},SELECT.fund,null,1),{cacheKey:base+'/fund'}),
       api.get(path('fund_smartscore_latest',{fund_id:fundId},SELECT.score,null,1),{cacheKey:base+'/score'}),
       api.get(path('fund_performance_history',{fund_id:fundId},SELECT.performance,'report_date.desc',2000),{cacheKey:base+'/performance'}),
-      api.get(path('fund_price_history',{fund_id:fundId},SELECT.nav,'as_of_date.asc',5000),{cacheKey:base+'/nav'})
+      api.get(path('fund_price_history',{fund_id:fundId},SELECT.nav,'as_of_date.asc',5000),{cacheKey:base+'/nav'}),
+      api.get(path('smartscore_evaluations',{fund_id:fundId},SELECT.evidence,'report_date.desc,calculated_at.desc',1),{cacheKey:base+'/evidence'})
     ]);
     const performanceResult=canonicalPerformance(results[2]),navResult=canonicalNAV(results[3]);
     const officialSeriesByHorizon=Object.create(null);
     performanceResult.data.forEach(row=>{(officialSeriesByHorizon[row.horizon]=officialSeriesByHorizon[row.horizon]||[]).push(row);});
-    return {fund:results[0][0]||null,score:results[1][0]||{},performance:performanceResult.data,officialPerformance:performanceResult.data,officialSeriesByHorizon,prices:navResult.data,navSeries:navResult.data,dataQuality:{performanceConflicts:performanceResult.conflicts,navConflicts:navResult.conflicts}};
+    return {
+      fund:results[0][0]||null,
+      score:results[1][0]||{},
+      performance:performanceResult.data,
+      officialPerformance:performanceResult.data,
+      officialSeriesByHorizon,
+      prices:navResult.data,
+      navSeries:navResult.data,
+      evidence:results[4][0]||null,
+      dataQuality:{performanceConflicts:performanceResult.conflicts,navConflicts:navResult.conflicts}
+    };
   }
 
   window.KHATER_DATA.fund={getFundBundle,canonicalPerformance,performanceSeries,canonicalNAV,getBenchmark,BENCHMARKS};
