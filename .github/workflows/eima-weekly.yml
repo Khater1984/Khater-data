@@ -3,7 +3,7 @@ name: EIMA Weekly Safety Pipeline
 on:
   schedule:
     # Two UTC triggers cover Egypt's UTC+2 / UTC+3 periods.
-    # The local-time gate below ensures exactly one run proceeds at 08:00 Africa/Cairo.
+    # The local-time gate ensures exactly one trigger proceeds at 08:00 Africa/Cairo.
     - cron: "0 5 * * 5"
     - cron: "0 6 * * 5"
   workflow_dispatch:
@@ -25,23 +25,33 @@ jobs:
           python-version: "3.12"
 
       - name: Gate scheduled run to 08:00 Egypt time
-        if: ${{ github.event_name == 'schedule' }}
+        id: schedule_gate
         run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "MANUAL_RUN: continuing regardless of scheduled time."
+            echo "continue=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
           HOUR=$(TZ=":$EIMA_TIMEZONE" date +"%H")
           LOCAL_NOW=$(TZ=":$EIMA_TIMEZONE" date +"%Y-%m-%d %H:%M:%S %Z")
           echo "Egypt local time: $LOCAL_NOW"
-          if [ "$HOUR" != "08" ]; then
-            echo "SCHEDULE_SKIP: this UTC trigger is not the active 08:00 Egypt slot."
-            exit 0
+
+          if [ "$HOUR" = "08" ]; then
+            echo "SCHEDULE_CONTINUE: active 08:00 Egypt slot."
+            echo "continue=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "SCHEDULE_SKIP: inactive UTC trigger; no EIMA work will run."
+            echo "continue=false" >> "$GITHUB_OUTPUT"
           fi
-          echo "SCHEDULE_CONTINUE: active 08:00 Egypt slot."
 
       - name: Install EIMA pipeline dependencies
-        if: ${{ github.event_name == 'workflow_dispatch' || success() }}
+        if: ${{ steps.schedule_gate.outputs.continue == 'true' }}
         run: pip install -r requirements-eima.txt
 
       - name: Validate newest EIMA report (no write)
         id: validate
+        if: ${{ steps.schedule_gate.outputs.continue == 'true' }}
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
