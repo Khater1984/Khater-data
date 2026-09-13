@@ -6,43 +6,12 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/app.css"/>
 <link rel="stylesheet" href="css/accordion.css"/>
+<link rel="stylesheet" href="css/page-map.css"/>
+<link rel="stylesheet" href="css/header.css"/>
 <script src="config.js"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
-<style>
-body{background:#12131C}
-.hero-mini{padding:28px 0 6px}
-.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 18px}
-@media(max-width:900px){.tiles{grid-template-columns:1fr}}
-.tiles{align-items:stretch}
-button.tile, .tile{
-  height:auto!important; min-height:148px; display:flex; flex-direction:column; align-items:flex-start; justify-content:space-between;
-  background:#1E1F2E; border:1px solid #2A2C3D; border-radius:16px; padding:16px; cursor:pointer;
-  text-align:right; width:100%; white-space:normal; line-height:1.45; font:inherit; color:inherit;
-}
-.tile .kicker{margin-bottom:8px}
-.tile .v{font-size:28px; font-family:"IBM Plex Sans",sans-serif; margin:0 0 8px}
-.tile .asof{color:#6B7280;font-size:12px;margin-top:8px}
-.pill{display:inline-block;border-radius:999px;padding:3px 8px;font-size:12px}
-.pill.up{background:#0b3b2e;color:#10B981}
-.pill.dn{background:#3a1515;color:#FF5252}
-.modal{display:none;position:fixed;inset:0;background:#0009;z-index:40;align-items:center;justify-content:center;padding:18px}
-.modal.on{display:flex}
-.modal .box{background:#12131C;border:1px solid #2A2C3D;border-radius:16px;max-width:860px;width:100%;max-height:90vh;overflow:auto;padding:18px}
-#dchart{height:320px;direction:ltr}
-.tile .v{font-size:24px;font-family:"IBM Plex Sans",sans-serif;margin:6px 0}
-.badge-g{color:#2ECC71;font-size:13px} .badge-r{color:#FF5252;font-size:13px}
-.seg,.ranges{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
-.seg button,.ranges button{cursor:pointer}
-.seg button.on,.ranges button.on{background:#FFD700;color:#12131C;border:0}
-.chart-wrap{position:relative}
-#chart{height:440px;direction:ltr;border:1px solid #2A2C3D;border-radius:14px;background:#12131C}
-#tip{display:none;position:absolute;top:12px;left:12px;background:#1E1F2E;border:1px solid #2A2C3D;border-radius:10px;padding:10px;font-size:12px;min-width:200px;z-index:5;direction:rtl}
-.why{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}
-@media(max-width:800px){.why{grid-template-columns:1fr}}
-</style>
-  <link rel="stylesheet" href="css/header.css"/>
 </head>
-<body>
+<body class="page-map">
 <header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>منصة فهم الاقتصاد وتحليل صناديق الاستثمار</span></div><nav>
 <a href="./index.html">البداية</a>
 <a href="./map.html">ماذا حدث للفلوس؟</a>
@@ -52,188 +21,15 @@ button.tile, .tile{
 <a href="./why.html">المنهج</a>
 </nav></div></header>
 <main class="wrap">
-  <section class="hero-mini">
-    <h1>ماذا حدث لقيمة أموالك منذ 2016؟</h1>
-    <p class="muted">لو كان معك 100 جنيه في يناير 2016، إليك القيمة الحالية لـ 100 جنيه إذا احتفظت بها كاش مقارنة باستثمارها في الأصول المختلفة حتى اليوم:</p>
-  </section>
-  <h3>الأصول ونمو الاستثمار</h3>
-  <div class="tiles" id="assets"></div>
-  <h3>الاقتصاد النقدي والادخار</h3>
-  <div class="tiles" id="policy"></div>
-  <div class="seg">
-    <button class="on" data-g="value">مقارنة أداء الأصول</button>
-    <button data-g="policy">تكلفة المعيشة والسياسة النقدية</button>
-  </div>
-  <div class="ranges">
-    <button class="on" data-r="all">الكل (2016 - 2026)</button>
-    <button data-r="5">آخر 5 سنوات</button>
-    <button data-r="2">آخر سنتين</button>
-  </div>
-  <div class="chart-wrap">
-    <div id="tip"></div>
-    <div id="chart"></div>
-  </div>
-  <section class="why">
-    <div class="card">
-      <h3>ماذا حدث لقوة الجنيه؟</h3>
-      <p id="pound"></p>
-    </div>
-    <div class="card">
-      <h3>لماذا يحدث ذلك معاً؟</h3>
-      <p>ارتفاع التضخم يأكل النقد السائل، فترتفع الفائدة وعائد الأذون، ويتجه جزء من المدخرات إلى الدولار والذهب والأسهم. المسارات تتحرك معاً لأنها استجابة لنفس الضغط على الجنيه، لا لأنها توصية شراء.</p>
-    </div>
-  </section>
-  <div id="pp-root" class="pp-wrap"></div>
+<section class="hero-mini"><h1>ماذا حدث لقيمة أموالك منذ 2016؟</h1><p class="muted">لو كان معك 100 جنيه في يناير 2016، إليك القيمة الحالية لـ 100 جنيه إذا احتفظت بها كاش مقارنة باستثمارها في الأصول المختلفة حتى اليوم:</p></section>
+<h3>الأصول ونمو الاستثمار</h3><div class="tiles" id="assets"></div>
+<h3>الاقتصاد النقدي والادخار</h3><div class="tiles" id="policy"></div>
+<div class="seg"><button class="on" data-g="value">مقارنة أداء الأصول</button><button data-g="policy">تكلفة المعيشة والسياسة النقدية</button></div>
+<div class="ranges"><button class="on" data-r="all">الكل (2016 - 2026)</button><button data-r="5">آخر 5 سنوات</button><button data-r="2">آخر سنتين</button></div>
+<div class="chart-wrap"><div id="tip"></div><div id="chart"></div></div>
+<section class="why"><div class="card"><h3>ماذا حدث لقوة الجنيه؟</h3><p id="pound"></p></div><div class="card"><h3>لماذا يحدث ذلك معاً؟</h3><p>ارتفاع التضخم يأكل النقد السائل، فترتفع الفائدة وعائد الأذون، ويتجه جزء من المدخرات إلى الدولار والذهب والأسهم. المسارات تتحرك معاً لأنها استجابة لنفس الضغط على الجنيه، لا لأنها توصية شراء.</p></div></section>
+<div id="pp-root" class="pp-wrap"></div>
 </main>
-<div class="modal" id="modal">
-  <div class="box">
-    <button id="mclose" class="primary" style="float:left">إغلاق</button>
-    <h2 id="mtitle"></h2>
-    <p class="muted" id="msum"></p>
-    <div id="dchart"></div>
-    <p class="muted" id="mmethod" style="margin-top:12px"></p>
-  </div>
-</div>
-<script type="module">
-import { toLine, rebase, en } from "./js/engine.js";
-import { loadEngine } from "./js/live.js";
-import { mountPurchasingAccordion } from "./js/accordion.js";
-
-const COLORS = {
-  purchasing:"#FF5252", usd_egp_mid:"#14B8A6", gold_egp_oz:"#FFD700",
-  silver_egp_oz:"#C0C0C0", qqq_egp:"#A855F7", spy_egp:"#3B82F6",
-  egx30_close:"#10B981", deposit:"#F59E0B", tbill:"#34D399"
-};
-const LABELS = {
-  usd_egp_mid:"سعر الدولار", gold_egp_oz:"الذهب", silver_egp_oz:"الفضة",
-  spy_egp:"الأسهم الأمريكية (S&P 500)", qqq_egp:"أسهم التكنولوجيا (ناسداك)",
-  egx30_close:"البورصة المصرية (EGX30)", purchasing:"القوة الشرائية للنقد",
-  deposit:"ودائع البنوك", tbill:"أذون الخزانة"
-};
-const META = {
-  usd_egp_mid: {text:"نفس الـ100 جنيه لو تحوّلت دولاراً في أول سعر متاح بعد يناير 2016 ثم قُيّمت بآخر سعر صرف في القاعدة.", href:"https://www.cbe.org.eg/en/economic-research/statistics/exchange-rates", link:"البنك المركزي — أسعار الصرف"},
-  gold_egp_oz: {text:"سعر أونصة الذهب بالدولار محوّل للجنيه بسعر الصرف في كل فترة، ثم قياس ماذا أصبحت 100 جنيه من أول نقطة 2016.", href:"https://www.cbe.org.eg/en/economic-research/statistics/exchange-rates", link:"منهج التحويل عبر سعر الصرف"},
-  silver_egp_oz: {text:"سعر أونصة الفضة بالدولار محوّل للجنيه بسعر الصرف، بنفس قاعدة الـ100 جنيه من 2016.", href:"https://www.cbe.org.eg/en/economic-research/statistics/exchange-rates", link:"منهج التحويل عبر سعر الصرف"},
-  spy_egp: {text:"مؤشر الأسهم الأمريكية الأوسع مُقوَّم بالجنيه عبر سعر الصرف. الرقم = ماذا أصبحت 100 جنيه منذ أول تداول في 2016.", href:"https://finance.yahoo.com/quote/SPY/", link:"سلسلة SPY (ثم التحويل للجنيه)"},
-  qqq_egp: {text:"أسهم التكنولوجيا الأمريكية مُقوَّمة بالجنيه عبر سعر الصرف من أول تداول 2016.", href:"https://finance.yahoo.com/quote/QQQ/", link:"سلسلة QQQ (ثم التحويل للجنيه)"},
-  egx30_close: {text:"ماذا أصبحت 100 جنيه لو تحركت مع إغلاق مؤشر البورصة المصرية من أول جلسة في يناير 2016 أو بعدها.", href:"https://www.egx.com.eg/", link:"البورصة المصرية"},
-  purchasing: {text:"النقد بلا استثمار. نركّب التضخم الشهري المعلن منذ 2016 لنرى كم تبقى من قوة 100 جنيه الشرائية.", href:"https://www.cbe.org.eg/en/economic-research/statistics/inflation-rates", link:"معدلات التضخم — البنك المركزي / الجهاز المركزي"},
-  deposit: {text:"عائد الوديعة القصيرة يُطبَّق على عدد الأيام الفعلي بين المشاهدات، لا بقسمة سعرين.", href:"https://www.cbe.org.eg/en/economic-research/statistics/interest-rates", link:"أسعار العائد — البنك المركزي"},
-  tbill: {text:"عائد مزاد أذون 91 يوماً يُطبَّق زمنياً. أول مزاد في السلسلة قد يكون بعد يناير 2016 ويُذكر على البطاقة.", href:"https://www.cbe.org.eg/en/economic-research/statistics/treasury-bills", link:"أذون الخزانة — البنك المركزي"}
-};
-const START="2016-01-01";
-const packed=await loadEngine();
-const S=packed.series;
-await mountPurchasingAccordion(document.getElementById("pp-root"));
-
-function path(key){
-  const line=toLine(S,START,100,key);
-  return line.length?rebase(line):[];
-}
-function lastOf(key){
-  const p=path(key);
-  return p.length?p.at(-1):null;
-}
-function card(key, warn){
-  const raw=toLine(S,START,100,key);
-  const p=raw.length?raw.at(-1):null;
-  const start=raw.length?raw[0].time:null;
-  if(!p) return `<button class="tile" data-k="${key}" type="button"><div class="kicker">${LABELS[key]}</div><div class="v">البيانات غير مكتملة للحساب</div></button>`;
-  const rebased=rebase(raw);
-  const last=rebased.at(-1).value;
-  const chg=last-100;
-  const pill=warn||chg<0?`pill dn`:`pill up`;
-  const extra=warn? " — تآكل القيمة":"";
-  const startNote=start && start>"2016-01-07"?` · البداية الفعلية ${start}`:"";
-  return `<button class="tile" data-k="${key}" type="button">
-    <div class="kicker">${LABELS[key]}</div>
-    <div class="v">${en(last,1)} ج.م</div>
-    <span class="${pill}">${chg>=0?"+":""}${en(chg,1)}%${extra}</span>
-    <div class="asof">آخر مشاهدة ${p.time}${startNote}</div>
-  </button>`;
-}
-document.getElementById("assets").innerHTML=["usd_egp_mid","gold_egp_oz","silver_egp_oz","spy_egp","qqq_egp","egx30_close"].map(k=>card(k)).join("");
-document.getElementById("policy").innerHTML=card("purchasing",true)+card("deposit")+card("tbill");
-let dchart, dseries;
-function openDetail(key){
-  const raw=toLine(S,START,100,key);
-  const modal=document.getElementById("modal");
-  document.getElementById("mtitle").textContent=LABELS[key]+" — ماذا حدث لقيمة 100 جنيه؟";
-  if(!raw.length){
-    document.getElementById("msum").textContent="⚠️ البيانات التاريخية غير مكتملة، لا يمكن حساب العائد بدقة.";
-    document.getElementById("mmethod").innerHTML=`${META[key].text} <a href="${META[key].href}" target="_blank" rel="noopener">${META[key].link}</a>`;
-    modal.classList.add("on"); return;
-  }
-  const rb=rebase(raw); const last=rb.at(-1);
-  document.getElementById("msum").textContent=`البداية 100 ج.م في ${raw[0].time} · الحالية ${en(last.value,1)} ج.م (${last.value>=100?"+":""}${en(last.value-100,1)}%) · آخر تحديث ${last.time}`;
-  document.getElementById("mmethod").innerHTML=`${META[key].text} <a href="${META[key].href}" target="_blank" rel="noopener">${META[key].link}</a>`;
-  modal.classList.add("on");
-  const box=document.getElementById("dchart");
-  if(!dchart){
-    dchart=LightweightCharts.createChart(box,{layout:{background:{color:"#12131C"},textColor:"#9AA0B4"},grid:{vertLines:{color:"#1E1F2E"},horzLines:{color:"#1E1F2E"}},rightPriceScale:{borderVisible:false},timeScale:{borderVisible:false}});
-  }
-  if(dseries) dchart.removeSeries(dseries);
-  dseries=dchart.addLineSeries({color:COLORS[key],lineWidth:2.4,priceLineVisible:false});
-  dseries.setData(rb);
-  dchart.applyOptions({width:box.clientWidth,height:320});
-  dchart.timeScale().setVisibleRange({from:raw[0].time,to:last.time});
-}
-document.querySelectorAll(".tile").forEach(t=>t.onclick=()=>openDetail(t.dataset.k));
-document.getElementById("mclose").onclick=()=>document.getElementById("modal").classList.remove("on");
-document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal") e.currentTarget.classList.remove("on");});
-const cash=lastOf("purchasing");
-if(cash) document.getElementById("pound").textContent=`100 جنيه نقداً في يناير 2016 أصبحت حوالي ${en(cash.value,1)} جنيهاً من القوة الشرائية في ${cash.time} بسبب التضخم المتراكم.`;
-
-const GROUPS={
-  value:["usd_egp_mid","gold_egp_oz","silver_egp_oz","egx30_close","spy_egp","qqq_egp"],
-  policy:["purchasing","deposit","tbill"]
-};
-let group="value", range="all", lines={};
-const el=document.getElementById("chart");
-const chart=LightweightCharts.createChart(el,{
-  layout:{background:{color:"#12131C"},textColor:"#9AA0B4",fontFamily:"IBM Plex Sans"},
-  grid:{vertLines:{color:"#1E1F2E"},horzLines:{color:"#1E1F2E"}},
-  rightPriceScale:{borderColor:"#2A2C3D",mode:1},
-  timeScale:{borderColor:"#2A2C3D"}
-});
-new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth,height:440})).observe(el);
-
-function visRange(){
-  const end="2026-12-31";
-  if(range==="all") return {from:START,to:end};
-  if(range==="5") return {from:"2021-01-01",to:end};
-  return {from:"2024-01-01",to:end};
-}
-function render(){
-  Object.values(lines).forEach(s=>chart.removeSeries(s)); lines={};
-  GROUPS[group].forEach(key=>{
-    const data=path(key);
-    if(!data.length) return;
-    const s=chart.addLineSeries({color:COLORS[key],lineWidth:2.3,priceLineVisible:false,lastValueVisible:true});
-    s.setData(data); lines[key]=s;
-  });
-  chart.timeScale().setVisibleRange(visRange());
-}
-chart.subscribeCrosshairMove(param=>{
-  const tip=document.getElementById("tip");
-  if(!param.time){tip.style.display="none";return;}
-  const rows=Object.entries(lines).map(([k,s])=>{
-    const v=param.seriesData.get(s);
-    if(!v) return "";
-    return `<div>${LABELS[k]}: <b>${en(v.value,1)} ج.م</b></div>`;
-  }).join("");
-  tip.style.display="block";
-  tip.innerHTML=`<div class="muted">${param.time}</div>${rows}`;
-});
-document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{
-  document.querySelectorAll(".seg button").forEach(x=>x.classList.remove("on"));
-  b.classList.add("on"); group=b.dataset.g; render();
-});
-document.querySelectorAll(".ranges button").forEach(b=>b.onclick=()=>{
-  document.querySelectorAll(".ranges button").forEach(x=>x.classList.remove("on"));
-  b.classList.add("on"); range=b.dataset.r; render();
-});
-chart.applyOptions({width:el.clientWidth,height:440});
-render();
-</script>
+<div class="modal" id="modal"><div class="box"><button id="mclose" class="primary" style="float:left">إغلاق</button><h2 id="mtitle"></h2><p class="muted" id="msum"></p><div id="dchart"></div><p class="muted" id="mmethod" style="margin-top:12px"></p></div></div>
+<script type="module" src="./js/map-page.js"></script>
 </body></html>
