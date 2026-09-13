@@ -25,6 +25,8 @@
   --fd-radius-sm: 8px;
   --fd-radius-md: 12px;
   --fd-radius-lg: 18px;
+  --fd-radius-card: 17px;
+  --fd-card-gradient: linear-gradient(180deg,#131a24,#0c1118);
   --fd-space-1: 4px;
   --fd-space-2: 8px;
   --fd-space-3: 12px;
@@ -46,6 +48,16 @@
 }
 
 @layer components {
+  /* Canonical surface contract. Values intentionally match the existing
+   * Fund Detail visual contract; later passes can remove the duplicate
+   * declarations from fund.css after CI and visual verification. */
+  .metric,
+  .card {
+    border-color: var(--fd-line);
+    border-radius: var(--fd-radius-card);
+    background: var(--fd-card-gradient);
+  }
+
   .fd-focus-ring:focus-visible,
   .tabs button:focus-visible,
   .tab-nav a:focus-visible,
