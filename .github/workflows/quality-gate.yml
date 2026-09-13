@@ -36,6 +36,7 @@ jobs:
           set -euo pipefail
           for file in web/js/*.js web/js/data/*.js; do node --check "$file"; done
           python scripts/check_inline_js.py
+          python scripts/audit_fund_css_tokens.py
       - name: Check financial data contract
         run: python scripts/verify_financial_contracts.py
       - name: Check Categories architecture contract
