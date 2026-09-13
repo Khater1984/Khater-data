@@ -88,34 +88,15 @@
     scrollbar-width: thin;
   }
 
-  @media (max-width: 700px) {
-    .tabs {
-      overflow-x: auto;
-      flex-wrap: nowrap;
-      padding-bottom: 6px;
-    }
-
-    .tabs button {
-      flex: 0 0 auto;
-      min-height: 40px;
-      white-space: nowrap;
-    }
+  .tabs button,
+  .tab-nav a {
+    transition: border-color .15s ease, background-color .15s ease, color .15s ease;
   }
 }
 
-@layer overrides {
-  .fund-detail-page img {
-    max-width: 100%;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .fund-detail-page *,
-    .fund-detail-page *::before,
-    .fund-detail-page *::after {
-      scroll-behavior: auto !important;
-      animation-duration: .01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: .01ms !important;
-    }
+@media (prefers-reduced-motion: reduce) {
+  .tabs button,
+  .tab-nav a {
+    transition: none;
   }
 }
