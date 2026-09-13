@@ -1,0 +1,51 @@
+/*
+ * Fund Detail CSS architecture layer manifest.
+ * This is intentionally additive: existing modules remain the source of truth
+ * while their cascade is made explicit for incremental consolidation.
+ */
+@layer foundation, layout, components, profile, price, performance, overrides;
+
+/* Existing modules are still loaded by fund-detail.css in their established
+ * order. New rules must declare an ownership layer before consolidation.
+ */
+:root {
+  --fd-bg: #071019;
+  --fd-panel: #0d141c;
+  --fd-panel-raised: #111b25;
+  --fd-line: rgba(255,255,255,.08);
+  --fd-text: #edf2f7;
+  --fd-muted: #8d99a8;
+  --fd-gold: #dcb66d;
+  --fd-green: #42d998;
+  --fd-red: #e87d73;
+  --fd-radius-sm: 8px;
+  --fd-radius-md: 12px;
+  --fd-radius-lg: 18px;
+  --fd-space-1: 4px;
+  --fd-space-2: 8px;
+  --fd-space-3: 12px;
+  --fd-space-4: 16px;
+  --fd-space-5: 24px;
+  --fd-space-6: 32px;
+}
+
+@layer foundation {
+  .fund-detail-page {
+    color: var(--fd-text);
+    background: var(--fd-bg);
+  }
+}
+
+@layer components {
+  .fd-focus-ring:focus-visible,
+  .tabs button:focus-visible,
+  .hero-price-compare:focus-visible {
+    outline: 2px solid var(--fd-gold);
+    outline-offset: 2px;
+  }
+}
+
+@layer overrides {
+  /* Keep visual behavior stable while providing one deliberate extension point. */
+  .fund-detail-page img { max-width: 100%; }
+}
