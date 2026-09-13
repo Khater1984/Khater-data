@@ -22,11 +22,17 @@ html = HTML.read_text(encoding="utf-8")
 entry = ENTRY.read_text(encoding="utf-8")
 errors = []
 
-if 'href="css/fund-detail.css"' not in html:
+# Allow cache-busting query strings while requiring the canonical asset path.
+canonical_href = re.search(
+    r'<link\s+[^>]*href=["\']css/fund-detail\.css(?:\?[^"\']*)?["\'][^>]*>',
+    html,
+    flags=re.IGNORECASE,
+)
+if not canonical_href:
     errors.append("fund.html must load css/fund-detail.css as its canonical Fund Detail stylesheet")
 
 for css in legacy_css:
-    if css in html:
+    if re.search(rf'<link\s+[^>]*href=["\']{re.escape(css)}(?:\?[^"\']*)?["\'][^>]*>', html, flags=re.IGNORECASE):
         errors.append(f"fund.html must not load legacy Fund Detail stylesheet directly: {css}")
 
 imports = re.findall(r"@import\s+url\(['\"]([^'\"]+)['\"]\)", entry)
@@ -44,5 +50,6 @@ if errors:
 
 print("FUND DETAIL CSS ARCHITECTURE CHECK PASSED")
 print(" - canonical entrypoint: css/fund-detail.css")
+print(" - cache-busting query strings allowed")
 print(" - legacy modules remain encapsulated behind the canonical entrypoint")
 print(" - module order is locked")
