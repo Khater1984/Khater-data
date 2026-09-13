@@ -6,6 +6,7 @@
 <script src="config.js"></script>
 <link rel="stylesheet" href="css/header.css">
 <link rel="stylesheet" href="css/page-categories.css">
+<link rel="stylesheet" href="css/category-context.css">
 </head>
 <body>
 <header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>منصة فهم الاقتصاد وتحليل صناديق الاستثمار</span></div><nav>
@@ -13,6 +14,7 @@
 </nav></div></header>
 <main class="wrap page">
 <section class="hero"><div class="hero-main"><div class="eyebrow">CATEGORY INTELLIGENCE MAP</div><h1>خريطة فئات الصناديق</h1><p>شاشة لفهم بنية سوق الصناديق المصري: أين تتركز الصناديق؟ ما حجم كل فئة؟ وما جودة البيانات والتقييمات المتاحة داخلها؟</p></div><div class="hero-side"><div class="status">FUND UNIVERSE</div><div class="side-number" id="totalFunds">—</div><div class="side-label">صندوق في قاعدة البيانات</div><div class="side-grid"><div class="micro"><div class="k">الفئات</div><span class="v" id="totalCats">—</span></div><div class="micro"><div class="k">Rated</div><span class="v" id="ratedFunds">—</span></div></div></div></section>
+<section class="category-context" id="categoryContext"><div class="context-loading">جاري ربط خريطة الفئات بالسياق المالي…</div></section>
 <section class="controls"><input id="search" placeholder="ابحث باسم الفئة أو مدير الاستثمار أو الصندوق..."><select id="score"><option value="">كل SmartScore</option><option value="90">90+</option><option value="75">75–89.9</option><option value="50">50–74.9</option><option value="0">أقل من 50</option></select><select id="confidence"><option value="">كل مستويات الثقة</option><option value="High">High</option><option value="Moderate">Moderate</option><option value="Limited">Limited</option><option value="Insufficient">Insufficient</option></select><button id="clear">مسح</button></section>
 <section class="section"><div class="section-head"><h2 class="section-title">01 MARKET VIEWS</h2><div class="section-note" id="mapStatus"><span class="dot"></span>جاري تحميل السوق</div></div><div class="view-tabs"><button class="view-tab active" data-view="map">MARKET MAP</button><button class="view-tab" data-view="heat">HEATMAP</button></div>
 <div class="view-pane active" id="pane-map"><div class="surface map"><div class="map-stage" id="mapStage"><div class="loading">جاري بناء خريطة الفئات…</div></div><div class="map-footer"><span>الخريطة وصفية ولا تعيد حساب SmartScore.</span><span><b id="visibleCount">—</b> صندوق ظاهر</span></div></div></div>
@@ -22,7 +24,9 @@
 <section class="section"><div class="section-head"><h2 class="section-title">03 MARKET OBSERVATORY</h2></div><div class="surface insight"><div class="insight-grid" id="insights"></div></div></section>
 </main>
 <script src="js/data/supabase-client.js"></script>
+<script src="js/data/macro-service.js"></script>
 <script src="js/data/categories-service.js"></script>
 <script src="js/categories-screen-v2.js"></script>
+<script src="js/category-context.js"></script>
 </body>
 </html>
