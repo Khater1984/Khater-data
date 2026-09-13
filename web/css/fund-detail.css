@@ -10,32 +10,42 @@
 @import url('./fund-price.css');
 @import url('./fund-profile.css');
 
-/* Layer foundation for incremental consolidation. Kept inline so the
- * canonical legacy import contract remains exact and machine-verifiable. */
-:root {
-  --fd-bg: #071019;
-  --fd-panel: #0d141c;
-  --fd-panel-raised: #111b25;
-  --fd-line: rgba(255,255,255,.08);
-  --fd-text: #edf2f7;
-  --fd-muted: #8d99a8;
-  --fd-gold: #dcb66d;
-  --fd-green: #42d998;
-  --fd-red: #e87d73;
-  --fd-radius-sm: 8px;
-  --fd-radius-md: 12px;
-  --fd-radius-lg: 18px;
-  --fd-radius-card: 17px;
-  --fd-card-gradient: linear-gradient(180deg,#131a24,#0c1118);
-  --fd-space-1: 4px;
-  --fd-space-2: 8px;
-  --fd-space-3: 12px;
-  --fd-space-4: 16px;
-  --fd-space-5: 24px;
-  --fd-space-6: 32px;
-}
-
 @layer foundation {
+  :root {
+    /* Canonical Fund Detail design tokens. */
+    --fd-bg: #071019;
+    --fd-panel: #0d141c;
+    --fd-panel-raised: #111b25;
+    --fd-line: rgba(255,255,255,.08);
+    --fd-text: #edf2f7;
+    --fd-muted: #8d99a8;
+    --fd-gold: #dcb66d;
+    --fd-green: #42d998;
+    --fd-red: #e87d73;
+    --fd-radius-sm: 8px;
+    --fd-radius-md: 12px;
+    --fd-radius-lg: 18px;
+    --fd-radius-card: 17px;
+    --fd-card-gradient: linear-gradient(180deg,#131a24,#0c1118);
+    --fd-space-1: 4px;
+    --fd-space-2: 8px;
+    --fd-space-3: 12px;
+    --fd-space-4: 16px;
+    --fd-space-5: 24px;
+    --fd-space-6: 32px;
+
+    /* Compatibility aliases: legacy modules can migrate without visual drift. */
+    --gold: var(--fd-gold);
+    --gold2: #f4d991;
+    --green: #46e39a;
+    --red: #f07b70;
+    --amber: #e9c66e;
+    --bg: #06090d;
+    --line: var(--fd-line);
+    --muted: var(--fd-muted);
+    --text: var(--fd-text);
+  }
+
   .fund-detail-page {
     color: var(--fd-text);
     background: var(--fd-bg);
@@ -48,9 +58,7 @@
 }
 
 @layer components {
-  /* Canonical surface contract. The first consolidation target is the
-   * shared metric/card surface because its visual values are identical in
-   * the legacy stylesheet. */
+  /* Canonical shared surface contract. */
   .metric,
   .card {
     border-color: var(--fd-line);
@@ -58,8 +66,6 @@
     background: var(--fd-card-gradient);
   }
 
-  /* Shared surface primitives for analytical cards. Only properties whose
-   * legacy values are proven identical are centralized here. */
   .score-card,
   .risk-card,
   .chart-card,
