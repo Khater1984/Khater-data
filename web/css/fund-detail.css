@@ -1,0 +1,13 @@
+/*
+ * Fund Detail — canonical stylesheet entrypoint.
+ *
+ * Module order is intentionally identical to the legacy fund.html cascade:
+ * foundation → chart → price → profile.
+ *
+ * This facade is the single CSS dependency of fund.html while the modules
+ * remain isolated until selector-level consolidation is verified.
+ */
+@import url('./fund.css');
+@import url('./fund-chart.css');
+@import url('./fund-price.css');
+@import url('./fund-profile.css');
