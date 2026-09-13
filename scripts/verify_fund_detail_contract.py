@@ -7,9 +7,7 @@ PAGE = ROOT / "web/fund.html"
 REQUIRED_CSS = [
     "css/app.css",
     "css/header.css",
-    "css/fund.css",
-    "css/fund-chart.css",
-    "css/fund-profile.css",
+    "css/fund-detail.css",
 ]
 REQUIRED_JS = [
     "js/data/supabase-client.js",
@@ -22,6 +20,7 @@ REQUIRED_JS = [
     "js/fund-evidence.js",
     "js/fund-profile.js",
     "js/fund-tabs.js",
+    "js/fund-detail-controller.js",
 ]
 LEGACY_PATTERNS = [
     r"fund-performance-v2\.js",
@@ -40,13 +39,11 @@ for pattern in LEGACY_PATTERNS:
     if re.search(pattern, text):
         errors.append(f"fund.html references legacy dependency: {pattern}")
 
-# The Fund Detail page must load the domain service before the facade/controller modules.
 service_pos = text.find('js/data/fund-service.js')
 core_pos = text.find('js/fund-core.js')
 if service_pos == -1 or core_pos == -1 or service_pos > core_pos:
     errors.append("fund.html must load fund-service.js before fund-core.js")
 
-# Keep direct Supabase transport out of page controllers: the page may only reference the canonical client.
 if "supabase.from(" in text or "supabase.rpc(" in text or ".from('" in text:
     errors.append("fund.html contains direct Supabase query code; use the data/service layer")
 
@@ -61,3 +58,4 @@ print(f" - canonical CSS dependencies: {len(REQUIRED_CSS)}")
 print(f" - canonical JS dependencies: {len(REQUIRED_JS)}")
 print(" - no legacy performance/core dependency references")
 print(" - data service precedes fund facade")
+print(" - canonical stylesheet owns Fund Detail styling")
