@@ -38,17 +38,55 @@
     color: var(--fd-text);
     background: var(--fd-bg);
   }
+
+  .fund-page {
+    min-width: 0;
+    overflow-x: clip;
+  }
 }
 
 @layer components {
   .fd-focus-ring:focus-visible,
   .tabs button:focus-visible,
-  .hero-price-compare:focus-visible {
+  .tab-nav a:focus-visible,
+  .hero-price-compare:focus-visible,
+  .profile-link:focus-visible {
     outline: 2px solid var(--fd-gold);
     outline-offset: 2px;
+  }
+
+  .tabs {
+    scrollbar-width: thin;
+  }
+
+  @media (max-width: 700px) {
+    .tabs {
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      padding-bottom: 6px;
+    }
+
+    .tabs button {
+      flex: 0 0 auto;
+      min-height: 40px;
+      white-space: nowrap;
+    }
   }
 }
 
 @layer overrides {
-  .fund-detail-page img { max-width: 100%; }
+  .fund-detail-page img {
+    max-width: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fund-detail-page *,
+    .fund-detail-page *::before,
+    .fund-detail-page *::after {
+      scroll-behavior: auto !important;
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+    }
+  }
 }
