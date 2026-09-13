@@ -13,7 +13,7 @@
 <main class="terminal">
 <section class="hero-compact">
   <div><div class="eyebrow"><span class="pulse"></span> رادار الصناديق</div><h1>من أداء الصندوق إلى قرار الاستثمار</h1><p>قارن الصناديق بالعائد الرسمي المنشور، ثم ضع النتيجة أمام مرجعيات السوق على <strong>نفس تاريخ التقرير الفعلي لكل صندوق</strong>.</p></div>
-  <div class="hero-metrics"><div><span>الكون</span><b>208</b><small>صندوقًا</small></div><div><span>المنهج</span><b>رسمي</b><small>عائد EIMA</small></div><div><span>التاريخ</span><b>خاص</b><small>لكل صندوق</small></div></div>
+  <div class="hero-metrics"><div><span>الكون</span><b>208</b><small>صندوقًا</small></div><div><span>المنهج</span><b>رسمي</b><small>عائد الهيئة</small></div><div><span>التاريخ</span><b>خاص</b><small>لكل صندوق</small></div></div>
 </section>
 <section class="workspace">
 <aside class="sidebar">
@@ -24,12 +24,12 @@
     <label class="field"><span>بحث</span><div class="input-box"><i>⌕</i><input id="q" placeholder="اسم الصندوق أو المدير"></div></label>
     <label class="field"><span>الفئة</span><select id="cat"><option value="">كل الفئات</option></select></label>
     <label class="field"><span>مدير الاستثمار</span><select id="mgr"><option value="">كل المديرين</option></select></label>
-    <div class="filter-pair"><label class="field"><span>SmartScore</span><select id="score"><option value="">الكل</option><option value="90">90–100</option><option value="75">75–89</option><option value="50">50–74</option><option value="0">أقل من 50</option><option value="na">غير مقيم</option></select></label><label class="field"><span>ترتيب</span><select id="viewSort"><option value="return">العائد</option><option value="score">SmartScore</option></select></label></div>
+    <div class="filter-pair"><label class="field"><span>SmartScore</span><select id="score"><option value="">الكل</option><option value="90">90–100</option><option value="75">75–89</option><option value="50">50–74</option><option value="0">أقل من 50</option><option value="na">غير مقيم</option></select></label><label class="field"><span>ترتيب</span><select id="viewSort"><option value="return">العائد الأعلى</option><option value="score">التقييم الأعلى</option></select></label></div>
   </div>
   <div class="side-section"><div class="side-section-head"><span>المقارنة بالسوق</span><small>اختر شرطًا</small></div><div id="bench" class="bench-list">جاري تحميل المعايير…</div><div id="msg" class="status"></div></div>
 </aside>
 <section class="content">
-  <div class="content-top"><div><div class="crumb">الصناديق / الاستكشاف / المقارنة</div><h2>كون الصناديق</h2><p id="horizonMeta">جاري مزامنة الأفق…</p></div><div class="content-status"><span></span><b>بيانات رسمية</b><small>Supabase · EIMA</small></div></div>
+  <div class="content-top"><div><div class="crumb">الصناديق / الاستكشاف / المقارنة</div><h2>كون الصناديق</h2><p id="horizonMeta">جاري مزامنة الأفق…</p></div><div class="content-status"><span></span><b>بيانات رسمية</b><small>قاعدة البيانات · الهيئة</small></div></div>
   <div id="kpis" class="kpis"></div>
   <div class="analysis-strip"><div><span>طريقة القراءة</span><b>العائد الرسمي ← المرجع ← المخاطرة ← الثقة</b></div><div><span>مرجع العائد السنوي</span><b>أذون الخزانة والودائع = متوسط سنوي</b></div><div><span>قاعدة العرض</span><b>لا رقم بلا مصدر صالح</b></div></div>
   <section class="ranking-panel">
@@ -40,9 +40,10 @@
 </section>
 <footer class="terminal-footer"><span>رادار السوق المصري</span><small>العائد الرسمي · تاريخ التقرير الخاص بالصندوق · محرك مرجعيات موحّد</small><b>بيانات أولًا · قرار أوضح</b></footer>
 </main>
-<script src="js/data/supabase-client.js?v=20260913-1"></script>
-<script src="js/data/fund-service.js?v=20260913-1"></script>
-<script src="js/data/funds-service.js?v=20260913-1"></script>
-<script src="js/data/benchmark-service.js?v=20260913-1"></script>
-<script src="js/funds-screen-v2.js?v=20260913-1"></script>
+<script src="js/data/supabase-client.js?v=20260913-2"></script>
+<script src="js/data/fund-service.js?v=20260913-2"></script>
+<script src="js/data/funds-service.js?v=20260913-2"></script>
+<script src="js/data/benchmark-service.js?v=20260913-2"></script>
+<script src="js/funds-screen-v2.js?v=20260913-2"></script>
+<script src="js/funds-screen-fixes.js?v=20260913-1"></script>
 </body></html>
