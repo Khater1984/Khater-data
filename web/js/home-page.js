@@ -16,9 +16,21 @@
   const signed=v=>v==null?'—':(v>0?'+':'')+fmt(v)+'%';
   function regime(egx30,gold,usd,inflation,tbill){
     if(egx30==null||gold==null||usd==null)return {label:'قراءة السياق قيد الاكتمال',cls:''};
-    if(egx30>0 && gold>0 && (inflation==null || inflation<tbill))return {label:'ميل إيجابي مع متابعة الأسعار',cls:'regime--positive'};
+    if(egx30>0 && gold>0 && (inflation==null || tbill==null || inflation<tbill))return {label:'ميل إيجابي مع متابعة الأسعار',cls:'regime--positive'};
     if(usd>0 || (inflation!=null && tbill!=null && inflation>=tbill))return {label:'ضغط نقدي / دفاعي',cls:'regime--caution'};
     return {label:'سوق متباين — المقارنة أهم من الاتجاه الواحد',cls:''};
+  }
+  function categoryInsights(list,marketRegime){
+    const groups=Object.create(null);
+    (list||[]).forEach(f=>{
+      if(!f.cat)return;
+      const g=groups[f.cat]||(groups[f.cat]={name:f.cat,count:0,scored:0,score:0,qualified:0});
+      g.count++;
+      if(Number.isFinite(f.score)){g.scored++;g.score+=f.score;}
+      if(String(f.qualification||'').toLowerCase().includes('qual'))g.qualified++;
+    });
+    const items=Object.values(groups).filter(g=>g.count>=2&&g.scored>0).map(g=>({...g,avg:g.score/g.scored,fit:marketRegime.cls==='regime--caution'&&/ذهب|نقد|دخل ثابت/.test(g.name)?1:marketRegime.cls==='regime--positive'&&/أسهم|مؤشرات/.test(g.name)?1:0}));
+    return items.sort((a,b)=>(b.fit-a.fit)||(b.avg-a.avg)||((b.count)-(a.count))).slice(0,3);
   }
   async function render(){
     const strip=document.getElementById('strip'), context=document.getElementById('financial-context');
@@ -42,6 +54,8 @@
       if(context){
         const changes={usd:pctChange(usdSeries.rows),gold:pctChange(goldSeries.rows),egx:pctChange(egxSeries.rows)};
         const r=regime(changes.egx,changes.gold,changes.usd,infl?.value,tbill?.value);
+        const insights=categoryInsights(universe.list,r);
+        const insightHtml=insights.length?insights.map((g,i)=>`<article class="opportunity-card"><span class="opportunity-rank">0${i+1}</span><div><span class="context-card__label">${g.fit?'ملاءمة سياقية':'إشارة جودة'}</span><h3>${g.name}</h3><p>${g.count} صناديق · متوسط SmartScore ${fmt(g.avg)} · ${g.scored} مقيمة</p></div></article>`).join(''):`<div class="empty">لا توجد عينة كافية لبناء قراءة للفئات الآن.</div>`;
         context.innerHTML=`
           <div class="home-context__head"><div><div class="kicker">الطبقة التي تسبق الفرصة</div><h2>ماذا يقول السوق أولًا؟</h2><p>نقرأ حركة الجنيه والأصول والأسعار قبل أن نطلب منك النظر إلى صندوق بعينه.</p></div><div class="home-context__date">آخر تحديث: ${egx?.ts_date||usd?.ts_date||'—'}</div></div>
           <div class="context-grid">
@@ -50,7 +64,8 @@
             <article class="context-card"><span class="context-card__label">Gold / EGP</span><h3>الذهب بالجنيه</h3><div class="context-card__value ${cls(changes.gold)}">${signed(changes.gold)}</div><div class="context-card__meta">تغير تقريبي خلال 30 يومًا</div></article>
             <article class="context-card"><span class="context-card__label">USD / EGP</span><h3>الجنيه مقابل الدولار</h3><div class="context-card__value ${cls(changes.usd)}">${signed(changes.usd)}</div><div class="context-card__meta">تغير تقريبي خلال 30 يومًا</div></article>
           </div>
-          <div class="context-links"><a class="context-link" href="./macro.html">افهم الاقتصاد الكلي ←</a><a class="context-link" href="./map.html">شاهد ماذا حدث للفلوس ←</a><a class="context-link" href="./categories.html">انتقل إلى خريطة الفئات ←</a></div>`;
+          <div class="context-links"><a class="context-link" href="./macro.html">افهم الاقتصاد الكلي ←</a><a class="context-link" href="./map.html">شاهد ماذا حدث للفلوس ←</a><a class="context-link" href="./categories.html">انتقل إلى خريطة الفئات ←</a></div>
+          <section class="opportunity-layer" aria-label="إشارات الفئات قبل الصناديق"><div class="opportunity-head"><div><div class="kicker">من السياق إلى الفئة</div><h2>أين يستحق البحث أن يبدأ؟</h2><p>ليست قائمة بأفضل الصناديق؛ بل قراءة أولية للفئات وفق جودة البيانات والـSmartScore والسياق الحالي.</p></div><a class="context-link" href="./categories.html">استكشف كل الفئات ←</a></div><div class="opportunity-grid">${insightHtml}</div></section>`;
       }
     }catch(e){
       strip.innerHTML='<div class="muted">تعذر تحميل الملخص من قاعدة البيانات</div>';
