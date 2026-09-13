@@ -13,49 +13,13 @@
 </head>
 <body>
   <header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>منصة فهم الاقتصاد وتحليل صناديق الاستثمار</span></div><nav>
-<a href="./index.html">البداية</a>
-<a href="./map.html">ماذا حدث للفلوس؟</a>
-<a href="./funds.html">الصناديق</a>
-<a href="./categories.html">خريطة الفئات</a>
-<a href="./macro.html">الاقتصاد</a>
-<a href="./why.html">المنهج</a>
+<a href="./index.html">البداية</a><a href="./map.html">ماذا حدث للفلوس؟</a><a href="./funds.html">الصناديق</a><a href="./categories.html">خريطة الفئات</a><a href="./macro.html">الاقتصاد</a><a href="./why.html">المنهج</a>
 </nav></div></header>
   <main class="wrap">
-    <section class="hero">
-      <div class="kicker">ليس موقع عرض صناديق</div>
-      <h1>ماذا حدث لأموالي منذ 2016؟</h1>
-      <p>التضخم والدولار والذهب والبورصة والصناديق كانت في جزر منفصلة. هنا تُجمع بالجنيه، وتُقارن بعدل، من دون أن نقول لك ماذا تشتري.</p>
-      <a class="btn" href="./map.html">ابدأ بـ 1,000 جنيه</a>
-    </section>
+    <section class="hero"><div class="kicker">ليس موقع عرض صناديق</div><h1>ماذا حدث لأموالي منذ 2016؟</h1><p>التضخم والدولار والذهب والبورصة والصناديق كانت في جزر منفصلة. هنا تُجمع بالجنيه، وتُقارن بعدل، من دون أن نقول لك ماذا تشتري.</p><a class="btn" href="./map.html">ابدأ بـ 1,000 جنيه</a></section>
     <section class="strip" id="strip"></section>
-    <section class="grid3">
-      <a class="card" href="./map.html"><div class="kicker">01</div><h3>ماذا حدث للفلوس؟</h3><p>مسار المبلغ نفسه عبر التضخم، الدولار، الذهب، EGX30 والأسواق العالمية.</p></a>
-      <a class="card" href="./funds.html"><div class="kicker">02</div><h3>الصناديق بذكاء</h3><p>فلتر AND على المراجع، ثم Score وRating وDNA. التفوق شرط ظهور لا زخرفة.</p></a>
-      <a class="card" href="./categories.html"><div class="kicker">03</div><h3>خريطة الفئات</h3><p>أين يتركز العائد داخل النقد والأسهم والذهب — قبل الغرق في صندوق واحد.</p></a>
-    </section>
+    <section class="grid3"><a class="card" href="./map.html"><div class="kicker">01</div><h3>ماذا حدث للفلوس؟</h3><p>مسار المبلغ نفسه عبر التضخم، الدولار، الذهب، EGX30 والأسواق العالمية.</p></a><a class="card" href="./funds.html"><div class="kicker">02</div><h3>الصناديق بذكاء</h3><p>فلتر AND على المراجع، ثم Score وRating وDNA. التفوق شرط ظهور لا زخرفة.</p></a><a class="card" href="./categories.html"><div class="kicker">03</div><h3>خريطة الفئات</h3><p>أين يتركز العائد داخل النقد والأسهم والذهب — قبل الغرق في صندوق واحد.</p></a></section>
   </main>
   <footer class="site"><div class="wrap">البيانات من سوبربيس · التحديث اليومي عبر GitHub Actions · ليست نصيحة استثمارية</div></footer>
-  <script>
-    (async function(){
-      const fmt=n=>Number(n).toLocaleString('en-US',{maximumFractionDigits:2});
-      const strip=document.getElementById('strip');
-      try{
-        const [usdData,egxData,universe]=await Promise.all([
-          window.KHATER_DATA.macro.getSeries('usd_egp_mid'),
-          window.KHATER_DATA.macro.getSeries('egx30_close'),
-          window.KHATER_DATA.funds.getUniverse()
-        ]);
-        const last=s=>s&&s.rows&&s.rows.length?s.rows[s.rows.length-1]:null;
-        const usd=last(usdData),egx=last(egxData);
-        const priced=universe.list.filter(x=>x.nav!=null).length;
-        strip.innerHTML=`
-          <div class="kpi"><em>USD / EGP</em><b class="num">${usd?fmt(usd.value):'—'}</b><span class="muted">${usd?usd.ts_date:''}</span></div>
-          <div class="kpi"><em>EGX30</em><b class="num">${egx?fmt(egx.value):'—'}</b><span class="muted">${egx?egx.ts_date:''}</span></div>
-          <div class="kpi"><em>صناديق مسعّرة</em><b class="num">${priced} / ${universe.list.length}</b><span class="muted">Supabase</span></div>
-          <div class="kpi"><em>مصدر البيانات</em><b>مباشر</b><span class="muted">public.macro_series + funds</span></div>`;
-      }catch(e){
-        strip.innerHTML='<div class="muted">تعذر تحميل الملخص من قاعدة البيانات</div>';
-      }
-    })();
-  </script>
+  <script src="js/home-page.js"></script>
 </body></html>
