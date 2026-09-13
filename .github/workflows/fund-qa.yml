@@ -11,7 +11,12 @@ on:
       - 'web/js/fund-benchmark.js'
       - 'web/js/fund-smartscore.js'
       - 'web/js/fund-evidence.js'
+      - 'web/js/fund-profile.js'
+      - 'web/js/fund-tabs.js'
       - 'web/css/fund.css'
+      - 'web/css/fund-chart.css'
+      - 'web/css/fund-profile.css'
+      - 'web/css/fund-price.css'
     branches: [main]
 
 jobs:
@@ -22,7 +27,7 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           set -e
-          for f in web/js/fund-core.js web/js/fund-performance.js web/js/fund-risk.js web/js/fund-benchmark.js web/js/fund-smartscore.js web/js/fund-evidence.js; do
+          for f in web/js/fund-core.js web/js/fund-performance.js web/js/fund-risk.js web/js/fund-benchmark.js web/js/fund-smartscore.js web/js/fund-evidence.js web/js/fund-profile.js web/js/fund-tabs.js; do
             node --check "$f"
           done
       - name: Check required tab contracts
@@ -33,8 +38,16 @@ jobs:
           grep -q 'FUND_TABS.benchmark' web/js/fund-benchmark.js
           grep -q 'FUND_TABS.smartscore' web/js/fund-smartscore.js
           grep -q 'FUND_TABS.evidence' web/js/fund-evidence.js
+          grep -q 'FUND_TABS.profile' web/js/fund-profile.js
           grep -q 'fund-performance.js' web/fund.html
           grep -q 'fund-risk.js' web/fund.html
           grep -q 'fund-benchmark.js' web/fund.html
           grep -q 'fund-smartscore.js' web/fund.html
           grep -q 'fund-evidence.js' web/fund.html
+          grep -q 'fund-profile.js' web/fund.html
+          grep -q 'fund-tabs.js' web/fund.html
+      - name: Check canonical fund-price dependency
+        run: |
+          set -e
+          test -s web/css/fund-price.css
+          grep -q 'fund-price.css' web/js/fund-core.js
