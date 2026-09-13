@@ -1,15 +1,14 @@
 (function () {
   'use strict';
 
-  // Fund Detail tab orchestration: render each non-performance tab once per page load.
-  // Performance remains intentionally uncached because its horizon selector can change.
-  // Cache the in-flight Promise immediately so rapid repeated clicks cannot trigger
-  // duplicate renders while the first tab load is still resolving.
+  // Performance and Benchmark depend on the selected horizon and must re-render
+  // when ?h= changes. Static/detail tabs can remain cached for the page lifetime.
+  const HORIZON_DEPENDENT = { performance: true, benchmark: true };
   const cache = Object.create(null);
   const original = window.FUND_TABS || {};
 
   function wrap(name, fn) {
-    if (typeof fn !== 'function' || name === 'performance') return fn;
+    if (typeof fn !== 'function' || HORIZON_DEPENDENT[name]) return fn;
     return function () {
       if (cache[name]) return cache[name];
       const pending = Promise.resolve().then(fn);
