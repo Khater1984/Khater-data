@@ -5,8 +5,10 @@
  */
 @layer foundation, layout, components, profile, price, performance, overrides;
 
-@import url('./fund-layers.css');
 @import url('./fund.css');
 @import url('./fund-chart.css');
 @import url('./fund-price.css');
 @import url('./fund-profile.css');
+
+/* Layer manifest is intentionally separate from the legacy import contract. */
+@import url('./fund-layers.css');
