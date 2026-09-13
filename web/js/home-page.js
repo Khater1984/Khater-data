@@ -24,10 +24,15 @@
     const strip=document.getElementById('strip'), context=document.getElementById('financial-context');
     if(!strip)return;
     try{
-      const keys=['usd_egp_mid','gold_egp_oz','egx30_close','cpi_headline_mom_pct','tbill_364_avg_yield_pct'];
-      const [series,universe]=await Promise.all([Promise.all(keys.map(k=>window.KHATER_DATA.macro.getSeries(k))),window.KHATER_DATA.funds.getUniverse()]);
-      const map=Object.fromEntries(series.map(s=>[s.key,s]));
-      const usd=last(map.usd_egp_mid),egx=last(map.egx30_close),gold=last(map.gold_egp_oz),infl=last(map.cpi_headline_mom_pct),tbill=last(map.tbill_364_avg_yield_pct);
+      const [usdSeries,goldSeries,egxSeries,inflSeries,tbillSeries,universe]=await Promise.all([
+        window.KHATER_DATA.macro.getSeries('usd_egp_mid'),
+        window.KHATER_DATA.macro.getSeries('gold_egp_oz'),
+        window.KHATER_DATA.macro.getSeries('egx30_close'),
+        window.KHATER_DATA.macro.getSeries('cpi_headline_mom_pct'),
+        window.KHATER_DATA.macro.getSeries('tbill_364_avg_yield_pct'),
+        window.KHATER_DATA.funds.getUniverse()
+      ]);
+      const usd=last(usdSeries),egx=last(egxSeries),gold=last(goldSeries),infl=last(inflSeries),tbill=last(tbillSeries);
       const priced=universe.list.filter(x=>x.nav!=null).length;
       strip.innerHTML=`
         <div class="kpi"><em>USD / EGP</em><b class="num">${usd?fmt(usd.value):'—'}</b><span class="muted">${usd?usd.ts_date:''}</span></div>
@@ -35,7 +40,7 @@
         <div class="kpi"><em>صناديق مسعّرة</em><b class="num">${priced} / ${universe.list.length}</b><span class="muted">Supabase</span></div>
         <div class="kpi"><em>مصدر البيانات</em><b>مباشر</b><span class="muted">public.macro_series + funds</span></div>`;
       if(context){
-        const changes={usd:pctChange(map.usd_egp_mid.rows),gold:pctChange(map.gold_egp_oz.rows),egx:pctChange(map.egx30_close.rows)};
+        const changes={usd:pctChange(usdSeries.rows),gold:pctChange(goldSeries.rows),egx:pctChange(egxSeries.rows)};
         const r=regime(changes.egx,changes.gold,changes.usd,infl?.value,tbill?.value);
         context.innerHTML=`
           <div class="home-context__head"><div><div class="kicker">الطبقة التي تسبق الفرصة</div><h2>ماذا يقول السوق أولًا؟</h2><p>نقرأ حركة الجنيه والأصول والأسعار قبل أن نطلب منك النظر إلى صندوق بعينه.</p></div><div class="home-context__date">آخر تحديث: ${egx?.ts_date||usd?.ts_date||'—'}</div></div>
