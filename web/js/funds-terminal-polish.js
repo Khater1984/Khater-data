@@ -2,6 +2,12 @@
 (function(){
 'use strict';
 function num(v){const n=Number(String(v||'').replace(/[%+,]/g,'').trim());return Number.isFinite(n)?n:null;}
+function syncMarketStrip(){
+  const h=document.getElementById('h'),meta=document.getElementById('horizonMeta'),kpis=document.getElementById('kpis');
+  if(h&&h.value){const o=h.options[h.selectedIndex];const el=document.getElementById('marketHorizon');if(el)el.textContent=o?o.text:'—';}
+  if(meta){const txt=meta.textContent||'',m=txt.match(/(\d+)\/(\d+)\s*صندوق/);const el=document.getElementById('marketCoverage');if(el&&m)el.textContent=m[1]+' / '+m[2];}
+  const dateKpi=kpis?.querySelector('.kpi:nth-child(4) b');const dateEl=document.getElementById('marketDates');if(dateKpi&&dateEl)dateEl.textContent=dateKpi.textContent.trim()||'—';
+}
 function addSignal(row,index,total){
   const fund=row.children[1], retCell=row.children[3], compare=row.children[4], scoreCell=row.children[5], qual=row.children[9];
   if(!fund||!retCell||!scoreCell||!qual)return;
@@ -30,9 +36,13 @@ function addSignal(row,index,total){
     compare.dataset.polished='1';const raw=compare.textContent.trim(),good=/هزم الكل/.test(raw);compare.innerHTML='<span class="compare-main '+(good?'':'hold')+'">'+(good?'● ':'○ ')+raw+'</span><span class="compare-sub">نفس تاريخ التقرير</span>';
   }
 }
-function run(){const rows=[...document.querySelectorAll('#rows > tr')].filter(r=>r.children.length>5&&!r.classList.contains('empty')&&!r.classList.contains('loading')&&!r.classList.contains('error-state'));rows.forEach((r,i)=>addSignal(r,i,rows.length));}
+function run(){
+  syncMarketStrip();
+  const rows=[...document.querySelectorAll('#rows > tr')].filter(r=>r.children.length>5&&!r.classList.contains('empty')&&!r.classList.contains('loading')&&!r.classList.contains('error-state'));
+  rows.forEach((r,i)=>addSignal(r,i,rows.length));
+}
 let scheduled=false;
 const obs=new MutationObserver(()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;run();});});
-obs.observe(document.getElementById('rows')||document.documentElement,{subtree:true,childList:true});
+const target=document.getElementById('rows')||document.documentElement;obs.observe(target,{subtree:true,childList:true});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();
