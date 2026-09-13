@@ -48,14 +48,25 @@
 }
 
 @layer components {
-  /* Canonical surface contract. Values intentionally match the existing
-   * Fund Detail visual contract; later passes can remove the duplicate
-   * declarations from fund.css after CI and visual verification. */
+  /* Canonical surface contract. The first consolidation target is the
+   * shared metric/card surface because its visual values are identical in
+   * the legacy stylesheet. */
   .metric,
   .card {
     border-color: var(--fd-line);
     border-radius: var(--fd-radius-card);
     background: var(--fd-card-gradient);
+  }
+
+  /* Shared surface primitives for analytical cards. Only properties whose
+   * legacy values are proven identical are centralized here. */
+  .score-card,
+  .risk-card,
+  .chart-card,
+  .table-card,
+  .evidence-main,
+  .evidence-side {
+    border-color: var(--fd-line);
   }
 
   .fd-focus-ring:focus-visible,
