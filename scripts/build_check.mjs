@@ -15,14 +15,25 @@ const requiredFundAssets = [
   'js/fund-evidence.js',
   'js/fund-profile.js',
   'js/fund-tabs.js',
-  'css/fund.css',
-  'css/fund-chart.css',
-  'css/fund-profile.css',
+  'css/fund-detail.css',
 ];
 
 for (const asset of requiredFundAssets) {
   if (!html.includes(asset)) {
     throw new Error(`fund.html missing required asset reference: ${asset}`);
+  }
+}
+
+const cssEntry = await readFile(join(root, 'css', 'fund-detail.css'), 'utf8');
+const requiredFundCssModules = [
+  './fund.css',
+  './fund-chart.css',
+  './fund-price.css',
+  './fund-profile.css',
+];
+for (const module of requiredFundCssModules) {
+  if (!cssEntry.includes(module)) {
+    throw new Error(`fund-detail.css missing canonical module reference: ${module}`);
   }
 }
 
@@ -41,11 +52,6 @@ for (const [name, file] of tabs) {
   if (!source.includes(`FUND_TABS.${name}`)) {
     throw new Error(`${file} missing FUND_TABS.${name} contract`);
   }
-}
-
-const fundCore = await readFile(join(jsRoot, 'fund-core.js'), 'utf8');
-if (!fundCore.includes('fund-price.css')) {
-  throw new Error('fund-core.js missing canonical fund-price.css dependency');
 }
 
 console.log('Static build contract OK');
