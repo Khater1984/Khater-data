@@ -1,0 +1,42 @@
+:root{--ft-gold:#d6b36a;--ft-green:#39d69a;--ft-red:#ed8078;--ft-blue:#82b7ff;--ft-ink:#dfe5e9;--ft-muted:#65717d}
+.page-funds .ranking-panel{border-color:rgba(255,255,255,.10);box-shadow:0 28px 90px rgba(0,0,0,.28)}
+.page-funds table{min-width:1260px}
+.page-funds thead th:nth-child(4){color:#c9a55e}
+.page-funds thead th:nth-child(5){color:#7cb39e}
+.page-funds thead th:nth-child(6){color:#d6b36a}
+.page-funds tbody tr{position:relative}
+.page-funds tbody tr:after{content:"";position:absolute;inset:auto 0 0 0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.03),transparent);pointer-events:none}
+.page-funds td{padding:10px 9px}
+.page-funds .fund{min-width:310px}
+.page-funds .fund b{font-size:11px;line-height:1.45;color:#edf1f3}
+.page-funds .fund .muted{font-size:7.5px;color:#687580}
+.page-funds .report-date{font-size:6.5px;color:#71899b}
+.page-funds .return{min-width:108px}
+.page-funds .return strong{font-size:17px;letter-spacing:-.04em;text-shadow:0 0 22px rgba(214,179,106,.08)}
+.page-funds .return .return-sub{display:block;margin-top:3px;font-size:6.5px;color:#65727d}
+.page-funds .smart-cell{min-width:132px}
+.page-funds .smart-score{display:flex;align-items:center;gap:8px}
+.page-funds .smart-score-ring{--score:0;position:relative;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--ft-gold) calc(var(--score)*1%),rgba(255,255,255,.07) 0);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.page-funds .smart-score-ring:before{content:"";position:absolute;inset:4px;border-radius:50%;background:#0b1016}
+.page-funds .smart-score-ring b{position:relative;z-index:1;font:700 9px var(--font-num);color:#e3e7ea}
+.page-funds .smart-score-copy{display:flex;flex-direction:column;gap:2px}
+.page-funds .smart-score-copy span{font-size:7px;color:#89959f}
+.page-funds .smart-score-copy em{font-size:6px;color:#596670;font-style:normal}
+.page-funds .compare-cell{min-width:138px}
+.page-funds .compare-main{display:inline-flex;align-items:center;gap:5px;padding:5px 7px;border:1px solid rgba(57,214,154,.16);border-radius:7px;background:rgba(57,214,154,.035);color:#97c9b5;font-size:7.5px;font-weight:700}
+.page-funds .compare-main.hold{border-color:rgba(255,255,255,.08);background:rgba(255,255,255,.018);color:#7c8994}
+.page-funds .compare-sub{display:block;margin-top:4px;color:#596670;font-size:6.5px}
+.page-funds .row-signal{display:flex;align-items:center;gap:5px;margin-top:5px}
+.page-funds .signal-dot{width:6px;height:6px;border-radius:50%;background:#68747f;box-shadow:0 0 0 3px rgba(255,255,255,.025)}
+.page-funds .row-signal strong{font-size:6.5px;font-weight:700}
+.page-funds .row-signal.neutral strong{color:#7d8994}.page-funds .row-signal.positive .signal-dot{background:var(--ft-green);box-shadow:0 0 0 3px rgba(57,214,154,.06)}.page-funds .row-signal.positive strong{color:#8ecdb6}.page-funds .row-signal.warning .signal-dot{background:var(--ft-red);box-shadow:0 0 0 3px rgba(237,128,120,.06)}.page-funds .row-signal.warning strong{color:#e6a09a}
+.page-funds .high-return-warning{margin-top:5px;font-size:6.5px;padding:4px 6px;border-radius:6px}
+.page-funds .rating,.page-funds .confidence{font-size:7.5px}
+.page-funds .risk-value{font:650 9px var(--font-num);color:#b4bec5}
+.page-funds .risk-label{display:block;margin-top:3px;font-size:6px;color:#596670}
+.page-funds .qual-pill{display:inline-flex;padding:4px 7px;border-radius:6px;font-size:6.5px;border:1px solid rgba(255,255,255,.08);color:#86929c;background:rgba(255,255,255,.018)}
+.page-funds .qual-pill.good{border-color:rgba(57,214,154,.2);color:#8ecdb6;background:rgba(57,214,154,.035)}
+.page-funds .qual-pill.bad{border-color:rgba(237,128,120,.22);color:#e6a09a;background:rgba(237,128,120,.035)}
+.page-funds .terminal-row-highlight td{background:linear-gradient(90deg,rgba(255,255,255,.012),rgba(57,214,154,.028),rgba(255,255,255,.008))}
+.page-funds .terminal-row-highlight .return strong{color:#f1e5c9}
+@media(max-width:760px){.page-funds table{min-width:1180px}.page-funds .fund{min-width:260px}}
