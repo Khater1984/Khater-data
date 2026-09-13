@@ -18,6 +18,24 @@ function load(src) {
   });
 }
 
+function mountPageStyles() {
+  if (!location.pathname.endsWith("/map.html")) return;
+  if (!document.querySelector('link[data-khater-page="map"]')) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "css/page-map.css";
+    link.dataset.khaterPage = "map";
+    document.head.appendChild(link);
+  }
+  document.querySelectorAll("head > style").forEach(style => {
+    if (style.textContent && style.textContent.includes(".hero-mini") && style.textContent.includes("#chart")) {
+      style.remove();
+    }
+  });
+}
+
+mountPageStyles();
+
 export function hasLive() {
   return Boolean(CFG.url && CFG.key);
 }
