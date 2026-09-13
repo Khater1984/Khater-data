@@ -1,37 +1,38 @@
-/* Canonical interactive benchmark layer. It consumes the DB batch RPC so every fund is compared using its own official report date. */
+/* Canonical interactive benchmark layer. DB batch RPC is paged so the UI never loses benchmark rows to the API row limit. */
 (function(window){
 'use strict';
 const D=window.KHATER_DATA||{}, S=D.supabase;
 if(!S) throw new Error('benchmark-service.js requires supabase-client.js');
 const esc=D.escape||((s)=>String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c])));
 const BENCHMARKS=Object.freeze({
- inflation:{key:'inflation',label:'التضخم',series:'cpi_headline_mom_pct',type:'inflation_compound',icon:'CPI'},
- tbill:{key:'tbill',label:'أذون الخزانة',series:'tbill_364_avg_yield_pct',type:'yield_average',icon:'T-BILL'},
- deposits:{key:'deposits',label:'ودائع البنوك',series:'bank_deposit_1_3m_avg_pct',type:'yield_average',icon:'DEPOSIT'},
- usd:{key:'usd',label:'الدولار',series:'usd_egp_mid',type:'price_return',icon:'FX'},
- gold:{key:'gold',label:'الذهب',series:'gold_egp_oz',type:'price_return',icon:'GOLD'},
- silver:{key:'silver',label:'الفضة',series:'silver_egp_oz',type:'price_return',icon:'SILVER'},
- egx30:{key:'egx30',label:'البورصة المصرية',series:'egx30_close',type:'price_return',icon:'EGX'},
- spy:{key:'spy',label:'الأسهم الأمريكية',series:'spy_egp',type:'price_return',icon:'S&P'},
- qqq:{key:'qqq',label:'أسهم التكنولوجيا',series:'qqq_egp',type:'price_return',icon:'NASDAQ'},
- btc:{key:'btc',label:'البيتكوين',series:'btc_egp',type:'price_return',icon:'BTC'}
+ inflation:{key:'inflation',label:'التضخم',series:'cpi_headline_mom_pct',type:'inflation_compound',icon:'٪'},
+ tbill:{key:'tbill',label:'أذون الخزانة',series:'tbill_364_avg_yield_pct',type:'yield_average',icon:'أذ'},
+ deposits:{key:'deposits',label:'ودائع البنوك',series:'bank_deposit_1_3m_avg_pct',type:'yield_average',icon:'و'},
+ usd:{key:'usd',label:'الدولار',series:'usd_egp_mid',type:'price_return',icon:'$'},
+ gold:{key:'gold',label:'الذهب',series:'gold_egp_oz',type:'price_return',icon:'ذ'},
+ silver:{key:'silver',label:'الفضة',series:'silver_egp_oz',type:'price_return',icon:'ف'},
+ egx30:{key:'egx30',label:'البورصة المصرية',series:'egx30_close',type:'price_return',icon:'م'},
+ spy:{key:'spy',label:'الأسهم الأمريكية',series:'spy_egp',type:'price_return',icon:'س'},
+ qqq:{key:'qqq',label:'أسهم التكنولوجيا',series:'qqq_egp',type:'price_return',icon:'ت'},
+ btc:{key:'btc',label:'البيتكوين',series:'btc_egp',type:'price_return',icon:'ب'}
 });
 const KEYS=Object.keys(BENCHMARKS);
-function load(horizon){
- return S.get('/rest/v1/rpc/fund_benchmark_comparison_batch?x=1',{cache:false}).catch(function(){
-   return fetch(String((S.config||{}).url||'').replace(/\/$/,'')+'/rest/v1/rpc/fund_benchmark_comparison_batch',{method:'POST',headers:{apikey:S.config.key,Authorization:'Bearer '+S.config.key,'Content-Type':'application/json'},body:JSON.stringify({p_horizon:horizon,p_series_keys:KEYS.map(k=>BENCHMARKS[k].series)})}).then(r=>r.json());
- });
-}
 async function getBatch(horizon){
- if(!horizon) return {rows:[],byFund:Object.create(null),meta:{distinctDates:0}};
+ if(!horizon) return {rows:[],byFund:Object.create(null),meta:{distinctDates:0,dates:[]}};
  const url=String((S.config||{}).url||'').replace(/\/$/,'')+'/rest/v1/rpc/fund_benchmark_comparison_batch';
- const response=await fetch(url,{method:'POST',headers:{apikey:S.config.key,Authorization:'Bearer '+S.config.key,'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({p_horizon:horizon,p_series_keys:KEYS.map(k=>BENCHMARKS[k].series)})});
- const body=await response.json().catch(()=>null);
- if(!response.ok) throw new Error((body&&(body.message||body.error||body.hint))||('HTTP '+response.status));
- const rows=Array.isArray(body)?body:[];
+ const all=[];
+ const pageSize=1000;
+ for(let offset=0;offset<100000;offset+=pageSize){
+   const response=await fetch(url+'?limit='+pageSize+'&offset='+offset,{method:'POST',headers:{apikey:S.config.key,Authorization:'Bearer '+S.config.key,'Content-Type':'application/json',Accept:'application/json','Prefer':'count=exact'},body:JSON.stringify({p_horizon:horizon,p_series_keys:KEYS.map(k=>BENCHMARKS[k].series)})});
+   const body=await response.json().catch(()=>null);
+   if(!response.ok) throw new Error((body&&(body.message||body.error||body.hint))||('HTTP '+response.status));
+   const page=Array.isArray(body)?body:[];
+   all.push(...page);
+   if(page.length<pageSize)break;
+ }
  const byFund=Object.create(null), dates=new Set();
- rows.forEach(r=>{const id=String(r.fund_id);(byFund[id]||(byFund[id]=Object.create(null)))[r.series_key]=r;if(r.report_date)dates.add(String(r.report_date));});
- return {rows,byFund,meta:{distinctDates:dates.size,dates:[...dates].sort()}};
+ all.forEach(r=>{const id=String(r.fund_id);(byFund[id]||(byFund[id]=Object.create(null)))[r.series_key]=r;if(r.report_date)dates.add(String(r.report_date));});
+ return {rows:all,byFund,meta:{distinctDates:dates.size,dates:[...dates].sort()}};
 }
 function evaluate(base,batch,selected){
  const keys=(selected||[]).filter(k=>BENCHMARKS[k]); const out=Object.create(null);
