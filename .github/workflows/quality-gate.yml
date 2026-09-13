@@ -42,5 +42,7 @@ jobs:
         run: python scripts/verify_macro_contract.py
       - name: Check Map architecture contract
         run: python scripts/verify_map_contract.py
+      - name: Check Home architecture contract
+        run: python scripts/verify_home_contract.py
       - name: Check project build contract
         run: node scripts/build_check.mjs
