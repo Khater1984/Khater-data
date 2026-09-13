@@ -27,7 +27,7 @@ if missing:
         + ", ".join(missing)
     )
 
-imports = re.findall(r"@import\\s+url\\('([^']+)'\\);", text)
+imports = re.findall(r"@import\s+url\('([^']+)'\);", text)
 expected = [
     "./fund.css",
     "./fund-chart.css",
