@@ -1,0 +1,35 @@
+/* Canonical macro-domain data service. Supabase is the sole source of truth. */
+(function(window){
+  'use strict';
+  const api=window.KHATER_DATA&&window.KHATER_DATA.supabase;
+  if(!api) throw new Error('macro-service.js requires supabase-client.js');
+  const SERIES={
+    usd_egp_mid:['الدولار / جنيه','سعر الصرف','asset'],gold_egp_oz:['الذهب بالجنيه','أونصة','asset'],silver_egp_oz:['الفضة بالجنيه','أونصة','asset'],egx30_close:['EGX30','المؤشر','asset'],spy_egp:['S&P 500 بالجنيه','SPY','asset'],qqq_egp:['ناسداك بالجنيه','QQQ','asset'],btc_egp:['بيتكوين بالجنيه','BTC','asset'],cpi_headline_mom_pct:['التضخم العام','تغير شهري %','inflation'],cpi_core_mom_pct:['التضخم الأساسي','تغير شهري %','inflation'],bank_deposit_1_3m_avg_pct:['وديعة 1–3 أشهر','% سنوي','rate'],bank_deposit_3_6m_avg_pct:['وديعة 3–6 أشهر','% سنوي','rate'],bank_deposit_6_12m_avg_pct:['وديعة 6–12 شهر','% سنوي','rate'],tbill_91_avg_yield_pct:['أذون 91 يومًا','% سنوي','rate'],tbill_364_avg_yield_pct:['أذون 364 يومًا','% سنوي','rate']
+  };
+  const TODAY=()=>new Date().toISOString().slice(0,10);
+  const validDate=v=>{const d=String(v||'').slice(0,10);return /^\d{4}-\d{2}-\d{2}$/.test(d)&&d<=TODAY();};
+  const num=v=>{const n=Number(v);return Number.isFinite(n)?n:null;};
+  const rowsOf=s=>Array.isArray(s?.rows)?s.rows:[];
+  async function getSeries(key){
+    if(!SERIES[key])throw new Error('Unknown macro series: '+key);
+    const rows=[];let offset=0;
+    while(true){
+      const path='/rest/v1/macro_series?select=series_key,ts_date,value,source_id&series_key=eq.'+encodeURIComponent(key)+'&ts_date=lte.'+TODAY()+'&order=ts_date.asc&offset='+offset+'&limit=1000';
+      const batch=await api.get(path,{cacheKey:'macro/'+key+'/'+offset});
+      (batch||[]).forEach(r=>{const date=String(r.ts_date||'').slice(0,10),value=num(r.value);if(validDate(date)&&value!==null)rows.push({series_key:r.series_key,ts_date:date,value,source_id:r.source_id||null});});
+      if(!batch||batch.length<1000)break;offset+=1000;
+    }
+    const byDate=Object.create(null),conflicts=[];
+    rows.forEach(r=>{if(!byDate[r.ts_date])byDate[r.ts_date]=r;else if(Number(byDate[r.ts_date].value)!==Number(r.value))conflicts.push({date:r.ts_date,kept:byDate[r.ts_date].source_id,conflicting:r.source_id});});
+    return {key,meta:SERIES[key],rows:Object.values(byDate).sort((a,b)=>a.ts_date.localeCompare(b.ts_date)),conflicts};
+  }
+  async function getAll(){const keys=Object.keys(SERIES),out=await Promise.all(keys.map(getSeries)),map=Object.create(null);out.forEach(x=>map[x.key]=x);return {series:map,keys,conflicts:out.flatMap(x=>x.conflicts)};}
+  function index100(rows){if(!rows.length)return[];const base=rows[0].value;if(!Number.isFinite(base)||base===0)return[];return rows.map(r=>({date:r.ts_date,value:r.value/base*100}));}
+  function purchasingPower(rows){let level=100;return rows.map(r=>{level*=1/(1+r.value/100);return{date:r.ts_date,value:level};});}
+  const rateSeries=rows=>rows.map(r=>({date:r.ts_date,value:r.value}));
+  function deriveSeries(series,mode){const rows=rowsOf(series);if(mode==='assets')return index100(rows);if(mode==='money')return purchasingPower(rows);if(mode==='rates')return rateSeries(rows);throw new Error('Unknown macro view mode: '+mode);}
+  function keysForMode(mode){if(!['assets','money','rates'].includes(mode))throw new Error('Unknown macro view mode: '+mode);const kind=mode==='assets'?'asset':mode==='money'?'inflation':'rate';return Object.keys(SERIES).filter(k=>SERIES[k][2]===kind);}
+  function rangeText(seriesList){const dates=seriesList.flatMap(rowsOf).map(x=>x.ts_date).filter(Boolean).sort();return dates.length?dates[0]+' → '+dates[dates.length-1]:'—';}
+  function buildView(data,mode){const keys=keysForMode(mode);return {mode,keys,series:keys.map(key=>({key,meta:SERIES[key],rows:deriveSeries(data.series[key],mode)})),range:rangeText(keys.map(k=>data.series[k]))};}
+  window.KHATER_DATA.macro={SERIES,getSeries,getAll,deriveSeries,keysForMode,rangeText,buildView};
+})(window);
