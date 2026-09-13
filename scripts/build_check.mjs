@@ -18,7 +18,6 @@ const requiredFundAssets = [
   'css/fund.css',
   'css/fund-chart.css',
   'css/fund-profile.css',
-  'css/fund-price.css',
 ];
 
 for (const asset of requiredFundAssets) {
