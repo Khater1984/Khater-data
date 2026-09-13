@@ -1,11 +1,10 @@
 /* P1 guardrails for funds.html — database values only; no fabricated fallbacks. */
 (function(){
-  const C=window.KHATER||{};
-  if(!C.url||!C.key) return;
-  const HDR={apikey:C.key,Authorization:'Bearer '+C.key};
+  const D=window.KHATER_DATA||{};
+  const get=D.supabase&&D.supabase.get;
   const $=id=>document.getElementById(id);
   const esc=s=>String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
-  const get=window.Platform&&window.Platform.api&&window.Platform.api.get?window.Platform.api.get:async path=>{const r=await fetch(C.url+path,{headers:HDR});const j=await r.json();if(!r.ok)throw Error(j.message||('HTTP '+r.status));return j};
+  if(typeof get!=='function') return;
   const BENCH={inflation:{type:'inflation',series:'cpi_headline_mom_pct'},tbill:{type:'tbill',series:'tbill_364_avg_yield_pct'},btc:{type:'level',series:'btc_egp'},qqq:{type:'level',series:'qqq_egp'},spy:{type:'level',series:'spy_egp'},usd:{type:'level',series:'usd_egp_mid'},silver:{type:'level',series:'silver_egp_oz'},gold:{type:'level',series:'gold_egp_oz'},egx30:{type:'level',series:'egx30_close'}};
   window.benchmark=async function(k,h,end){
     const b=BENCH[k];if(!b)return null;
@@ -22,10 +21,10 @@
     return null;
   };
   async function horizonEvidence(h){const r=await get('/rest/v1/fund_performance_history?select=report_date&horizon=eq.'+encodeURIComponent(h)+'&order=report_date.asc&limit=1000');const dates=[...new Set(r.map(x=>x.report_date).filter(Boolean))];return{count:dates.length,first:dates[0]||null,last:dates[dates.length-1]||null};}
-  function ensureMeta(){const h=$('h');if(!h)return null;let box=$('horizonMeta');if(!box){box=document.createElement('div');box.id='horizonMeta';box.className='horizon-meta';h.insertAdjacentElement('afterend',box)}return box;}
+  function ensureMeta(){const h=$('h');if(!h)return null;let box=$('horizonMeta');if(!box){box=document.createElement('div');box.id='horizonMeta';box.className='horizon-meta';h.insertAdjacentElement('afterend',box)}return box}
   async function updateHorizonMeta(){const h=$('h');if(!h||!h.value)return;const box=ensureMeta();if(!box)return;box.textContent='جارٍ التحقق من تاريخ البيانات...';try{const e=await horizonEvidence(h.value);if(!e.last){box.textContent='لا توجد بيانات فعلية لهذه الفترة في قاعدة البيانات.';return}const base='آخر تاريخ متاح: '+e.last;if(e.count<=1)box.innerHTML=esc(base)+' · <b>لقطة واحدة فقط</b>؛ لا تُعامل كأنها سلسلة تاريخية كاملة.';else box.innerHTML=esc(base)+' · السجل التاريخي المتاح: <b>'+e.count+'</b> لقطة زمنية ('+esc(e.first)+' → '+esc(e.last)+').';}catch(err){box.textContent='تعذر التحقق من تاريخ البيانات.'}}
-  function addSortControl(){const tb=document.querySelector('.toolbar');if(!tb||$('viewSort'))return;const s=document.createElement('select');s.id='viewSort';s.innerHTML='<option value="score">ترتيب العرض: SmartScore</option><option value="return">ترتيب العرض: العائد</option>';tb.insertBefore(s,$('reset')||null);s.addEventListener('change',sortRows);}
-  function sortRows(){const body=$('rows'),s=$('viewSort');if(!body||!s)return;const rows=[...body.querySelectorAll('tr')];const val=(tr,idx)=>{const n=parseFloat((tr.children[idx]?.textContent||'').replace(/[^0-9+\-.]/g,''));return Number.isFinite(n)?n:-Infinity};rows.sort((a,b)=>val(b,s.value==='score'?4:3)-val(a,s.value==='score'?4:3));rows.forEach((tr,i)=>{if(tr.children[0])tr.children[0].textContent=i+1;body.appendChild(tr)});}
+  function addSortControl(){const tb=document.querySelector('.toolbar');if(!tb||$('viewSort'))return;const s=document.createElement('select');s.id='viewSort';s.innerHTML='<option value="score">ترتيب العرض: SmartScore</option><option value="return">ترتيب العرض: العائد</option>';tb.insertBefore(s,$('reset')||null);s.addEventListener('change',sortRows)}
+  function sortRows(){const body=$('rows'),s=$('viewSort');if(!body||!s)return;const rows=[...body.querySelectorAll('tr')];const val=(tr,idx)=>{const n=parseFloat((tr.children[idx]?.textContent||'').replace(/[^0-9+\-.]/g,''));return Number.isFinite(n)?n:-Infinity};rows.sort((a,b)=>val(b,s.value==='score'?4:3)-val(a,s.value==='score'?4:3));rows.forEach((tr,i)=>{if(tr.children[0])tr.children[0].textContent=i+1;body.appendChild(tr)})}
   function observeResults(){const body=$('rows');if(!body)return;let observer;observer=new MutationObserver(()=>{addSortControl();observer.disconnect();sortRows();observer.observe(body,{childList:true})});observer.observe(body,{childList:true})}
   function init(){addSortControl();const h=$('h');if(h){h.addEventListener('change',updateHorizonMeta);setTimeout(updateHorizonMeta,500)}observeResults()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
