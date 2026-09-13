@@ -5,7 +5,7 @@ ROOT=Path(__file__).resolve().parents[1]
 service=(ROOT/'web/js/data/macro-service.js').read_text(encoding='utf-8')
 screen=(ROOT/'web/js/macro-screen-v2.js').read_text(encoding='utf-8')
 html=(ROOT/'web/macro.html').read_text(encoding='utf-8')
-for token in ['getSeries','getAll','buildView','deriveSeries','keysForMode','public.macro_series']:
+for token in ['getSeries','getAll','buildView','deriveSeries','keysForMode','/rest/v1/macro_series?']:
     if token not in service: raise SystemExit(f'Macro contract failed: service missing {token}')
 for token in ['svc.getAll()','svc.buildView(state.data,state.mode)','svc.rangeText']:
     if token not in screen: raise SystemExit(f'Macro contract failed: controller missing {token}')
