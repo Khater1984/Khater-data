@@ -1,21 +1,21 @@
 # Frontend Consolidation Map
 
-Status: verified audit + first safe consolidation pass, 2026-09-13.
+Status: verified consolidation pass + architecture guardrails, 2026-09-13.
 
 ## Source-of-truth rule
 
-Supabase is authoritative for live financial data. `web/js/data/*` is the canonical browser data layer. Repository JSON files under `data/` are snapshots/audit artifacts and must not be used as a competing source for current financial displays.
+Supabase is authoritative for live financial data. `web/js/data/*` is the canonical browser data layer. Repository JSON files under `web/data/` are snapshots/audit artifacts and must not be used as a competing source for current financial displays.
 
 ## Canonical page map
 
 | Page | Canonical data layer | Canonical screen/module | Decision |
 |---|---|---|---|
-| `web/index.html` | shared data layer | inline page composition | KEEP; shared UI extraction later |
+| `web/index.html` | `macro-service.js`, `funds-service.js` | `home-page.js` | KEEP; controller extracted |
 | `web/macro.html` | `macro-service.js` | `macro-screen-v2.js` | KEEP |
-| `web/categories.html` | `categories-service.js` | `categories-screen-v2.js` | KEEP; CSS extraction next |
+| `web/categories.html` | `categories-service.js` | `categories-screen-v2.js` | KEEP; CSS extraction remains |
 | `web/funds.html` | `fund-service.js`, `funds-service.js`, `benchmark-service.js` | `funds-screen-v2.js` | KEEP |
-| `web/fund.html` | `fund-service.js` | `fund-core.js` + tab modules | KEEP |
-| `web/map.html` | `macro-service.js` through `live.js` compatibility adapter | existing map module | KEEP for now; migrate boundary later |
+| `web/fund.html` | `fund-service.js` | `fund-core.js` + tab modules + `fund-tabs.js` | KEEP |
+| `web/map.html` | `macro-service.js` through `live.js` compatibility boundary | `map-page.js` | KEEP; boundary reduction remains |
 | `web/heatmap.html` | `categories.html?view=heat` | redirect only | KEEP as compatibility route |
 | `web/why.html` | static | static | KEEP |
 
@@ -23,46 +23,44 @@ Supabase is authoritative for live financial data. `web/js/data/*` is the canoni
 
 `web/fund.html` loads one shared Supabase client and one canonical `fund-service.js`, then mounts:
 
-- `fund-core.js` — identity/page shell
-- `fund-performance.js` — performance
+- `fund-core.js` — identity/page shell and compatibility facade
+- `fund-performance.js` — official performance
 - `fund-risk.js` — risk
 - `fund-benchmark.js` — benchmark context
 - `fund-smartscore.js` — stored SmartScore presentation
 - `fund-evidence.js` — evidence/method
 - `fund-profile.js` — profile/documents
+- `fund-tabs.js` — tab orchestration/cache boundary
 
-`fund-performance-v3.js` was verified as unreferenced by the production Fund Detail page and has been removed in this consolidation pass. `fund-performance.js` is the canonical performance module.
+`fund-performance.js` is the canonical production performance module. No alternate performance implementation should be introduced without a reference audit.
 
 ## Funds screen
 
-`funds.html` loads:
+`funds.html` loads the canonical Supabase client, fund service, funds service, benchmark service, `funds-screen-v2.js`, and the terminal presentation layer. `funds-screen-v2.js` remains the canonical screen implementation.
 
-- `supabase-client.js`
-- `fund-service.js`
-- `funds-service.js`
-- `benchmark-service.js`
-- `funds-screen-v2.js`
-- `funds-terminal-polish.js`
-
-Therefore `funds-screen-v2.js` is the current canonical screen implementation. The older direct-Supabase `funds-screen.js` and presentation patch `funds-screen-fixes.js` were verified as unreferenced by the current page and removed in this consolidation pass.
+The Funds architecture contract explicitly prevents the screen from querying financial tables directly or calculating official returns from browser-side NAV math.
 
 ## Categories / heatmap
 
-`categories.html` loads `supabase-client.js`, `categories-service.js`, and `categories-screen-v2.js`. `heatmap.html` is already a compatibility redirect into the categories heatmap view. No separate heatmap implementation should be created.
+`categories.html` loads `supabase-client.js`, `categories-service.js`, and `categories-screen-v2.js`. `heatmap.html` is a compatibility redirect into the unified categories heatmap view. No separate heatmap implementation should be created.
 
-The categories page still carries a large inline style block. This is the next confirmed CSS consolidation target: extract it into `page-categories.css` without changing visual behavior.
+`page-categories.css` exists as the target stylesheet. The remaining inline CSS in `categories.html` must be extracted only as a controlled, behavior-preserving CSS migration; no visual rewrite is permitted during that step.
 
 ## Macro / map
 
-`macro.html` already uses the canonical `macro-service.js` directly.
+`macro.html` uses `macro-service.js` directly.
 
-`map.html` uses the `live.js` compatibility adapter. `live.js` reads from `macro-service.js` and explicitly disables JSON fallback. This is transitional rather than a competing financial data source. It should be migrated only after equivalent behavior is covered by the shared macro layer.
+`map.html` is now a thin HTML shell loading `map-page.js` and `page-map.css`. `map-page.js` still uses `engine.js`, `accordion.js`, and the `live.js` compatibility boundary. This is a real modular page, but the domain-calculation boundary is not yet fully consolidated. `engine.js` therefore remains intentionally retained until equivalent logic is owned by the canonical macro domain layer and covered by QA.
+
+## Home
+
+`index.html` is now a thin composition page. `home-page.js` owns the small amount of page orchestration and obtains live USD/EGP, EGX30, and fund-universe data through canonical services. It must not become a second financial calculation layer.
 
 ## JSON snapshot policy
 
-The repository contains generated/audit JSON under `data/`, including `engine_data.json`, `fund_profiles.json`, `funds_dna.json`, `benchmarks.json`, `management_companies.json`, `metadata_coverage.json`, and `unified_enrichment_audit.json`.
+The repository contains generated/audit JSON under `web/data/`, including `engine_data.json`, `fund_profiles.json`, `funds_dna.json`, `benchmarks.json`, `management_companies.json`, `metadata_coverage.json`, and `unified_enrichment_audit.json`.
 
-These files are **not deleted in this pass**. They require a reference audit before any removal because some are useful QA/export artifacts even when they are not runtime sources. Current production financial pages use Supabase-backed services.
+These files are **not deleted merely for cleanup**. They require a reference audit before removal because some are useful QA/export artifacts even when they are not runtime sources. Current production financial pages are protected against using these snapshots as competing live financial sources.
 
 ## CSS consolidation targets
 
@@ -74,14 +72,19 @@ Rules:
 2. Extract page-local inline CSS before merging shared selectors.
 3. Do not delete a stylesheet solely because its name contains `polish`, `v2`, or `fixes`.
 4. Remove a selector/file only after reference and behavior checks.
+5. A file becomes a deletion candidate only after repository-wide reference analysis and runtime/QA confirmation.
+
+## Quality architecture
+
+Global CI now includes page-specific contracts for Fund Detail, Funds, Categories, Macro, Map, and Home, plus a repository-wide frontend reference audit. The reference audit fails on broken local assets and reports unreferenced JS/CSS as candidates rather than deleting them automatically.
 
 ## Next consolidation pass
 
-1. Extract categories inline CSS into `page-categories.css`.
-2. Audit all CSS references and unused selectors.
-3. Audit repository-wide references to snapshot JSON.
-4. Reduce the `live.js` compatibility boundary once map behavior is covered by shared services.
-5. Run the full browser/financial QA suite before merging functional changes.
+1. Extract categories inline CSS into `page-categories.css` with zero behavior change.
+2. Review the orphan-candidate report and classify each candidate KEEP / MERGE / DEPRECATE / DELETE.
+3. Move Map's remaining domain calculations out of `engine.js` only after parity tests exist in the macro domain layer.
+4. Audit snapshot JSON references and classify runtime vs QA/export artifacts.
+5. Run the full browser/financial QA suite before any functional merge.
 
 ## Non-negotiables
 
