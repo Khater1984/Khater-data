@@ -3,16 +3,21 @@
 
   // Fund Detail tab orchestration: render each non-performance tab once per page load.
   // Performance remains intentionally uncached because its horizon selector can change.
+  // Cache the in-flight Promise immediately so rapid repeated clicks cannot trigger
+  // duplicate renders while the first tab load is still resolving.
   const cache = Object.create(null);
   const original = window.FUND_TABS || {};
 
   function wrap(name, fn) {
     if (typeof fn !== 'function' || name === 'performance') return fn;
-    return async function () {
+    return function () {
       if (cache[name]) return cache[name];
-      const result = await fn();
-      cache[name] = true;
-      return result;
+      const pending = Promise.resolve().then(fn);
+      cache[name] = pending.catch(function (error) {
+        delete cache[name];
+        throw error;
+      });
+      return cache[name];
     };
   }
 
