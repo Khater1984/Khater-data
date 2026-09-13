@@ -10,6 +10,24 @@
     throw new Error('Supabase data transport must load before categories-service.js');
   }
 
+  // The page historically carried a large inline style block. Load the canonical
+  // page stylesheet before the screen controller runs, then retire that inline
+  // block so CSS has one source of truth without changing the page architecture.
+  function mountPageStyles() {
+    if (document.querySelector('link[data-khater-page="categories"]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'css/page-categories.css';
+    link.dataset.khaterPage = 'categories';
+    document.head.appendChild(link);
+    document.querySelectorAll('head > style').forEach((style) => {
+      if (style.textContent && style.textContent.includes('.heat-canvas') && style.textContent.includes('.atlas-card')) {
+        style.remove();
+      }
+    });
+  }
+  mountPageStyles();
+
   const clean = (value) => value == null ? '' : String(value).trim();
   const number = (value) => {
     if (value == null || value === '') return null;
