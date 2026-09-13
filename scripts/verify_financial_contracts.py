@@ -12,6 +12,7 @@ FILES = {
     "smartscore": ROOT / "web/js/fund-smartscore.js",
     "evidence": ROOT / "web/js/fund-evidence.js",
     "profile": ROOT / "web/js/fund-profile.js",
+    "tabs": ROOT / "web/js/fund-tabs.js",
     "service": ROOT / "web/js/data/fund-service.js",
     "funds_service": ROOT / "web/js/data/funds-service.js",
 }
@@ -48,7 +49,7 @@ missing = [name for name, (token, source) in REQUIRED.items() if token not in TE
 if missing:
     raise SystemExit("Financial contract failed:\n- " + "\n- ".join(missing))
 
-for name in ("core", "performance", "risk", "benchmark", "smartscore", "evidence", "profile"):
+for name in ("core", "performance", "risk", "benchmark", "smartscore", "evidence", "profile", "tabs"):
     source = TEXT[name]
     forbidden = ["window.KHATER_DATA.supabase", "/rest/v1/", "supabase.from(", "./data/", "../data/", "web/data/"]
     hits = [token for token in forbidden if token in source]
@@ -69,9 +70,10 @@ required_order = [
     "js/fund-smartscore.js",
     "js/fund-evidence.js",
     "js/fund-profile.js",
+    "js/fund-tabs.js",
 ]
 positions = [html.find(token) for token in required_order]
 if any(pos < 0 for pos in positions) or positions != sorted(positions):
-    raise SystemExit("Financial contract failed: Fund Profile script/data-layer order is invalid")
+    raise SystemExit("Financial contract failed: Fund Detail script/data-layer order is invalid")
 
 print("Financial contract checks passed")
