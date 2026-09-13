@@ -38,5 +38,7 @@ jobs:
         run: python scripts/verify_categories_contract.py
       - name: Check Funds architecture contract
         run: python scripts/verify_funds_contract.py
+      - name: Check Macro architecture contract
+        run: python scripts/verify_macro_contract.py
       - name: Check project build contract
         run: node scripts/build_check.mjs
