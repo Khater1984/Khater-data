@@ -13,28 +13,51 @@ const META={
  egx30_close:{text:"ماذا أصبحت 100 جنيه لو تحركت مع إغلاق مؤشر البورصة المصرية من أول جلسة في يناير 2016 أو بعدها.",href:"https://www.egx.com.eg/",link:"البورصة المصرية"},
  purchasing:{text:"النقد بلا استثمار. نركّب التضخم الشهري المعلن منذ 2016 لنرى كم تبقى من قوة 100 جنيه الشرائية.",href:"https://www.cbe.org.eg/en/economic-research/statistics/inflation-rates",link:"معدلات التضخم — البنك المركزي / الجهاز المركزي"},
  deposit:{text:"عائد الوديعة القصيرة يُطبَّق على عدد الأيام الفعلي بين المشاهدات، لا بقسمة سعرين.",href:"https://www.cbe.org.eg/en/economic-research/statistics/interest-rates",link:"أسعار العائد — البنك المركزي"},
- tbill:{text:"عائد مزاد أذون 91 يوماً يُطبَّق زمنياً. أول مزاد في السلسلة قد يكون بعد يناير 2016 ويُذكر على البطاقة.",href:"https://www.cbe.org.eg/",link:"أذون الخزانة — مزادات"}
+ tbill:{text:"عائد مزاد أذون 91 يوماً يُطبَّق زمنياً. أول مزاد في السلسلة قد يكون بعد يناير 2016 ويُذكر على البطاقة.",href:"https://www.cbe.org.eg/en/economic-research/statistics/treasury-bills",link:"أذون الخزانة — البنك المركزي"}
 };
 const START="2016-01-01";
-const GROUPS={value:["usd_egp_mid","gold_egp_oz","silver_egp_oz","spy_egp","qqq_egp","egx30_close"],policy:["purchasing","deposit","tbill"]};
-const $=id=>document.getElementById(id);
-const state={series:null,group:"value",range:"all",lines:{}};
+const GROUPS={value:["usd_egp_mid","gold_egp_oz","silver_egp_oz","egx30_close","spy_egp","qqq_egp"],policy:["purchasing","deposit","tbill"]};
 
-function rowsOf(key){
-  const s=state.series?.[key];
-  if(!s)return [];
-  if(Array.isArray(s)){
-    return s.map(r=>({time:r[0],value:Number(r[1])})).filter(r=>r.time&&Number.isFinite(r.value));
-  }
-  return (s.rows||[]).map(r=>({time:r.time||r.ts_date,value:Number(r.value)})).filter(r=>r.time&&Number.isFinite(r.value));
+const state={group:"value",range:"all",lines:{},detailChart:null,detailSeries:null,series:{}};
+const $=id=>document.getElementById(id);
+function path(key){const line=toLine(state.series,START,100,key);return line.length?rebase(line):[]}
+function lastOf(key){const p=path(key);return p.length?p.at(-1):null}
+function card(key,warn=false){
+ const raw=toLine(state.series,START,100,key),p=raw.at(-1),start=raw[0]?.time;
+ if(!p)return `<button class="tile" data-k="${key}" type="button"><div class="kicker">${LABELS[key]}</div><div class="v">البيانات غير مكتملة للحساب</div></button>`;
+ const last=rebase(raw).at(-1).value,chg=last-100,pill=warn||chg<0?"pill dn":"pill up",extra=warn?" — تآكل القيمة":"",startNote=start&&start>"2016-01-07"?` · البداية الفعلية ${start}`:"";
+ return `<button class="tile" data-k="${key}" type="button"><div class="kicker">${LABELS[key]}</div><div class="v">${en(last,1)} ج.م</div><span class="${pill}">${chg>=0?"+":""}${en(chg,1)}%${extra}</span><div class="asof">آخر مشاهدة ${p.time}${startNote}</div></button>`;
 }
-function lastOf(key){const rows=rowsOf(key);return rows.length?rows[rows.length-1]:null}
-function path(key){const rows=rowsOf(key);if(!rows.length)return[];const from=state.range==="all"?START:state.range==="5"?"2021-01-01":"2024-01-01";const sliced=rows.filter(r=>r.time>=from);if(key==="purchasing"||key==="deposit"||key==="tbill")return toLine(sliced);return rebase(sliced)}
-function card(key,cash=false){const last=lastOf(key);const v=last?en(last.value,1):"—";const t=last?last.time:"—";return `<button type="button" class="tile" data-k="${key}"><div class="tile-k">${LABELS[key]}</div><div class="tile-v">${v}</div><div class="tile-t">${t}</div></button>`}
-function openDetail(key){const m=META[key];if(!m)return;$("mtitle").textContent=LABELS[key];$("msum").textContent=m.text;$("mmethod").innerHTML=`<a href="${m.href}" target="_blank" rel="noopener">${m.link}</a>`;$("modal").classList.add("on");const host=$("dchart");host.innerHTML="";const c=LightweightCharts.createChart(host,{layout:{background:{color:"#FFFFFF"},textColor:"#4a6b6c",fontFamily:"IBM Plex Sans"},grid:{vertLines:{color:"#E1EFEA"},horzLines:{color:"#E1EFEA"}},rightPriceScale:{borderColor:"#CCE0DC",mode:1},timeScale:{borderColor:"#CCE0DC"},width:host.clientWidth,height:280});const data=path(key);if(data.length){const s=c.addLineSeries({color:COLORS[key],lineWidth:2.3});s.setData(data);c.timeScale().fitContent()}}
-function render(){const chart=window.__mapChart;if(!chart)return;Object.values(state.lines).forEach(s=>chart.removeSeries(s));state.lines={};GROUPS[state.group].forEach(key=>{const data=path(key);if(!data.length)return;const s=chart.addLineSeries({color:COLORS[key],lineWidth:2.3,priceLineVisible:false,lastValueVisible:true});s.setData(data);state.lines[key]=s});chart.timeScale().setVisibleRange(visibleRange())}
+function detailMethod(key){const m=META[key];return `${m.text} <a href="${m.href}" target="_blank" rel="noopener">${m.link}</a>`}
+function openDetail(key){
+ const raw=toLine(state.series,START,100,key),modal=$("modal");
+ $("mtitle").textContent=LABELS[key]+" — ماذا حدث لقيمة 100 جنيه؟";
+ $("mmethod").innerHTML=detailMethod(key);
+ if(!raw.length){$("msum").textContent="⚠️ البيانات التاريخية غير مكتملة، لا يمكن حساب العائد بدقة.";modal.classList.add("on");return}
+ const rb=rebase(raw),last=rb.at(-1);
+ $("msum").textContent=`البداية 100 ج.م في ${raw[0].time} · الحالية ${en(last.value,1)} ج.م (${last.value>=100?"+":""}${en(last.value-100,1)}%) · آخر تحديث ${last.time}`;
+ modal.classList.add("on");
+ const host=$("dchart");host.innerHTML="";
+ if(state.detailChart){try{state.detailChart.remove()}catch(_){}state.detailChart=null}
+ const c=LightweightCharts.createChart(host,{layout:{background:{color:"#FFFFFF"},textColor:"#4a6b6c",fontFamily:"IBM Plex Sans"},grid:{vertLines:{color:"#E1EFEA"},horzLines:{color:"#E1EFEA"}},rightPriceScale:{borderColor:"#CCE0DC",mode:1},timeScale:{borderColor:"#CCE0DC"},width:host.clientWidth,height:280});
+ state.detailChart=c;
+ const s=c.addLineSeries({color:COLORS[key],lineWidth:2.3});s.setData(rb);c.timeScale().fitContent();
+}
+function render(){
+ const chart=window.__mapChart;if(!chart)return;
+ Object.values(state.lines).forEach(s=>chart.removeSeries(s));state.lines={};
+ GROUPS[state.group].forEach(key=>{
+  const data=path(key);if(!data.length)return;
+  const s=chart.addLineSeries({color:COLORS[key],lineWidth:2.3,priceLineVisible:false,lastValueVisible:true});
+  s.setData(data);state.lines[key]=s;
+ });
+ chart.timeScale().setVisibleRange(visibleRange());
+}
 function visibleRange(){const end="2026-12-31";return state.range==="all"?{from:START,to:end}:state.range==="5"?{from:"2021-01-01",to:end}:{from:"2024-01-01",to:end}}
-const chartEl=$("chart"),chart=LightweightCharts.createChart(chartEl,{layout:{background:{color:"#FFFFFF"},textColor:"#4a6b6c",fontFamily:"IBM Plex Sans"},grid:{vertLines:{color:"#E1EFEA"},horzLines:{color:"#E1EFEA"}},rightPriceScale:{borderColor:"#CCE0DC",mode:1},timeScale:{borderColor:"#CCE0DC"}});window.__mapChart=chart;
+
+const chartEl=$("chart");
+const chart=LightweightCharts.createChart(chartEl,{layout:{background:{color:"#FFFFFF"},textColor:"#4a6b6c",fontFamily:"IBM Plex Sans"},grid:{vertLines:{color:"#E1EFEA"},horzLines:{color:"#E1EFEA"}},rightPriceScale:{borderColor:"#CCE0DC",mode:1},timeScale:{borderColor:"#CCE0DC"}});
+window.__mapChart=chart;
 new ResizeObserver(()=>chart.applyOptions({width:chartEl.clientWidth,height:440})).observe(chartEl);
 
 try{
