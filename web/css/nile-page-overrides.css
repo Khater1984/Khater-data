@@ -1,0 +1,57 @@
+/* Nile V3 — page token overrides (load after page-*.css, before identity)
+   Remaps residual local dark tokens without rewriting page structure. */
+
+.page-funds {
+  --bg: var(--nile-paper) !important;
+  --panel: var(--card-white) !important;
+  --panel2: var(--nile-canvas) !important;
+  --line: var(--river-line) !important;
+  --line-soft: var(--surface-soft) !important;
+  --text: var(--ink-dark) !important;
+  --muted: var(--ink-muted) !important;
+  --dim: var(--unavailable) !important;
+  --gold: var(--copper) !important;
+  --green: var(--perf-up) !important;
+  --red: var(--perf-down) !important;
+  --blue: var(--nile-emerald) !important;
+  --font-num: var(--font-mono) !important;
+  background: var(--nile-paper) !important;
+  color: var(--ink-dark) !important;
+  font-family: var(--font-arabic) !important;
+}
+.page-funds .ambient { display: none !important; }
+
+:root {
+  --gold: var(--copper);
+  --gold2: var(--copper);
+  --green: var(--perf-up);
+  --red: var(--perf-down);
+  --amber: var(--caution);
+  --bg: var(--nile-paper);
+  --panel: var(--card-white);
+  --line: var(--river-line);
+  --muted: var(--ink-muted);
+  --text: var(--ink-dark);
+}
+
+body {
+  background: var(--nile-paper) !important;
+  color: var(--ink-dark) !important;
+  font-family: var(--font-arabic) !important;
+}
+
+.fund-page, .fund-detail-page {
+  background: var(--nile-paper) !important;
+  color: var(--ink-dark) !important;
+}
+
+.hero {
+  background: var(--card-white) !important;
+  border-color: var(--river-line) !important;
+  color: var(--ink-dark) !important;
+}
+
+.opportunity-shell {
+  background: var(--card-white) !important;
+  border-color: var(--river-line) !important;
+}
