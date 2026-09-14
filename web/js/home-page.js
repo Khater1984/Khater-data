@@ -1,4 +1,6 @@
-/* Home page controller. Data access stays in canonical domain services. */
+/* Experience Architecture V1 — Home / Now hub.
+ * Financial values remain owned by canonical domain services.
+ */
 (function(window){
   'use strict';
   const fmt=n=>Number(n).toLocaleString('en-US',{maximumFractionDigits:2});
@@ -7,36 +9,41 @@
     if(!rows||rows.length<2)return null;
     const latest=rows[rows.length-1];
     const cutoff=new Date(latest.ts_date+'T00:00:00'); cutoff.setDate(cutoff.getDate()-period);
-    let base=null;
-    for(let i=rows.length-1;i>=0;i--){if(new Date(rows[i].ts_date+'T00:00:00')<=cutoff){base=rows[i];break;}}
-    if(!base||!Number(base.value))return null;
-    return (Number(latest.value)-Number(base.value))/Number(base.value)*100;
+    for(let i=rows.length-1;i>=0;i--){
+      const d=new Date(rows[i].ts_date+'T00:00:00');
+      if(d<=cutoff&&Number.isFinite(Number(rows[i].value))&&Number(rows[i].value)!==0)
+        return (Number(latest.value)-Number(rows[i].value))/Number(rows[i].value)*100;
+    }
+    return null;
   };
-  const cls=v=>v==null?'':v>=0?'up':'dn';
   const signed=v=>v==null?'—':(v>0?'+':'')+fmt(v)+'%';
-  function regime(egx30,gold,usd,inflation,tbill){
-    if(egx30==null||gold==null||usd==null)return {label:'قراءة السياق قيد الاكتمال',cls:''};
-    if(egx30>0 && gold>0 && (inflation==null || tbill==null || inflation<tbill))return {label:'ميل إيجابي مع متابعة الأسعار',cls:'regime--positive'};
-    if(usd>0 || (inflation!=null && tbill!=null && inflation>=tbill))return {label:'ضغط نقدي / دفاعي',cls:'regime--caution'};
-    return {label:'سوق متباين — المقارنة أهم من الاتجاه الواحد',cls:''};
+  const tone=v=>v==null?'':v>0?'up':'dn';
+
+  function deriveRegime(changes,inflation,tbill){
+    const {egx,gold,usd}=changes;
+    if(egx==null||gold==null||usd==null)
+      return {label:'قراءة السياق قيد الاكتمال',copy:'توجد إشارة أو أكثر لم تصل بعد إلى طبقة البيانات المشتركة.',cls:''};
+    if(gold>2&&usd>0)
+      return {label:'تحوّط نقدي / ذهب حاضر في المشهد',copy:'ارتفاع الذهب مع تحرك الدولار يجعل حماية القوة الشرائية جزءًا مهمًا من قراءة السوق قبل مقارنة الصناديق.',cls:'regime--caution'};
+    if(egx>0&&gold>0&&(inflation==null||tbill==null||inflation<tbill))
+      return {label:'زخم متعدد الأصول مع عائد نقدي مهم',copy:'الأسهم والذهب يتحركان إيجابيًا بينما يبقى العائد النقدي مرجعًا قويًا؛ التفوق الإضافي يحتاج مقارنة واضحة.',cls:'regime--positive'};
+    if(tbill!=null&&inflation!=null&&tbill>=inflation)
+      return {label:'العائد النقدي يفرض خط أساس مرتفعًا',copy:'أي مخاطرة إضافية تحتاج أن تُقاس مقابل العائد النقدي المتاح، لا مقابل الصفر.',cls:'regime--caution'};
+    return {label:'سوق متباين — المقارنة أهم من الاتجاه الواحد',copy:'لا يوجد اتجاه واحد يختصر المشهد؛ لذلك ننتقل من السياق إلى الفئة ثم إلى الصندوق.',cls:''};
   }
-  function categoryInsights(list,marketRegime){
-    const groups=Object.create(null);
-    (list||[]).forEach(f=>{
-      if(!f.cat)return;
-      const g=groups[f.cat]||(groups[f.cat]={name:f.cat,count:0,scored:0,score:0,qualified:0});
-      g.count++;
-      if(Number.isFinite(f.score)){g.scored++;g.score+=f.score;}
-      if(String(f.qualification||'').toLowerCase().includes('qual'))g.qualified++;
-    });
-    const items=Object.values(groups).filter(g=>g.count>=2&&g.scored>0).map(g=>({...g,avg:g.score/g.scored,fit:marketRegime.cls==='regime--caution'&&/ذهب|نقد|دخل ثابت/.test(g.name)?1:marketRegime.cls==='regime--positive'&&/أسهم|مؤشرات/.test(g.name)?1:0}));
-    return items.sort((a,b)=>(b.fit-a.fit)||(b.avg-a.avg)||((b.count)-(a.count))).slice(0,3);
+
+  function setSignal(el,label,value,date,extra){
+    el.querySelector('.x-signal__label').textContent=label;
+    el.querySelector('.x-signal__value').textContent=value;
+    el.querySelector('.x-signal__date').textContent=extra||date||'—';
   }
+
   async function render(){
-    const strip=document.getElementById('strip'), context=document.getElementById('financial-context');
-    if(!strip)return;
+    const signalBox=document.getElementById('market-signals');
+    if(!signalBox)return;
+    const obs=document.getElementById('home-observation');
     try{
-      const [usdSeries,goldSeries,egxSeries,inflSeries,tbillSeries,universe]=await Promise.all([
+      const [usdS,goldS,egxS,inflS,tbillS,universe]=await Promise.all([
         window.KHATER_DATA.macro.getSeries('usd_egp_mid'),
         window.KHATER_DATA.macro.getSeries('gold_egp_oz'),
         window.KHATER_DATA.macro.getSeries('egx30_close'),
@@ -44,33 +51,37 @@
         window.KHATER_DATA.macro.getSeries('tbill_364_avg_yield_pct'),
         window.KHATER_DATA.funds.getUniverse()
       ]);
-      const usd=last(usdSeries),egx=last(egxSeries),gold=last(goldSeries),infl=last(inflSeries),tbill=last(tbillSeries);
-      const priced=universe.list.filter(x=>x.nav!=null).length;
-      strip.innerHTML=`
-        <div class="kpi"><em>USD / EGP</em><b class="num">${usd?fmt(usd.value):'—'}</b><span class="muted">${usd?usd.ts_date:''}</span></div>
-        <div class="kpi"><em>EGX30</em><b class="num">${egx?fmt(egx.value):'—'}</b><span class="muted">${egx?egx.ts_date:''}</span></div>
-        <div class="kpi"><em>صناديق مسعّرة</em><b class="num">${priced} / ${universe.list.length}</b><span class="muted">Supabase</span></div>
-        <div class="kpi"><em>مصدر البيانات</em><b>مباشر</b><span class="muted">public.macro_series + funds</span></div>`;
-      if(context){
-        const changes={usd:pctChange(usdSeries.rows),gold:pctChange(goldSeries.rows),egx:pctChange(egxSeries.rows)};
-        const r=regime(changes.egx,changes.gold,changes.usd,infl?.value,tbill?.value);
-        const insights=categoryInsights(universe.list,r);
-        const insightHtml=insights.length?insights.map((g,i)=>`<article class="opportunity-card"><span class="opportunity-rank">0${i+1}</span><div><span class="context-card__label">${g.fit?'ملاءمة سياقية':'إشارة جودة'}</span><h3>${g.name}</h3><p>${g.count} صناديق · متوسط SmartScore ${fmt(g.avg)} · ${g.scored} مقيمة</p></div></article>`).join(''):`<div class="empty">لا توجد عينة كافية لبناء قراءة للفئات الآن.</div>`;
-        context.innerHTML=`
-          <div class="home-context__head"><div><div class="kicker">الطبقة التي تسبق الفرصة</div><h2>ماذا يقول السوق أولًا؟</h2><p>نقرأ حركة الجنيه والأصول والأسعار قبل أن نطلب منك النظر إلى صندوق بعينه.</p></div><div class="home-context__date">آخر تحديث: ${egx?.ts_date||usd?.ts_date||'—'}</div></div>
-          <div class="context-grid">
-            <article class="context-card context-card--regime"><div><span class="context-card__label">Market Regime</span><h3>الصورة العامة</h3><div class="regime ${r.cls}"><i class="regime-dot"></i>${r.label}</div></div><div class="context-note">ليست توصية شراء؛ إنها نقطة بداية لفهم ما يحدث.</div></article>
-            <article class="context-card"><span class="context-card__label">EGX30</span><h3>البورصة المصرية</h3><div class="context-card__value ${cls(changes.egx)}">${signed(changes.egx)}</div><div class="context-card__meta">تغير تقريبي خلال 30 يومًا</div></article>
-            <article class="context-card"><span class="context-card__label">Gold / EGP</span><h3>الذهب بالجنيه</h3><div class="context-card__value ${cls(changes.gold)}">${signed(changes.gold)}</div><div class="context-card__meta">تغير تقريبي خلال 30 يومًا</div></article>
-            <article class="context-card"><span class="context-card__label">USD / EGP</span><h3>الجنيه مقابل الدولار</h3><div class="context-card__value ${cls(changes.usd)}">${signed(changes.usd)}</div><div class="context-card__meta">تغير تقريبي خلال 30 يومًا</div></article>
-          </div>
-          <div class="context-links"><a class="context-link" href="./macro.html">افهم الاقتصاد الكلي ←</a><a class="context-link" href="./map.html">شاهد ماذا حدث للفلوس ←</a><a class="context-link" href="./categories.html">انتقل إلى خريطة الفئات ←</a></div>
-          <section class="opportunity-layer" aria-label="إشارات الفئات قبل الصناديق"><div class="opportunity-head"><div><div class="kicker">من السياق إلى الفئة</div><h2>أين يستحق البحث أن يبدأ؟</h2><p>ليست قائمة بأفضل الصناديق؛ بل قراءة أولية للفئات وفق جودة البيانات والـSmartScore والسياق الحالي.</p></div><a class="context-link" href="./categories.html">استكشف كل الفئات ←</a></div><div class="opportunity-grid">${insightHtml}</div></section>`;
-      }
-    }catch(e){
-      strip.innerHTML='<div class="muted">تعذر تحميل الملخص من قاعدة البيانات</div>';
-      if(context)context.innerHTML='<div class="empty">تعذر تحميل طبقة السياق المالي من قاعدة البيانات</div>';
-      console.error('[home]',e);
+      const usd=last(usdS),gold=last(goldS),egx=last(egxS),infl=last(inflS),tbill=last(tbillS);
+      const changes={usd:pctChange(usdS.rows),gold:pctChange(goldS.rows),egx:pctChange(egxS.rows)};
+      const regime=deriveRegime(changes,infl?.value,tbill?.value);
+      const dates=[usd?.ts_date,gold?.ts_date,egx?.ts_date].filter(Boolean).sort();
+      const latestDate=dates[dates.length-1]||'—';
+      document.getElementById('regime-title').textContent=regime.label;
+      document.getElementById('regime-copy').textContent=regime.copy;
+      document.getElementById('regime-title').className=regime.cls;
+      document.getElementById('regime-stamp').textContent='آخر تحديث: '+latestDate;
+      if(obs)obs.textContent='آخر مشاهدة فعلية: '+latestDate+' · قراءة تقريبية للأداء خلال 30 يومًا حيث تتوفر المقارنة.';
+      const cards=signalBox.querySelectorAll('.x-signal');
+      setSignal(cards[0],'USD / EGP',usd?fmt(usd.value):'—',usd?.ts_date,'30 يوم: '+signed(changes.usd));
+      setSignal(cards[1],'EGX30',egx?fmt(egx.value):'—',egx?.ts_date,'30 يوم: '+signed(changes.egx));
+      setSignal(cards[2],'Gold / EGP',gold?fmt(gold.value):'—',gold?.ts_date,'30 يوم: '+signed(changes.gold));
+      const rate=tbill?.value,inflation=infl?.value;
+      setSignal(cards[3],'T-Bill / Inflation',rate!=null?fmt(rate)+'%':'—',tbill?.ts_date,(rate!=null&&inflation!=null)?'أذون '+fmt(rate)+'% · تضخم '+fmt(inflation)+'%':'البيانات غير مكتملة');
+      cards.forEach((card,i)=>{
+        const val=card.querySelector('.x-signal__value');
+        val.classList.remove('up','dn');
+        if(i<3)val.classList.add(tone([changes.usd,changes.egx,changes.gold][i]));
+      });
+      const priced=Array.isArray(universe?.list)?universe.list.filter(x=>x.nav!=null).length:0;
+      const bridge=document.querySelector('.x-bridge span');
+      if(bridge)bridge.textContent=`${priced} صندوقًا مسعّرًا حاليًا · الفحص يبدأ من الأداء الرسمي ثم المرجع ثم الدليل.`;
+    }catch(error){
+      if(obs)obs.textContent='تعذر تحديث القراءة الحية الآن؛ لم نعرض رقمًا غير موثّق.';
+      document.getElementById('regime-title').textContent='القراءة الحية غير متاحة الآن';
+      document.getElementById('regime-copy').textContent='الخدمة لم تُرجع البيانات المطلوبة. لن نستبدلها بقيم fallback أو أرقام غير مؤرخة.';
+      document.getElementById('regime-stamp').textContent='حالة البيانات: غير مكتملة';
+      signalBox.innerHTML='<div class="empty" style="grid-column:1/-1">تعذر تحميل الإشارات الحية من طبقة البيانات المشتركة. أعد المحاولة لاحقًا بدل الاعتماد على رقم غير موثّق.</div>';
+      console.error('[home-v1]',error);
     }
   }
   window.KHATER_HOME={render};
