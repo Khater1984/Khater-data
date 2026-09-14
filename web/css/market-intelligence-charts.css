@@ -1,0 +1,25 @@
+/* Market Intelligence — expressive up/down signals + financial chart surface */
+:root{--mi-up:#0b8f67;--mi-down:#d64545;--mi-up-soft:#e9f7f2;--mi-down-soft:#fff0ef;--mi-ink:#12263a;--mi-muted:#657789;--mi-border:#dce5eb;--mi-shadow:0 12px 34px rgba(18,38,58,.08)}
+.market-overview,.terminal-grid,.terminal-context{position:relative}
+.leader-card{position:relative;overflow:hidden;background:linear-gradient(145deg,#fff 0%,#fbfdff 100%)!important;box-shadow:var(--mi-shadow)!important;border-color:var(--mi-border)!important}
+.leader-card:after{content:"";position:absolute;inset:auto -35px -55px auto;width:130px;height:130px;border-radius:50%;background:rgba(32,105,150,.045);pointer-events:none}
+.leader-card strong.up,.pulse-row strong.up{color:var(--mi-up)!important}
+.leader-card strong.dn,.pulse-row strong.dn{color:var(--mi-down)!important}
+.leader-card .leader-chart{height:54px;margin:8px -4px 0;position:relative;z-index:1}
+.leader-card .tv-spark{height:54px!important;width:100%!important}
+.tv-spark{width:100%;height:30px;min-width:70px;display:block;position:relative}
+.pulse-row .spark{width:96px;height:28px;color:var(--mi-muted)}
+.pulse-row .spark.tv-spark{height:28px;width:96px}
+.pulse-row .spark:empty{display:none}
+.pulse-row strong{transition:color .2s ease}
+.pulse-row:has(strong.up){background:linear-gradient(90deg,rgba(11,143,103,.025),transparent 45%)}
+.pulse-row:has(strong.dn){background:linear-gradient(90deg,rgba(214,69,69,.025),transparent 45%)}
+.pulse-group.hedge,.pulse-group.system{background:var(--mi-up)!important}
+.pulse-group.risk{background:var(--mi-down)!important}
+.regime-dot{transition:background .25s ease,box-shadow .25s ease}
+.market-overview .overview-lead{background:linear-gradient(145deg,#f7fbff,#fff)!important;box-shadow:var(--mi-shadow)!important}
+.t-panel,.terminal-context,.terminal-regime{box-shadow:var(--mi-shadow)!important}
+.t-panel{border-color:var(--mi-border)!important}
+.pulse-head{background:#f3f7fa!important;color:#526574!important}
+@media(max-width:700px){.leader-card .leader-chart,.leader-card .tv-spark{height:48px!important}.pulse-row .spark.tv-spark{width:76px;height:24px}}
+@media(max-width:480px){.pulse-row .spark.tv-spark{width:64px;height:22px}}
