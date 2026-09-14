@@ -1,4 +1,4 @@
-/* map.html page layout — tokens from app.css */
+/* map.html page layout — tokens from design system via app.css */
 .page-map{background:var(--bg)}
 .hero-mini{padding:28px 0 6px}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 18px}
@@ -13,8 +13,8 @@ button.tile, .tile{
 .tile .v{font-size:24px; font-family:var(--font-num); margin:6px 0}
 .tile .asof{color:var(--dim);font-size:12px;margin-top:8px}
 .pill{display:inline-block;border-radius:999px;padding:3px 8px;font-size:12px}
-.pill.up{background:#0b3b2e;color:var(--good)}
-.pill.dn{background:#3a1515;color:var(--bad)}
+.pill.up{background:rgba(13,148,116,.12);color:var(--perf-up,var(--good));border:1px solid rgba(13,148,116,.25)}
+.pill.dn{background:rgba(217,56,58,.1);color:var(--perf-down,var(--bad));border:1px solid rgba(217,56,58,.25)}
 .modal{display:none;position:fixed;inset:0;background:#0009;z-index:40;align-items:center;justify-content:center;padding:18px}
 .modal.on{display:flex}
 .modal .box{background:var(--bg);border:1px solid var(--line);border-radius:16px;max-width:860px;width:100%;max-height:90vh;overflow:auto;padding:18px}
@@ -22,7 +22,7 @@ button.tile, .tile{
 .badge-g{color:var(--good);font-size:13px} .badge-r{color:var(--bad);font-size:13px}
 .seg,.ranges{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
 .seg button,.ranges button{cursor:pointer}
-.seg button.on,.ranges button.on{background:var(--gold);color:#12131C;border:0}
+.seg button.on,.ranges button.on{background:var(--nile-emerald,var(--accent,#0d9474));color:#fff;border:0}
 .chart-wrap{position:relative}
 #chart{height:440px;direction:ltr;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
 #tip{display:none;position:absolute;top:12px;left:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:12px;min-width:200px;z-index:5;direction:rtl}
