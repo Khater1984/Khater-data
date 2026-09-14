@@ -11,7 +11,6 @@
 <link rel="stylesheet" href="css/khater-design-system.css">
 <link rel="stylesheet" href="css/brief-page.css">
 <link rel="stylesheet" href="css/header.css">
-<link rel="stylesheet" href="css/khater-platform-identity.css">
 <script src="config.js"></script>
 <script src="js/data/supabase-client.js"></script>
 <script src="js/data/macro-service.js"></script>
@@ -28,17 +27,50 @@
       <a href="./macro.html">الاقتصاد</a>
       <a href="./categories.html">المناطق</a>
       <a href="./funds.html">الصناديق</a>
+      <a href="./why.html">المنهج</a>
     </nav>
   </div>
 </header>
 <main id="main-content" class="brief-shell">
-  <section class="brief-hero" aria-labelledby="brief-title"><div class="brief-hero-copy"><div class="brief-eyebrow"><span class="live-dot"></span> MARKET INTELLIGENCE · NOW</div><h1 id="brief-title">السوق المصري الآن، في قراءة واحدة.</h1><p>أهم حركة في السوق، وأبرز ما يستحق المتابعة.</p></div><div id="terminal-stamp" class="observation-stamp">آخر قراءة · —</div></section>
-  <section class="brief-regime" aria-labelledby="regime-title"><div class="regime-badge"><span class="regime-dot"></span>حالة السوق</div><div class="regime-content"><h2 id="regime-title">جاري بناء القراءة</h2><p id="regime-copy">تُحدّث القراءة من المؤشرات المرجعية الفعلية.</p></div></section>
-  <section class="brief-signals" aria-labelledby="signals-title"><div class="section-intro"><div><div class="section-label">MARKET PULSE</div><h2 id="signals-title">الإشارات الأهم</h2></div></div><div id="market-leaders" class="signal-grid" aria-live="polite"></div><div class="brief-meaning"><h2>ماذا يعني ذلك؟</h2><p id="meaning-copy">تُبنى القراءة من حركة المؤشرات وتاريخ آخر مشاهدة.</p></div></section>
-  <section class="brief-paths" aria-labelledby="paths-title"><div class="section-intro"><div><div class="section-label">INVESTIGATION</div><h2 id="paths-title">اختر ما تريد أن تعرفه</h2></div></div><div class="path-grid"><a class="path-card money" href="./map.html"><span class="path-number">01</span><span class="path-icon">◈</span><h3>قيمة فلوسي</h3><p>كيف تغيّرت قيمة المال أمام التضخم والدولار والذهب والعائد النقدي؟</p><b>افتح القراءة ←</b></a><a class="path-card context" href="./macro.html"><span class="path-number">02</span><span class="path-icon">◌</span><h3>الاقتصاد</h3><p>ما الذي يحدث في التضخم والفائدة والسيولة والمرجعيات؟</p><b>افتح السياق ←</b></a><a class="path-card regions" href="./categories.html"><span class="path-number">03</span><span class="path-icon">⌘</span><h3>المناطق</h3><p>أي فئات تستحق التحقيق في ضوء حالة السوق الحالية؟</p><b>استكشف الفئات ←</b></a><a class="path-card funds" href="./funds.html"><span class="path-number">04</span><span class="path-icon">▣</span><h3>الصناديق</h3><p>أي الصناديق تستحق الفحص بالأداء والمرجع والدليل؟</p><b>افحص الصناديق ←</b></a></div></section>
-  <section class="brief-evidence" aria-labelledby="evidence-title"><aside class="evidence-explain"><div class="section-label">EVIDENCE</div><h2>الدليل قبل الانطباع</h2><ul><li>كل قراءة مرتبطة بتاريخ مشاهدة.</li><li>الحركة محسوبة من السلسلة الفعلية.</li><li>البيانات المتأخرة تبقى معلنة.</li></ul></aside><div class="evidence-table-wrap"><div class="evidence-head"><h2 id="evidence-title">صورة السوق المرجعية</h2><span class="source-chip">SUPABASE</span></div><div id="market-pulse" class="market-reference"></div></div></section>
+  <section class="brief-hero" aria-labelledby="brief-title">
+    <div class="section-label">MARKET BRIEF</div>
+    <h1 id="brief-title">ماذا يحدث في السوق الآن؟</h1>
+    <p class="brief-lede" id="brief-lede">قراءة سريعة من المؤشرات المرجعية قبل أي قرار.</p>
+    <div class="brief-status" id="brief-status" aria-live="polite"></div>
+  </section>
+  <section class="brief-signals" aria-labelledby="signals-title">
+    <div class="section-intro"><div><div class="section-label">PULSE</div><h2 id="signals-title">الإشارات الأهم</h2></div></div>
+    <div id="market-leaders" class="signal-grid" aria-live="polite"></div>
+    <div class="brief-meaning"><h2>ماذا يعني ذلك؟</h2><p id="meaning-copy">تُبنى القراءة من حركة المؤشرات وتاريخ آخر مشاهدة.</p></div>
+  </section>
+  <section class="brief-paths" aria-labelledby="paths-title">
+    <div class="section-intro"><div><div class="section-label">INVESTIGATION</div><h2 id="paths-title">اختر ما تريد أن تعرفه</h2></div></div>
+    <div class="path-grid">
+      <a class="path-card money" href="./map.html"><span class="path-number">01</span><span class="path-icon">◈</span><h3>قيمة فلوسي</h3><p>كيف تغيّرت قيمة المال أمام التضخم والدولار والذهب والعائد النقدي؟</p><b>افتح القراءة ←</b></a>
+      <a class="path-card context" href="./macro.html"><span class="path-number">02</span><span class="path-icon">◌</span><h3>الاقتصاد</h3><p>ما الذي يحدث في التضخم والفائدة والسيولة والمرجعيات؟</p><b>افتح السياق ←</b></a>
+      <a class="path-card regions" href="./categories.html"><span class="path-number">03</span><span class="path-icon">⌘</span><h3>المناطق</h3><p>أي فئات تستحق التحقيق في ضوء حالة السوق الحالية؟</p><b>استكشف الفئات ←</b></a>
+      <a class="path-card funds" href="./funds.html"><span class="path-number">04</span><span class="path-icon">▣</span><h3>الصناديق</h3><p>أي الصناديق تستحق الفحص بالأداء والمرجع والدليل؟</p><b>افحص الصناديق ←</b></a>
+    </div>
+  </section>
+  <section class="brief-evidence" aria-labelledby="evidence-title">
+    <aside class="evidence-explain">
+      <div class="section-label">EVIDENCE</div>
+      <h2>الدليل قبل الانطباع</h2>
+      <ul>
+        <li>كل قراءة مرتبطة بتاريخ مشاهدة.</li>
+        <li>الحركة محسوبة من السلسلة الفعلية.</li>
+        <li>البيانات المتأخرة تبقى معلنة.</li>
+      </ul>
+    </aside>
+    <div class="evidence-table-wrap">
+      <div class="evidence-head"><h2 id="evidence-title">صورة السوق المرجعية</h2><span class="source-chip">SUPABASE</span></div>
+      <div id="market-pulse" class="market-reference"></div>
+    </div>
+  </section>
   <p class="brief-note">آخر مشاهدة فعلية تظهر مع كل قراءة · البيانات الناقصة أو المتأخرة لا تُستبدل بتخمين · المنصة للفهم والمقارنة وليست توصية استثمارية.</p>
 </main>
-<script src="js/home-redesign.js"></script><script src="js/market-intelligence-charts.js"></script>
+<script src="js/home-page.js"></script>
+<script src="js/home-redesign.js"></script>
+<script src="js/market-intelligence-charts.js"></script>
 </body>
 </html>
