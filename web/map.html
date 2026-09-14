@@ -12,24 +12,25 @@
 <script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
 </head>
 <body class="page-map">
-<header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>منصة فهم الاقتصاد وتحليل صناديق الاستثمار</span></div><nav>
+<a class="skip-link" href="#main-content">تخطَّ إلى المحتوى الرئيسي</a>
+<header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>منصة فهم الاقتصاد وتحليل صناديق الاستثمار</span></div><nav aria-label="التنقل الرئيسي">
 <a href="./index.html">البداية</a>
-<a href="./map.html">ماذا حدث للفلوس؟</a>
+<a class="active" aria-current="page" href="./map.html">ماذا حدث للفلوس؟</a>
 <a href="./funds.html">الصناديق</a>
 <a href="./categories.html">خريطة الفئات</a>
 <a href="./macro.html">الاقتصاد</a>
 <a href="./why.html">المنهج</a>
 </nav></div></header>
-<main class="wrap">
+<main id="main-content" class="wrap">
 <section class="hero-mini"><h1>ماذا حدث لقيمة أموالك منذ 2016؟</h1><p class="muted">لو كان معك 100 جنيه في يناير 2016، إليك القيمة الحالية لـ 100 جنيه إذا احتفظت بها كاش مقارنة باستثمارها في الأصول المختلفة حتى اليوم:</p></section>
-<h3>الأصول ونمو الاستثمار</h3><div class="tiles" id="assets"></div>
-<h3>الاقتصاد النقدي والادخار</h3><div class="tiles" id="policy"></div>
-<div class="seg"><button class="on" data-g="value">مقارنة أداء الأصول</button><button data-g="policy">تكلفة المعيشة والسياسة النقدية</button></div>
-<div class="ranges"><button class="on" data-r="all">الكل (2016 - 2026)</button><button data-r="5">آخر 5 سنوات</button><button data-r="2">آخر سنتين</button></div>
-<div class="chart-wrap"><div id="tip"></div><div id="chart"></div></div>
+<h3>الأصول ونمو الاستثمار</h3><div class="tiles" id="assets" aria-live="polite"></div>
+<h3>الاقتصاد النقدي والادخار</h3><div class="tiles" id="policy" aria-live="polite"></div>
+<div class="seg" role="tablist" aria-label="نوع المقارنة"><button type="button" class="on" role="tab" aria-selected="true" data-g="value">مقارنة أداء الأصول</button><button type="button" role="tab" aria-selected="false" data-g="policy">تكلفة المعيشة والسياسة النقدية</button></div>
+<div class="ranges" role="tablist" aria-label="النطاق الزمني"><button type="button" class="on" role="tab" aria-selected="true" data-r="all">الكل (2016 - 2026)</button><button type="button" role="tab" aria-selected="false" data-r="5">آخر 5 سنوات</button><button type="button" role="tab" aria-selected="false" data-r="2">آخر سنتين</button></div>
+<div class="chart-wrap"><div id="tip" aria-live="polite"></div><div id="chart" role="img" aria-label="رسم بياني لمقارنة مسارات قيمة الأصول"></div></div>
 <section class="why"><div class="card"><h3>ماذا حدث لقوة الجنيه؟</h3><p id="pound"></p></div><div class="card"><h3>لماذا يحدث ذلك معاً؟</h3><p>ارتفاع التضخم يأكل النقد السائل، فترتفع الفائدة وعائد الأذون، ويتجه جزء من المدخرات إلى الدولار والذهب والأسهم. المسارات تتحرك معاً لأنها استجابة لنفس الضغط على الجنيه، لا لأنها توصية شراء.</p></div></section>
 <div id="pp-root" class="pp-wrap"></div>
 </main>
-<div class="modal" id="modal"><div class="box"><button id="mclose" class="primary" style="float:left">إغلاق</button><h2 id="mtitle"></h2><p class="muted" id="msum"></p><div id="dchart"></div><p class="muted" id="mmethod" style="margin-top:12px"></p></div></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle" hidden><div class="box"><button id="mclose" class="primary modal-close" type="button">إغلاق</button><h2 id="mtitle"></h2><p class="muted" id="msum"></p><div id="dchart" role="img" aria-label="تفاصيل المسار المحدد"></div><p class="muted modal-method" id="mmethod"></p></div></div>
 <script type="module" src="./js/map-page.js"></script>
 </body></html>
