@@ -3,9 +3,10 @@ import { bucket } from "./engine.js";
 
 export const CFG = window.KHATER || {};
 
+/** Paths are relative to the page URL (map.html), not the module URL. */
 async function ensureMacroDataLayer() {
-  if (!window.KHATER_DATA?.supabase) await load("./data/supabase-client.js");
-  if (!window.KHATER_DATA?.macro) await load("./data/macro-service.js");
+  if (!window.KHATER_DATA?.supabase) await load("js/data/supabase-client.js");
+  if (!window.KHATER_DATA?.macro) await load("js/data/macro-service.js");
 }
 
 function load(src) {
@@ -43,6 +44,9 @@ export function hasLive() {
 export async function loadEngine() {
   if (!hasLive()) throw new Error("Supabase configuration is required; JSON snapshots are disabled");
   await ensureMacroDataLayer();
+  if (!window.KHATER_DATA?.macro?.getAll) {
+    throw new Error("macro-service.js failed to expose KHATER_DATA.macro");
+  }
   const packed = await window.KHATER_DATA.macro.getAll();
   const series = {};
   Object.entries(packed.series).forEach(([key, data]) => {
@@ -68,24 +72,24 @@ export async function loadSeries(from = "2016-01-01") {
 /* Legacy fund adapter is kept isolated until all external callers are migrated. */
 export async function loadFunds() {
   if (!hasLive()) throw new Error("Supabase configuration is required; JSON snapshots are disabled");
-  if (!window.KHATER_DATA?.supabase) await load("./data/supabase-client.js");
-  if (!window.KHATER_DATA?.funds) await load("./data/funds-service.js");
+  if (!window.KHATER_DATA?.supabase) await load("js/data/supabase-client.js");
+  if (!window.KHATER_DATA?.funds) await load("js/data/funds-service.js");
   const universe = await window.KHATER_DATA.funds.getUniverse();
   return universe.list.map(f => ({
-    id:f.id,
-    name:f.name,
-    manager:f.manager,
-    category:f.cat,
-    nav:f.nav,
-    score:f.score,
-    rating:f.rating,
-    currency:null,
-    nav_asof:null,
-    bucket:bucket(f.cat)
+    id: f.id,
+    name: f.name,
+    manager: f.manager,
+    category: f.cat,
+    nav: f.nav,
+    score: f.score,
+    rating: f.rating,
+    currency: null,
+    nav_asof: null,
+    bucket: bucket(f.cat)
   }));
 }
 
 export async function loadFundBook() {
   if (!hasLive()) throw new Error("Supabase configuration is required; JSON snapshots are disabled");
-  return { source:"supabase", funds:await loadFunds() };
+  return { source: "supabase", funds: await loadFunds() };
 }

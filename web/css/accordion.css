@@ -1,40 +1,152 @@
-
-.pp-wrap{
-  --bg:#12131C; --card:#1E1F2E; --line:#2A2C3D; --ink:#F4F5F8; --mute:#9AA0B4;
-  --loss:#FF5252; --win:#2ECC71;
-  background:var(--bg); color:var(--ink); border:1px solid var(--line);
-  border-radius:20px; padding:22px; margin:28px 0 48px;
+/* Nile V3 — Purchasing Power accordion (map signature experience)
+   Identity: Paper canvas, emerald/copper evidence, mono numbers. */
+.pp-wrap {
+  --pp-bg: var(--nile-paper, #f4f8f7);
+  --pp-card: var(--card-white, #ffffff);
+  --pp-line: var(--river-line, #cce0dc);
+  --pp-ink: var(--ink-dark, #0c2328);
+  --pp-mute: var(--ink-muted, #4a6b6c);
+  --pp-loss: var(--coral, #d9383a);
+  --pp-win: var(--nile-emerald, #0d9474);
+  background: var(--pp-card);
+  color: var(--pp-ink);
+  border: 1px solid var(--pp-line);
+  border-radius: var(--radius-md, 12px);
+  box-shadow: var(--shadow-1, 0 1px 3px rgba(12, 35, 40, 0.04));
+  padding: 22px;
+  margin: 28px 0 48px;
+  font-family: var(--font-arabic, Cairo, system-ui, sans-serif);
 }
-.pp-wrap *{box-sizing:border-box}
-.pp-head{margin-bottom:16px}
-.pp-head h2{margin:0 0 6px;font-size:22px;line-height:1.4}
-.pp-head p{margin:0;color:var(--mute)}
-.pp-row{border-bottom:1px solid var(--line)}
-.pp-row:last-child{border-bottom:0}
-.pp-row summary{
-  list-style:none; cursor:pointer;
-  display:grid; grid-template-columns:86px 1fr minmax(180px,240px) 22px;
-  gap:12px; align-items:center; padding:12px 2px;
+.pp-wrap * { box-sizing: border-box; }
+.pp-head { margin-bottom: 16px; }
+.pp-head h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  line-height: 1.35;
+  color: var(--pp-ink);
+  font-weight: 800;
 }
-.pp-row summary::-webkit-details-marker{display:none}
-.pp-yearbox{display:flex;align-items:center;gap:8px;font-weight:700}
-.pp-flag{width:18px;height:18px;border-radius:50%;overflow:hidden;flex:0 0 18px}
-.pp-bar{height:10px;background:#2A2C3D;border-radius:99px;overflow:hidden}
-.pp-bar>i{display:block;height:10px;width:0;background:var(--loss);transition:width .55s ease}
-.pp-metric{font-size:13px}
-.pp-badge{color:var(--loss);font-size:12px;margin-inline-start:6px}
-.pp-chevron{color:var(--mute);transition:transform .25s ease;text-align:center}
-.pp-row[open] .pp-chevron{transform:rotate(180deg);color:var(--ink)}
-.pp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:4px 0 16px}
-.pp-cell{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
-.pp-cell em{display:block;color:var(--mute);font-style:normal;font-size:12px;margin-bottom:6px}
-.pp-cell .line{display:flex;justify-content:space-between;gap:8px;align-items:center}
-.pp-cell b{font-family:"IBM Plex Sans",sans-serif}
-.tag{font-size:11px;border-radius:999px;padding:3px 8px;white-space:nowrap}
-.tag.win{background:#143325;color:var(--win)}
-.tag.lose{background:#3a1b1b;color:#ff8b83}
-@media(max-width:800px){
-  .pp-row summary{grid-template-columns:70px 1fr 22px}
-  .pp-metric{grid-column:1 / -2}
-  .pp-grid{grid-template-columns:1fr}
+.pp-head p {
+  margin: 0;
+  color: var(--pp-mute);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.pp-row { border-bottom: 1px solid var(--pp-line); }
+.pp-row:last-child { border-bottom: 0; }
+.pp-row summary {
+  list-style: none;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 86px 1fr minmax(180px, 240px) 22px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 2px;
+}
+.pp-row summary::-webkit-details-marker { display: none; }
+.pp-yearbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  color: var(--pp-ink);
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+.pp-flag {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex: 0 0 18px;
+}
+.pp-bar {
+  height: 10px;
+  background: var(--nile-canvas, #ebf2f0);
+  border-radius: 99px;
+  overflow: hidden;
+  border: 1px solid var(--pp-line);
+}
+.pp-bar > i {
+  display: block;
+  height: 10px;
+  width: 0;
+  background: var(--pp-loss);
+  transition: width 0.55s ease;
+}
+.pp-metric { font-size: 13px; color: var(--pp-ink); }
+.pp-metric b {
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+.pp-badge {
+  color: var(--pp-loss);
+  font-size: 12px;
+  margin-inline-start: 6px;
+  font-weight: 700;
+}
+.pp-chevron {
+  color: var(--pp-mute);
+  transition: transform 0.25s ease;
+  text-align: center;
+}
+.pp-row[open] .pp-chevron {
+  transform: rotate(180deg);
+  color: var(--pp-ink);
+}
+.pp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 4px 0 16px;
+}
+.pp-cell {
+  background: var(--nile-canvas, #ebf2f0);
+  border: 1px solid var(--pp-line);
+  border-radius: var(--radius-sm, 8px);
+  padding: 12px;
+}
+.pp-cell em {
+  display: block;
+  color: var(--pp-mute);
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.pp-cell .line {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+.pp-cell b {
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  direction: ltr;
+  unicode-bidi: isolate;
+  color: var(--pp-ink);
+}
+.tag {
+  font-size: 11px;
+  border-radius: 999px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  font-weight: 700;
+}
+.tag.win {
+  background: rgba(13, 148, 116, 0.12);
+  color: var(--pp-win);
+  border: 1px solid rgba(13, 148, 116, 0.25);
+}
+.tag.lose {
+  background: rgba(217, 56, 58, 0.1);
+  color: var(--pp-loss);
+  border: 1px solid rgba(217, 56, 58, 0.25);
+}
+@media (max-width: 800px) {
+  .pp-row summary { grid-template-columns: 70px 1fr 22px; }
+  .pp-metric { grid-column: 1 / -2; }
+  .pp-grid { grid-template-columns: 1fr; }
 }
