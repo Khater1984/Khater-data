@@ -4,3 +4,11 @@
 @import url('./fund-price.css');
 @import url('./fund-profile.css');
 .fund-detail-page{background:var(--nile-paper);color:var(--ink-dark);font-family:var(--font-arabic)}
+.visually-hidden{
+  position:absolute;
+  width:1px;height:1px;
+  padding:0;margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;border:0;
+}
