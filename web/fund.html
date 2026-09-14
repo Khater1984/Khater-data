@@ -1,25 +1,49 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>تفاصيل الصندوق | رادار السوق المصري</title>
-<script src="config.js"></script>
-<link rel="stylesheet" href="css/app.css">
-<link rel="stylesheet" href="css/header.css">
-<link rel="stylesheet" href="css/fund-detail.css?v=20260914css1">
-<link rel="stylesheet" href="css/fund-decision.css">
-<link rel="stylesheet" href="css/fund-release-hardening.css?v=20260914rc1">
-<link rel="stylesheet" href="css/nile-page-overrides.css"><link rel="stylesheet" href="css/khater-platform-identity.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FUND DNA · Institutional Profile</title>
+  <script src="config.js"></script>
+  <link rel="stylesheet" href="css/khater-design-system.css?v=nile3b">
+  <link rel="stylesheet" href="css/header.css?v=nile3b">
+  <link rel="stylesheet" href="css/fund-detail.css?v=nile3b">
+  <link rel="stylesheet" href="css/fund-decision.css?v=nile3b">
+  <link rel="stylesheet" href="css/fund-release-hardening.css?v=nile3b">
 </head>
 <body class="fund-detail-page">
-<a class="skip-link" href="#main-content">تخطَّ إلى المحتوى الرئيسي</a>
-<header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>Fund DNA</span></div><nav aria-label="التنقل الرئيسي">
-<a href="./index.html">الآن</a><a href="./map.html">قيمة فلوسي</a><a href="./macro.html">الاقتصاد</a><a href="./categories.html">المناطق</a><a href="./funds.html">الصناديق</a>
-</nav></div></header>
-<main id="main-content" class="wrap fund-page"></main>
+  <a class="skip-link" href="#main-content">تخطَّ إلى المحتوى الرئيسي</a>
+  <header class="site-header">
+    <div class="wrap">
+      <div class="logo">رادار السوق المصري<span>FUND DNA · ملف مؤسسي</span></div>
+      <nav aria-label="التنقل الرئيسي">
+        <a href="./index.html">البداية</a>
+        <a href="./map.html">ماذا حدث للفلوس؟</a>
+        <a href="./funds.html">الصناديق</a>
+        <a href="./categories.html">خريطة الفئات</a>
+        <a href="./macro.html">الاقتصاد</a>
+        <a href="./why.html">المنهج</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content" class="wrap fund-page">
+    <div id="app" class="fund-app" aria-live="polite">
+      <div class="loading">جاري تحميل FUND DNA…</div>
+    </div>
+  </main>
 <script src="js/data/supabase-client.js"></script>
 <script src="js/data/fund-service.js"></script>
+<script src="js/data/macro-service.js"></script>
+<script src="js/fund-core.js?v=20260914css1"></script>
+<script src="js/fund-performance.js?v=20260912bundle4"></script>
+<script src="js/fund-risk.js?v=20260912bundle4"></script>
+<script src="js/fund-benchmark.js?v=20260912bundle4"></script>
+<script src="js/fund-smartscore.js?v=20260912bundle4"></script>
+<script src="js/fund-evidence.js?v=20260912bundle4"></script>
+<script src="js/fund-profile.js?v=20260912bundle4"></script>
+<script src="js/fund-tabs.js?v=20260913tabs1"></script>
+<script src="js/fund-decision-layer.js"></script>
+<script src="js/fund-detail-controller.js?v=20260914rc1"></script>
 <script src="js/fund-detail-boot.js"></script>
 </body>
 </html>
