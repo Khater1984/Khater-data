@@ -1,33 +1,60 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>رادار السوق المصري — منصة فهم الاقتصاد وتحليل صناديق الاستثمار</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>رادار السوق المصري — الآن</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="css/app.css"/>
   <link rel="stylesheet" href="css/home-context.css"/>
+  <link rel="stylesheet" href="css/experience-v1.css"/>
+  <link rel="stylesheet" href="css/header.css"/>
   <script src="config.js"></script>
   <script src="js/data/supabase-client.js"></script>
   <script src="js/data/macro-service.js"></script>
   <script src="js/data/funds-service.js"></script>
-  <link rel="stylesheet" href="css/header.css"/>
 </head>
-<body>
+<body class="experience-home">
   <a class="skip-link" href="#main-content">تخطَّ إلى المحتوى الرئيسي</a>
   <header class="site-header">
     <div class="wrap">
-      <div class="logo">رادار السوق المصري<span>منصة فهم الاقتصاد وتحليل صناديق الاستثمار</span></div>
+      <div class="logo">رادار السوق المصري<span>طبقة ذكاء فوق السوق — من السياق إلى القرار</span></div>
       <nav aria-label="التنقل الرئيسي">
-        <a href="./index.html" aria-current="page">البداية</a><a href="./map.html">ماذا حدث للفلوس؟</a><a href="./funds.html">الصناديق</a><a href="./categories.html">خريطة الفئات</a><a href="./macro.html">الاقتصاد</a><a href="./why.html">المنهج</a>
+        <a class="active" aria-current="page" href="./index.html">الآن</a>
+        <a href="./map.html">قيمة فلوسي</a>
+        <a href="./macro.html">الاقتصاد</a>
+        <a href="./categories.html">المناطق</a>
+        <a href="./funds.html">الصناديق</a>
       </nav>
     </div>
   </header>
-  <main id="main-content" class="wrap">
-    <section class="hero" aria-labelledby="home-title"><div class="kicker">ليس موقع عرض صناديق</div><h1 id="home-title">ماذا حدث لأموالي منذ 2016؟</h1><p>التضخم والدولار والذهب والبورصة والصناديق كانت في جزر منفصلة. هنا تُجمع بالجنيه، وتُقارن بعدل، من دون أن نقول لك ماذا تشتري.</p><a class="btn" href="./map.html">ابدأ بـ 1,000 جنيه</a></section>
-    <section class="strip" id="strip" aria-label="لقطة السوق"></section>
-    <section class="home-context" id="financial-context" aria-label="السياق المالي قبل الفرص"></section>
-    <section class="grid3" aria-label="مسارات التحليل"><a class="card" href="./map.html"><div class="kicker">01</div><h3>ماذا حدث للفلوس؟</h3><p>مسار المبلغ نفسه عبر التضخم، الدولار، الذهب، EGX30 والأسواق العالمية.</p></a><a class="card" href="./funds.html"><div class="kicker">02</div><h3>الصناديق بذكاء</h3><p>فلتر AND على المراجع، ثم Score وRating وDNA. التفوق شرط ظهور لا زخرفة.</p></a><a class="card" href="./categories.html"><div class="kicker">03</div><h3>خريطة الفئات</h3><p>أين يتركز العائد داخل النقد والأسهم والذهب — قبل الغرق في صندوق واحد.</p></a></section>
+  <main id="main-content" class="x-shell">
+    <section class="x-hero" aria-labelledby="home-title">
+      <div class="x-kicker">MARKET BRIEF · NOW</div>
+      <h1 id="home-title">ماذا يحدث في السوق المصري الآن؟</h1>
+      <p class="x-lead">قبل أن نبحث عن صندوق، نثبت حالة النظام: الجنيه، الأسعار، العائد النقدي، الذهب والبورصة. ثم نختار أين يستحق التحقيق.</p>
+      <div class="x-observation"><i class="x-dot" aria-hidden="true"></i><span id="home-observation">جاري تثبيت أحدث مشاهدة فعلية من قاعدة البيانات…</span></div>
+      <section class="x-regime" aria-labelledby="regime-title">
+        <div class="x-regime__top"><div><div class="x-kicker">REGIME</div><h2 id="regime-title">قراءة السوق قبل الفرصة</h2><p id="regime-copy">نقرأ الإشارات معًا بدل أن نترك رقمًا منفردًا يقود القصة.</p></div><div class="x-stamp" id="regime-stamp">آخر تحديث: —</div></div>
+        <div class="x-signals" id="market-signals" aria-label="الإشارات الرئيسية">
+          <div class="x-signal"><span class="x-signal__label">USD / EGP</span><b class="x-signal__value">—</b><small class="x-signal__date">جاري التحميل</small></div>
+          <div class="x-signal"><span class="x-signal__label">EGX30</span><b class="x-signal__value">—</b><small class="x-signal__date">جاري التحميل</small></div>
+          <div class="x-signal"><span class="x-signal__label">Gold / EGP</span><b class="x-signal__value">—</b><small class="x-signal__date">جاري التحميل</small></div>
+          <div class="x-signal"><span class="x-signal__label">T-Bill / Inflation</span><b class="x-signal__value">—</b><small class="x-signal__date">جاري التحميل</small></div>
+        </div>
+      </section>
+      <section class="x-question" aria-labelledby="paths-title"><div><div class="x-kicker">من هنا تبدأ أسئلتك</div><h2 id="paths-title">لا توجد رحلة واحدة للمستثمر</h2><p>اختر السؤال الذي يهمك. يحتفظ كل مسار بالسياق نفسه بدل إعادة بناء القصة من الصفر.</p></div></section>
+      <section class="x-paths" aria-label="مسارات التحقيق">
+        <a class="x-path x-path--signature" href="./map.html"><div><span class="x-path__num">01 · SIGNATURE</span><h3>قيمة فلوسي</h3><p>لو بدأت بمبلغ بالجنيه، ماذا حدث لقيمته عبر التضخم والدولار والذهب والبورصة والعائد النقدي؟</p></div><span class="x-path__go">شاهد قصة قيمة المال ←</span></a>
+        <a class="x-path" href="./macro.html"><div><span class="x-path__num">02 · WHY</span><h3>الاقتصاد</h3><p>ما النظام الاقتصادي الذي نتحرك داخله؟ وما الذي يعنيه ذلك للمخاطر والعوائد؟</p></div><span class="x-path__go">افهم السياق ←</span></a>
+        <a class="x-path" href="./categories.html"><div><span class="x-path__num">03 · WHERE</span><h3>المناطق</h3><p>أي فئات تستحق التحقيق الآن قبل أن ندخل في تفاصيل صندوق بعينه؟</p></div><span class="x-path__go">استكشف الفئات ←</span></a>
+      </section>
+      <div class="x-bridge"><div><strong>جاهز لفحص الصناديق؟</strong><span>Shortlist ثم أداء رسمي ثم Benchmark ثم SmartScore ثم الدليل.</span></div><a href="./funds.html">انتقل إلى الصناديق ←</a></div>
+    </section>
+    <section class="x-context" aria-labelledby="context-title"><div class="x-context__head"><div><div class="x-kicker">EVIDENCE</div><h2 id="context-title">لماذا نثق في القراءة؟</h2><p>كل مشاهدة تحمل تاريخها، والصفحات التحليلية تستخدم طبقة البيانات المشتركة بدل أرقام مخزنة منفصلة.</p></div></div><div class="x-context__cards"><article class="x-context__card"><span>المصدر الحي</span><b>Supabase</b><small>المصدر المرجعي للبيانات المالية الحالية.</small></article><article class="x-context__card"><span>طريقة القراءة</span><b>سياق → مقارنة</b><small>لا نحول رقمًا منفردًا إلى توصية.</small></article><article class="x-context__card"><span>الشفافية</span><b>تاريخ + دليل</b><small>البيانات الناقصة أو المتأخرة تظهر كحالة معلنة.</small></article></div></section>
+    <div class="x-footer-note">رادار السوق المصري يقدّم طبقة فهم ومقارنة، وليس توصية استثمارية. <a href="./why.html">المنهج والشفافية ←</a></div>
   </main>
   <footer class="site"><div class="wrap">البيانات من سوبربيس · التحديث اليومي عبر GitHub Actions · ليست نصيحة استثمارية</div></footer>
   <script src="js/home-page.js"></script>
-</body></html>
+</body>
+</html>
