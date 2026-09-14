@@ -33,6 +33,8 @@ jobs:
         run: python scripts/verify_frontend_boundaries.py
       - name: Check final frontend production architecture
         run: python scripts/verify_frontend_production_contract.py
+      - name: Run whole-product release candidate audit
+        run: python scripts/verify_release_candidate.py
       - name: Check JavaScript syntax
         run: |
           set -euo pipefail
