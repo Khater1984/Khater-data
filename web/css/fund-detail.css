@@ -1,14 +1,37 @@
-/* LAYOUT ONLY — Nile V3. Imports structural modules only. */
+/* LAYOUT ONLY — Nile V3. Canonical Fund Detail entrypoint.
+   Protected import order + ownership surface contract. */
 @import url('./fund.css');
 @import url('./fund-chart.css');
 @import url('./fund-price.css');
 @import url('./fund-profile.css');
-.fund-detail-page{background:var(--nile-paper);color:var(--ink-dark);font-family:var(--font-arabic)}
-.visually-hidden{
-  position:absolute;
-  width:1px;height:1px;
-  padding:0;margin:-1px;
-  overflow:hidden;
-  clip:rect(0,0,0,0);
-  white-space:nowrap;border:0;
+
+/* Ownership surface contract (required by verify_fund_css_ownership) */
+.fund-detail-page,
+.fund-page {
+  --fd-line: var(--river-line, #cce0dc);
+  --fd-radius-card: var(--radius-md, 12px);
+  --fd-card-gradient: linear-gradient(180deg, #ffffff 0%, var(--nile-canvas, #ebf2f0) 100%);
+  background: var(--nile-paper, #f4f8f7);
+  color: var(--ink-dark, #0c2328);
+  font-family: var(--font-arabic, Cairo, system-ui, sans-serif);
+}
+
+.metric,
+.card {
+  background: var(--card-white, #ffffff);
+  border: 1px solid var(--fd-line);
+  border-radius: var(--fd-radius-card);
+  box-shadow: var(--shadow-1, 0 1px 3px rgba(12, 35, 40, 0.04));
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
