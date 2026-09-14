@@ -1,0 +1,105 @@
+/* FUNDS PAGE — PRO STRUCTURE ENHANCEMENT
+   Layout/interaction only. Visual identity remains owned by khater-design-system.css. */
+.page-funds{background:var(--kh-bg)}
+
+/* Executive screen framing */
+.page-funds .funds-shell{padding-top:18px}
+.page-funds .market-strip{position:relative;box-shadow:var(--kh-shadow-2)}
+.page-funds .market-lead{min-height:64px}
+.page-funds .market-lead span:nth-child(2){font-size:14px}
+.page-funds .market-item b{font-size:12px}
+
+/* Stronger analytical hierarchy */
+.page-funds .hero-zone{gap:24px;margin-bottom:32px}
+.page-funds .hero-copy{padding-top:12px}
+.page-funds .hero-copy h1{max-width:850px}
+.page-funds .hero-copy p{max-width:72ch}
+.page-funds .hero-focus{min-height:158px;box-shadow:var(--kh-shadow-2)}
+.page-funds .focus-line span,.page-funds .focus-line b{padding:5px 9px;border:1px solid var(--kh-border);border-radius:999px;background:var(--kh-surface-2)}
+.page-funds .focus-line b{background:var(--kh-positive-soft);border-color:rgba(13,148,116,.25);color:var(--kh-accent)}
+
+/* Opportunity becomes a deliberate intelligence band */
+.page-funds .opportunity-shell{margin-bottom:28px}
+.page-funds #opportunityLayer{scroll-margin-top:90px}
+
+/* Command rail */
+.page-funds .command-layout{grid-template-columns:300px minmax(0,1fr);gap:22px}
+.page-funds .control-rail{box-shadow:var(--kh-shadow-2)}
+.page-funds .rail-head h2{letter-spacing:-.01em}
+.page-funds .control-block:first-of-type{margin-top:18px}
+.page-funds .split-controls{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+
+/* Results header behaves like a terminal status bar */
+.page-funds .results-head{padding:0 2px 2px}
+.page-funds .results-title h2{font-size:clamp(20px,1.8vw,26px)}
+.page-funds .results-actions{align-self:center}
+.page-funds .active-filter-label{box-shadow:var(--kh-shadow-1)}
+
+/* KPI hierarchy */
+.page-funds .kpis{grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px}
+.page-funds .kpi{min-height:94px;padding:15px 16px;box-shadow:var(--kh-shadow-1)}
+.page-funds .kpi b{letter-spacing:-.02em}
+
+/* Evidence / methodology */
+.page-funds .insight-ribbon{gap:12px}
+.page-funds .ribbon-main,.page-funds .ribbon-note{min-height:68px;display:flex;flex-direction:column;justify-content:center}
+.page-funds .table-meta{padding:14px 17px}
+.page-funds .table-meta-right{font-weight:700}
+
+/* Institutional table density */
+.page-funds .table-frame{box-shadow:var(--kh-shadow-2)}
+.page-funds .table-scroll{max-height:calc(100vh - 285px);min-height:360px}
+.page-funds table{min-width:1120px}
+.page-funds thead th{height:46px;padding:10px 13px}
+.page-funds tbody td{height:64px;padding:10px 13px}
+.page-funds tbody tr{transition:background var(--transition-fast)}
+
+/* Keep the primary entity visible while scanning horizontally */
+.page-funds thead th.fund-col{position:sticky;right:0;z-index:4;background:var(--kh-surface-2);box-shadow:-8px 0 12px rgba(12,35,40,.035)}
+.page-funds tbody td:nth-child(2){position:sticky;right:0;z-index:3;background:var(--kh-surface);box-shadow:-8px 0 12px rgba(12,35,40,.035)}
+.page-funds tbody tr:nth-child(even) td:nth-child(2){background:color-mix(in srgb,var(--kh-surface-2) 42%,var(--kh-surface))}
+.page-funds tbody tr:hover td:nth-child(2),.page-funds tbody tr.terminal-row-highlight td:nth-child(2){background:var(--kh-surface-3)}
+.page-funds tbody tr.terminal-row-highlight td:nth-child(2){background:var(--kh-warning-soft)}
+
+/* First-rank emphasis without turning the table into a marketing card */
+.page-funds tbody tr:first-child td{border-top:1px solid rgba(13,148,116,.22)}
+.page-funds tbody tr:first-child .rank-col{color:var(--kh-accent);font-weight:800}
+.page-funds tbody tr:first-child .return-col{font-size:16px}
+
+/* Better scanning rhythm */
+.page-funds .fund-col a{display:inline-block;max-width:230px;line-height:1.35}
+.page-funds .compare-main,.page-funds .smart-score-copy em{white-space:nowrap}
+.page-funds .return-sub{white-space:nowrap}
+
+/* Accessible keyboard state */
+.page-funds tbody tr:focus-within td{box-shadow:inset 0 0 0 2px var(--kh-accent)}
+
+/* Empty/error states should sit comfortably inside the terminal */
+.page-funds td.loading,.page-funds td.empty,.page-funds td.error-state{height:220px}
+
+@media(max-width:1100px){
+  .page-funds .command-layout{grid-template-columns:270px minmax(0,1fr)}
+  .page-funds .table-scroll{max-height:none}
+}
+@media(max-width:960px){
+  .page-funds .command-layout{grid-template-columns:1fr}
+  .page-funds .control-rail{box-shadow:var(--kh-shadow-1)}
+  .page-funds .table-scroll{min-height:0}
+  .page-funds thead th.fund-col,.page-funds tbody td:nth-child(2){position:static;box-shadow:none}
+}
+@media(max-width:640px){
+  .page-funds .hero-zone{gap:16px}
+  .page-funds .hero-copy h1{font-size:clamp(29px,9vw,38px)}
+  .page-funds .focus-line{gap:5px}
+  .page-funds .focus-line i{display:none}
+  .page-funds .focus-line span,.page-funds .focus-line b{font-size:12px}
+  .page-funds .kpis{grid-template-columns:1fr 1fr}
+  .page-funds .split-controls{grid-template-columns:1fr}
+  .page-funds .table-meta{align-items:flex-start}
+}
+@media(max-width:430px){
+  .page-funds .kpis{grid-template-columns:1fr}
+  .page-funds .market-strip{grid-template-columns:1fr}
+  .page-funds .market-lead{grid-column:auto}
+  .page-funds .market-item{border-inline-start:0!important;border-top:1px solid var(--kh-border)}
+}
