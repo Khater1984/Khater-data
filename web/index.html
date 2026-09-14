@@ -6,19 +6,18 @@
   <title>رادار السوق المصري — الآن</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="css/app.css"/>
-  <link rel="stylesheet" href="css/home-context.css"/>
-  <link rel="stylesheet" href="css/experience-v1.css"/>
   <link rel="stylesheet" href="css/header.css"/>
+  <link rel="stylesheet" href="css/experience-v2-terminal.css"/>
   <script src="config.js"></script>
   <script src="js/data/supabase-client.js"></script>
   <script src="js/data/macro-service.js"></script>
   <script src="js/data/funds-service.js"></script>
 </head>
-<body class="experience-home">
+<body class="terminal">
   <a class="skip-link" href="#main-content">تخطَّ إلى المحتوى الرئيسي</a>
-  <header class="site-header">
+  <header class="site-header terminal-header">
     <div class="wrap">
-      <div class="logo">رادار السوق المصري<span>طبقة ذكاء فوق السوق — من السياق إلى القرار</span></div>
+      <div class="logo">رادار السوق المصري<span>Financial Intelligence · من السياق إلى القرار</span></div>
       <nav aria-label="التنقل الرئيسي">
         <a class="active" aria-current="page" href="./index.html">الآن</a>
         <a href="./map.html">قيمة فلوسي</a>
@@ -28,33 +27,69 @@
       </nav>
     </div>
   </header>
-  <main id="main-content" class="x-shell">
-    <section class="x-hero" aria-labelledby="home-title">
-      <div class="x-kicker">MARKET BRIEF · NOW</div>
-      <h1 id="home-title">ماذا يحدث في السوق المصري الآن؟</h1>
-      <p class="x-lead">قبل أن نبحث عن صندوق، نثبت حالة النظام: الجنيه، الأسعار، العائد النقدي، الذهب والبورصة. ثم نختار أين يستحق التحقيق.</p>
-      <div class="x-observation"><i class="x-dot" aria-hidden="true"></i><span id="home-observation">جاري تثبيت أحدث مشاهدة فعلية من قاعدة البيانات…</span></div>
-      <section class="x-regime" aria-labelledby="regime-title">
-        <div class="x-regime__top"><div><div class="x-kicker">REGIME</div><h2 id="regime-title">قراءة السوق قبل الفرصة</h2><p id="regime-copy">نقرأ الإشارات معًا بدل أن نترك رقمًا منفردًا يقود القصة.</p></div><div class="x-stamp" id="regime-stamp">آخر تحديث: —</div></div>
-        <div class="x-signals" id="market-signals" aria-label="الإشارات الرئيسية">
-          <div class="x-signal"><span class="x-signal__label">USD / EGP</span><b class="x-signal__value">—</b><small class="x-signal__date">جاري التحميل</small></div>
-          <div class="x-signal"><span class="x-signal__label">EGX30</span><b class="x-signal__value">—</b><small class="x-signal__date">جاري التحميل</small></div>
-          <div class="x-signal"><span class="x-signal__label">Gold / EGP</span><b class="x-signal__value">—</b><small class="x-signal__date">جاري التحميل</small></div>
-          <div class="x-signal"><span class="x-signal__label">T-Bill / Inflation</span><b class="x-signal__value">—</b><small class="x-signal__date">جاري التحميل</small></div>
-        </div>
-      </section>
-      <section class="x-question" aria-labelledby="paths-title"><div><div class="x-kicker">من هنا تبدأ أسئلتك</div><h2 id="paths-title">لا توجد رحلة واحدة للمستثمر</h2><p>اختر السؤال الذي يهمك. يحتفظ كل مسار بالسياق نفسه بدل إعادة بناء القصة من الصفر.</p></div></section>
-      <section class="x-paths" aria-label="مسارات التحقيق">
-        <a class="x-path x-path--signature" href="./map.html"><div><span class="x-path__num">01 · SIGNATURE</span><h3>قيمة فلوسي</h3><p>لو بدأت بمبلغ بالجنيه، ماذا حدث لقيمته عبر التضخم والدولار والذهب والبورصة والعائد النقدي؟</p></div><span class="x-path__go">شاهد قصة قيمة المال ←</span></a>
-        <a class="x-path" href="./macro.html"><div><span class="x-path__num">02 · WHY</span><h3>الاقتصاد</h3><p>ما النظام الاقتصادي الذي نتحرك داخله؟ وما الذي يعنيه ذلك للمخاطر والعوائد؟</p></div><span class="x-path__go">افهم السياق ←</span></a>
-        <a class="x-path" href="./categories.html"><div><span class="x-path__num">03 · WHERE</span><h3>المناطق</h3><p>أي فئات تستحق التحقيق الآن قبل أن ندخل في تفاصيل صندوق بعينه؟</p></div><span class="x-path__go">استكشف الفئات ←</span></a>
-      </section>
-      <div class="x-bridge"><div><strong>جاهز لفحص الصناديق؟</strong><span>Shortlist ثم أداء رسمي ثم Benchmark ثم SmartScore ثم الدليل.</span></div><a href="./funds.html">انتقل إلى الصناديق ←</a></div>
+
+  <main id="main-content" class="terminal-shell">
+    <section class="terminal-top" aria-labelledby="terminal-title">
+      <div>
+        <div class="terminal-kicker">MARKET INTELLIGENCE · NOW</div>
+        <h1 id="terminal-title" class="terminal-title">السوق في لقطة واحدة، قبل أن تبحث عن صندوق.</h1>
+        <p class="terminal-deck">نثبت حالة النظام أولًا، ثم نقرأ الحركة، ثم نقرر أين يستحق التحقيق. لا رقم منفرد يختصر السوق ولا فرصة بلا سياق.</p>
+      </div>
+      <div id="terminal-stamp" class="terminal-stamp">LAST OBSERVATION · —</div>
     </section>
-    <section class="x-context" aria-labelledby="context-title"><div class="x-context__head"><div><div class="x-kicker">EVIDENCE</div><h2 id="context-title">لماذا نثق في القراءة؟</h2><p>كل مشاهدة تحمل تاريخها، والصفحات التحليلية تستخدم طبقة البيانات المشتركة بدل أرقام مخزنة منفصلة.</p></div></div><div class="x-context__cards"><article class="x-context__card"><span>المصدر الحي</span><b>Supabase</b><small>المصدر المرجعي للبيانات المالية الحالية.</small></article><article class="x-context__card"><span>طريقة القراءة</span><b>سياق → مقارنة</b><small>لا نحول رقمًا منفردًا إلى توصية.</small></article><article class="x-context__card"><span>الشفافية</span><b>تاريخ + دليل</b><small>البيانات الناقصة أو المتأخرة تظهر كحالة معلنة.</small></article></div></section>
-    <div class="x-footer-note">رادار السوق المصري يقدّم طبقة فهم ومقارنة، وليس توصية استثمارية. <a href="./why.html">المنهج والشفافية ←</a></div>
+
+    <nav class="terminal-nav" aria-label="سطوح التحليل">
+      <a class="active" href="./index.html">الآن</a>
+      <a href="./map.html">قيمة فلوسي</a>
+      <a href="./macro.html">الاقتصاد</a>
+      <a href="./categories.html">المناطق</a>
+      <a href="./funds.html">الصناديق</a>
+    </nav>
+
+    <section class="terminal-regime" aria-labelledby="regime-title">
+      <div class="regime-line"><i class="regime-dot" aria-hidden="true"></i><span class="regime-label">REGIME · CURRENT READ</span></div>
+      <h2 id="regime-title" class="regime-title">جاري تثبيت حالة السوق…</h2>
+      <p id="regime-copy" class="regime-copy">نقرأ الإشارات معًا بدل أن نترك رقمًا منفردًا يقود القصة.</p>
+    </section>
+
+    <section class="terminal-grid" aria-label="Market pulse and decision frame">
+      <article class="t-panel">
+        <div class="t-head"><div><div class="terminal-kicker">MARKET PULSE</div><h2>الإشارات المرجعية</h2><p>القيمة الأخيرة + حركة 30 يومًا + تاريخ المشاهدة.</p></div><span class="t-meta">SOURCE · SUPABASE</span></div>
+        <div id="market-pulse">
+          <div class="pulse-row pulse-head"><span>المؤشر</span><span>القيمة</span><span>30 يوم</span><span>المشاهدة</span></div>
+          <div class="pulse-row"><span>USD / EGP</span><b>—</b><strong>—</strong><small>تحميل</small></div>
+          <div class="pulse-row"><span>EGX30</span><b>—</b><strong>—</strong><small>تحميل</small></div>
+          <div class="pulse-row"><span>Gold / EGP</span><b>—</b><strong>—</strong><small>تحميل</small></div>
+          <div class="pulse-row"><span>Silver / EGP</span><b>—</b><strong>—</strong><small>تحميل</small></div>
+          <div class="pulse-row"><span>S&P 500 / EGP</span><b>—</b><strong>—</strong><small>تحميل</small></div>
+          <div class="pulse-row"><span>NASDAQ 100 / EGP</span><b>—</b><strong>—</strong><small>تحميل</small></div>
+          <div class="pulse-row"><span>BTC / EGP</span><b>—</b><strong>—</strong><small>تحميل</small></div>
+        </div>
+      </article>
+
+      <aside class="t-panel t-side">
+        <div class="t-head"><div><div class="terminal-kicker">DECISION FRAME</div><h2>السؤال التالي</h2><p>المنصة تجيب أولًا، ثم تفتح التحقيق.</p></div></div>
+        <div class="decision"><div class="decision-top"><b class="decision-num">01</b><h3>ماذا حدث لقيمة المال؟</h3></div><p>قارن القوة الشرائية مع التضخم والدولار والذهب والعائد النقدي.</p><a href="./map.html">افتح قيمة فلوسي ←</a></div>
+        <div class="decision"><div class="decision-top"><b class="decision-num">02</b><h3>لماذا حدث ذلك؟</h3></div><p>افهم النظام الاقتصادي وأسعار الفائدة والسيولة والمرجعيات.</p><a href="./macro.html">افتح الاقتصاد ←</a></div>
+        <div class="decision"><div class="decision-top"><b class="decision-num">03</b><h3>أين يستحق التحقيق؟</h3></div><p>انتقل من السياق إلى الفئات قبل اختيار صندوق بعينه.</p><a href="./categories.html">افتح المناطق ←</a></div>
+        <div class="decision"><div class="decision-top"><b class="decision-num">04</b><h3>من يستحق الفحص؟</h3></div><p>Shortlist ثم أداء رسمي ثم Benchmark ثم SmartScore ثم الدليل.</p><a href="./funds.html">افتح الصناديق ←</a></div>
+      </aside>
+    </section>
+
+    <section aria-labelledby="paths-title">
+      <div class="t-head" style="margin-top:14px;border:1px solid var(--t-line);border-radius:14px 14px 0 0;background:var(--t-panel)"><div><div class="terminal-kicker">INVESTIGATION PATHS</div><h2 id="paths-title">اختر السؤال، لا الصفحة</h2><p>كل مسار يحتفظ بنفس السياق المرجعي.</p></div></div>
+      <div class="terminal-actions">
+        <a class="terminal-action" href="./map.html"><b>قيمة فلوسي</b><span>What happened to my money?</span></a>
+        <a class="terminal-action" href="./macro.html"><b>الاقتصاد</b><span>Why did it happen?</span></a>
+        <a class="terminal-action" href="./categories.html"><b>المناطق</b><span>Where should I investigate?</span></a>
+        <a class="terminal-action" href="./funds.html"><b>الصناديق</b><span>Which funds deserve a look?</span></a>
+      </div>
+    </section>
+
+    <div class="terminal-footer">آخر مشاهدة فعلية تظهر مع كل قراءة · البيانات الناقصة أو المتأخرة لا تُستبدل بتخمين · هذه المنصة طبقة فهم ومقارنة وليست توصية استثمارية.</div>
   </main>
-  <footer class="site"><div class="wrap">البيانات من سوبربيس · التحديث اليومي عبر GitHub Actions · ليست نصيحة استثمارية</div></footer>
+
+  <footer class="site"><div class="wrap">البيانات من Supabase · التحديث اليومي عبر GitHub Actions · ليست نصيحة استثمارية</div></footer>
   <script src="js/home-page.js"></script>
 </body>
 </html>
