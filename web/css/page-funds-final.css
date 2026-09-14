@@ -1,0 +1,333 @@
+/* FUNDS PAGE — UNIFIED FINAL VISUAL LAYER
+   Layout and hierarchy only. Financial/data logic remains untouched.
+   Visual identity is inherited from khater-design-system.css. */
+
+.page-funds .funds-shell{padding-top:14px;padding-bottom:36px}
+
+/* 1. Market context — one quiet status rail */
+.page-funds .market-strip{
+  display:grid!important;
+  grid-template-columns:minmax(250px,1.8fr) repeat(3,minmax(150px,.8fr))!important;
+  min-height:48px!important;
+  margin-bottom:20px!important;
+  border-radius:var(--kh-r-md)!important;
+  box-shadow:none!important;
+}
+.page-funds .market-lead,.page-funds .market-item{padding:10px 14px!important}
+.page-funds .market-lead{min-height:48px!important}
+.page-funds .market-lead span:nth-child(2){font-size:12px!important}
+.page-funds .market-lead small{font-size:9px!important}
+.page-funds .market-item b{font-size:11px!important}
+
+/* 2. Hero — deliberate breathing room, no secondary card */
+.page-funds .hero-zone{
+  display:block!important;
+  margin:0 0 18px!important;
+}
+.page-funds .hero-copy{padding:0!important}
+.page-funds .hero-copy h1{
+  margin:5px 0 7px!important;
+  max-width:920px!important;
+  font-size:clamp(30px,3.2vw,44px)!important;
+  line-height:1.15!important;
+}
+.page-funds .hero-copy p{max-width:78ch!important;font-size:13px!important;line-height:1.7!important}
+.page-funds .hero-copy:after{width:120px!important;height:2px!important;margin-top:12px!important}
+.page-funds .hero-focus{display:none!important}
+
+/* 3. Opportunity radar — one analytical band instead of stacked cards */
+.page-funds .opportunity-shell{
+  margin:0 0 16px!important;
+  border:1px solid var(--kh-border)!important;
+  border-radius:var(--kh-r-md)!important;
+  background:var(--kh-surface)!important;
+  box-shadow:none!important;
+}
+.page-funds .opp-head{
+  padding:10px 14px 8px!important;
+  border-bottom:1px solid var(--kh-border)!important;
+  background:var(--kh-surface)!important;
+  gap:14px!important;
+}
+.page-funds .opp-kicker{font-size:8px!important}
+.page-funds .opp-head h2{font-size:16px!important;margin:2px 0!important}
+.page-funds .opp-head p{font-size:10px!important;line-height:1.45!important;max-width:90ch!important}
+.page-funds .opp-regime{
+  min-width:200px!important;
+  padding:8px 10px!important;
+  border:1px solid var(--kh-border)!important;
+  border-radius:var(--kh-r-sm)!important;
+  background:var(--kh-surface-2)!important;
+}
+.page-funds .opp-regime span,.page-funds .opp-regime small{font-size:8px!important}
+.page-funds .opp-regime b{font-size:11px!important;margin:1px 0!important}
+.page-funds .opp-grid{
+  display:grid!important;
+  grid-template-columns:1.2fr 1fr 1fr!important;
+  gap:0!important;
+  padding:0!important;
+  background:var(--kh-surface)!important;
+}
+.page-funds .opp-card,.page-funds .opp-card.hero, .page-funds article.opp-card{
+  min-height:78px!important;
+  padding:9px 12px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.page-funds .opp-card+.opp-card{border-inline-start:1px solid var(--kh-border)!important}
+.page-funds .opp-card.hero{background:var(--kh-surface-2)!important;border-inline-start:3px solid var(--kh-accent)!important}
+.page-funds .opp-card>span{font-size:8px!important;margin-bottom:2px!important}
+.page-funds .opp-card>strong{font-size:14px!important;margin:0 5px 0 0!important}
+.page-funds .opp-card>small{font-size:8px!important}
+.page-funds .opp-card>p{font-size:8.5px!important;line-height:1.35!important;margin:2px 0 0!important}
+.page-funds .mini-list{margin-top:2px!important}
+.page-funds .mini-list a{padding:2px 0!important;font-size:8.5px!important}
+.page-funds .mini-list em{font-size:8px!important}
+.page-funds .opp-leaders{padding:6px 12px!important;border-top:1px solid var(--kh-border)!important;background:var(--kh-surface)!important}
+.page-funds .leaders-head{margin-bottom:3px!important}
+.page-funds .leaders-head b{font-size:8px!important}
+.page-funds .leader-strip{display:flex!important;gap:5px!important;overflow-x:auto!important;grid-template-columns:none!important;padding-bottom:1px!important}
+.page-funds .leader-strip .leader,.page-funds a.leader{
+  flex:0 0 150px!important;
+  min-height:48px!important;
+  padding:5px 7px!important;
+  border:1px solid var(--kh-border)!important;
+  border-radius:var(--kh-r-sm)!important;
+  background:var(--kh-surface-2)!important;
+  box-shadow:none!important;
+}
+.page-funds .leader h3{font-size:9px!important;margin:0 0 1px!important}
+.page-funds .leader .pct{font-size:12px!important}
+.page-funds .leader i,.page-funds .leader span{font-size:7px!important}
+.page-funds .leader em{font-size:7px!important}
+.page-funds .opp-foot{display:none!important}
+
+/* 4. Command workspace — stable 12-column layout */
+.page-funds .command-layout{display:block!important}
+.page-funds .control-rail{
+  position:static!important;
+  display:grid!important;
+  grid-template-columns:repeat(12,minmax(0,1fr))!important;
+  grid-template-rows:32px 42px auto!important;
+  gap:6px!important;
+  align-items:stretch!important;
+  padding:7px!important;
+  margin:0 0 12px!important;
+  background:var(--kh-surface)!important;
+  border:1px solid var(--kh-border)!important;
+  border-radius:var(--kh-r-md)!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+.page-funds .control-rail:before,.page-funds .control-rail:after{display:none!important}
+.page-funds .rail-head{
+  grid-column:1/3!important;grid-row:1!important;
+  min-width:0!important;margin:0!important;padding:0 6px!important;
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  gap:5px!important;border:0!important;
+}
+.page-funds .rail-head h2{font-size:12px!important;white-space:nowrap!important}
+.page-funds .rail-head small{display:none!important}
+.page-funds #reset{padding:3px 7px!important;font-size:8px!important;white-space:nowrap!important}
+.page-funds .date-rule{
+  grid-column:3/7!important;grid-row:1!important;
+  min-width:0!important;margin:0!important;padding:4px 7px!important;
+  display:flex!important;align-items:center!important;gap:6px!important;
+  background:var(--kh-surface-2)!important;border:1px solid var(--kh-border)!important;
+  border-radius:var(--kh-r-sm)!important;
+}
+.page-funds .date-rule .rule-icon{width:20px!important;height:20px!important;font-size:9px!important}
+.page-funds .date-rule b{font-size:8px!important;white-space:nowrap!important}
+.page-funds .date-rule small{font-size:7px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+
+/* Turn grouped filter wrappers into transparent layout containers. */
+.page-funds .control-block:not(.benchmarks-block),
+.page-funds .split-controls{display:contents!important}
+.page-funds .control-block:not(.benchmarks-block)>.block-title{display:none!important}
+.page-funds .control-rail label{min-width:0!important;margin:0!important;align-self:stretch!important}
+.page-funds .control-rail label>span{display:block!important;margin:0 0 2px!important;font-size:7.5px!important;line-height:1.1!important;color:var(--kh-muted)!important;font-weight:700!important}
+.page-funds .control-rail input,.page-funds .control-rail select{width:100%!important;height:30px!important;min-height:30px!important;padding:0 7px!important;font-size:9px!important;border-radius:var(--kh-r-sm)!important}
+.page-funds .search-control>div{height:30px!important}
+.page-funds .search-control input{height:28px!important}
+.page-funds .search-control b{padding-inline:6px!important;font-size:14px!important}
+
+/* Exact placement by real element IDs. */
+.page-funds .control-rail label:has(#h){grid-column:7!important;grid-row:1/3!important;padding-top:0!important}
+.page-funds .control-rail label:has(#q){grid-column:8/10!important;grid-row:1/3!important}
+.page-funds .control-rail label:has(#cat){grid-column:10!important;grid-row:1/3!important}
+.page-funds .control-rail label:has(#mgr){grid-column:11!important;grid-row:1/3!important}
+.page-funds .control-rail label:has(#score){grid-column:12!important;grid-row:1/2!important}
+.page-funds .control-rail label:has(#viewSort){grid-column:1!important;grid-row:2!important}
+/* Keep SmartScore and sort readable by moving them into a compact lower row on narrow widths. */
+
+/* Benchmarks — deliberate horizontal evidence rail */
+.page-funds .benchmarks-block{
+  grid-column:1/-1!important;grid-row:3!important;
+  min-width:0!important;margin:0!important;padding:6px 2px 0!important;
+  border-top:1px solid var(--kh-border)!important;
+}
+.page-funds .benchmarks-block .block-title{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  min-height:14px!important;margin:0 0 4px!important;
+}
+.page-funds .benchmarks-block .block-title span{font-size:9px!important}
+.page-funds .benchmarks-block .block-title small{font-size:7px!important}
+.page-funds .bench-list{
+  display:flex!important;gap:5px!important;align-items:stretch!important;
+  overflow-x:auto!important;overflow-y:hidden!important;
+  padding:0 0 3px!important;margin:0!important;
+  scrollbar-width:thin!important;
+}
+.page-funds .benchcard{
+  flex:0 0 205px!important;
+  min-width:205px!important;
+  min-height:56px!important;
+  padding:6px 8px!important;
+  display:grid!important;
+  grid-template-columns:23px minmax(0,1fr)!important;
+  column-gap:6px!important;
+  align-items:center!important;
+  border-radius:var(--kh-r-sm)!important;
+  box-shadow:none!important;
+}
+.page-funds .benchcard .benchicon{width:23px!important;height:23px!important;display:grid!important;place-items:center!important;font-size:9px!important}
+.page-funds .benchcard .benchbody{min-width:0!important}
+.page-funds .benchcard .benchname{font-size:9px!important;line-height:1.2!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.page-funds .benchcard .type-tag{font-size:7px!important}
+.page-funds .benchcard .benchval{font-size:9px!important;font-weight:800!important;line-height:1.2!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.page-funds .benchcard .benchdate,.page-funds .benchcard .benchref,.page-funds .benchcard .unit-warning,.page-funds .benchcard .benchpick{font-size:7px!important;line-height:1.25!important;white-space:normal!important}
+.page-funds .benchcard .benchpick{margin:2px 0 0!important}
+.page-funds .benchcard .benchpick input{width:auto!important;height:auto!important;min-height:0!important}
+.page-funds .rail-message{margin:3px 0 0!important;font-size:7px!important;line-height:1.3!important}
+
+/* 5. Results header — table becomes the visual anchor */
+.page-funds .results-head{margin:0 0 7px!important;padding:0 2px!important;align-items:end!important}
+.page-funds .results-title span{font-size:8px!important}
+.page-funds .results-title h2{font-size:20px!important;margin:2px 0!important}
+.page-funds .results-title p,.page-funds #resultInfo,.page-funds #horizonMeta{font-size:9px!important;line-height:1.4!important}
+.page-funds .active-filter-label{padding:5px 8px!important;font-size:8px!important;box-shadow:none!important}
+
+/* 6. KPI strip — one band, not five cards */
+.page-funds .kpis{
+  display:flex!important;gap:0!important;margin:0 0 8px!important;padding:0!important;
+  overflow:hidden!important;background:var(--kh-surface-2)!important;
+  border:1px solid var(--kh-border)!important;border-radius:var(--kh-r-sm)!important;
+}
+.page-funds .kpi{
+  flex:1 1 0!important;min-width:0!important;min-height:50px!important;
+  padding:6px 9px!important;border:0!important;border-inline-start:1px solid var(--kh-border)!important;
+  border-radius:0!important;background:transparent!important;box-shadow:none!important;
+}
+.page-funds .kpi:first-child{border-inline-start:0!important}
+.page-funds .kpi:before{display:none!important}
+.page-funds .kpi span{font-size:7px!important}
+.page-funds .kpi b{font-size:13px!important;margin-top:1px!important}
+.page-funds .kpi em{font-size:7px!important}
+.page-funds .insight-ribbon{display:none!important}
+
+/* 7. Table — strongest object on the page */
+.page-funds .table-frame{
+  border-radius:var(--kh-r-md)!important;
+  border:1px solid var(--kh-border)!important;
+  box-shadow:none!important;
+}
+.page-funds .table-meta{
+  min-height:36px!important;padding:6px 10px!important;gap:8px!important;
+  background:var(--kh-surface)!important;
+  border-bottom:1px solid var(--kh-border)!important;
+}
+.page-funds .table-meta b{font-size:9px!important}
+.page-funds .table-meta-right{font-size:7px!important}
+.page-funds .evidence-strip{gap:5px 9px!important;margin-top:2px!important;padding:5px 0 0!important;font-size:7px!important}
+.page-funds .table-scroll{max-height:calc(100vh - 300px)!important;min-height:380px!important}
+.page-funds table{min-width:1100px!important;font-size:10px!important}
+.page-funds thead th{height:38px!important;padding:6px 8px!important;font-size:7px!important}
+.page-funds tbody td{height:54px!important;padding:6px 8px!important;font-size:9px!important}
+.page-funds tbody td:nth-child(2) b{font-size:10px!important}
+.page-funds .return-col,.page-funds tbody td:nth-child(4) strong{font-size:13px!important}
+.page-funds .smart-score{min-width:92px!important;gap:5px!important}
+.page-funds .smart-score-ring{width:32px!important;height:32px!important;font-size:9px!important}
+.page-funds .smart-score-copy em{font-size:9px!important}
+.page-funds .confidence,.page-funds .rating,.page-funds .verdict,.page-funds .qual-pill{min-height:20px!important;padding:2px 6px!important;font-size:7px!important}
+.page-funds .row-signal{font-size:7px!important;margin-top:2px!important}
+.page-funds .fund-col a{max-width:210px!important}
+
+/* Sticky fund name while scanning the wide table */
+.page-funds thead th.fund-col{position:sticky!important;right:0!important;z-index:4!important;background:var(--kh-surface-2)!important;box-shadow:-6px 0 10px rgba(12,35,40,.035)!important}
+.page-funds tbody td:nth-child(2){position:sticky!important;right:0!important;z-index:3!important;background:var(--kh-surface)!important;box-shadow:-6px 0 10px rgba(12,35,40,.025)!important}
+.page-funds tbody tr:nth-child(even) td:nth-child(2){background:var(--kh-surface-2)!important}
+.page-funds tbody tr:hover td:nth-child(2){background:var(--kh-surface-3)!important}
+
+/* Footer remains a quiet close */
+.page-funds .funds-footer{margin-top:16px!important}
+
+@media(max-width:1100px){
+  .page-funds .control-rail{
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    grid-template-rows:32px 42px 42px auto!important;
+  }
+  .page-funds .rail-head{grid-column:1/3!important;grid-row:1!important}
+  .page-funds .date-rule{grid-column:3/7!important;grid-row:1!important}
+  .page-funds .control-rail label:has(#h){grid-column:1!important;grid-row:2!important}
+  .page-funds .control-rail label:has(#q){grid-column:2/4!important;grid-row:2!important}
+  .page-funds .control-rail label:has(#cat){grid-column:4!important;grid-row:2!important}
+  .page-funds .control-rail label:has(#mgr){grid-column:5!important;grid-row:2!important}
+  .page-funds .control-rail label:has(#score){grid-column:6!important;grid-row:2!important}
+  .page-funds .control-rail label:has(#viewSort){grid-column:1!important;grid-row:3!important}
+  .page-funds .benchmarks-block{grid-row:4!important}
+  .page-funds .opp-grid{grid-template-columns:1fr 1fr!important}
+  .page-funds .opp-card.hero{grid-column:1/-1!important}
+  .page-funds .table-scroll{max-height:none!important}
+}
+
+@media(max-width:760px){
+  .page-funds .funds-shell{padding-inline:12px!important}
+  .page-funds .market-strip{display:flex!important;overflow-x:auto!important;white-space:nowrap!important;margin-bottom:14px!important}
+  .page-funds .market-lead,.page-funds .market-item{flex:0 0 auto!important;min-width:125px!important}
+  .page-funds .hero-zone{margin-bottom:12px!important}
+  .page-funds .hero-copy h1{font-size:28px!important}
+  .page-funds .hero-copy p{font-size:11px!important}
+  .page-funds .opp-head{display:block!important}
+  .page-funds .opp-regime{margin-top:6px!important}
+  .page-funds .opp-grid{display:block!important}
+  .page-funds .opp-card{min-height:0!important;padding:8px 10px!important;border-top:1px solid var(--kh-border)!important}
+  .page-funds .opp-card+.opp-card{border-inline-start:0!important}
+  .page-funds .opp-card.hero{border-top:0!important}
+  .page-funds .leader-strip .leader{flex-basis:180px!important}
+  .page-funds .control-rail{display:block!important;padding:9px!important}
+  .page-funds .rail-head{margin-bottom:6px!important;padding:0!important}
+  .page-funds .date-rule{margin-bottom:7px!important}
+  .page-funds .control-block:not(.benchmarks-block){display:block!important}
+  .page-funds .control-block:not(.benchmarks-block)>label,.page-funds .split-controls>label{display:block!important;margin-bottom:6px!important}
+  .page-funds .benchmarks-block{margin-top:7px!important;padding-top:7px!important}
+  .page-funds .benchcard{flex-basis:195px!important;min-width:195px!important}
+  .page-funds .results-head{display:block!important}
+  .page-funds .results-actions{margin-top:5px!important}
+  .page-funds .kpis{overflow-x:auto!important}
+  .page-funds .kpi{flex:0 0 130px!important}
+  .page-funds .table-scroll{overflow:visible!important;min-height:0!important}
+  .page-funds table,.page-funds thead,.page-funds tbody{display:block!important;width:100%!important;min-width:0!important}
+  .page-funds thead{display:none!important}
+  .page-funds tbody tr{display:block!important;margin:0 0 8px!important;border:1px solid var(--kh-border)!important;border-radius:var(--kh-r-md)!important;overflow:hidden!important;background:var(--kh-surface)!important}
+  .page-funds tbody tr td{display:none!important;height:auto!important;border:0!important;padding:0!important}
+  .page-funds tbody tr td:nth-child(1),.page-funds tbody tr td:nth-child(2),.page-funds tbody tr td:nth-child(4),.page-funds tbody tr td:nth-child(6),.page-funds tbody tr td:nth-child(9),.page-funds tbody tr td:nth-child(11){display:block!important}
+  .page-funds tbody tr td:nth-child(1){position:absolute!important;top:10px!important;right:10px!important;width:auto!important;font:800 9px var(--kh-num)!important}
+  .page-funds tbody tr td:nth-child(2){position:static!important;box-shadow:none!important;padding:10px 32px 8px 10px!important;background:transparent!important}
+  .page-funds tbody tr td:nth-child(2) b{font-size:12px!important}
+  .page-funds tbody tr td:nth-child(4),.page-funds tbody tr td:nth-child(6),.page-funds tbody tr td:nth-child(9){display:inline-flex!important;vertical-align:top!important;width:33.333%!important;padding:7px 8px!important;flex-direction:column!important;gap:2px!important;border-top:1px solid var(--kh-border)!important}
+  .page-funds tbody tr td:nth-child(4)::before{content:'العائد'}
+  .page-funds tbody tr td:nth-child(6)::before{content:'SmartScore'}
+  .page-funds tbody tr td:nth-child(9)::before{content:'الثقة'}
+  .page-funds tbody tr td:nth-child(4)::before,.page-funds tbody tr td:nth-child(6)::before,.page-funds tbody tr td:nth-child(9)::before{font:600 7px var(--kh-font)!important;color:var(--kh-muted)!important}
+  .page-funds tbody tr td:nth-child(11){padding:7px 10px!important;border-top:1px solid var(--kh-border)!important;font-size:8px!important}
+  .page-funds tbody tr td:nth-child(11)::before{content:'الإشارة';display:block;margin-bottom:2px;font-weight:800}
+  .page-funds tbody tr.funds-row-expanded td:nth-child(3),.page-funds tbody tr.funds-row-expanded td:nth-child(5),.page-funds tbody tr.funds-row-expanded td:nth-child(7),.page-funds tbody tr.funds-row-expanded td:nth-child(8),.page-funds tbody tr.funds-row-expanded td:nth-child(10){display:flex!important;justify-content:space-between!important;gap:8px!important;padding:7px 10px!important;border-top:1px solid var(--kh-border)!important;font-size:8px!important}
+  .page-funds thead th.fund-col,.page-funds tbody td:nth-child(2){position:static!important;box-shadow:none!important}
+}
+
+@media(max-width:430px){
+  .page-funds .kpi{flex-basis:125px!important}
+  .page-funds .benchcard{flex-basis:185px!important;min-width:185px!important}
+}
