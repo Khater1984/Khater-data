@@ -18,16 +18,10 @@ const META={
 const START="2016-01-01";
 const GROUPS={value:["usd_egp_mid","gold_egp_oz","silver_egp_oz","egx30_close","spy_egp","qqq_egp"],policy:["purchasing","deposit","tbill"]};
 
-const state={group:"value",range:"all",lines:{},detailChart:null,detailSeries:null,series:{}};
+const state={group:"value",range:"all",lines:{},detailChart:null,series:{}};
 const $=id=>document.getElementById(id);
 function path(key){const line=toLine(state.series,START,100,key);return line.length?rebase(line):[]}
 function lastOf(key){const p=path(key);return p.length?p.at(-1):null}
-function card(key,warn=false){
- const raw=toLine(state.series,START,100,key),p=raw.at(-1),start=raw[0]?.time;
- if(!p)return `<button class="tile" data-k="${key}" type="button"><div class="kicker">${LABELS[key]}</div><div class="v">البيانات غير مكتملة للحساب</div></button>`;
- const last=rebase(raw).at(-1).value,chg=last-100,pill=warn||chg<0?"pill dn":"pill up",extra=warn?" — تآكل القيمة":"",startNote=start&&start>"2016-01-07"?` · البداية الفعلية ${start}`:"";
- return `<button class="tile" data-k="${key}" type="button"><div class="kicker">${LABELS[key]}</div><div class="v">${en(last,1)} ج.م</div><span class="${pill}">${chg>=0?"+":""}${en(chg,1)}%${extra}</span><div class="asof">آخر مشاهدة ${p.time}${startNote}</div></button>`;
-}
 function detailMethod(key){const m=META[key];return `${m.text} <a href="${m.href}" target="_blank" rel="noopener">${m.link}</a>`}
 function openDetail(key){
  const raw=toLine(state.series,START,100,key),modal=$("modal");
@@ -51,7 +45,13 @@ function render(){
   const s=chart.addLineSeries({color:COLORS[key],lineWidth:2.3,priceLineVisible:false,lastValueVisible:true});
   s.setData(data);state.lines[key]=s;
  });
+ renderLegend();
  chart.timeScale().setVisibleRange(visibleRange());
+}
+function renderLegend(){
+ const host=$("assetLegend");if(!host)return;
+ host.innerHTML=GROUPS[state.group].filter(k=>state.lines[k]).map(k=>`<button type="button" class="legend-item" data-k="${k}"><span class="legend-dot" style="background:${COLORS[k]}"></span><span>${LABELS[k]}</span></button>`).join("");
+ host.querySelectorAll(".legend-item").forEach(b=>b.onclick=()=>openDetail(b.dataset.k));
 }
 function visibleRange(){const end="2026-12-31";return state.range==="all"?{from:START,to:end}:state.range==="5"?{from:"2021-01-01",to:end}:{from:"2024-01-01",to:end}}
 
@@ -61,19 +61,23 @@ window.__mapChart=chart;
 new ResizeObserver(()=>chart.applyOptions({width:chartEl.clientWidth,height:440})).observe(chartEl);
 
 try{
-const packed=await loadEngine();state.series=packed.series;await mountPurchasingAccordion($("pp-root"));
-$("assets").innerHTML=["usd_egp_mid","gold_egp_oz","silver_egp_oz","spy_egp","qqq_egp","egx30_close"].map(k=>card(k)).join("");
-$("policy").innerHTML=card("purchasing",true)+card("deposit")+card("tbill");
-document.querySelectorAll(".tile").forEach(t=>t.onclick=()=>openDetail(t.dataset.k));
-$("mclose").onclick=()=>$("modal").classList.remove("on");$("modal").addEventListener("click",e=>{if(e.target.id==="modal")e.currentTarget.classList.remove("on")});
-const cash=lastOf("purchasing");if(cash)$("pound").textContent=`100 جنيه نقداً في يناير 2016 أصبحت حوالي ${en(cash.value,1)} جنيهاً من القوة الشرائية في ${cash.time} بسبب التضخم المتراكم.`;
-chart.subscribeCrosshairMove(param=>{const tip=$("tip");if(!param.time){tip.style.display="none";return}const rows=Object.entries(state.lines).map(([k,s])=>{const v=param.seriesData.get(s);return v?`<div>${LABELS[k]}: <b>${en(v.value,1)} ج.م</b></div>`:"";}).join("");tip.style.display="block";tip.innerHTML=`<div class="muted">${param.time}</div>${rows}`});
-document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".seg button").forEach(x=>x.classList.remove("on"));b.classList.add("on");state.group=b.dataset.g;render()});
-document.querySelectorAll(".ranges button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".ranges button").forEach(x=>x.classList.remove("on"));b.classList.add("on");state.range=b.dataset.r;render()});
-chart.applyOptions({width:chartEl.clientWidth,height:440});render();
-const st=$("mapStatus");if(st){st.textContent="";st.className="";st.hidden=true;}
+ const packed=await loadEngine();state.series=packed.series;await mountPurchasingAccordion($("pp-root"));
+ const cash=lastOf("purchasing");
+ if(cash)$("pound").textContent=`100 جنيه نقداً في يناير 2016 أصبحت حوالي ${en(cash.value,1)} جنيهاً من القوة الشرائية في ${cash.time} بسبب التضخم المتراكم.`;
+ chart.subscribeCrosshairMove(param=>{
+  const tip=$("tip");
+  if(!param.time){tip.style.display="none";return}
+  const rows=Object.entries(state.lines).map(([k,s])=>{const v=param.seriesData.get(s);return v?`<div>${LABELS[k]}: <b>${en(v.value,1)} ج.م</b></div>`:"";}).join("");
+  tip.style.display="block";tip.innerHTML=`<div class="muted">${param.time}</div>${rows}`;
+ });
+ document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".seg button").forEach(x=>x.classList.remove("on"));b.classList.add("on");state.group=b.dataset.g;render()});
+ document.querySelectorAll(".ranges button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".ranges button").forEach(x=>x.classList.remove("on"));b.classList.add("on");state.range=b.dataset.r;render()});
+ $("mclose").onclick=()=>$("modal").classList.remove("on");
+ $("modal").addEventListener("click",e=>{if(e.target.id==="modal")e.currentTarget.classList.remove("on")});
+ chart.applyOptions({width:chartEl.clientWidth,height:440});render();
+ const st=$("mapStatus");if(st){st.textContent="";st.className="";st.hidden=true;}
 }catch(err){
-const st=$("mapStatus");
-if(st){st.className="error-state";st.textContent="تعذر تحميل المسارات: "+(err&&err.message?err.message:String(err));}
-console.error(err);
+ const st=$("mapStatus");
+ if(st){st.className="error-state";st.textContent="تعذر تحميل المسارات: "+(err&&err.message?err.message:String(err));}
+ console.error(err);
 }
