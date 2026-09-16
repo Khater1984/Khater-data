@@ -6,10 +6,11 @@ const $=id=>document.getElementById(id),fmt=(n,d=1)=>Number.isFinite(Number(n))?
 const esc=v=>String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\\':'&#39;'}[c]));
 const colors=()=>window.KHATER_THEME?.series||{};
 let data=null,model=null;
+function toChartRows(rows){return(Array.isArray(rows)?rows:[]).map(r=>({date:String(r.date||r.ts_date||'').slice(0,10),value:Number(r.value)})).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r.date)&&Number.isFinite(r.value));}
 function pathPoints(rows,w,h,pad,minY,maxY){const xs=rows.map(r=>new Date(r.date).getTime()),minX=Math.min(...xs),maxX=Math.max(...xs),spanX=Math.max(1,maxX-minX),spanY=Math.max(1e-9,maxY-minY);return rows.map(r=>`${pad+(new Date(r.date).getTime()-minX)/spanX*(w-pad*2)},${h-pad-(r.value-minY)/spanY*(h-pad*2)}`).join(' ')}
 function renderLineChart(hostId,seriesList){
- const host=$(hostId);if(!host)return;const usable=seriesList.filter(s=>Array.isArray(s.rows)&&s.rows.length);if(!usable.length){host.innerHTML='<div class="chart-empty">لا توجد بيانات متاحة للرسم.</div>';return;}
- const rows=usable.flatMap(s=>s.rows),w=1000,h=360,pad=38,ys=rows.map(r=>Number(r.value)).filter(Number.isFinite),minY=Math.min(...ys),maxY=Math.max(...ys),palette=[colors().usd_egp_mid||'#087f63',colors().gold_egp_oz||'#a9652b',colors().qqq_egp||'#3d6b8a',colors().tbill||'#9a7112',colors().silver_egp_oz||'#607477'];
+ const host=$(hostId);if(!host)return;const usable=seriesList.map(s=>({label:s.label,rows:toChartRows(s.rows)})).filter(s=>s.rows.length);if(!usable.length){host.innerHTML='<div class="chart-empty">لا توجد بيانات متاحة للرسم.</div>';return;}
+ const rows=usable.flatMap(s=>s.rows),w=1000,h=360,pad=38,ys=rows.map(r=>r.value).filter(Number.isFinite),minY=Math.min(...ys),maxY=Math.max(...ys),palette=[colors().usd_egp_mid||'#087f63',colors().gold_egp_oz||'#a9652b',colors().qqq_egp||'#3d6b8a',colors().tbill||'#9a7112',colors().silver_egp_oz||'#607477'];
  host.innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="رسم بياني اقتصادي"><line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}" stroke="var(--shell-border)"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${h-pad}" stroke="var(--shell-border)"/>${usable.map((s,i)=>`<polyline fill="none" stroke="${palette[i%palette.length]}" stroke-width="3" points="${pathPoints(s.rows,w,h,pad,minY,maxY)}"/>`).join('')}</svg><div class="chart-legend">${usable.map((s,i)=>`<span><i class="dot-${i%5}"></i>${esc(s.label)}</span>`).join('')}</div>`;
 }
 function renderHero(){
@@ -22,7 +23,7 @@ function renderHero(){
  $('metric-inflation-note').textContent=r.inflationTrend==null?'مقارنة سابقة غير مكتملة':`${r.inflationTrend>=0?'+':''}${fmt(r.inflationTrend,1)} pp مقابل الـ12 شهر السابقة`;
  $('metric-margin-note').textContent='أذون 91 يومًا − تضخم 12 شهرًا';$('metric-curve-note').textContent='أذون 364 يومًا − أذون 91 يومًا';$('metric-spread-note').textContent='أذون 91 يومًا − وديعة 6–12 شهر';
 }
-function renderRates(){renderLineChart('rates-chart',model.rates.map(s=>({label:s.label,rows:svc.monthlySnapshots(s.rows,48).map(r=>({date:r.date,value:Number(r.value)}))})));}
+function renderRates(){renderLineChart('rates-chart',model.rates.map(s=>({label:s.label,rows:s.rows})));}
 function renderInflation(){renderLineChart('inflation-chart',[{label:'التضخم العام',rows:model.inflation.headline},{label:'التضخم الأساسي',rows:model.inflation.core}]);}
 function renderChanges(){const labels={usd_egp_mid:'الدولار',gold_egp_oz:'الذهب',egx30_close:'EGX30',spy_egp:'S&P 500'};const rows=model.transmission.filter(x=>x.change).map(x=>({label:labels[x.key]||x.label,value:x.change.value,date:x.change.date}));$('change-grid').innerHTML=rows.length?rows.map(x=>`<article class="change-item"><span>${esc(x.label)}</span><strong class="${x.value>=0?'up':'down'}">${x.value>=0?'+':''}${fmt(x.value,1)}%</strong><small>${esc(x.date||'—')}</small></article>`).join(''):'<div class="chart-empty">لا توجد تغيرات شهرية كافية لهذه السلاسل.</div>';}
 function renderRateTable(){$('rate-table-body').innerHTML=model.rates.map(x=>`<tr><th>${esc(x.label)}</th><td class="num">${fmt(x.record?.value,2)}</td><td>${esc(x.record?.ts_date||'—')}</td></tr>`).join('');}
