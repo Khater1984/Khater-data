@@ -36,8 +36,9 @@
     var caution = css('--shell-caution', '#9a7112');
     var info = css('--shell-info', '#3d6b8a');
     var fontAr = css('--font-arabic', 'Cairo, sans-serif').replace(/^[\"']|[\"']$/g, '');
+    var chartFontSize = Math.round(parseFloat(css('--text-small', '12.5'))) || 12;
 
-    var palette = [green, gold, info, caution, muted, red, '#14B891', '#5D6E9A'];
+    var palette = [green, gold, info, caution, muted, red];
 
     return {
       color: {
@@ -90,11 +91,27 @@
         var color = this.directionColor(direction);
         return rgbaFromHex(color, Number.isFinite(Number(alpha)) ? Number(alpha) : 0.12);
       },
+      seriesColor: function (key) {
+        if (key && this.series[key]) return this.series[key];
+        return green;
+      },
+      paletteAt: function (index) {
+        var i = Number(index) || 0;
+        return palette[((i % palette.length) + palette.length) % palette.length];
+      },
+      svgAppearance: function () {
+        return {
+          line: this.color.chartPrimary,
+          fill: this.fillUp,
+          axis: this.color.chartGrid,
+          width: 2.5
+        };
+      },
       chartLayout: function () {
         return {
           background: { color: surface },
           textColor: ink,
-          fontSize: 12,
+          fontSize: chartFontSize,
           fontFamily: fontAr,
           attributionLogo: false
         };
@@ -117,8 +134,44 @@
         return {
           color: ink,
           fontFamily: fontAr,
-          fontSize: 12
+          fontSize: chartFontSize
         };
+      },
+      chartCrosshair: function () {
+        var faint = rgbaFromHex(green, 0.28);
+        return {
+          vertLine: { color: faint, width: 1, style: 2, labelBackgroundColor: green },
+          horzLine: { color: faint, width: 1, style: 2, labelBackgroundColor: green }
+        };
+      },
+      lightweightChartOptions: function (overrides) {
+        var scale = this.chartScale();
+        var extra = overrides || {};
+        var base = {
+          layout: this.chartLayout(),
+          grid: this.chartGrid(),
+          rightPriceScale: {
+            borderColor: scale.borderColor,
+            textColor: scale.textColor,
+            scaleMargins: { top: 0.08, bottom: 0.08 },
+            minimumWidth: 72,
+            visible: true
+          },
+          timeScale: {
+            borderColor: scale.borderColor,
+            rightOffset: 4,
+            barSpacing: 8,
+            minBarSpacing: 3
+          },
+          localization: { locale: 'en-US' },
+          crosshair: this.chartCrosshair(),
+          attributionLogo: false
+        };
+        var key;
+        for (key in extra) {
+          if (Object.prototype.hasOwnProperty.call(extra, key)) base[key] = extra[key];
+        }
+        return base;
       },
       chartBorder: border,
       scoreColor: function (v) {

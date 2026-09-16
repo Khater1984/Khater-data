@@ -4,14 +4,16 @@
 const svc=window.KHATER_DATA&&window.KHATER_DATA.macro;if(!svc)throw new Error('macro-screen.js requires macro-service.js');
 const $=id=>document.getElementById(id),fmt=(n,d=1)=>Number.isFinite(Number(n))?Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:d}):'—';
 const esc=v=>String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\\':'&#39;'}[c]));
-const colors=()=>window.KHATER_THEME?.series||{};
+const theme=()=>window.KHATER_THEME||{};
 let data=null,model=null;
 function toChartRows(rows){return(Array.isArray(rows)?rows:[]).map(r=>({date:String(r.date||r.ts_date||'').slice(0,10),value:Number(r.value)})).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r.date)&&Number.isFinite(r.value));}
 function pathPoints(rows,w,h,pad,minY,maxY){const xs=rows.map(r=>new Date(r.date).getTime()),minX=Math.min(...xs),maxX=Math.max(...xs),spanX=Math.max(1,maxX-minX),spanY=Math.max(1e-9,maxY-minY);return rows.map(r=>`${pad+(new Date(r.date).getTime()-minX)/spanX*(w-pad*2)},${h-pad-(r.value-minY)/spanY*(h-pad*2)}`).join(' ')}
 function renderLineChart(hostId,seriesList){
  const host=$(hostId);if(!host)return;const usable=seriesList.map(s=>({label:s.label,rows:toChartRows(s.rows)})).filter(s=>s.rows.length);if(!usable.length){host.innerHTML='<div class="chart-empty">لا توجد بيانات متاحة للرسم.</div>';return;}
- const rows=usable.flatMap(s=>s.rows),w=1000,h=360,pad=38,ys=rows.map(r=>r.value).filter(Number.isFinite),minY=Math.min(...ys),maxY=Math.max(...ys),palette=[colors().usd_egp_mid||'#087f63',colors().gold_egp_oz||'#a9652b',colors().qqq_egp||'#3d6b8a',colors().tbill||'#9a7112',colors().silver_egp_oz||'#607477'];
- host.innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="رسم بياني اقتصادي"><line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}" stroke="var(--shell-border)"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${h-pad}" stroke="var(--shell-border)"/>${usable.map((s,i)=>`<polyline fill="none" stroke="${palette[i%palette.length]}" stroke-width="3" points="${pathPoints(s.rows,w,h,pad,minY,maxY)}"/>`).join('')}</svg><div class="chart-legend">${usable.map((s,i)=>`<span><i class="dot-${i%5}"></i>${esc(s.label)}</span>`).join('')}</div>`;
+ const rows=usable.flatMap(s=>s.rows),w=1000,h=360,pad=38,ys=rows.map(r=>r.value).filter(Number.isFinite),minY=Math.min(...ys),maxY=Math.max(...ys),t=theme();
+ if(!t.paletteAt||!t.color||!t.color.chartGrid)throw new Error('macro-screen.js requires platform-theme.js');
+ const axis=t.color.chartGrid;
+ host.innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="رسم بياني اقتصادي"><line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}" stroke="${axis}"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${h-pad}" stroke="${axis}"/>${usable.map((s,i)=>`<polyline fill="none" stroke="${t.paletteAt(i)}" stroke-width="3" points="${pathPoints(s.rows,w,h,pad,minY,maxY)}"/>`).join('')}</svg><div class="chart-legend">${usable.map((s,i)=>`<span><i style="background:${t.paletteAt(i)}"></i>${esc(s.label)}</span>`).join('')}</div>`;
 }
 function renderHero(){
  const r=svc.readout(data),range=model.range;

@@ -29,6 +29,9 @@ jobs:
       - name: Typography contract (Cairo only)
         run: python scripts/verify_typography.py
 
+      - name: Chart identity
+        run: python scripts/verify_chart_identity.py
+
       - name: Frontend production contract
         run: python scripts/verify_frontend_production_contract.py
 

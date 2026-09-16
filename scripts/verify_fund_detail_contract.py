@@ -10,6 +10,7 @@ REQUIRED_CSS = [
     "css/platform-shell.css",
 ]
 REQUIRED_JS = [
+    "js/platform-theme.js",
     "js/data/supabase-client.js",
     "js/data/fund-service.js",
     "js/fund-core.js",
