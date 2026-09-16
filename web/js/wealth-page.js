@@ -11,11 +11,12 @@ const state={group:'value',range:'all'};
 function visible(row){
   if(state.range==='all')return true;
   const years=state.range==='5'?5:2;
-  const end=new Date('2026-12-31T00:00:00');
+  const latest=snapshot?.latestDate||new Date().toISOString().slice(0,10);
+  const end=new Date(`${latest}T00:00:00`);
   const start=new Date(end);start.setFullYear(start.getFullYear()-years);
   return new Date(row.date+'T00:00:00')>=start;
 }
-function lineColor(key){return COLORS[key]||'#6ec3d4';}
+function lineColor(key){return COLORS[key]||'#087f63';}
 function render(){
   if(!snapshot||!chart)return;
   Object.values(lines).forEach(s=>chart.removeSeries(s));lines={};
@@ -45,22 +46,19 @@ function setupChart(){
   });
 }
 function wire(){
-  document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.seg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');state.group=b.dataset.g;render();renderLegend();}));
-  document.querySelectorAll('.ranges button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.ranges button').forEach(x=>x.classList.remove('on'));b.classList.add('on');state.range=b.dataset.r;render();renderLegend();}));
-  $('mclose')?.addEventListener('click',()=>{$('modal').hidden=true;$('modal').classList.remove('on')});
-  $('modal')?.addEventListener('click',e=>{if(e.target.id==='modal'){e.currentTarget.hidden=true;e.currentTarget.classList.remove('on')}});
+  document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.seg button').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-selected','false'));b.classList.add('on');b.setAttribute('aria-selected','true');state.group=b.dataset.g;render();renderLegend();}));
+  document.querySelectorAll('.ranges button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.ranges button').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.ranges button').forEach(x=>x.setAttribute('aria-selected','false'));b.classList.add('on');b.setAttribute('aria-selected','true');state.range=b.dataset.r;render();}));
 }
 function status(){
   const dates=[...snapshot.assets,...snapshot.money,...snapshot.rates].map(x=>x.date).filter(Boolean).sort();
   $('wealth-stamp')?.replaceChildren(document.createTextNode(`آخر مشاهدة · ${dates.at(-1)||'غير متاح'}`));
   $('wealth-coverage')?.replaceChildren(document.createTextNode(`${snapshot.coverage.assets} من ${snapshot.coverage.totalAssets} أصول متاحة`));
 }
-
 window.addEventListener('DOMContentLoaded',async()=>{
   try{
     snapshot=await window.KHATER_DATA.wealth.snapshot();
     setupChart();wire();status();render();renderLegend();
-    await mountPurchasingAccordion($('pp-root'));
+    mountPurchasingAccordion($('pp-root'),snapshot);
     const cash=snapshot.money?.[0]?.value;
     if(cash!=null)$('pound').textContent=`القوة الشرائية للمؤشر النقدي تبدأ من 100 وتتحرك مع التضخم الشهري الفعلي الموجود في قاعدة البيانات. آخر قراءة: ${fmt(cash)}.`;
   }catch(error){
