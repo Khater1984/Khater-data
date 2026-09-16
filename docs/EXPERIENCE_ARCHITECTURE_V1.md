@@ -1,6 +1,6 @@
 # Khater Experience Architecture V1
 
-Status: implemented foundation on branch `experience-v1-rebuild`.
+Status: live product shell on `main` after retiring the Areas/Heatmap surface for a clean rebuild.
 
 ## Product rule
 
@@ -9,15 +9,18 @@ The frontend is an investment-intelligence experience, not a collection of equal
 ## Primary navigation
 
 1. **الآن** — live/current market brief and hub.
-2. **قيمة فلوسي** — signature outcome experience.
+2. **قيمة ثروتي** — signature outcome experience.
 3. **الاقتصاد** — macro context / Why layer.
-4. **المناطق** — category discovery / Where layer.
-5. **الصناديق** — searchable investment universe / investigation layer.
+4. **الصناديق** — searchable investment universe / investigation layer.
 
 Secondary surfaces:
 
 - **Fund DNA** — entity-level investigation, not a primary tab.
 - **المنهج** — methodology, audit and transparency reference, not a primary tab.
+
+Deferred:
+
+- **المناطق** — retired from the live shell. It will be rebuilt from scratch under the unified Nile identity. No heatmap compatibility route remains.
 
 ## Home contract
 
@@ -30,7 +33,7 @@ Above the fold:
 - one regime judgement;
 - one explanatory sentence;
 - 3–4 dated market signals;
-- three intent branches: Value of My Money, Economy, Areas;
+- intent branches: Value of My Money, Economy, Funds;
 - a clear route into Funds without presenting it as the default answer.
 
 Home is a hub, not a portal full of links.
