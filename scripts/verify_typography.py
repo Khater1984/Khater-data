@@ -20,11 +20,22 @@ FORBIDDEN_RE = [
     re.compile(r"font-family\s*:\s*[^;]*\bSegoe UI\b", re.I),
 ]
 PAGE_CSS = [
-    "page-funds.css", "page-funds-layout.css", "page-map.css",
-    "page-macro.css", "brief-page.css", "fund-detail.css", "opportunity-layer.css",
-    "accordion.css", "macro-intelligence.css", "category-context.css",
-    "page-categories.css",
+    "page-funds.css", "page-funds-layout.css", "page-funds-responsive-v2.css",
+    "page-map.css", "page-macro.css", "brief-page.css", "fund-detail.css",
+    "opportunity-layer.css", "accordion.css", "macro-intelligence.css",
+    "category-context.css", "page-categories.css", "now.css", "page-wealth.css",
+    "header.css",
 ]
+H1_BIND_PAGES = [
+    "now.css", "page-wealth.css", "page-categories.css", "page-macro.css",
+    "fund-detail.css", "page-funds-responsive-v2.css",
+]
+WEIGHT_RX = re.compile(r"font-weight\s*:\s*([0-9]+)")
+H1_SIZE_RX = re.compile(
+    r"(?:^|[},\s])([.#\w\-]*h1[^{]*)\{([^}]*)\}",
+    re.I,
+)
+FONT_SIZE_RX = re.compile(r"font-size\s*:\s*([^;]+)", re.I)
 
 errors = []
 mono_hits = 0
@@ -58,6 +69,12 @@ for path in css_files + js_files + html_files:
     if re.search(r'style\s*=\s*["\'][^"\']*font-family', text, re.I):
         inline_hits += 1
         errors.append(f"{rel}: inline font-family style detected")
+    if path.suffix == ".css":
+        for i, line in enumerate(text.splitlines(), 1):
+            for m in WEIGHT_RX.finditer(line):
+                weight = int(m.group(1))
+                if weight > 800:
+                    errors.append(f"{rel}:{i} Cairo max weight is 800, found font-weight:{weight}")
 
 for name in PAGE_CSS:
     path = css_dir / name
@@ -68,6 +85,22 @@ for name in PAGE_CSS:
         if re.search(r"font-family\s*:", line, re.I):
             errors.append(f"web/css/{name}:{i} page CSS must not set font-family (central identity only)")
             page_overrides += 1
+
+for name in H1_BIND_PAGES:
+    path = css_dir / name
+    if not path.is_file():
+        continue
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    for match in H1_SIZE_RX.finditer(text):
+        body = match.group(2)
+        size = FONT_SIZE_RX.search(body)
+        if not size:
+            continue
+        value = size.group(1).strip()
+        if "--text-hero" not in value:
+            errors.append(
+                f"web/css/{name} h1 font-size must bind to var(--text-hero), found {value}"
+            )
 
 shell_path = css_dir / "platform-shell.css"
 if shell_path.is_file():
@@ -80,6 +113,10 @@ if shell_path.is_file():
         errors.append("platform-shell.css still references IBM Plex Mono")
     if "TYPOGRAPHY ENFORCEMENT" not in shell:
         errors.append("platform-shell.css missing TYPOGRAPHY ENFORCEMENT block")
+    if "--text-lede:" not in shell:
+        errors.append("platform-shell.css missing --text-lede")
+    if "--text-num-lg:" not in shell:
+        errors.append("platform-shell.css missing --text-num-lg")
 
 fund = WEB / "fund.html"
 if fund.is_file():

@@ -23,8 +23,6 @@
   .page-funds .market-item{border-inline-start:0}
   .page-funds .market-item:nth-child(odd){border-inline-start:1px solid var(--kh-border)}
   .page-funds .hero-zone{grid-template-columns:1fr;gap:14px;margin-bottom:18px}
-  .page-funds .hero-copy h1{font-size:clamp(28px,8vw,40px)}
-  .page-funds .hero-copy p{font-size:15px}
   .page-funds .control-rail{grid-template-columns:1fr 1fr;padding:12px}
   .page-funds .control-rail .rail-head{grid-column:1/-1}
   .page-funds .control-block{grid-column:span 1}
@@ -46,6 +44,5 @@
   .page-funds .control-block,.page-funds .benchmarks-block{grid-column:1/-1}
   .page-funds .kpis{grid-template-columns:1fr 1fr;gap:8px}
   .page-funds .kpi{min-height:76px;padding:11px}
-  .page-funds .kpi b{font-size:20px}
   .page-funds .table-meta-right{display:none}
 }

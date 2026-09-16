@@ -1,7 +1,8 @@
 /* ==========================================================================
-   Nile Market Intelligence — Platform Shell V4.2
+   Nile Market Intelligence — Platform Shell V4.3
    Single identity · Cairo for all text and numbers (no Mono UI)
    Product chrome: paper, header rail, shared surfaces.
+   Type scale: pages bind --text-* tokens; they do not invent sizes.
    Financial up/down hues are unchanged.
    ========================================================================== */
 @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap");
@@ -36,15 +37,18 @@
   --font-arabic:"Cairo",sans-serif;
   --kh-font:var(--font-arabic);
   --font-mono:var(--font-arabic);
-  --text-hero:clamp(30px,3.4vw,46px);
-  --text-page:clamp(22px,2.3vw,32px);
-  --text-section:clamp(17px,1.45vw,22px);
+  --text-hero:clamp(32px,4vw,48px);
+  --text-page:clamp(22px,2.4vw,32px);
+  --text-section:clamp(18px,1.55vw,24px);
+  --text-lede:15px;
   --text-card:15px;
   --text-body:14px;
   --text-small:12.5px;
-  --text-micro:10.5px;
-  --text-num:clamp(20px,1.8vw,28px);
-  --text-num-lg:clamp(22px,2vw,30px);
+  --text-micro:11px;
+  --text-num:clamp(22px,2.2vw,32px);
+  --text-num-lg:clamp(28px,3.2vw,44px);
+  --text-nav:12.5px;
+  --weight-strong:800;
   --leading-tight:1.18;
   --leading-body:1.7;
   --tracking-kicker:.09em;
@@ -192,33 +196,33 @@ th,td{border-bottom:1px solid var(--shell-border);padding:11px 13px;vertical-ali
 .hero,.hero-zone,.brief-hero,.hero-mini{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-lg);box-shadow:var(--shell-shadow);padding:var(--space-5) 28px;position:relative;overflow:hidden}
 .hero::before,.brief-hero::before,.hero-mini::before{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:linear-gradient(180deg,var(--shell-green),var(--shell-gold));opacity:.95}
 .hero h1,.hero-zone h1,.brief-hero h1,.hero-mini h1{margin:0;max-width:24ch;font-size:var(--text-hero);line-height:var(--leading-tight);letter-spacing:var(--tracking-tight);color:var(--shell-ink)}
-.hero p,.hero-zone p,.brief-hero p,.hero-mini .muted,.brief-lede{max-width:64ch;font-size:15px;line-height:1.75;color:var(--shell-muted)}
+.hero p,.hero-zone p,.brief-hero p,.hero-mini .muted,.brief-lede{max-width:64ch;font-size:var(--text-lede);line-height:1.75;color:var(--shell-muted)}
 
 .section,.brief-signals,.brief-paths,.brief-evidence{margin-top:var(--space-6)}
 .section-head,.section-intro{padding-bottom:var(--space-2);border-bottom:1px solid var(--shell-border);margin-bottom:var(--space-3)}
 .section-title,.section-intro h2{margin:0;font-size:var(--text-section);letter-spacing:var(--tracking-tight);color:var(--shell-ink)}
 
 .path-card{display:flex;flex-direction:column;gap:var(--space-2);padding:18px 18px 16px;min-height:152px;text-decoration:none;color:inherit}
-.path-card h3{margin:0;font-size:16px;color:var(--shell-ink)}
-.path-card p{margin:0;font-size:13px;color:var(--shell-muted);line-height:1.55;flex:1}
-.path-card b{font-size:12px;color:var(--shell-green)}
-.path-number{font-family:var(--font-arabic);font-size:11px;color:var(--shell-gold);font-weight:700;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.path-card h3{margin:0;font-size:var(--text-card);color:var(--shell-ink)}
+.path-card p{margin:0;font-size:var(--text-small);color:var(--shell-muted);line-height:1.55;flex:1}
+.path-card b{font-size:var(--text-small);color:var(--shell-green)}
+.path-number{font-family:var(--font-arabic);font-size:var(--text-micro);color:var(--shell-gold);font-weight:700;letter-spacing:.04em;font-variant-numeric:tabular-nums}
 
 .investment-panel{padding:18px 20px}
 .investment-panel .panel-head{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--space-4);flex-wrap:wrap;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--shell-border)}
 .investment-panel .panel-head h2{margin:0;font-size:var(--text-section);color:var(--shell-ink)}
-.investment-panel .panel-note{font-size:11px;font-weight:700;color:var(--shell-muted);padding:6px 10px;border-radius:var(--radius-pill);background:var(--shell-surface-soft);border:1px solid var(--shell-border)}
+.investment-panel .panel-note{font-size:var(--text-micro);font-weight:700;color:var(--shell-muted);padding:6px 10px;border-radius:var(--radius-pill);background:var(--shell-surface-soft);border:1px solid var(--shell-border)}
 .seg,.ranges{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:10px 0 14px}
 .seg button,.ranges button{height:36px;padding:0 14px;font-size:var(--text-small)}
 .seg button.on,.ranges button.on,.seg button[aria-selected="true"],.ranges button[aria-selected="true"]{background:var(--shell-green);border-color:var(--shell-green);color:#fff}
 .chart-wrap{position:relative;min-height:400px;border:1px solid var(--shell-border);border-radius:var(--radius-md);background:linear-gradient(180deg,var(--shell-surface) 0%,var(--shell-surface-soft) 100%);overflow:hidden}
 #chart{height:440px;width:100%}
 .asset-legend{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-3)}
-.legend-item{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--shell-border);background:var(--shell-surface);color:var(--shell-ink);border-radius:var(--radius-pill);padding:7px 11px;cursor:pointer;font:inherit;font-size:12px}
+.legend-item{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--shell-border);background:var(--shell-surface);color:var(--shell-ink);border-radius:var(--radius-pill);padding:7px 11px;cursor:pointer;font:inherit;font-size:var(--text-small)}
 .legend-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
 
 .controls{display:grid;grid-template-columns:minmax(280px,1fr) repeat(2,minmax(180px,240px));align-items:center;gap:10px;padding:10px;background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-md);box-shadow:var(--shell-shadow)}
-.controls input,.controls select{height:42px;background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-sm);font-size:13px;font-family:var(--font-arabic)}
+.controls input,.controls select{height:42px;background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-sm);font-size:var(--text-small);font-family:var(--font-arabic)}
 .view-tabs{display:flex;gap:5px}
 .view-tab.active{background:var(--shell-green);color:#fff;border-color:var(--shell-green)}
 .grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:16px}
@@ -238,13 +242,29 @@ th,td{border-bottom:1px solid var(--shell-border);padding:11px 13px;vertical-ali
 
 @media(min-width:1500px){main.wrap,main.funds-shell,main.brief-shell{padding-inline:0}.site-header .wrap{padding-inline:0}}
 @media(max-width:1050px){.site-header .wrap{align-items:stretch;padding-block:10px;flex-direction:column;gap:10px}.site-header nav{width:100%}.hero{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
-@media(max-width:760px){:root{--shell-content:calc(100% - 24px);--header-h:58px}main.wrap,main.funds-shell,main.brief-shell,.page,.fund-page{padding-block:14px 34px}.site-header .wrap{min-height:58px;padding-inline:12px;gap:10px}.site-header .logo{font-size:14px}.site-header nav a{height:32px;padding-inline:9px;font-size:11px}.hero,.hero-zone,.brief-hero,.hero-mini{padding:18px;border-radius:var(--radius-md)}.hero h1,.hero-zone h1,.hero-mini h1{font-size:28px}.controls{grid-template-columns:1fr}}
+@media(max-width:760px){
+  :root{
+    --shell-content:calc(100% - 24px);
+    --header-h:58px;
+    --text-hero:30px;
+    --text-page:22px;
+    --text-section:18px;
+    --text-num:22px;
+    --text-num-lg:32px;
+    --text-nav:11px;
+  }
+  main.wrap,main.funds-shell,main.brief-shell,.page,.fund-page{padding-block:14px 34px}
+  .site-header .wrap{min-height:58px;padding-inline:12px;gap:10px}
+  .hero,.hero-zone,.brief-hero,.hero-mini{padding:18px;border-radius:var(--radius-md)}
+  .controls{grid-template-columns:1fr}
+}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
 /* --------------------------------------------------------------------------
    TYPOGRAPHY ENFORCEMENT (legacy cleanup)
    Page CSS must NOT set font-family. Numeric alignment only via tabular-nums.
    --font-mono / --kh-num are aliases to Cairo for old selectors only.
+   Pages bind --text-* ; they do not invent font-size or font-weight above 800.
    -------------------------------------------------------------------------- */
 .page-funds .market-item b,
 .page-funds .kpi b,

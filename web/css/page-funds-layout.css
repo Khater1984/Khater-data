@@ -36,7 +36,7 @@
   border-radius:10px;
 }
 .page-funds .results-head{padding-inline:4px;margin-bottom:12px}
-.page-funds .results-title h2{font-size:clamp(22px,2vw,30px);letter-spacing:-.025em}
+.page-funds .results-title h2{font-size:var(--text-page);letter-spacing:var(--tracking-tight)}
 .page-funds .kpis{
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;
   background:transparent;border:0;overflow:visible;
@@ -45,12 +45,13 @@
   min-height:82px;border:1px solid var(--shell-border);border-radius:var(--radius-md);
   background:var(--shell-surface);box-shadow:var(--shell-shadow);
 }
+.page-funds .kpi b{font-size:var(--text-num)}
 .page-funds .table-frame{border-radius:var(--radius-md)}
-.page-funds table{font-size:13px}
-.page-funds thead th{height:48px;font-size:11px;background:var(--shell-surface-soft);color:var(--shell-ink)}
+.page-funds table{font-size:var(--text-small)}
+.page-funds thead th{height:48px;font-size:var(--text-micro);background:var(--shell-surface-soft);color:var(--shell-ink)}
 .page-funds tbody td{height:58px;padding:11px 13px}
 .page-funds tbody tr:hover td{background:var(--shell-green-soft)}
-.page-funds .return-col{font-size:16px}
+.page-funds .return-col{font-size:var(--text-card)}
 
 @media(max-width:1050px){
   .page-funds .control-rail{grid-template-columns:repeat(3,minmax(0,1fr))}

@@ -39,14 +39,14 @@
   border:1px solid var(--river-line);border-radius:var(--radius-md);padding:24px;
   background:var(--card-white);box-shadow:var(--shadow-1)
 }
-.fund-page .eyebrow,.fund-page .muted,.fund-page .note{color:var(--ink-muted);font-size:11px}
-.fund-page h1{font-size:clamp(28px,4vw,48px);margin:8px 0;color:var(--ink-dark)}
+.fund-page .eyebrow,.fund-page .muted,.fund-page .note{color:var(--ink-muted);font-size:var(--text-micro)}
+.fund-page h1{font-size:var(--text-hero);margin:8px 0;color:var(--ink-dark)}
 .fund-page .card,.fund-page .panel,.fund-page .kpi{
   background:var(--card-white);border:1px solid var(--river-line);border-radius:var(--radius-md);
   padding:14px;box-shadow:var(--shadow-1);color:var(--ink-dark)
 }
 .fund-page table{width:100%;border-collapse:collapse;background:var(--card-white)}
-.fund-page th{background:var(--nile-canvas);color:var(--ink-muted);font-size:10px;padding:10px}
+.fund-page th{background:var(--nile-canvas);color:var(--ink-muted);font-size:var(--text-micro);padding:10px}
 .fund-page td{border-bottom:1px solid var(--river-line);padding:10px;color:var(--ink-dark)}
 .fund-page .num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
 .up{color:var(--perf-up)}.down{color:var(--perf-down)}
@@ -64,7 +64,7 @@
 .decision-card{margin:14px 0 0;border:1px solid var(--river-line);border-radius:var(--radius-md);background:var(--card-white);padding:16px;color:var(--ink-dark);box-shadow:var(--shadow-1)}.decision-card h2,.decision-card h3{color:var(--ink-dark)}.decision-card p{color:var(--ink-muted)}
 
 /* --- inlined from fund-release-hardening.css --- */
-.decision-category-note{margin-top:6px}.metric-compact{font-size:24px!important}.metric-qualification{font-size:22px!important}.fund-manager-logo{max-width:100%;max-height:100%;object-fit:contain}.hero-logo-box.fallback{display:grid;place-items:center}.tabs button:focus-visible{outline:2px solid var(--shell-gold);outline-offset:3px}.tab-panel[role=tabpanel]{scroll-margin-top:84px}.tab-panel.is-loading{opacity:.62;pointer-events:none;min-height:120px;position:relative}.tab-panel.is-loading:after{content:'جارٍ التحميل…';display:block;text-align:center;color:var(--shell-muted);padding:24px;font-size:11px}.tab-context-status{white-space:nowrap}.decision-path{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.decision-path i{opacity:.55}.fund-page a:focus-visible,.fund-page button:focus-visible{outline:2px solid var(--shell-gold);outline-offset:3px}.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}@media(max-width:560px){.tabs{grid-template-columns:1fr 1fr}.tabs button{min-height:48px}.tab-context{gap:8px}.decision-path{font-size:10px}.metric-compact,.metric-qualification{font-size:20px!important}}
+.decision-category-note{margin-top:6px}.metric-compact{font-size:var(--text-num)!important}.metric-qualification{font-size:var(--text-num)!important}.fund-manager-logo{max-width:100%;max-height:100%;object-fit:contain}.hero-logo-box.fallback{display:grid;place-items:center}.tabs button:focus-visible{outline:2px solid var(--shell-gold);outline-offset:3px}.tab-panel[role=tabpanel]{scroll-margin-top:84px}.tab-panel.is-loading{opacity:.62;pointer-events:none;min-height:120px;position:relative}.tab-panel.is-loading:after{content:'جارٍ التحميل…';display:block;text-align:center;color:var(--shell-muted);padding:24px;font-size:var(--text-micro)}.tab-context-status{white-space:nowrap}.decision-path{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.decision-path i{opacity:.55}.fund-page a:focus-visible,.fund-page button:focus-visible{outline:2px solid var(--shell-gold);outline-offset:3px}.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}@media(max-width:560px){.tabs{grid-template-columns:1fr 1fr}.tabs button{min-height:48px}.tab-context{gap:8px}.decision-path{font-size:var(--text-micro)}}
 
 /* === Layout moved from platform-shell (Fund DNA) === */
 .fund-detail-page .fund-page{width:min(100%,1480px)}
@@ -96,3 +96,4 @@
 @media(max-width:760px){
   .fund-detail-page .fund-page .hero>div{padding:18px}
 }
+

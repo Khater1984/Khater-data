@@ -50,7 +50,8 @@ shell = (WEB / "css/platform-shell.css").read_text(encoding="utf-8")
 required_tokens = [
     "--shell-bg:", "--shell-surface:", "--shell-green:", "--shell-red:",
     "--shell-content:", "font-variant-numeric:tabular-nums", "@media(max-width:760px)",
-    "--text-hero:", "--space-1:", "--radius-sm:", "--shell-warning:",
+    "--text-hero:", "--text-lede:", "--text-num:", "--text-num-lg:", "--text-nav:",
+    "--space-1:", "--radius-sm:", "--shell-warning:",
     "--focus:", "--header-h:", "--nile-max:", "--kh-h1:",
 ]
 for token in required_tokens:
