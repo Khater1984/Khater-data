@@ -1,23 +1,24 @@
 #!/usr/bin/env python3
-"""Home / Now contract — Market Brief via macro series; data boundary only."""
+"""NOW experience contract — read-model driven; data boundary only."""
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 html = (ROOT / "web/index.html").read_text(encoding="utf-8")
-controller = (ROOT / "web/js/home-page.js").read_text(encoding="utf-8")
+controller = (ROOT / "web/js/now-page.js").read_text(encoding="utf-8")
+service = (ROOT / "web/js/data/now-service.js").read_text(encoding="utf-8")
 
 required = [
     "js/data/supabase-client.js",
     "js/data/macro-service.js",
-    "js/data/funds-service.js",
-    "js/home-page.js",
+    "js/data/now-service.js",
+    "js/now-page.js",
 ]
 for token in required:
     if token not in html:
-        raise SystemExit(f"Home contract failed: missing {token}")
+        raise SystemExit(f"NOW contract failed: missing {token}")
 
 if "<script>" in html and "getSeries(" in html:
-    raise SystemExit("Home contract failed: inline data orchestration detected")
+    raise SystemExit("NOW contract failed: inline data orchestration detected")
 
 for forbidden in [
     "fund_performance_history",
@@ -29,30 +30,19 @@ for forbidden in [
     "web/data/",
 ]:
     if forbidden in controller:
-        raise SystemExit(
-            f"Home contract failed: controller bypasses canonical services via {forbidden}"
-        )
+        raise SystemExit(f"NOW contract failed: controller bypasses canonical services via {forbidden}")
 
-# Now is a Market Brief: macro series are required. Full funds universe is not.
-for token in [
-    "window.KHATER_DATA.macro.getSeries('usd_egp_mid')",
-    "window.KHATER_DATA.macro.getSeries('egx30_close')",
-]:
-    if token not in controller:
-        raise SystemExit(f"Home contract failed: controller missing {token}")
+if "window.KHATER_DATA.now" not in controller:
+    raise SystemExit("NOW contract failed: controller must consume the NOW read model")
 
-# Boundary presence: controller may gate on funds namespace without calling getUniverse.
-if "window.KHATER_DATA.funds" not in controller and "KHATER_DATA.funds" not in controller:
-    raise SystemExit(
-        "Home contract failed: controller must acknowledge funds data boundary "
-        "(even if Now does not call getUniverse)"
-    )
+if "macro.getSeries" not in service:
+    raise SystemExit("NOW contract failed: NOW service must consume macro-service")
 
-# Forbid dual home renderers
-if "home-redesign.js" in html:
-    raise SystemExit("Home contract failed: legacy home-redesign.js must not be loaded")
+for forbidden in ["home-page.js", "market-intelligence-charts.js", "brief-page.css"]:
+    if forbidden in html:
+        raise SystemExit(f"NOW contract failed: legacy asset still loaded: {forbidden}")
 
-print("Home contract checks passed")
-print(" - macro series: usd_egp_mid + egx30_close")
-print(" - funds service loaded for boundary; getUniverse not required on Now")
-print(" - single controller: home-page.js")
+print("NOW contract checks passed")
+print(" - page consumes KHATER_DATA.now.snapshot()")
+print(" - macro access stays inside now-service")
+print(" - legacy home renderer/assets are removed from the page")
