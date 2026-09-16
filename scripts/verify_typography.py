@@ -28,7 +28,7 @@ PAGE_CSS = [
 ]
 H1_BIND_PAGES = [
     "now.css", "page-wealth.css", "page-categories.css", "page-macro.css",
-    "fund-detail.css", "page-funds-responsive-v2.css",
+    "fund-detail.css", "page-funds-layout.css",
 ]
 WEIGHT_RX = re.compile(r"font-weight\s*:\s*([0-9]+)")
 H1_SIZE_RX = re.compile(

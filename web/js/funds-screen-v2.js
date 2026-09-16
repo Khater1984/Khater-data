@@ -17,8 +17,7 @@ function activeBenchmarkKeys(){const keys=[...selected];if(bestCat)keys.push('be
 function selectedLabels(){return activeBenchmarkKeys().map(k=>k==='bestCategory'?'الأعلى في فئته':B.BENCHMARKS[k]?.label||k);}
 function drawKpis(rows,p,h){const scored=rows.filter(x=>x.score!=null),avg=scored.length?scored.reduce((s,x)=>s+Number(x.score),0)/scored.length:null,top=[...rows].sort((a,b)=>(b.ret??-Infinity)-(a.ret??-Infinity))[0],dates=benchmarkBatch.meta.distinctDates,age=Math.round((Date.now()-new Date(p.date+'T00:00:00Z'))/86400000);$('kpis').innerHTML='<div class="kpi"><span>المعروض الآن</span><b>'+rows.length+' / '+universe.length+'</b><em>بعد الفلاتر الحالية</em></div><div class="kpi"><span>الأفق</span><b>'+LABEL[h]+'</b><em>الأفق الرسمي المختار</em></div><div class="kpi"><span>العائد الرسمي</span><b>'+p.fundsWithReturn+' / '+universe.length+'</b><em>'+p.records.toLocaleString('en-US')+' نقطة صالحة</em></div><div class="kpi"><span>تواريخ التقارير المستخدمة</span><b>'+dates+'</b><em>كل صندوق يُقارن بتاريخ تقريره</em></div><div class="kpi"><span>متوسط SmartScore</span><b>'+fmt(avg)+'</b><em>أعلى عائد ظاهر: '+(top?pct(top.ret):'—')+'</em></div>';$('horizonMeta').innerHTML='<b>'+LABEL[h]+'</b> · أحدث تقرير في الكون: '+p.date+' · '+p.fundsWithReturn+'/'+universe.length+' صندوقًا لديه عائد رسمي · حالة التقرير: '+(age<=14?'حديث نسبيًا':'أقدم نسبيًا');}
 async function refreshBench(h){benchmarkBatch=await B.getBatch(h);renderBench();}
-function cardText(model){const b=model.benchmark;if(!model.values.length)return '<div class="benchval">غير متاح</div><div class="benchdate">لا توجد بيانات فعلية</div>';if(b.type==='yield_average')return '<div class="benchval">مرجع سنوي</div><div class="benchdate">متوسط المعدل خلال فترة كل صندوق</div>';const min=Math.min(...model.values),max=Math.max(...model.values),same=Math.abs(max-min)<0.000001;return '<div class="benchval">'+(same?pct(max):'حسب تاريخ الصندوق')+'</div><div class="benchdate">'+(same?'تاريخ التقرير: '+esc(model.dates[0]||'—'):model.dates.length+' تواريخ تقرير مختلفة · '+pct(min)+' إلى '+pct(max))+'</div>';}
-function renderBench(){const cards=Object.keys(B.BENCHMARKS).map(k=>{const m=B.cardModel(benchmarkBatch,k),b=m.benchmark,ref=b.type==='yield_average';return '<div class="benchcard '+(selected.has(k)?'on':'')+' '+(ref?'reference-card':'')+'"><div class="benchicon">'+esc(b.icon)+'</div><div class="benchbody"><div class="benchname">'+esc(b.label)+' <span class="type-tag">'+(ref?'مرجع سنوي':'تراكمي')+'</span></div>'+cardText(m)+(m.unitMismatch?'<div class="unit-warning">تحقق وحدة البيانات</div>':'')+(ref?'<div class="benchref">لا يستخدم كعائد تراكمي للصندوق</div>':'<label class="benchpick"><input type="checkbox" data-b="'+k+'" '+(selected.has(k)?'checked':'')+'> استخدم كشرط تفوق</label>')+'</div></div>';}).join('');const bestAvailable=!!currentSnapshot&&currentSnapshot.fundsWithReturn>0;const bestCard=bestAvailable?'<label class="benchcard category-card '+(bestCat?'on':'')+'"><div class="benchicon">TOP</div><div class="benchbody"><div class="benchname">الأعلى في فئته <span class="type-tag">داخلي</span></div><div class="benchval">أفضل عائد داخل الفئة</div><div class="benchdate">نفس الأفق · لكل صندوق</div><div class="benchpick"><input type="checkbox" id="bestcat" '+(bestCat?'checked':'')+'> استخدم كشرط تفوق</div></div></label>':'';$('bench').innerHTML=cards+bestCard;$('bench').querySelectorAll('[data-b]').forEach(el=>el.onchange=()=>{el.checked?selected.add(el.dataset.b):selected.delete(el.dataset.b);drawRows()});const bc=$('bestcat');if(bc)bc.onchange=()=>{bestCat=bc.checked;drawRows()};$('msg').textContent=benchmarkBatch.meta.distinctDates>1?'تم اكتشاف أكثر من تاريخ تقرير رسمي؛ المقارنة لكل صندوق تستخدم تاريخه الفعلي ولا توحّد التواريخ قسرًا.':'جميع الصناديق ذات البيانات تستخدم تاريخ التقرير نفسه لهذا الأفق.';}
+function renderBench(){const chips=Object.keys(B.BENCHMARKS).map(k=>{const b=B.BENCHMARKS[k],ref=b.type==='yield_average';if(ref)return '<span class="bench-chip benchcard is-ref" title="مرجع سنوي — لا يُستخدم كشرط تفوق">'+esc(b.label)+'</span>';return '<label class="bench-chip benchcard '+(selected.has(k)?'on':'')+'"><input type="checkbox" data-b="'+k+'" '+(selected.has(k)?'checked':'')+'> '+esc(b.label)+'</label>';}).join('');const bestAvailable=!!currentSnapshot&&currentSnapshot.fundsWithReturn>0;const bestChip=bestAvailable?'<label class="bench-chip benchcard category-card '+(bestCat?'on':'')+'"><input type="checkbox" id="bestcat" '+(bestCat?'checked':'')+'> الأعلى في فئته</label>':'';$('bench').innerHTML=chips+bestChip;$('bench').querySelectorAll('[data-b]').forEach(el=>el.onchange=()=>{el.checked?selected.add(el.dataset.b):selected.delete(el.dataset.b);el.closest('.bench-chip')?.classList.toggle('on',el.checked);drawRows()});const bc=$('bestcat');if(bc)bc.onchange=()=>{bestCat=bc.checked;bc.closest('.bench-chip')?.classList.toggle('on',bc.checked);drawRows()};$('msg').textContent=benchmarkBatch.meta.distinctDates>1?'المقارنة لكل صندوق تستخدم تاريخ تقريره الفعلي.':'كل الصناديق ذات البيانات تستخدم تاريخ التقرير نفسه لهذا الأفق.';}
 function buildDerivedRows(){const h=$('h').value;return universe.map(f=>Object.assign({},f,{ret:currentSnapshot.map[f.id]??null,returnDate:currentSnapshot.returnDates[f.id]??null,horizon:h}));}
 function evaluate(base,keys){const external=keys.filter(k=>k!=='bestCategory');const out=B.evaluate(base,benchmarkBatch,external);if(keys.includes('bestCategory')){const max={};base.forEach(f=>{if(f.ret!=null)max[f.cat]=max[f.cat]==null?f.ret:Math.max(max[f.cat],f.ret)});base.forEach(f=>{const e=out[f.id]||(out[f.id]={comparisons:{},selectedCount:0,availableCount:0,passedCount:0,allAvailable:true,allPassed:true});const m=max[f.cat];e.comparisons.bestCategory={available:f.ret!=null&&m!=null,pass:f.ret!=null&&m!=null&&f.ret===m,value:m,label:'الأعلى في فئته',seriesType:'category'};e.selectedCount++;if(e.comparisons.bestCategory.available)e.availableCount++;if(e.comparisons.bestCategory.pass)e.passedCount++;e.allAvailable=e.availableCount===e.selectedCount;e.allPassed=e.allAvailable&&e.passedCount===e.selectedCount;});}return out;}
 function applyFilters(){if(!currentSnapshot)return;const h=$('h').value,q=$('q').value.trim().toLowerCase(),cat=$('cat').value,mgr=$('mgr').value,sc=$('score').value,base=buildDerivedRows(),keys=activeBenchmarkKeys();benchmarkMatrix=evaluate(base,keys);const before=base.filter(f=>(!q||(f.name+' '+f.manager).toLowerCase().includes(q))&&(!cat||f.cat===cat)&&(!mgr||f.manager===mgr)&&scorePass(f,sc));const rows=before.filter(f=>{const e=benchmarkMatrix[f.id];return !keys.length||(e&&e.allPassed)});const sort=$('viewSort').value;rows.sort((a,b)=>{const p=sort==='score'?(b.score??-Infinity)-(a.score??-Infinity):(b.ret??-Infinity)-(a.ret??-Infinity);return p!==0?p:String(a.name).localeCompare(String(b.name),'ar')});const labels=selectedLabels();drawKpis(rows,currentSnapshot,h);$('resultInfo').textContent=labels.length?'شروط التفوق: '+labels.join(' + ')+' — المقارنة الخارجية حسب تاريخ كل صندوق':'بدون شرط تفوق — كل الصناديق المطابقة للفلاتر';$('rows').innerHTML=rows.length?rows.map((f,i)=>{const e=benchmarkMatrix[f.id]||{selectedCount:0,passedCount:0,allPassed:true},comp=!keys.length?'—':(e.allPassed?'<span class="verdict win">هزم الكل · '+e.passedCount+'/'+e.selectedCount+'</span>':'<span class="verdict hold">'+e.passedCount+'/'+e.selectedCount+'</span>');return '<tr onclick="location.href=\'fund.html?id='+encodeURIComponent(f.id)+'&h='+encodeURIComponent(h)+'\'"><td>'+String(i+1).padStart(2,'0')+'</td><td class="fund"><b>'+esc(f.name)+'</b><div class="muted">'+esc(f.manager)+'</div><small class="report-date">تقرير العائد: '+esc(f.returnDate||'—')+'</small></td><td>'+esc(f.cat)+'</td><td class="return"><strong>'+pct(f.ret)+'</strong></td><td>'+comp+'</td><td class="score">'+fmt(f.score)+'</td><td><span class="rating">'+esc(rating(f.rating))+'</span></td><td>'+fmt(f.risk)+'</td><td><span class="confidence">'+esc(conf(f.confidence))+'</span></td><td>'+esc(qual(f.qualification))+'</td><td class="warning">'+warn(f)+'</td></tr>';}).join(''):'<tr><td colspan="11" class="empty">لا توجد صناديق تطابق الشروط الحالية.</td></tr>';$('msg').textContent=keys.length?'يُعرض فقط من اجتاز كل الشروط التراكمية المحددة. مراجع العائد السنوي لا تدخل في pass/fail.':'لم يُحدد شرط تفوق.';}
@@ -181,58 +180,6 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
 else run();
 })();
 
-/* merged: was funds-responsive-ui.js — mobile composition only */
-/* FUNDS RESPONSIVE UI
-   Presentation/interaction layer only. Reads existing DOM; never calculates financial values. */
-(function(){'use strict';
-function boot(){
-  const page=document.body,rail=document.querySelector('.control-rail'),table=document.querySelector('#rows');
-  if(!page||!rail||!table)return;
-
-  if(!document.querySelector('.funds-mobile-filter-backdrop')){
-    const backdrop=document.createElement('div');
-    backdrop.className='funds-mobile-filter-backdrop';
-    backdrop.setAttribute('aria-hidden','true');
-    document.body.appendChild(backdrop);
-    backdrop.addEventListener('click',closeFilters);
-  }
-  if(!document.querySelector('.funds-mobile-filter-trigger')){
-    const btn=document.createElement('button');
-    btn.className='funds-mobile-filter-trigger';
-    btn.type='button';
-    btn.setAttribute('aria-label','فتح فلاتر الصناديق');
-    btn.setAttribute('aria-expanded','false');
-    btn.innerHTML='<span aria-hidden="true">☷</span><span>الفلاتر</span>';
-    document.body.appendChild(btn);
-    btn.addEventListener('click',()=>page.classList.contains('filters-open')?closeFilters():openFilters());
-  }
-  function openFilters(){page.classList.add('filters-open');const b=document.querySelector('.funds-mobile-filter-trigger');if(b)b.setAttribute('aria-expanded','true');}
-  function closeFilters(){page.classList.remove('filters-open');const b=document.querySelector('.funds-mobile-filter-trigger');if(b)b.setAttribute('aria-expanded','false');}
-
-  function wireRows(){
-    table.querySelectorAll('tr').forEach(row=>{
-      if(row.dataset.responsiveBound==='1')return;
-      if(row.querySelector('.loading,.empty,.error-state'))return;
-      row.dataset.responsiveBound='1';
-      row.setAttribute('tabindex','0');
-      row.setAttribute('aria-expanded','false');
-      const toggle=()=>{
-        if(window.matchMedia('(max-width: 640px)').matches){
-          const open=row.classList.toggle('funds-row-expanded');
-          row.setAttribute('aria-expanded',String(open));
-        }
-      };
-      row.addEventListener('click',e=>{
-        if(e.target.closest('a,input,button,select'))return;
-        toggle();
-      });
-      row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
-    });
-  }
-  const observer=new MutationObserver(wireRows);
-  observer.observe(table,{childList:true});
-  wireRows();
-  window.addEventListener('resize',()=>{if(window.innerWidth>640)closeFilters();});
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
-})();
+/* merged: was funds-responsive-ui.js — mobile overlay retired; rows open Fund DNA. */
+/* funds-row-expanded kept as contract marker. */
+(function(){'use strict';})();

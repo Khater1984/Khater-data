@@ -1,6 +1,5 @@
-/* Funds structure: canonical layout modules */
+/* Funds page — structure only. Identity tokens live in platform-shell.css. */
 @import url('./page-funds-layout.css');
 @import url('./page-funds-responsive-v2.css');
 
-/* FUNDS PAGE — STRUCTURE ONLY. Typography and visual tokens are owned by platform-shell.css. */
-.page-funds{min-height:100vh;background:var(--kh-bg);color:var(--kh-ink)}
+.page-funds{min-height:100vh;background:var(--shell-bg);color:var(--shell-ink);color-scheme:light}
