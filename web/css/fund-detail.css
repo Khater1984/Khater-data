@@ -35,7 +35,6 @@
 }
 
 /* --- inlined from fund.css --- */
-/* LAYOUT ONLY — Nile V3 tokens from platform-shell */
 .fund-page{padding:24px 0 80px;background:var(--nile-paper);color:var(--ink-dark);font-family:var(--font-arabic)}
 .fund-page .hero{
   border:1px solid var(--river-line);border-radius:var(--radius-md);padding:24px;
@@ -67,3 +66,34 @@
 
 /* --- inlined from fund-release-hardening.css --- */
 .decision-category-note{margin-top:6px}.metric-compact{font-size:24px!important}.metric-qualification{font-size:22px!important}.fund-manager-logo{max-width:100%;max-height:100%;object-fit:contain}.hero-logo-box.fallback{display:grid;place-items:center}.tabs button:focus-visible{outline:2px solid var(--gold2,#f4d991);outline-offset:3px}.tab-panel[role=tabpanel]{scroll-margin-top:84px}.tab-panel.is-loading{opacity:.62;pointer-events:none;min-height:120px;position:relative}.tab-panel.is-loading:after{content:'جارٍ التحميل…';display:block;text-align:center;color:var(--muted,#8993a3);padding:24px;font-size:11px}.tab-context-status{white-space:nowrap}.decision-path{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.decision-path i{opacity:.55}.fund-page a:focus-visible,.fund-page button:focus-visible{outline:2px solid var(--gold2,#f4d991);outline-offset:3px}.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}@media(max-width:560px){.tabs{grid-template-columns:1fr 1fr}.tabs button{min-height:48px}.tab-context{gap:8px}.decision-path{font-size:10px}.metric-compact,.metric-qualification{font-size:20px!important}}
+
+/* === Layout moved from platform-shell (Fund DNA) === */
+.fund-detail-page .fund-page{width:min(100%,1480px)}
+.fund-detail-page .fund-page .hero{padding:0;overflow:hidden;background:transparent;border:0;box-shadow:none}
+.fund-detail-page .fund-page .hero>div{padding:clamp(24px,3vw,38px)}
+.fund-detail-page .fund-page .hero>div:first-child{
+  background:var(--shell-surface);border:1px solid var(--shell-border);
+  border-radius:var(--radius-lg);box-shadow:var(--shell-shadow);
+}
+.fund-detail-page .fund-page .hero>div:last-child{
+  background:linear-gradient(145deg,#e8f3ef,var(--shell-surface-soft));
+  border:1px solid var(--shell-border);border-radius:var(--radius-lg);box-shadow:var(--shell-shadow);
+}
+.fund-detail-page .fund-page .card,
+.fund-detail-page .fund-page .panel,
+.fund-detail-page .fund-page .kpi,
+.fund-detail-page .fund-page .metric{
+  border-radius:14px;padding:18px;background:var(--shell-surface);box-shadow:var(--shell-shadow);
+}
+.fund-detail-page .fund-page section{margin-block:16px}
+.fund-detail-page .fund-page .chart-wrap,
+.fund-detail-page .fund-page .chartbox,
+.fund-detail-page .fund-page .chart-top{
+  background:var(--shell-surface);border:1px solid var(--shell-border);
+  border-radius:14px;box-shadow:var(--shell-shadow);
+}
+.fund-detail-page .fund-page th{background:var(--shell-surface-soft);color:var(--shell-ink)}
+.fund-detail-page .fund-page td{background:var(--shell-surface)}
+@media(max-width:760px){
+  .fund-detail-page .fund-page .hero>div{padding:18px}
+}
