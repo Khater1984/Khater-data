@@ -1,5 +1,5 @@
 /* Platform theme bridge — reads identity from platform-shell.css :root.
- * Charts, numbers, and decorative strokes must use KHATER_THEME — not hard-coded hex.
+ * Charts use Cairo (same as platform typography contract).
  */
 (function (window, document) {
   'use strict';
@@ -29,18 +29,17 @@
     var gold = css('--shell-gold', '#a9652b');
     var muted = css('--shell-muted', '#607477');
     var surface = css('--shell-surface', '#ffffff');
-    var soft = css('--shell-surface-soft', '#f8fafb');
+    var soft = css('--shell-surface-soft', '#f7faf9');
     var border = css('--shell-border', '#d9e2e1');
-    var ink = css('--shell-ink', '#10262a');
+    var ink = css('--shell-ink', '#0e2327');
     var caution = css('--shell-caution', '#9a7112');
-    var fontAr = css('--font-arabic', 'Cairo, system-ui, sans-serif').replace(/^["']|["']$/g, '');
-    var fontMono = css('--font-mono', 'IBM Plex Mono, ui-monospace, monospace').replace(/^["']|["']$/g, '');
+    var fontAr = css('--font-arabic', 'Cairo, sans-serif').replace(/^["']|["']$/g, '');
 
     var palette = [green, gold, css('--shell-info', '#3d6b8a'), caution, muted, red, '#14B891', '#5D6E9A'];
 
     return {
       color: {
-        bg: css('--shell-bg', '#f5f7f8'),
+        bg: css('--shell-bg', '#f3f6f5'),
         surface: surface,
         surfaceSoft: soft,
         ink: ink,
@@ -58,8 +57,8 @@
       },
       font: {
         arabic: fontAr,
-        mono: fontMono,
-        chart: fontMono + ', ' + fontAr
+        mono: fontAr,
+        chart: fontAr
       },
       series: {
         purchasing: red,
@@ -81,7 +80,7 @@
         return {
           background: { color: surface },
           textColor: muted,
-          fontFamily: fontMono + ', Cairo, system-ui, sans-serif'
+          fontFamily: 'Cairo, sans-serif'
         };
       },
       chartGrid: function () {

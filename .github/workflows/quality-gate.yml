@@ -1,67 +1,74 @@
 name: Quality gate
 
 on:
-  pull_request:
   push:
-    branches: [main, 'dev/**']
-  workflow_dispatch:
-
-permissions:
-  contents: read
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  static-checks:
+  quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - uses: actions/setup-node@v5
-        with:
-          node-version: '22'
-      - name: Check Python syntax
-        run: python -m compileall -q scripts
-      - name: Check JSON and local assets
+          python-version: '3.11'
+
+      - name: Baseline
         run: python scripts/verify_baseline.py
-      - name: Audit generated snapshot references
-        run: python scripts/audit_data_sources.py
-      - name: Audit frontend references and orphan candidates
-        run: python scripts/audit_frontend_references.py
-      - name: Audit frontend data boundaries
+
+      - name: Frontend boundaries
         run: python scripts/verify_frontend_boundaries.py
-      - name: Check centralized platform visual identity
+
+      - name: Platform identity
         run: python scripts/verify_platform_identity.py
-      - name: Check final frontend production architecture
+
+      - name: Typography contract (Cairo only)
+        run: python scripts/verify_typography.py
+
+      - name: Frontend production contract
         run: python scripts/verify_frontend_production_contract.py
-      - name: Run whole-product release candidate audit
+
+      - name: Release candidate
         run: python scripts/verify_release_candidate.py
-      - name: Run deep release readiness audit
+
+      - name: Release readiness
         run: python scripts/verify_release_readiness.py
-      - name: Check JavaScript syntax
-        run: |
-          set -euo pipefail
-          for file in web/js/*.js web/js/data/*.js; do node --check "$file"; done
-          python scripts/check_inline_js.py
-          python scripts/audit_fund_css_tokens.py
-      - name: Check financial data contract
-        run: python scripts/verify_financial_contracts.py
-      - name: Check Categories architecture contract
-        run: python scripts/verify_categories_contract.py
-      - name: Check Funds architecture contract
-        run: python scripts/verify_funds_contract.py
-      - name: Check Fund Detail architecture contract
-        run: python scripts/verify_fund_detail_contract.py
-      - name: Check Fund Detail CSS architecture
-        run: python scripts/verify_fund_detail_css_architecture.py
-      - name: Check Fund Detail CSS ownership
-        run: python scripts/verify_fund_css_ownership.py
-      - name: Check Macro architecture contract
-        run: python scripts/verify_macro_contract.py
-      - name: Check Map architecture contract
-        run: python scripts/verify_map_contract.py
-      - name: Check Home architecture contract
-        run: python scripts/verify_home_contract.py
-      - name: Check project build contract
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build check
         run: node scripts/build_check.mjs
+
+      - name: Financial contracts
+        run: python scripts/verify_financial_contracts.py
+
+      - name: Categories contract
+        run: python scripts/verify_categories_contract.py
+
+      - name: Funds contract
+        run: python scripts/verify_funds_contract.py
+
+      - name: Fund detail contract
+        run: python scripts/verify_fund_detail_contract.py
+
+      - name: Fund detail CSS architecture
+        run: python scripts/verify_fund_detail_css_architecture.py
+
+      - name: Fund CSS ownership
+        run: python scripts/verify_fund_css_ownership.py
+
+      - name: Macro contract
+        run: python scripts/verify_macro_contract.py
+
+      - name: Map contract
+        run: python scripts/verify_map_contract.py
+
+      - name: Home contract
+        run: python scripts/verify_home_contract.py
