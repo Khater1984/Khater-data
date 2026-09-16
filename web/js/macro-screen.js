@@ -4,35 +4,30 @@
 const svc=window.KHATER_DATA&&window.KHATER_DATA.macro;if(!svc)throw new Error('macro-screen.js requires macro-service.js');
 const $=id=>document.getElementById(id),fmt=(n,d=1)=>Number.isFinite(Number(n))?Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:d}):'—';
 const esc=v=>String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\\':'&#39;'}[c]));
-let data=null;
 const colors=()=>window.KHATER_THEME?.series||{};
-function latest(key){return svc.latest(data.series[key]?.rows)}
-function renderHero(){
- const read=svc.readout(data),range=svc.rangeText(Object.values(data.series));
- $('coverage').textContent=range;$('source').textContent='Supabase · public.macro_series';$('hero-date').textContent=range.split(' → ').at(-1)||'—';
- $('conflict-note').textContent=read.errors.length?`تعذر تحميل ${read.errors.length} سلسلة؛ تم عرض المتاح فقط.`:read.conflicts?`تم رصد ${read.conflicts} تعارضًا زمنيًا داخل طبقة البيانات`:'لا توجد تعارضات زمنية مرصودة';
- $('regime-title').textContent=read.realCashMargin==null?'البيانات المتاحة لا تكفي للمقارنة':'هامش العائد النقدي فوق التضخم المركب';
- $('regime-copy').textContent=read.realCashMargin==null?'لم يتم اختراع قراءة بديلة. راجع تشخيص السلاسل أدناه.':`التضخم المركب لآخر 12 شهرًا ${fmt(read.inflation12,1)}% مقابل ${fmt(read.latest.tb91?.value,2)}% لأذون 91 يومًا؛ الفارق الحسابي ${fmt(read.realCashMargin,1)} نقطة مئوية.`;
- $('metric-inflation').textContent=fmt(read.inflation12,1)+'%';$('metric-margin').textContent=fmt(read.realCashMargin,1)+' pp';$('metric-curve').textContent=fmt(read.rateCurve,1)+' pp';$('metric-spread').textContent=fmt(read.depositBillSpread,1)+' pp';
- $('metric-inflation-note').textContent=read.inflationTrend==null?'مقارنة سابقة غير مكتملة':`${read.inflationTrend>=0?'+':''}${fmt(read.inflationTrend,1)} pp مقابل الـ12 شهر السابقة`;
- $('metric-margin-note').textContent='أذون 91 يومًا − تضخم 12 شهرًا';$('metric-curve-note').textContent='أذون 364 يومًا − أذون 91 يومًا';$('metric-spread-note').textContent='أذون 91 يومًا − وديعة 6–12 شهر';
-}
+let data=null,model=null;
 function pathPoints(rows,w,h,pad,minY,maxY){const xs=rows.map(r=>new Date(r.date).getTime()),minX=Math.min(...xs),maxX=Math.max(...xs),spanX=Math.max(1,maxX-minX),spanY=Math.max(1e-9,maxY-minY);return rows.map(r=>`${pad+(new Date(r.date).getTime()-minX)/spanX*(w-pad*2)},${h-pad-(r.value-minY)/spanY*(h-pad*2)}`).join(' ')}
 function renderLineChart(hostId,seriesList){
- const host=$(hostId);if(!host)return;const usable=seriesList.filter(s=>s.rows.length);if(!usable.length){host.innerHTML='<div class="chart-empty">لا توجد بيانات متاحة للرسم.</div>';return;}
- const rows=usable.flatMap(s=>s.rows),w=1000,h=360,pad=38,ys=rows.map(r=>r.value),minY=Math.min(...ys),maxY=Math.max(...ys),palette=[colors().usd_egp_mid||'#087f63',colors().gold_egp_oz||'#a9652b',colors().qqq_egp||'#3d6b8a',colors().tbill||'#9a7112',colors().silver_egp_oz||'#607477'];
+ const host=$(hostId);if(!host)return;const usable=seriesList.filter(s=>Array.isArray(s.rows)&&s.rows.length);if(!usable.length){host.innerHTML='<div class="chart-empty">لا توجد بيانات متاحة للرسم.</div>';return;}
+ const rows=usable.flatMap(s=>s.rows),w=1000,h=360,pad=38,ys=rows.map(r=>Number(r.value)).filter(Number.isFinite),minY=Math.min(...ys),maxY=Math.max(...ys),palette=[colors().usd_egp_mid||'#087f63',colors().gold_egp_oz||'#a9652b',colors().qqq_egp||'#3d6b8a',colors().tbill||'#9a7112',colors().silver_egp_oz||'#607477'];
  host.innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="رسم بياني اقتصادي"><line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}" stroke="var(--shell-border)"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${h-pad}" stroke="var(--shell-border)"/>${usable.map((s,i)=>`<polyline fill="none" stroke="${palette[i%palette.length]}" stroke-width="3" points="${pathPoints(s.rows,w,h,pad,minY,maxY)}"/>`).join('')}</svg><div class="chart-legend">${usable.map((s,i)=>`<span><i class="dot-${i%5}"></i>${esc(s.label)}</span>`).join('')}</div>`;
 }
-function renderRates(){const keys=['bank_deposit_1_3m_avg_pct','bank_deposit_3_6m_avg_pct','bank_deposit_6_12m_avg_pct','tbill_91_avg_yield_pct','tbill_364_avg_yield_pct'];renderLineChart('rates-chart',keys.map(k=>({label:svc.SERIES[k][0],rows:svc.monthlySnapshots(data.series[k].rows,48)})));}
-function renderInflation(){const keys=['cpi_headline_mom_pct','cpi_core_mom_pct'];renderLineChart('inflation-chart',keys.map(k=>({label:svc.SERIES[k][0],rows:svc.monthlySnapshots(data.series[k].rows,36)})));}
-function renderChanges(){const keys=['usd_egp_mid','gold_egp_oz','egx30_close','spy_egp'];const labels={usd_egp_mid:'الدولار',gold_egp_oz:'الذهب',egx30_close:'EGX30',spy_egp:'S&P 500'};const rows=keys.map(k=>{const changes=svc.monthlyChanges(data.series[k].rows,24),last=changes.at(-1);return{key:k,label:labels[k],value:last?.value??null,date:last?.date??null};}).filter(x=>x.value!==null);$('change-grid').innerHTML=rows.length?rows.map(x=>`<article class="change-item"><span>${x.label}</span><strong class="${x.value>=0?'up':'down'}">${x.value>=0?'+':''}${fmt(x.value,1)}%</strong><small>${x.date||'—'}</small></article>`).join(''):'<div class="chart-empty">لا توجد تغيرات شهرية كافية لهذه السلاسل.</div>';}
-function renderRateTable(){const keys=['bank_deposit_1_3m_avg_pct','bank_deposit_3_6m_avg_pct','bank_deposit_6_12m_avg_pct','tbill_91_avg_yield_pct','tbill_364_avg_yield_pct'];$('rate-table-body').innerHTML=keys.map(k=>{const r=latest(k);return`<tr><th>${svc.SERIES[k][0]}</th><td class="num">${fmt(r?.value,2)}</td><td>${r?.ts_date||'—'}</td></tr>`}).join('');}
-function renderDiagnostics(){
- const read=svc.readout(data),items=[['التضخم العام',read.completeness.inflation],['أذون 91 يومًا',read.completeness.tb91],['أذون 364 يومًا',read.completeness.tb364],['وديعة 6–12 شهر',read.completeness.deposit]];
- const host=document.getElementById('data-diagnostics');if(!host)return;
- host.innerHTML=items.map(([label,count])=>`<span><strong>${label}</strong><b>${fmt(count,0)}</b> قراءة</span>`).join('')+(read.errors.length?`<small class="diagnostic-error">${read.errors.map(e=>`${esc(e.key)}: ${esc(e.error)}`).join(' · ')}</small>`:'');
+function renderHero(){
+ const r=svc.readout(data),range=model.range;
+ $('coverage').textContent=range;$('source').textContent='Supabase · public.macro_series';$('hero-date').textContent=range.split(' → ').at(-1)||'—';
+ $('conflict-note').textContent=r.errors.length?`تعذر تحميل ${r.errors.length} سلسلة؛ تم عرض المتاح فقط.`:r.conflicts?`تم رصد ${r.conflicts} تعارضًا زمنيًا داخل طبقة البيانات`:'لا توجد تعارضات زمنية مرصودة';
+ $('regime-title').textContent=r.realCashMargin==null?'البيانات المتاحة لا تكفي للمقارنة':'هامش العائد النقدي فوق التضخم المركب';
+ $('regime-copy').textContent=r.realCashMargin==null?'لم يتم اختراع قراءة بديلة. راجع تشخيص السلاسل أدناه.':`التضخم المركب لآخر 12 شهرًا ${fmt(r.inflation12,1)}% مقابل ${fmt(r.latest.tb91?.value,2)}% لأذون 91 يومًا؛ الفارق الحسابي ${fmt(r.realCashMargin,1)} نقطة مئوية.`;
+ $('metric-inflation').textContent=r.inflation12==null?'—':fmt(r.inflation12,1)+'%';$('metric-margin').textContent=r.realCashMargin==null?'—':fmt(r.realCashMargin,1)+' pp';$('metric-curve').textContent=r.rateCurve==null?'—':fmt(r.rateCurve,1)+' pp';$('metric-spread').textContent=r.depositBillSpread==null?'—':fmt(r.depositBillSpread,1)+' pp';
+ $('metric-inflation-note').textContent=r.inflationTrend==null?'مقارنة سابقة غير مكتملة':`${r.inflationTrend>=0?'+':''}${fmt(r.inflationTrend,1)} pp مقابل الـ12 شهر السابقة`;
+ $('metric-margin-note').textContent='أذون 91 يومًا − تضخم 12 شهرًا';$('metric-curve-note').textContent='أذون 364 يومًا − أذون 91 يومًا';$('metric-spread-note').textContent='أذون 91 يومًا − وديعة 6–12 شهر';
 }
-function renderMethod(){$('method-range').textContent=svc.rangeText(Object.values(data.series));$('method-conflicts').textContent=data.conflicts.length?`تم الاحتفاظ بأول قيمة لكل تاريخ مع تسجيل ${data.conflicts.length} تعارضًا للمراجعة.`:'لم تُرصد تعارضات قيم على التاريخ نفسه.';renderDiagnostics();}
-async function init(){try{data=await svc.getAll();window.__KHATER_MACRO_DATA=data;renderHero();renderRates();renderInflation();renderChanges();renderRateTable();renderMethod();}catch(e){console.error('[macro-screen]',e);$('macro-error').hidden=false;$('macro-error').textContent='تعذر قراءة البيانات الفعلية من طبقة البيانات. لم يتم عرض أرقام بديلة.';}}
+function renderRates(){renderLineChart('rates-chart',model.rates.map(s=>({label:s.label,rows:svc.monthlySnapshots(s.rows,48).map(r=>({date:r.date,value:Number(r.value)}))})));}
+function renderInflation(){renderLineChart('inflation-chart',[{label:'التضخم العام',rows:model.inflation.headline},{label:'التضخم الأساسي',rows:model.inflation.core}]);}
+function renderChanges(){const labels={usd_egp_mid:'الدولار',gold_egp_oz:'الذهب',egx30_close:'EGX30',spy_egp:'S&P 500'};const rows=model.transmission.filter(x=>x.change).map(x=>({label:labels[x.key]||x.label,value:x.change.value,date:x.change.date}));$('change-grid').innerHTML=rows.length?rows.map(x=>`<article class="change-item"><span>${esc(x.label)}</span><strong class="${x.value>=0?'up':'down'}">${x.value>=0?'+':''}${fmt(x.value,1)}%</strong><small>${esc(x.date||'—')}</small></article>`).join(''):'<div class="chart-empty">لا توجد تغيرات شهرية كافية لهذه السلاسل.</div>';}
+function renderRateTable(){$('rate-table-body').innerHTML=model.rates.map(x=>`<tr><th>${esc(x.label)}</th><td class="num">${fmt(x.record?.value,2)}</td><td>${esc(x.record?.ts_date||'—')}</td></tr>`).join('');}
+function renderDiagnostics(){const items=[['التضخم العام',model.completeness.inflation],['أذون 91 يومًا',model.completeness.tb91],['أذون 364 يومًا',model.completeness.tb364],['وديعة 6–12 شهر',model.completeness.deposit]];const host=$('data-diagnostics');if(!host)return;host.innerHTML=items.map(([label,count])=>`<span><strong>${esc(label)}</strong><b>${fmt(count,0)}</b> قراءة</span>`).join('')+(model.errors.length?`<small class="diagnostic-error">${model.errors.map(e=>`${esc(e.key)}: ${esc(e.error)}`).join(' · ')}</small>`:'');}
+function renderMethod(){$('method-range').textContent=model.range;$('method-conflicts').textContent=model.conflicts.length?`تم الاحتفاظ بأول قيمة لكل تاريخ مع تسجيل ${model.conflicts.length} تعارضًا للمراجعة.`:'لم تُرصد تعارضات قيم على التاريخ نفسه.';renderDiagnostics();}
+async function init(){try{data=await svc.getAll();model=data.readModel||svc.buildEconomicReadModel(data);window.__KHATER_MACRO_DATA={data,model};renderHero();renderRates();renderInflation();renderChanges();renderRateTable();renderMethod();}catch(e){console.error('[macro-screen]',e);$('macro-error').hidden=false;$('macro-error').textContent='تعذر قراءة البيانات الفعلية من طبقة البيانات: '+String(e?.message||e);}}
 document.addEventListener('DOMContentLoaded',init);
 })(window,document);
