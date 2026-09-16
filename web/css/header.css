@@ -1,5 +1,5 @@
 @import url('./platform-shell.css');
-/* SHARED NAVIGATION — institutional chrome */
+/* SHARED NAVIGATION — structure only; type from shell */
 .site-header{
   position:sticky;top:0;z-index:var(--z-header,100);
   background:rgba(255,255,255,.92);
@@ -15,7 +15,6 @@
   display:flex;align-items:center;gap:28px;box-sizing:border-box;
 }
 .site-header .logo{
-  font-family:var(--font-arabic,"Cairo"),sans-serif;
   font-weight:800;font-size:16.5px;line-height:1.2;
   color:var(--shell-ink);white-space:nowrap;flex:0 0 auto;
   letter-spacing:-.03em;text-decoration:none;
@@ -33,7 +32,6 @@
   display:inline-flex;align-items:center;justify-content:center;
   height:36px;padding:0 14px;border-radius:9px;border:1px solid transparent;
   color:var(--shell-muted);text-decoration:none;
-  font-family:var(--font-arabic,"Cairo"),sans-serif;
   font-size:12.5px;font-weight:700;white-space:nowrap;flex:0 0 auto;
   transition:color var(--transition-fast,140ms ease),background var(--transition-fast,140ms ease),border-color var(--transition-fast,140ms ease);
 }
