@@ -24,16 +24,33 @@ for (const asset of requiredFundAssets) {
   }
 }
 
+// Fund Detail CSS is a single inlined entrypoint (no split modules).
+// Split files fund.css / fund-chart.css / fund-price.css / fund-profile.css were retired.
 const cssEntry = await readFile(join(root, 'css', 'fund-detail.css'), 'utf8');
-const requiredFundCssModules = [
-  './fund.css',
-  './fund-chart.css',
-  './fund-price.css',
-  './fund-profile.css',
+const requiredOwnership = [
+  '--fd-line:',
+  '--fd-radius-card:',
+  '--fd-card-gradient:',
+  '.metric,',
+  '.card {',
 ];
-for (const module of requiredFundCssModules) {
-  if (!cssEntry.includes(module)) {
-    throw new Error(`fund-detail.css missing canonical module reference: ${module}`);
+for (const token of requiredOwnership) {
+  if (!cssEntry.includes(token)) {
+    throw new Error(`fund-detail.css missing ownership contract token: ${token}`);
+  }
+}
+if (cssEntry.includes("@import") && cssEntry.includes('fund.css')) {
+  throw new Error('fund-detail.css must not @import split fund modules; ownership is inlined');
+}
+
+const retiredModules = ['fund.css', 'fund-chart.css', 'fund-price.css', 'fund-profile.css'];
+for (const name of retiredModules) {
+  try {
+    await access(join(root, 'css', name));
+    throw new Error(`retired Fund Detail stylesheet still on disk: css/${name}`);
+  } catch (err) {
+    if (err && err.message && err.message.includes('retired Fund Detail')) throw err;
+    // ENOENT expected
   }
 }
 
