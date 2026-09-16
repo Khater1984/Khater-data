@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>المناطق — فئات الصناديق | رادار السوق المصري</title>
+  <script src="config.js"></script>
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/platform-shell.css">
+  <link rel="stylesheet" href="css/page-categories.css">
+</head>
+<body class="page-categories">
+  <a class="skip-link" href="#main-content">تخط’ إلى المحتوى الرئيسي</a>
+  <header class="site-header">
+    <div class="wrap">
+      <div class="logo">رادار السوق المصري<span>اكتشاف الفئات · مقارنة أوضح</span></div>
+      <nav aria-label="التنقل الرئيسي">
+        <a href="./index.html">الآن</a>
+        <a href="./wealth.html">قيمة ثروتي</a>
+        <a href="./macro.html">الاقتصاد</a>
+        <a href="./categories.html" class="active" aria-current="page">المناطق</a>
+        <a href="./funds.html">الصناديق</a>
+        <a href="./map.html" hidden aria-hidden="true">قيمة ثروتي — توافق</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content" class="cat-main">
+    <section class="cat-hero" aria-labelledby="cat-title">
+      <div class="cat-hero-copy">
+        <div class="cat-kicker">CATEGORY ATLAS · WHERE</div>
+        <h1 id="cat-title">أين تتجمع الصناديق؟</h1>
+        <p>هذه الصفحة لا ترسم خريطة حرارية. هي طبقة اكتشاف: الفئة، حجمها، وسيط العائد الرسمي، ثم الصندوق نفسه.</p>
+      </div>
+      <aside class="cat-hero-aside" aria-live="polite">
+        <span>تغطية اللقطة</span>
+        <strong id="cat-coverage">—</strong>
+        <small id="cat-stamp">جاري القراءة من طبقة البيانات</small>
+      </aside>
+    </section>
+    <section class="cat-toolbar" aria-label="أفق الأداء">
+      <div>
+        <div class="cat-label">الأفق الرسمي</div>
+        <p>العائد المعروض هو آخر قراءة رسمية لكل صندوق في الأفق المختار، وليس حسابًا من NAV.</p>
+      </div>
+      <div id="cat-horizons" class="cat-horizons" role="tablist" aria-label="آفاق الأداء"></div>
+    </section>
+    <section class="cat-section" aria-labelledby="cat-map-title">
+      <div class="cat-section-head">
+        <div>
+          <div class="cat-label">DISCOVER</div>
+          <h2 id="cat-map-title">الفئات</h2>
+        </div>
+        <p id="cat-map-note">كل بطاقة تمثل فئة واحدة. الضغط يفتح الصناديق داخلها.</p>
+      </div>
+      <div id="cat-grid" class="cat-grid" aria-live="polite">
+        <div class="cat-loading">جاري تحميل الفئات من البيانات الرسمية…</div>
+      </div>
+    </section>
+    <section class="cat-section" aria-labelledby="cat-list-title">
+      <div class="cat-section-head">
+        <div>
+          <div class="cat-label">DRILL DOWN</div>
+          <h2 id="cat-list-title">صناديق الفئة</h2>
+        </div>
+        <p id="cat-list-note">اختر فئة لعرض صناديقها مرتبة بالعائد الرسمي.</p>
+      </div>
+      <div id="cat-funds" class="cat-funds surface">
+        <div class="cat-empty">لم تُختر فئة بعد.</div>
+      </div>
+    </section>
+    <footer class="cat-foot" id="cat-foot">المصدر: Supabase عبر categories-service · لا خريطة حرارية · لا أرقام بديلة.</footer>
+  </main>
+  <script src="js/data/supabase-client.js"></script>
+  <script src="js/data/fund-service.js"></script>
+  <script src="js/data/funds-service.js"></script>
+  <script src="js/data/categories-service.js"></script>
+  <script src="js/categories-screen-v2.js"></script>
+</body>
+</html>
