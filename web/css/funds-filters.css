@@ -1,4 +1,4 @@
-/* Funds filters — benchmark chips are always contained within two rows. */
+/* Funds filter surface: compact by default, expandable on demand. */
 .page-funds .bench-list{
   display:grid;
   grid-template-rows:repeat(2,minmax(31px,auto));
@@ -8,17 +8,28 @@
   justify-content:start;
   gap:7px 8px;
   margin-top:7px;
+  overflow:hidden;
+  padding-bottom:2px;
+  max-height:69px;
+  transition:max-height .2s ease;
+}
+.page-funds .bench-list.is-expanded{
+  max-height:none;
   overflow-x:auto;
   overflow-y:hidden;
-  padding-bottom:2px;
-  scrollbar-width:thin;
 }
-.page-funds .bench-chip{
-  white-space:nowrap;
+.page-funds .bench-chip{white-space:nowrap}
+.page-funds .filters-more{
+  margin-top:8px;
+  border:0;
+  background:transparent;
+  color:var(--accent,#176b5b);
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+  padding:4px 0;
 }
+.page-funds .filters-more:hover{text-decoration:underline}
 @media(max-width:760px){
-  .page-funds .bench-list{
-    grid-template-rows:repeat(2,31px);
-    justify-content:start;
-  }
+  .page-funds .bench-list{grid-template-rows:repeat(2,31px);max-height:69px}
 }
