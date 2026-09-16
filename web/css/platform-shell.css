@@ -1,0 +1,76 @@
+/*
+ * Nile Market Intelligence — Platform Shell V1
+ * One shared visual layer for every public surface.
+ * Keep page logic and data contracts untouched.
+ */
+:root{
+  --shell-bg:#f5f7f8;
+  --shell-surface:#ffffff;
+  --shell-surface-soft:#f8fafb;
+  --shell-ink:#10262a;
+  --shell-muted:#607477;
+  --shell-border:#d9e2e1;
+  --shell-border-strong:#bccdca;
+  --shell-green:#087f63;
+  --shell-green-soft:#e8f5f1;
+  --shell-red:#c73538;
+  --shell-red-soft:#faeded;
+  --shell-gold:#a9652b;
+  --shell-shadow:0 8px 28px rgba(16,38,42,.055);
+  --shell-shadow-hover:0 14px 36px rgba(16,38,42,.09);
+  --shell-content:min(100% - 32px, 1560px);
+}
+html,body{background:var(--shell-bg)!important;color:var(--shell-ink)}
+body{font-family:var(--font-arabic,"Cairo",system-ui,sans-serif)!important}
+.site-header{background:rgba(255,255,255,.96)!important;border-bottom:1px solid var(--shell-border)!important;box-shadow:0 1px 0 rgba(16,38,42,.025)!important;backdrop-filter:blur(18px)!important}
+.site-header .wrap{max-width:1560px!important;min-height:68px!important;padding-inline:16px!important;gap:34px!important}
+.site-header .logo{font-size:17px!important;letter-spacing:-.03em!important;color:var(--shell-ink)!important}
+.site-header .logo span{font-size:9px!important;color:#74878a!important}
+.site-header nav{justify-content:flex-start!important;gap:4px!important}
+.site-header nav a{height:38px!important;padding-inline:15px!important;border-radius:8px!important;color:#607477!important;font-size:12px!important;font-weight:700!important}
+.site-header nav a:hover{background:#f1f5f4!important;color:var(--shell-ink)!important}
+.site-header nav a.active{background:var(--shell-green-soft)!important;border-color:rgba(8,127,99,.18)!important;color:var(--shell-green)!important}
+.wrap,.khater-app,.app-shell,.page-shell,.brief-shell,.funds-shell{width:var(--shell-content)!important;max-width:none!important}
+main.wrap,main.funds-shell,main.brief-shell{padding-block:24px 54px!important}
+.page,.fund-page{padding-block:24px 54px!important}
+.hero,.hero-zone,.brief-hero{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:16px;box-shadow:var(--shell-shadow)}
+.hero{padding:28px 30px!important}
+.hero-zone{padding:28px 30px!important}
+.brief-hero{padding:24px 28px!important}
+.hero h1,.hero-zone h1,.brief-hero h1{letter-spacing:-.04em!important;color:var(--shell-ink)!important}
+.surface,.card,.panel,.investment-panel,.table-frame,.evidence-table-wrap,.brief-regime,.brief-meaning,.path-card,.signal-card{background:var(--shell-surface)!important;border:1px solid var(--shell-border)!important;box-shadow:var(--shell-shadow)!important}
+.surface,.card,.panel,.investment-panel,.table-frame{border-radius:12px!important}
+.path-card,.signal-card{border-radius:12px!important}
+.surface:hover,.path-card:hover,.signal-card:hover{box-shadow:var(--shell-shadow-hover)!important}
+.section,.brief-signals,.brief-paths,.brief-evidence{margin-top:30px!important}
+.section-head,.section-intro{padding-bottom:8px!important;border-bottom:1px solid var(--shell-border)!important}
+.section-title,.section-intro h2{letter-spacing:-.025em!important;color:var(--shell-ink)!important}
+.eyebrow,.section-label,.micro-kicker,.status,.nile-kicker,.context-eyebrow{color:var(--shell-gold)!important}
+button,select,input{font-family:var(--font-arabic,"Cairo",system-ui,sans-serif)}
+button,.market-sort,.market-filter,.heat-tool{border-color:var(--shell-border)!important;background:#fff!important;color:var(--shell-ink)!important}
+button:hover,.market-sort:hover,.market-filter:hover,.heat-tool:hover{border-color:var(--shell-border-strong)!important;background:var(--shell-surface-soft)!important}
+button.active,.market-sort.active,.market-filter.active,.heat-tool.active{background:var(--shell-green-soft)!important;color:var(--shell-green)!important;border-color:rgba(8,127,99,.25)!important}
+input:focus,select:focus,button:focus-visible{outline-color:rgba(8,127,99,.3)!important}
+.num,.numeric-data,.tabular-nums,.return-col,.pct,[data-financial-number]{font-family:var(--font-mono)!important;font-variant-numeric:tabular-nums lining-nums!important}
+/* Financial semantics: green = positive, red = negative. */
+.up,.positive,.good,.is-up,[data-direction="up"]{color:var(--shell-green)!important}
+.dn,.negative,.bad,.is-down,[data-direction="down"]{color:var(--shell-red)!important}
+.bg-up{background:var(--shell-green-soft)!important}.bg-dn{background:var(--shell-red-soft)!important}
+/* Dense financial tables */
+table{border-collapse:separate!important;border-spacing:0!important;width:100%!important}
+thead th{background:#eef3f2!important;color:#4f6669!important;border-bottom:1px solid var(--shell-border-strong)!important;font-weight:800!important}
+tbody tr{background:#fff!important}
+tbody tr:nth-child(even){background:#fbfcfc!important}
+tbody tr:hover{background:#f0f7f4!important}
+th,td{border-bottom:1px solid #e5eceb!important}
+/* Remove the visual impression of a narrow centered application on wide screens. */
+@media(min-width:1500px){main.wrap,main.funds-shell,main.brief-shell{padding-inline:0!important}.site-header .wrap{padding-inline:0!important}}
+@media(max-width:760px){
+  :root{--shell-content:calc(100% - 24px)}
+  .site-header .wrap{min-height:58px!important;padding-inline:12px!important;gap:12px!important}
+  .site-header .logo{font-size:14px!important}
+  .site-header nav a{height:34px!important;padding-inline:10px!important;font-size:11px!important}
+  main.wrap,main.funds-shell,main.brief-shell,.page,.fund-page{padding-block:14px 34px!important}
+  .hero,.hero-zone,.brief-hero{padding:18px!important;border-radius:12px!important}
+  .section,.brief-signals,.brief-paths,.brief-evidence{margin-top:22px!important}
+}
