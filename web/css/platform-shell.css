@@ -1,15 +1,10 @@
 /* ==========================================================================
-   Nile Market Intelligence — Platform Shell V3
-   SINGLE visual identity source for the whole product.
-
-   Edit THIS FILE for: color, type, space, radius, shadow, primitives, states.
-   Page files (page-*.css, fund-detail.css) own layout/structure only.
+   Nile Market Intelligence — Platform Shell V3.1 (Complete Design System)
+   SINGLE visual identity source. Edit THIS FILE only for identity.
+   Page CSS = layout/structure only.
    ========================================================================== */
 @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 
-/* --------------------------------------------------------------------------
-   1) TOKENS
-   -------------------------------------------------------------------------- */
 :root{
   --shell-bg:#f5f7f8;
   --shell-surface:#ffffff;
@@ -38,6 +33,7 @@
   --text-small:12px;
   --text-micro:10px;
   --text-num:clamp(20px,1.8vw,28px);
+  --text-num-lg:clamp(22px,2vw,30px);
   --leading-tight:1.2;
   --leading-body:1.65;
   --tracking-kicker:.08em;
@@ -56,8 +52,31 @@
   --chart-secondary:var(--shell-gold);
   --chart-grid:#e3ebe9;
   --chart-axis:var(--shell-muted);
+  --shell-positive-soft:var(--shell-green-soft);
+  --shell-warning:var(--shell-caution);
+  --shell-warning-soft:#f8f1e4;
+  --shell-info:#3d6b8a;
+  --shell-info-soft:#e8f0f5;
+  --shell-focus-ring:rgba(8,127,99,.28);
+  --focus:0 0 0 3px var(--shell-focus-ring);
+  --header-h:64px;
+  --shell-pad:clamp(14px,2.2vw,34px);
+  --shell-max:1560px;
+  --shell-gap:16px;
+  --table-row-h:58px;
+  --table-head-h:48px;
+  --control-h:38px;
+  --chip-h:26px;
+  --transition-fast:120ms ease;
+  --transition-normal:200ms ease;
+  --z-header:100;
+  --z-sticky:40;
+  --z-modal:200;
+  --z-toast:300;
   --nile-paper:var(--shell-bg);
   --nile-canvas:var(--shell-surface-soft);
+  --nile-max:var(--shell-max);
+  --nile-pad:var(--shell-pad);
   --card-white:var(--shell-surface);
   --surface-soft:var(--shell-surface-soft);
   --ink-dark:var(--shell-ink);
@@ -86,6 +105,9 @@
   --kh-negative:var(--shell-red);
   --kh-accent:var(--shell-green);
   --kh-accent-soft:var(--shell-green-soft);
+  --kh-positive-soft:var(--shell-positive-soft);
+  --kh-warning:var(--shell-warning);
+  --kh-warning-soft:var(--shell-warning-soft);
   --kh-font:var(--font-arabic);
   --kh-num:var(--font-mono);
   --kh-r-sm:var(--radius-sm);
@@ -93,8 +115,14 @@
   --kh-r-lg:var(--radius-lg);
   --kh-shadow-1:var(--shell-shadow);
   --kh-shadow-2:var(--shell-shadow-hover);
-  --kh-pad:clamp(14px,2.2vw,34px);
-  --kh-max:1560px;
+  --kh-pad:var(--shell-pad);
+  --kh-max:var(--shell-max);
+  --kh-gap:var(--shell-gap);
+  --kh-h1:var(--text-hero);
+  --kh-h3:var(--text-section);
+  --kh-body:var(--text-body);
+  --kh-small:var(--text-small);
+  --kh-micro:var(--text-micro);
   --bg:var(--shell-bg);
   --card:var(--shell-surface);
   --panel:var(--shell-surface);
@@ -113,18 +141,12 @@
   --shadow-1:var(--shell-shadow);
 }
 
-/* --------------------------------------------------------------------------
-   2) BASE
-   -------------------------------------------------------------------------- */
 *,*::before,*::after{box-sizing:border-box}
 html,body{background:var(--shell-bg);color:var(--shell-ink)}
 body{margin:0;font-family:var(--font-arabic);font-size:var(--text-body);line-height:var(--leading-body);overflow-x:hidden}
 .wrap,.khater-app,.app-shell,.page-shell,.brief-shell,.funds-shell{width:var(--shell-content);max-width:none;margin-inline:auto}
 main.wrap,main.funds-shell,main.brief-shell,.page,.fund-page{padding-block:var(--space-5) var(--space-7)}
 
-/* --------------------------------------------------------------------------
-   3) PRIMITIVES
-   -------------------------------------------------------------------------- */
 .eyebrow,.section-label,.micro-kicker,.status,.nile-kicker,.context-eyebrow,.section-kicker{color:var(--shell-gold);font-size:var(--text-micro);font-weight:800;letter-spacing:var(--tracking-kicker);text-transform:uppercase}
 .surface,.card,.panel,.investment-panel,.table-frame,.evidence-table-wrap,.brief-regime,.brief-meaning,.path-card,.signal-card{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-md);box-shadow:var(--shell-shadow)}
 .surface:hover,.path-card:hover,.signal-card:hover{box-shadow:var(--shell-shadow-hover)}
@@ -132,7 +154,7 @@ button,select,input,textarea{font-family:var(--font-arabic)}
 button,.market-sort,.market-filter,.heat-tool,.view-tab{border:1px solid var(--shell-border);background:var(--shell-surface);color:var(--shell-ink);border-radius:var(--radius-sm);font-weight:700;cursor:pointer}
 button:hover,.market-sort:hover,.market-filter:hover,.heat-tool:hover,.view-tab:hover{border-color:var(--shell-border-strong);background:var(--shell-surface-soft)}
 button.active,.market-sort.active,.market-filter.active,.heat-tool.active,.view-tab.active,button.on,[aria-selected="true"]{background:var(--shell-green-soft);color:var(--shell-green);border-color:rgba(8,127,99,.25)}
-button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid rgba(8,127,99,.28);outline-offset:2px}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--shell-focus-ring);outline-offset:2px}
 .num,.numeric-data,.tabular-nums,.return-col,.pct,[data-financial-number]{font-family:var(--font-mono);font-variant-numeric:tabular-nums lining-nums;direction:ltr;unicode-bidi:isolate}
 .up,.positive,.good,.is-up,[data-direction="up"]{color:var(--shell-green)}
 .dn,.down,.negative,.bad,.is-down,[data-direction="down"]{color:var(--shell-red)}
@@ -149,9 +171,6 @@ tbody tr:nth-child(even){background:#fbfcfc}
 tbody tr:hover{background:var(--shell-green-soft)}
 th,td{border-bottom:1px solid #e5eceb;padding:10px 12px}
 
-/* --------------------------------------------------------------------------
-   4) PATTERNS
-   -------------------------------------------------------------------------- */
 .hero,.hero-zone,.brief-hero,.hero-mini{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-lg);box-shadow:var(--shell-shadow);padding:var(--space-5) 28px}
 .hero h1,.hero-zone h1,.brief-hero h1,.hero-mini h1{margin:0;max-width:22ch;font-size:var(--text-hero);line-height:var(--leading-tight);letter-spacing:-.04em;color:var(--shell-ink)}
 .hero p,.hero-zone p,.brief-hero p,.hero-mini .muted,.brief-lede{max-width:62ch;font-size:15px;line-height:1.7;color:var(--shell-muted)}
@@ -183,26 +202,17 @@ th,td{border-bottom:1px solid #e5eceb;padding:10px 12px}
 .heat-stage{height:620px}
 .map-panel,.heat-panel,.map-stage,.heat-stage{background:linear-gradient(180deg,var(--shell-surface-soft),#edf5f2)}
 
-/* --------------------------------------------------------------------------
-   5) STATES
-   -------------------------------------------------------------------------- */
 .loading,.context-loading{color:var(--shell-muted);font-size:var(--text-small)}
 .error-state,.state-error{color:var(--shell-red);background:var(--shell-red-soft);border:1px solid rgba(199,53,56,.25);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);font-size:var(--text-small);font-weight:700}
 .state-empty,.state-stale,.state-missing{color:var(--shell-muted);background:var(--shell-surface-soft);border:1px dashed var(--shell-border);border-radius:var(--radius-md);padding:var(--space-4);font-size:var(--text-small)}
 .fund-app .loading,.fund-page .loading{border:1px dashed var(--shell-border);background:var(--shell-surface);border-radius:var(--radius-md);padding:var(--space-6);text-align:center;color:var(--shell-muted)}
 
-/* --------------------------------------------------------------------------
-   6) UTILITIES
-   -------------------------------------------------------------------------- */
 .visually-hidden,.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-.skip-link{position:absolute;inset-inline-start:-999px;top:0;background:var(--shell-green);color:#fff;padding:8px 12px;z-index:200}
+.skip-link{position:absolute;inset-inline-start:-999px;top:0;background:var(--shell-green);color:#fff;padding:8px 12px;z-index:var(--z-toast)}
 .skip-link:focus{inset-inline-start:8px}
 .page-map .tiles,#assets,#policy,h3 + .tiles{display:none}
 .page-map .why{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
 
-/* --------------------------------------------------------------------------
-   7) RESPONSIVE (identity-level only)
-   -------------------------------------------------------------------------- */
 @media(min-width:1500px){
   main.wrap,main.funds-shell,main.brief-shell{padding-inline:0}
   .site-header .wrap{padding-inline:0}
@@ -218,7 +228,7 @@ th,td{border-bottom:1px solid #e5eceb;padding:10px 12px}
   .page-map .why{grid-template-columns:1fr}
 }
 @media(max-width:760px){
-  :root{--shell-content:calc(100% - 24px)}
+  :root{--shell-content:calc(100% - 24px);--header-h:58px}
   main.wrap,main.funds-shell,main.brief-shell,.page,.fund-page{padding-block:14px 34px}
   .site-header .wrap{min-height:58px;padding-inline:12px;gap:12px}
   .site-header .logo{font-size:14px}
