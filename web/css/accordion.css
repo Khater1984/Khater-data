@@ -1,21 +1,20 @@
-/* Nile V3 — Purchasing Power accordion (map signature experience)
-   Identity: Paper canvas, emerald/copper evidence, mono numbers. */
+/* Purchasing Power accordion — layout only; identity from platform-shell */
 .pp-wrap {
-  --pp-bg: var(--nile-paper, #f4f8f7);
-  --pp-card: var(--card-white, #ffffff);
-  --pp-line: var(--river-line, #cce0dc);
-  --pp-ink: var(--ink-dark, #0c2328);
-  --pp-mute: var(--ink-muted, #4a6b6c);
-  --pp-loss: var(--coral, #d9383a);
-  --pp-win: var(--nile-emerald, #0d9474);
+  --pp-bg: var(--shell-bg);
+  --pp-card: var(--shell-surface);
+  --pp-line: var(--shell-border);
+  --pp-ink: var(--shell-ink);
+  --pp-mute: var(--shell-muted);
+  --pp-loss: var(--shell-red);
+  --pp-win: var(--shell-green);
   background: var(--pp-card);
   color: var(--pp-ink);
   border: 1px solid var(--pp-line);
-  border-radius: var(--radius-md, 12px);
-  box-shadow: var(--shadow-1, 0 1px 3px rgba(12, 35, 40, 0.04));
+  border-radius: var(--radius-md);
+  box-shadow: var(--shell-shadow);
   padding: 22px;
   margin: 28px 0 48px;
-  font-family: var(--font-arabic, Cairo, system-ui, sans-serif);
+  font-family: var(--font-arabic);
 }
 .pp-wrap * { box-sizing: border-box; }
 .pp-head { margin-bottom: 16px; }
@@ -50,7 +49,7 @@
   gap: 8px;
   font-weight: 800;
   color: var(--pp-ink);
-  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-family: var(--font-mono);
   direction: ltr;
   unicode-bidi: isolate;
 }
@@ -63,7 +62,7 @@
 }
 .pp-bar {
   height: 10px;
-  background: var(--nile-canvas, #ebf2f0);
+  background: var(--shell-surface-soft);
   border-radius: 99px;
   overflow: hidden;
   border: 1px solid var(--pp-line);
@@ -77,7 +76,7 @@
 }
 .pp-metric { font-size: 13px; color: var(--pp-ink); }
 .pp-metric b {
-  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-family: var(--font-mono);
   direction: ltr;
   unicode-bidi: isolate;
 }
@@ -103,9 +102,9 @@
   padding: 4px 0 16px;
 }
 .pp-cell {
-  background: var(--nile-canvas, #ebf2f0);
+  background: var(--shell-surface-soft);
   border: 1px solid var(--pp-line);
-  border-radius: var(--radius-sm, 8px);
+  border-radius: var(--radius-sm);
   padding: 12px;
 }
 .pp-cell em {
@@ -123,7 +122,7 @@
   align-items: center;
 }
 .pp-cell b {
-  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-family: var(--font-mono);
   direction: ltr;
   unicode-bidi: isolate;
   color: var(--pp-ink);
@@ -136,14 +135,14 @@
   font-weight: 700;
 }
 .tag.win {
-  background: rgba(13, 148, 116, 0.12);
+  background: var(--shell-green-soft);
   color: var(--pp-win);
-  border: 1px solid rgba(13, 148, 116, 0.25);
+  border: 1px solid rgba(8, 127, 99, 0.25);
 }
 .tag.lose {
-  background: rgba(217, 56, 58, 0.1);
+  background: var(--shell-red-soft);
   color: var(--pp-loss);
-  border: 1px solid rgba(217, 56, 58, 0.25);
+  border: 1px solid rgba(199, 53, 56, 0.25);
 }
 @media (max-width: 800px) {
   .pp-row summary { grid-template-columns: 70px 1fr 22px; }

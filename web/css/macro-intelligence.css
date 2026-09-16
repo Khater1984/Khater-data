@@ -1,21 +1,5 @@
-/* LAYOUT ONLY — Nile V3 tokens from khater-design-system.css */
-.intelligence-section{margin-top:28px}
-.regime-card{
-  border:1px solid var(--river-line);border-radius:var(--radius-md);padding:22px;
-  background:var(--card-white);box-shadow:var(--shadow-1)
-}
-.regime-card h2{font-size:22px;margin:0 0 8px;color:var(--ink-dark)}
-.regime-card p{margin:0;color:var(--ink-muted);line-height:1.7;font-size:13px}
-.reading-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:14px}
-.reading-grid article{
-  border:1px solid var(--river-line);border-radius:12px;padding:14px;background:var(--nile-canvas)
-}
-.reading-grid b{font-size:18px;font-family:var(--font-mono);direction:ltr;unicode-bidi:isolate;color:var(--ink-dark)}
-.reading-grid span{display:block;font-size:11px;color:var(--ink-muted);margin-top:4px}
-.decision-bridge{
-  display:grid;grid-template-columns:1.4fr .9fr;gap:14px;margin-top:12px;padding:18px;
-  border:1px solid var(--river-line);border-radius:var(--radius-md);background:var(--card-white)
-}
-.decision-bridge h3{margin:0 0 8px;font-size:15px}
-.decision-bridge p{margin:0;color:var(--ink-muted);font-size:12px;line-height:1.7}
-@media(max-width:800px){.decision-bridge{grid-template-columns:1fr}}
+/* Macro intelligence — layout only; identity from platform-shell */
+.macro-intel,.macro-panel{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-md);box-shadow:var(--shell-shadow);color:var(--shell-ink)}
+.macro-intel h2,.macro-panel h2{color:var(--shell-ink)}
+.macro-intel p,.macro-panel p{color:var(--shell-muted)}
+.macro-intel .num,.macro-panel .num{font-family:var(--font-mono);direction:ltr;unicode-bidi:isolate}
