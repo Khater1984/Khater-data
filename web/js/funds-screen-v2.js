@@ -1,181 +1,28 @@
-/* Funds screen controller. Rendering only; official performance and benchmark semantics come from data services. */
-(function(){
-'use strict';
+/* Funds Discovery Surface v3 — table-first, paginated, comparison-ready. Data semantics stay in services. */
+(function(){'use strict';
 const $=id=>document.getElementById(id),D=window.KHATER_DATA||{},F=D.funds,B=D.benchmarks;
 if(!F||!B)throw new Error('Funds screen requires fund and benchmark data services');
 const LABEL={weekly:'أسبوع','4weeks':'4 أسابيع',ytd:'منذ بداية العام',last12m:'12 شهرًا','1y':'سنة','2y':'سنتان','3y':'3 سنوات','4y':'4 سنوات','5y':'5 سنوات','6y':'6 سنوات'};
-const esc=D.escape||((s)=>String(s??'').replace(/[&<>\"']/g,c=>({'&':'&','<':'<','>':'>','\"':'"',"'":'&#39;'}[c])));
+const esc=D.escape||((s)=>String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c])));
 const fmt=x=>x==null?'—':Number(x).toLocaleString('en-US',{maximumFractionDigits:2});
 const pct=x=>x==null?'—':fmt(x)+'%';
-let universe=[],selected=new Set(),bestCat=false,currentSnapshot=null,benchmarkBatch={rows:[],byFund:Object.create(null),meta:{distinctDates:0}},benchmarkMatrix={},drawSeq=0;
+let universe=[],currentSnapshot=null,benchmarkBatch={meta:{distinctDates:0}},benchmarkMatrix={},filtered=[],page=1,pageSize=20,selected=new Set(),drawSeq=0;
+const activeKeys=()=>[...document.querySelectorAll('#bench input[data-b]:checked')].map(x=>x.dataset.b).concat($('bestcat')?.checked?['bestCategory']:[]);
 function scorePass(f,s){if(!s)return true;if(s==='na')return f.score==null;if(s==='90')return f.score!=null&&f.score>=90;if(s==='75')return f.score!=null&&f.score>=75&&f.score<90;if(s==='50')return f.score!=null&&f.score>=50&&f.score<75;return f.score!=null&&f.score<50;}
-function activeBenchmarkKeys(){const keys=[...selected];if(bestCat)keys.push('bestCategory');return keys;}
-function selectedLabels(){return activeBenchmarkKeys().map(k=>k==='bestCategory'?'الأعلى في فئته':B.BENCHMARKS[k]?.label||k);}
-function drawKpis(rows,p,h){const dates=benchmarkBatch.meta.distinctDates,age=Math.round((Date.now()-new Date(p.date+'T00:00:00Z'))/86400000);$('kpis').innerHTML='<div class="kpi"><span>المعروض الآن</span><b>'+rows.length+' / '+universe.length+'</b><em>بعد الفلاتر الحالية</em></div><div class="kpi"><span>الأفق</span><b>'+LABEL[h]+'</b><em>الأفق الرسمي المختار</em></div><div class="kpi"><span>العائد الرسمي</span><b>'+p.fundsWithReturn+' / '+universe.length+'</b><em>'+p.records.toLocaleString('en-US')+' نقطة صالحة</em></div><div class="kpi"><span>تواريخ التقارير</span><b>'+dates+'</b><em>كل صندوق بتاريخ تقريره</em></div>';$('horizonMeta').innerHTML='<b>'+LABEL[h]+'</b> · أحدث تقرير: '+p.date+' · '+p.fundsWithReturn+'/'+universe.length+' صندوقًا لديه عائد رسمي · '+(age<=14?'حديث نسبيًا':'أقدم نسبيًا');}
-async function refreshBench(h){benchmarkBatch=await B.getBatch(h);renderBench();}
-function renderBench(){const chips=Object.keys(B.BENCHMARKS).map(k=>{const b=B.BENCHMARKS[k],ref=b.type==='yield_average';if(ref)return '<span class="bench-chip benchcard is-ref" title="مرجع سنوي — لا يُستخدم كشرط تفوق">'+esc(b.label)+'</span>';return '<label class="bench-chip benchcard '+(selected.has(k)?'on':'')+'"><input type="checkbox" data-b="'+k+'" '+(selected.has(k)?'checked':'')+'> '+esc(b.label)+'</label>';}).join('');const bestAvailable=!!currentSnapshot&&currentSnapshot.fundsWithReturn>0;const bestChip=bestAvailable?'<label class="bench-chip benchcard category-card '+(bestCat?'on':'')+'"><input type="checkbox" id="bestcat" '+(bestCat?'checked':'')+'> الأعلى في فئته</label>':'';$('bench').innerHTML=chips+bestChip;$('bench').querySelectorAll('[data-b]').forEach(el=>el.onchange=()=>{el.checked?selected.add(el.dataset.b):selected.delete(el.dataset.b);el.closest('.bench-chip')?.classList.toggle('on',el.checked);drawRows()});const bc=$('bestcat');if(bc)bc.onchange=()=>{bestCat=bc.checked;bc.closest('.bench-chip')?.classList.toggle('on',bc.checked);drawRows()};$('msg').textContent=benchmarkBatch.meta.distinctDates>1?'المقارنة لكل صندوق تستخدم تاريخ تقريره الفعلي.':'كل الصناديق ذات البيانات تستخدم تاريخ التقرير نفسه لهذا الأفق.';}
-function buildDerivedRows(){const h=$('h').value;return universe.map(f=>Object.assign({},f,{ret:currentSnapshot.map[f.id]??null,returnDate:currentSnapshot.returnDates[f.id]??null,horizon:h}));}
-function evaluate(base,keys){const external=keys.filter(k=>k!=='bestCategory');const out=B.evaluate(base,benchmarkBatch,external);if(keys.includes('bestCategory')){const max={};base.forEach(f=>{if(f.ret!=null)max[f.cat]=max[f.cat]==null?f.ret:Math.max(max[f.cat],f.ret)});base.forEach(f=>{const e=out[f.id]||(out[f.id]={comparisons:{},selectedCount:0,availableCount:0,passedCount:0,allAvailable:true,allPassed:true});const m=max[f.cat];e.comparisons.bestCategory={available:f.ret!=null&&m!=null,pass:f.ret!=null&&m!=null&&f.ret===m,value:m,label:'الأعلى في فئته',seriesType:'category'};e.selectedCount++;if(e.comparisons.bestCategory.available)e.availableCount++;if(e.comparisons.bestCategory.pass)e.passedCount++;e.allAvailable=e.availableCount===e.selectedCount;e.allPassed=e.allAvailable&&e.passedCount===e.selectedCount;});}return out;}
-function applyFilters(){if(!currentSnapshot)return;const h=$('h').value,q=$('q').value.trim().toLowerCase(),cat=$('cat').value,mgr=$('mgr').value,sc=$('score').value,base=buildDerivedRows(),keys=activeBenchmarkKeys();benchmarkMatrix=evaluate(base,keys);const before=base.filter(f=>(!q||(f.name+' '+f.manager).toLowerCase().includes(q))&&(!cat||f.cat===cat)&&(!mgr||f.manager===mgr)&&scorePass(f,sc));const rows=before.filter(f=>{const e=benchmarkMatrix[f.id];return !keys.length||(e&&e.allPassed)});const sort=$('viewSort').value;rows.sort((a,b)=>{const p=sort==='score'?(b.score??-Infinity)-(a.score??-Infinity):(b.ret??-Infinity)-(a.ret??-Infinity);return p!==0?p:String(a.name).localeCompare(String(b.name),'ar')});const labels=selectedLabels();drawKpis(rows,currentSnapshot,h);$('resultInfo').textContent=labels.length?'شروط التفوق: '+labels.join(' + '):'بدون شرط تفوق — العائد الرسمي كما هو';$('rows').innerHTML=rows.length?rows.map((f,i)=>{const e=benchmarkMatrix[f.id]||{selectedCount:0,passedCount:0,allPassed:true};const score=f.score==null?'غير مقيم':'SmartScore '+fmt(f.score);const beat=!keys.length?'':(e.allPassed?' · هزم المراجع':' · '+e.passedCount+'/'+e.selectedCount);return '<a class="surface fund-card" href="fund.html?id='+encodeURIComponent(f.id)+'&h='+encodeURIComponent(h)+'"><small>#'+String(i+1).padStart(2,'0')+'</small><div><h3>'+esc(f.name)+'</h3><span class="fund-meta">'+esc(f.cat)+(f.manager?' · '+esc(f.manager):'')+beat+'</span></div><b class="fund-ret">'+pct(f.ret)+'</b><em class="fund-score">'+score+'</em></a>';}).join(''):'<div class="empty">لا توجد صناديق تطابق الشروط الحالية.</div>';$('msg').textContent=keys.length?'يُعرض فقط من اجتاز شروط التفوق المحددة.':'لم يُحدد شرط تفوق.';}
-function drawRows(){try{applyFilters()}catch(e){console.error(e);$('rows').innerHTML='<div class="error-state">تعذر بناء النتائج لمنع عرض رقم مالي غير موثوق.</div>';$('resultInfo').textContent='تم إيقاف العرض بسبب خلل في سلامة البيانات.';}}
-async function setHorizon(h){const seq=++drawSeq;$('rows').innerHTML='<div class="loading">جاري مزامنة العوائد الرسمية ومراجع السوق…</div>';$('horizonMeta').textContent='جاري تحميل الأفق…';try{const p=await F.getPerformanceSnapshot(h);if(seq!==drawSeq)return;currentSnapshot=p;await refreshBench(h);if(seq!==drawSeq)return;drawRows();}catch(e){if(seq!==drawSeq)return;currentSnapshot=null;$('rows').innerHTML='<div class="error-state">تعذر تحميل بيانات هذا الأفق.<br><small>'+esc(e.message)+'</small></div>';}}
-(async()=>{try{const u=await F.getUniverse();universe=u.list;const horizons=u.horizons.filter(h=>F.ORDER.includes(h));$('h').innerHTML=horizons.map(x=>'<option value="'+x+'">'+LABEL[x]+'</option>').join('');$('h').value=horizons.includes('last12m')?'last12m':horizons[0]||'';[...new Set(universe.map(x=>x.cat))].sort().forEach(x=>$('cat').insertAdjacentHTML('beforeend','<option value="'+esc(x)+'">'+esc(x)+'</option>'));[...new Set(universe.map(x=>x.manager).filter(Boolean))].sort().forEach(x=>$('mgr').insertAdjacentHTML('beforeend','<option value="'+esc(x)+'">'+esc(x)+'</option>'));$('q').addEventListener('input',drawRows);['cat','mgr','score','viewSort'].forEach(id=>$(id).addEventListener('change',drawRows));$('h').addEventListener('change',()=>setHorizon($('h').value));$('reset').onclick=()=>{selected.clear();bestCat=false;$('q').value='';$('cat').value='';$('mgr').value='';$('score').value='';$('viewSort').value='return';$('h').value=horizons.includes('last12m')?'last12m':horizons[0]||'';setHorizon($('h').value)};await setHorizon($('h').value);}catch(e){console.error(e);$('rows').innerHTML='<div class="error-state">تعذر تحميل بيانات الصناديق.<br><small>'+esc(e.message)+'</small></div>';}})();
+function riskPass(f,v){if(!v)return true;if(v==='na')return f.risk==null;if(f.risk==null)return false;const n=Number(f.risk);return v==='low'?n<40:v==='mid'?n>=40&&n<70:n>=70;}
+function selectedLabels(){return activeKeys().map(k=>k==='bestCategory'?'الأعلى في فئته':B.BENCHMARKS[k]?.label||k);}
+function buildRows(){return universe.map(f=>({...f,ret:currentSnapshot.map[f.id]??null,returnDate:currentSnapshot.returnDates[f.id]??null,horizon:$('h').value}));}
+function evaluate(base,keys){const external=keys.filter(k=>k!=='bestCategory'),out=B.evaluate(base,benchmarkBatch,external);if(keys.includes('bestCategory')){const max={};base.forEach(f=>{if(f.ret!=null)max[f.cat]=max[f.cat]==null?f.ret:Math.max(max[f.cat],f.ret)});base.forEach(f=>{const e=out[f.id]||(out[f.id]={comparisons:{},selectedCount:0,availableCount:0,passedCount:0,allAvailable:true,allPassed:true}),m=max[f.cat];e.comparisons.bestCategory={available:f.ret!=null&&m!=null,pass:f.ret!=null&&m!=null&&f.ret===m,value:m,label:'الأعلى في فئته'};e.selectedCount++;if(e.comparisons.bestCategory.available)e.availableCount++;if(e.comparisons.bestCategory.pass)e.passedCount++;e.allAvailable=e.availableCount===e.selectedCount;e.allPassed=e.allAvailable&&e.passedCount===e.selectedCount;});}return out;}
+function riskLabel(v){if(v==null)return'—';const n=Number(v);return Number.isFinite(n)?fmt(n):String(v)}
+function drawKpis(rows,p,h){const dates=benchmarkBatch.meta?.distinctDates??0;$('kpis').innerHTML='<div class="kpi"><span>المعروض</span><b>'+rows.length+' / '+universe.length+'</b><em>بعد الفلاتر</em></div><div class="kpi"><span>الأفق</span><b>'+LABEL[h]+'</b><em>الأداء الرسمي</em></div><div class="kpi"><span>لديها عائد</span><b>'+p.fundsWithReturn+' / '+universe.length+'</b><em>'+p.records.toLocaleString('en-US')+' نقطة</em></div><div class="kpi"><span>تواريخ التقارير</span><b>'+dates+'</b><em>وفق بيانات الصناديق</em></div>';$('horizonMeta').innerHTML='<b>'+LABEL[h]+'</b> · أحدث تقرير '+p.date+' · '+p.fundsWithReturn+'/'+universe.length+' صندوقًا لديه عائد رسمي';$('marketHorizon').textContent='الأفق · '+LABEL[h];$('marketCoverage').textContent='التغطية · '+p.fundsWithReturn+'/'+universe.length;$('marketDates').textContent='التقرير · '+p.date;}
+function sortRows(rows){const s=$('viewSort').value;return rows.sort((a,b)=>{let d=0;if(s==='score')d=(b.score??-Infinity)-(a.score??-Infinity);else if(s==='risk')d=(a.risk??Infinity)-(b.risk??Infinity);else if(s==='name')d=String(a.name).localeCompare(String(b.name),'ar');else d=(b.ret??-Infinity)-(a.ret??-Infinity);return d||String(a.name).localeCompare(String(b.name),'ar');});}
+function applyFilters(resetPage){if(!currentSnapshot)return;if(resetPage)page=1;const q=$('q').value.trim().toLowerCase(),cat=$('cat').value,mgr=$('mgr').value,sc=$('score').value,risk=$('riskFilter').value,currency=$('currency').value,nav=$('navFilter').value,base=buildRows(),keys=activeKeys();benchmarkMatrix=evaluate(base,keys);let rows=base.filter(f=>(!q||(f.name+' '+f.manager).toLowerCase().includes(q))&&(!cat||f.cat===cat)&&(!mgr||f.manager===mgr)&&scorePass(f,sc)&&riskPass(f,risk)&&(!currency||f.currency===currency)&&(!nav||(nav==='available'?f.nav!=null:f.nav==null))&&(!keys.length||(benchmarkMatrix[f.id]?.allPassed)));filtered=sortRows(rows);const maxPages=Math.max(1,Math.ceil(filtered.length/pageSize));if(page>maxPages)page=maxPages;drawKpis(filtered,currentSnapshot,$('h').value);const labels=selectedLabels();$('resultInfo').textContent=labels.length?'شروط التفوق: '+labels.join(' + '):'العائد الرسمي كما هو — يمكنك إضافة شروط تفوق من المرجعيات';renderTable();renderPagination();updateSelection();}
+function renderTable(){const start=(page-1)*pageSize,view=filtered.slice(start,start+pageSize),h=$('h').value;if(!view.length){$('rows').innerHTML='<tr><td colspan="10" class="empty">لا توجد صناديق تطابق الشروط الحالية.</td></tr>';return;}$('rows').innerHTML=view.map((f,i)=>{const n=start+i+1,checked=selected.has(f.id),score=f.score==null?'—':fmt(f.score),rating=f.rating||'—';return '<tr class="fund-row" data-id="'+esc(f.id)+'"><td class="col-check"><input class="row-check" type="checkbox" data-id="'+esc(f.id)+'" '+(checked?'checked':'')+' aria-label="اختيار '+esc(f.name)+'"></td><td class="row-num">'+String(n).padStart(2,'0')+'</td><td class="fund-name"><a href="fund.html?id='+encodeURIComponent(f.id)+'&h='+encodeURIComponent(h)+'">'+esc(f.name)+'</a><small>'+esc(f.manager||'')+'</small></td><td>'+esc(f.cat)+'</td><td class="return-cell">'+pct(f.ret)+'</td><td>'+riskLabel(f.risk)+'</td><td><span class="rating-badge">'+esc(rating)+'</span></td><td><span class="score-badge '+(f.score==null?'muted':'')+'">'+score+'</span></td><td class="nav-cell">'+(f.nav==null?'—':fmt(f.nav))+'</td><td>'+esc(f.currency||'—')+'</td></tr>';}).join('');document.querySelectorAll('.row-check').forEach(c=>c.addEventListener('change',()=>{c.checked?selected.add(c.dataset.id):selected.delete(c.dataset.id);updateSelection();}));$('selectAll').checked=view.length>0&&view.every(f=>selected.has(f.id));$('selectAll').indeterminate=view.some(f=>selected.has(f.id))&&!$('selectAll').checked;}
+function renderPagination(){const pages=Math.max(1,Math.ceil(filtered.length/pageSize)),items=[];const push=(p,label,disabled)=>items.push('<button type="button" data-page="'+p+'" '+(disabled?'disabled':'')+'>'+label+'</button>');push(page-1,'‹',page===1);const from=Math.max(1,page-2),to=Math.min(pages,from+4);for(let p=from;p<=to;p++)items.push('<button type="button" class="'+(p===page?'active':'')+'" data-page="'+p+'">'+p+'</button>');push(page+1,'›',page===pages);$('pagination').innerHTML=items.join('');document.querySelectorAll('#pagination button:not([disabled])').forEach(b=>b.addEventListener('click',()=>{page=Number(b.dataset.page);renderTable();renderPagination();}));$('pageInfo').textContent=filtered.length?((page-1)*pageSize+1)+'–'+Math.min(page*pageSize,filtered.length)+' من '+filtered.length+' صندوقًا · صفحة '+page+' من '+pages:'0 صندوق';}
+function updateSelection(){$('selectionInfo').textContent=selected.size?'تم اختيار '+selected.size+' صندوق':'لم يتم اختيار صناديق';$('compareBtn').disabled=selected.size<2;$('compareBtn').querySelector('b').textContent=selected.size;}
+function renderCompare(){const ids=[...selected].slice(0,6),rows=universe.filter(f=>ids.includes(f.id)).map(f=>({...f,ret:currentSnapshot.map[f.id]??null}));$('compareContent').innerHTML='<div class="compare-note">المقارنة وصفية: العائد والمخاطرة والتصنيف وSmartScore والسعر والعملة. افتح ملف الصندوق للتفاصيل الكاملة.</div><div class="compare-table-wrap"><table class="compare-table"><thead><tr><th>المؤشر</th>'+rows.map(f=>'<th>'+esc(f.name)+'</th>').join('')+'</tr></thead><tbody><tr><th>الفئة</th>'+rows.map(f=>'<td>'+esc(f.cat)+'</td>').join('')+'</tr><tr><th>العائد</th>'+rows.map(f=>'<td class="return-cell">'+pct(f.ret)+'</td>').join('')+'</tr><tr><th>المخاطرة</th>'+rows.map(f=>'<td>'+riskLabel(f.risk)+'</td>').join('')+'</tr><tr><th>التصنيف</th>'+rows.map(f=>'<td>'+esc(f.rating||'—')+'</td>').join('')+'</tr><tr><th>SmartScore</th>'+rows.map(f=>'<td>'+fmt(f.score)+'</td>').join('')+'</tr><tr><th>آخر سعر</th>'+rows.map(f=>'<td>'+fmt(f.nav)+'</td>').join('')+'</tr><tr><th>العملة</th>'+rows.map(f=>'<td>'+esc(f.currency||'—')+'</td>').join('')+'</tr></tbody></table></div>';$('comparePanel').hidden=false;$('comparePanel').scrollIntoView({behavior:'smooth',block:'start'});}
+async function refreshBench(h){benchmarkBatch=await B.getBatch(h);const chips=Object.keys(B.BENCHMARKS).map(k=>{const b=B.BENCHMARKS[k],ref=b.type==='yield_average';if(ref)return '<span class="bench-chip is-ref">'+esc(b.label)+'</span>';return '<label class="bench-chip"><input type="checkbox" data-b="'+k+'">'+esc(b.label)+'</label>';}).join('');$('bench').innerHTML=chips+'<label class="bench-chip category-chip"><input type="checkbox" id="bestcat"> الأعلى في فئته</label>';document.querySelectorAll('#bench input[data-b],#bestcat').forEach(x=>x.addEventListener('change',()=>applyFilters(true)));$('msg').textContent='المقارنة تستخدم تاريخ التقرير الفعلي لكل صندوق.';}
+async function setHorizon(h){const seq=++drawSeq;$('rows').innerHTML='<tr><td colspan="10" class="loading">جاري مزامنة العوائد الرسمية…</td></tr>';try{const p=await F.getPerformanceSnapshot(h);if(seq!==drawSeq)return;currentSnapshot=p;await refreshBench(h);if(seq!==drawSeq)return;applyFilters(true);}catch(e){if(seq!==drawSeq)return;$('rows').innerHTML='<tr><td colspan="10" class="error-state">تعذر تحميل هذا الأفق.<br><small>'+esc(e.message)+'</small></td></tr>';}}
+function bind(){const advanced=$('advancedToggle');advanced.onclick=()=>{const box=$('advancedFilters');box.hidden=!box.hidden;advanced.setAttribute('aria-expanded',String(!box.hidden));advanced.textContent=box.hidden?'فلاتر متقدمة':'إخفاء الفلاتر';};$('q').addEventListener('input',()=>applyFilters(true));['cat','mgr','score','viewSort','riskFilter','currency','navFilter'].forEach(id=>$(id).addEventListener('change',()=>applyFilters(true)));$('h').addEventListener('change',()=>setHorizon($('h').value));$('pageSize').addEventListener('change',()=>{pageSize=Number($('pageSize').value);page=1;renderTable();renderPagination();});$('selectAll').addEventListener('change',()=>{const view=filtered.slice((page-1)*pageSize,page*pageSize);view.forEach(f=>$('selectAll').checked?selected.add(f.id):selected.delete(f.id));renderTable();updateSelection();});$('compareBtn').addEventListener('click',renderCompare);$('closeCompare').addEventListener('click',()=>$('comparePanel').hidden=true);$('reset').addEventListener('click',()=>{selected.clear();$('q').value='';$('cat').value='';$('mgr').value='';$('score').value='';$('riskFilter').value='';$('currency').value='';$('navFilter').value='';$('viewSort').value='return';$('h').value=F.ORDER.includes('last12m')?'last12m':F.ORDER[0];setHorizon($('h').value);});}
+(async function(){try{bind();const u=await F.getUniverse();universe=u.list;const horizons=u.horizons.filter(h=>F.ORDER.includes(h));$('h').innerHTML=horizons.map(x=>'<option value="'+x+'">'+LABEL[x]+'</option>').join('');$('h').value=horizons.includes('last12m')?'last12m':horizons[0]||'';[...new Set(universe.map(x=>x.cat))].sort().forEach(x=>$('cat').insertAdjacentHTML('beforeend','<option value="'+esc(x)+'">'+esc(x)+'</option>'));[...new Set(universe.map(x=>x.manager).filter(Boolean))].sort().forEach(x=>$('mgr').insertAdjacentHTML('beforeend','<option value="'+esc(x)+'">'+esc(x)+'</option>'));[...new Set(universe.map(x=>x.currency).filter(Boolean))].sort().forEach(x=>$('currency').insertAdjacentHTML('beforeend','<option value="'+esc(x)+'">'+esc(x)+'</option>'));await setHorizon($('h').value);}catch(e){console.error(e);$('rows').innerHTML='<tr><td colspan="10" class="error-state">تعذر تحميل بيانات الصناديق.<br><small>'+esc(e.message)+'</small></td></tr>';}})();
 })();
-
-/* merged: was funds-terminal-polish.js — visual layer only */
-/* Visual layer only. Reads already-rendered fund fields; no financial calculations or data fetching. */
-(function(){
-'use strict';
-function num(v){
-  const n=Number(String(v||'').replace(/[%+,]/g,'').trim());
-  return Number.isFinite(n)?n:null;
-}
-function syncMarketStrip(){
-  const h=document.getElementById('h');
-  const meta=document.getElementById('horizonMeta');
-  const kpis=document.getElementById('kpis');
-  if(h&&h.value){
-    const o=h.options[h.selectedIndex];
-    const el=document.getElementById('marketHorizon');
-    if(el) el.textContent=o?o.text:'—';
-  }
-  if(meta){
-    const txt=meta.textContent||'';
-    const m=txt.match(/(\d+)\/(\d+)\s*صندوق/);
-    const el=document.getElementById('marketCoverage');
-    if(el&&m) el.textContent=m[1]+' / '+m[2];
-  }
-  const dateKpi=kpis&&kpis.querySelector('.kpi:nth-child(4) b');
-  const dateEl=document.getElementById('marketDates');
-  if(dateKpi&&dateEl) dateEl.textContent=dateKpi.textContent.trim()||'—';
-}
-function syncEvidenceStrip(){
-  const host=document.getElementById('fundsEvidence');
-  if(!host) return;
-  const meta=document.getElementById('horizonMeta');
-  const info=document.getElementById('resultInfo');
-  const h=document.getElementById('h');
-  const horizon=h&&h.options[h.selectedIndex]?h.options[h.selectedIndex].text:'—';
-  const coverage=(meta&&meta.textContent)||'—';
-  const filter=(info&&info.textContent)||'—';
-  host.innerHTML=
-    '<span><b>المصدر</b> · العائد الرسمي لمدير الصندوق</span>'+
-    '<span><b>الأفق</b> · '+horizon+'</span>'+
-    '<span><b>التغطية</b> · '+coverage.replace(/^.*?·\s*/,'')+'</span>'+
-    '<span class="chip chip-verified">موثّق · ليس توصية</span>'+
-    '<span><b>الفلتر</b> · '+filter+'</span>';
-}
-function polishConfidence(cell){
-  if(!cell||cell.dataset.polished==='1') return;
-  cell.dataset.polished='1';
-  const raw=(cell.textContent||'').trim();
-  if(!raw||raw==='—'){cell.innerHTML='<span class="confidence">—</span>';return;}
-  let tier='is-mid';
-  if(/عالية|مرتفع|high|موثوق/i.test(raw)) tier='is-high';
-  else if(/منخفض|ضعيفة|low|محدود/i.test(raw)) tier='is-low';
-  cell.innerHTML='<span class="confidence '+tier+'">'+raw+'</span>';
-}
-function addSignal(row,index,total){
-  const fund=row.children[1];
-  const retCell=row.children[3];
-  const compare=row.children[4];
-  const scoreCell=row.children[5];
-  const riskCell=row.children[7];
-  const confCell=row.children[8];
-  const qual=row.children[9];
-  if(!fund||!retCell||!scoreCell||!qual) return;
-
-  const score=num(scoreCell.textContent);
-  const ret=num(retCell.textContent);
-  const q=(qual.textContent||'').trim();
-
-  let cls='neutral', label='قراءة متوازنة';
-  const weak=score!=null&&score<60;
-  const incomplete=score==null||/غير مؤهل|تحت المراقبة|—/.test(q);
-  if(index<Math.max(5,Math.ceil(total*.15))&&ret!=null&&(weak||incomplete)){
-    cls='warning'; label='عائد مرتفع · يحتاج مراجعة';
-  }else if(score!=null&&score>=75&&!incomplete){
-    cls='positive'; label='إشارة إيجابية';
-  }else if(compare&&/هزم الكل/.test(compare.textContent)){
-    cls='positive'; label='متفوق على المراجع';
-  }
-
-  let signal=fund.querySelector('.row-signal');
-  if(!signal){
-    signal=document.createElement('div');
-    signal.className='row-signal';
-    fund.appendChild(signal);
-  }
-  const wanted='row-signal '+cls;
-  if(signal.className!==wanted){
-    signal.className=wanted;
-    signal.innerHTML='<i class="signal-dot" aria-hidden="true"></i><strong>'+label+'</strong>';
-  }
-  if(cls==='warning') row.classList.add('terminal-row-highlight');
-  else row.classList.remove('terminal-row-highlight');
-
-  if(scoreCell.dataset.polished!=='1'){
-    scoreCell.dataset.polished='1';
-    if(score==null){
-      scoreCell.innerHTML='<span class="smart-score"><span class="smart-score-ring"><b>—</b></span><span class="smart-score-copy"><span>غير مقيم</span><em>لا توجد نتيجة</em></span></span>';
-    }else{
-      const capped=Math.max(0,Math.min(100,score));
-      const tone=score>=75?'قوي':score>=60?'متوسط':'منخفض';
-      scoreCell.innerHTML='<span class="smart-score"><span class="smart-score-ring" style="--score:'+capped+'"><b>'+Math.round(score)+'</b></span><span class="smart-score-copy"><span>SmartScore</span><em>'+tone+'</em></span></span>';
-    }
-  }
-
-  if(!retCell.querySelector('.return-sub')){
-    const sub=document.createElement('span');
-    sub.className='return-sub';
-    sub.textContent=(row.querySelector('.report-date')&&row.querySelector('.report-date').textContent)||'العائد الرسمي';
-    retCell.appendChild(sub);
-  }
-
-  if(qual.dataset.polished!=='1'){
-    qual.dataset.polished='1';
-    const txt=q;
-    const klass=/مؤهل/.test(txt)&&!(/غير|تحت/.test(txt))?'good':/غير|تحت/.test(txt)?'bad':'';
-    qual.innerHTML='<span class="qual-pill '+klass+'">'+txt+'</span>';
-  }
-
-  polishConfidence(confCell);
-
-  if(compare&&compare.dataset.polished!=='1'){
-    compare.dataset.polished='1';
-    const raw=compare.textContent.trim();
-    const good=/هزم الكل/.test(raw);
-    compare.innerHTML='<span class="compare-main '+(good?'':'hold')+'">'+(good?'● ':'○ ')+raw+'</span><span class="compare-sub">نفس تاريخ التقرير</span>';
-  }
-
-  if(riskCell&&riskCell.dataset.polished!=='1'){
-    riskCell.dataset.polished='1';
-    const rv=(riskCell.textContent||'').trim();
-    if(rv&&rv!=='—'){
-      riskCell.innerHTML='<span class="num">'+rv+'</span>';
-    }
-  }
-}
-function run(){
-  syncMarketStrip();
-  syncEvidenceStrip();
-  const rows=[...document.querySelectorAll('#rows > tr')].filter(function(r){
-    return r.children.length>5 && !r.classList.contains('empty') && !r.classList.contains('loading') && !r.classList.contains('error-state');
-  });
-  rows.forEach(function(r,i){ addSignal(r,i,rows.length); });
-}
-let scheduled=false;
-const obs=new MutationObserver(function(){
-  if(scheduled) return;
-  scheduled=true;
-  requestAnimationFrame(function(){ scheduled=false; run(); });
-});
-const target=document.getElementById('rows')||document.documentElement;
-obs.observe(target,{subtree:true,childList:true});
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run);
-else run();
-})();
-
-/* merged: was funds-responsive-ui.js — mobile overlay retired; rows open Fund DNA. */
-/* funds-row-expanded kept as contract marker. */
-(function(){'use strict';})();
