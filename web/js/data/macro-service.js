@@ -40,25 +40,25 @@ function deriveSeries(series,mode){const rows=rowsOf(series);if(mode==='assets')
 function keysForMode(mode){if(!['assets','money','rates'].includes(mode))throw new Error('Unknown macro view mode: '+mode);const kind=mode==='assets'?'asset':mode==='money'?'inflation':'rate';return Object.keys(SERIES).filter(k=>SERIES[k][2]===kind);}
 function rangeText(seriesList){const dates=seriesList.flatMap(rowsOf).map(x=>x.ts_date).filter(validDate).sort();return dates.length?dates[0]+' → '+dates[dates.length-1]:'—';}
 function buildView(data,mode){const keys=keysForMode(mode);return{mode,keys,series:keys.map(key=>({key,meta:SERIES[key],rows:deriveSeries(data.series[key],mode)})),range:rangeText(keys.map(k=>data.series[k]))};}
-function latest(rows){const r=rowsOf(rows);return r.length?r[r.length-1]:null;}
-function previous(rows){const r=rowsOf(rows);return r.length>1?r[r.length-2]:null;}
+function latest(rows){const r=rowsOf(rows).filter(x=>validDate(x?.ts_date)&&num(x?.value)!==null);if(!r.length)return null;return r.reduce((a,b)=>String(b.ts_date)>String(a.ts_date)?b:a);}
+function previous(rows){const r=rowsOf(rows).filter(x=>validDate(x?.ts_date)&&num(x?.value)!==null).sort((a,b)=>a.ts_date.localeCompare(b.ts_date));return r.length>1?r[r.length-2]:null;}
 function recent(rows,count=3){return rowsOf(rows).slice(-count);}
 function mean(rows){const r=rowsOf(rows).map(x=>Number(x.value)).filter(Number.isFinite);return r.length?r.reduce((a,b)=>a+b,0)/r.length:null;}
-function monthlySnapshots(rows,count=36){const map=new Map();rowsOf(rows).forEach(r=>{const month=String(r.ts_date).slice(0,7),current=map.get(month);if(!current||r.ts_date>current.date)map.set(month,{date:r.ts_date,value:Number(r.value)});});return[...map.values()].sort((a,b)=>a.date.localeCompare(b.date)).slice(-count);}
-function compoundedRate(rows){const r=monthlySnapshots(rows,13);if(r.length<12)return null;return(r.slice(-12).reduce((level,x)=>level*(1+Number(x.value)/100),1)-1)*100;}
+function monthlySnapshots(rows,count=36){const map=new Map();rowsOf(rows).forEach(r=>{const month=String(r.ts_date||'').slice(0,7),value=num(r.value);if(!/^\d{4}-\d{2}$/.test(month)||value===null)return;const current=map.get(month);if(!current||String(r.ts_date)>current.date)map.set(month,{date:String(r.ts_date).slice(0,10),value});});return[...map.values()].sort((a,b)=>a.date.localeCompare(b.date)).slice(-count);}
+function compoundedRate(rows){const r=monthlySnapshots(rows,13);if(r.length<12)return null;return(r.slice(-12).reduce((level,x)=>level*(1+x.value/100),1)-1)*100;}
 function annualizedInflation(rows){return compoundedRate(rows);}
-function monthlyChanges(rows,count=24){const s=monthlySnapshots(rows,count+1),out=[];for(let i=1;i<s.length;i++){const a=s[i-1],b=s[i];if(Number.isFinite(a.value)&&a.value!==0&&Number.isFinite(b.value))out.push({date:b.date,value:(b.value-a.value)/a.value*100});}return out.slice(-count);}
-function previous12Rate(rows){const r=monthlySnapshots(rows,24);if(r.length<24)return null;return(r.slice(-24,-12).reduce((level,x)=>level*(1+Number(x.value)/100),1)-1)*100;}
-function latestRecord(data,key){return latest(data.series[key]?.rows||[]);}
+function monthlyChanges(rows,count=24){const s=monthlySnapshots(rows,count+1),out=[];for(let i=1;i<s.length;i++){const a=s[i-1],b=s[i];if(a.value!==0)out.push({date:b.date,value:(b.value-a.value)/a.value*100});}return out.slice(-count);}
+function previous12Rate(rows){const r=monthlySnapshots(rows,24);if(r.length<24)return null;return(r.slice(-24,-12).reduce((level,x)=>level*(1+x.value/100),1)-1)*100;}
+function latestRecord(data,key){return latest(data?.series?.[key]?.rows);}
 function buildEconomicReadModel(data){
- const headline=data.series.cpi_headline_mom_pct?.rows||[];
+ const headline=data?.series?.cpi_headline_mom_pct?.rows||[];
  const tb91=latestRecord(data,'tbill_91_avg_yield_pct'),tb364=latestRecord(data,'tbill_364_avg_yield_pct'),deposit=latestRecord(data,'bank_deposit_6_12m_avg_pct');
  const inflation12=annualizedInflation(headline),priorInflation12=previous12Rate(headline);
  const model={
-  range:rangeText(Object.values(data.series)),
+  range:rangeText(Object.values(data.series||{})),
   errors:data.errors||[],conflicts:data.conflicts||[],
   latest:{inflation:latestRecord(data,'cpi_headline_mom_pct'),coreInflation:latestRecord(data,'cpi_core_mom_pct'),tb91,tb364,deposit},
-  system:{inflation12,priorInflation12,inflationTrend:inflation12!==null&&priorInflation12!==null?inflation12-priorInflation12:null,realCashMargin:tb91&&inflation12!==null?tb91.value-inflation12:null,rateCurve:tb364&&tb91?tb364.value-tb91.value:null,depositBillSpread:tb91&&deposit?tb91.value-deposit.value:null},
+  system:{inflation12,priorInflation12,inflationTrend:inflation12!==null&&priorInflation12!==null?inflation12-priorInflation12:null,realCashMargin:tb91&&inflation12!==null?num(tb91.value)-inflation12:null,rateCurve:tb364&&tb91?num(tb364.value)-num(tb91.value):null,depositBillSpread:tb91&&deposit?num(tb91.value)-num(deposit.value):null},
   rates:['bank_deposit_1_3m_avg_pct','bank_deposit_3_6m_avg_pct','bank_deposit_6_12m_avg_pct','tbill_91_avg_yield_pct','tbill_364_avg_yield_pct'].map(key=>({key,label:SERIES[key][0],record:latestRecord(data,key),rows:data.series[key]?.rows||[]})),
   inflation:{headline:monthlySnapshots(headline,36),core:monthlySnapshots(data.series.cpi_core_mom_pct?.rows||[],36)},
   transmission:['usd_egp_mid','gold_egp_oz','egx30_close','spy_egp'].map(key=>({key,label:SERIES[key][0],change:monthlyChanges(data.series[key]?.rows||[],24).at(-1)||null}))
@@ -66,6 +66,6 @@ function buildEconomicReadModel(data){
  model.completeness={inflation:headline.length,tb91:(data.series.tbill_91_avg_yield_pct?.rows||[]).length,tb364:(data.series.tbill_364_avg_yield_pct?.rows||[]).length,deposit:(data.series.bank_deposit_6_12m_avg_pct?.rows||[]).length};
  return model;
 }
-function readout(data){const m=data.readModel||buildEconomicReadModel(data);return{...m.system,latest:m.latest,conflicts:m.conflicts.length,errors:m.errors,completeness:m.completeness};}
+function readout(data){return buildEconomicReadModel(data);}
 window.KHATER_DATA.macro={SERIES,getSeries,getAll,deriveSeries,keysForMode,rangeText,buildView,latest,previous,recent,mean,annualizedInflation,monthlySnapshots,monthlyChanges,readout,buildEconomicReadModel};
 })(window);
