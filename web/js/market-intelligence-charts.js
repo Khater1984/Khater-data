@@ -1,32 +1,15 @@
-/* Market Intelligence mini-trends — SVG; colors/fonts from KHATER_THEME (platform-shell). */
+/* Market Intelligence mini-trends — one renderer, no external watermark. */
 (function(window){'use strict';
 function theme(){return window.KHATER_THEME||{};}
-function COLORS(){var t=theme();return{up:(t.color&&t.color.up)||'#087f63',down:(t.color&&t.color.down)||'#c73538',flat:(t.color&&t.color.muted)||'#607477',fillUp:t.fillUp||'rgba(8,127,99,.12)',fillDown:t.fillDown||'rgba(199,53,56,.12)',fillFlat:t.fillFlat||'rgba(96,116,119,.10)'};}
+function colors(){const t=theme();return{up:t.color?.up||'#087f63',down:t.color?.down||'#c73538',flat:t.color?.muted||'#607477',fillUp:t.fillUp||'rgba(8,127,99,.12)',fillDown:t.fillDown||'rgba(199,53,56,.12)',fillFlat:t.fillFlat||'rgba(96,116,119,.10)'};}
 const defs=[['USD / EGP','usd_egp_mid'],['EGX30','egx30_close'],['Gold / EGP','gold_egp_oz'],['Silver / EGP','silver_egp_oz'],['S&P 500 / EGP','spy_egp'],['NASDAQ 100 / EGP','qqq_egp'],['BTC / EGP','btc_egp']];
 const seriesMap={};
-function renderOne(el,rows){
-  if(!Array.isArray(rows)||rows.length<2)return;
-  const values=rows.map(r=>({d:r.ts_date,v:Number(r.value)})).filter(x=>x.d&&Number.isFinite(x.v)).slice(-45);
-  if(values.length<2)return;
-  const first=values[0].v,last=values[values.length-1].v,delta=last-first;
-  const C=COLORS();
-  const color=delta>0?C.up:delta<0?C.down:C.flat;
-  const fill=delta>0?C.fillUp:delta<0?C.fillDown:C.fillFlat;
-  const min=Math.min(...values.map(x=>x.v)),max=Math.max(...values.map(x=>x.v)),range=max-min||1;
-  const w=240,h=48,p=2;
-  const pts=values.map((x,i)=>{const px=p+(i/(values.length-1))*(w-p*2);const py=h-p-((x.v-min)/range)*(h-p*2);return [px,py]});
-  const line=pts.map(p=>p.join(',')).join(' ');
-  const area=`${p},${h-p} ${line} ${w-p},${h-p}`;
-  el.replaceChildren();
-  el.classList.add('trend-rendered');
-  el.setAttribute('aria-label',`${el.dataset.label||'المؤشر'} اتجاه ${delta>=0?'صاعد':'هابط'}`);
-  el.innerHTML=`<svg class="mini-trend" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" focusable="false" aria-hidden="true"><polygon points="${area}" fill="${fill}"/><polyline points="${line}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`;
+function renderOne(el,rows){if(!Array.isArray(rows)||rows.length<2)return;const values=rows.map(r=>({d:r.ts_date,v:Number(r.value)})).filter(x=>x.d&&Number.isFinite(x.v)).slice(-45);if(values.length<2)return;const delta=values.at(-1).v-values[0].v,C=colors(),color=delta>0?C.up:delta<0?C.down:C.flat,fill=delta>0?C.fillUp:delta<0?C.fillDown:C.fillFlat,min=Math.min(...values.map(x=>x.v)),max=Math.max(...values.map(x=>x.v)),range=max-min||1,w=240,h=48,p=2,pts=values.map((x,i)=>[p+(i/(values.length-1))*(w-p*2),h-p-((x.v-min)/range)*(h-p*2)]),line=pts.map(x=>x.join(',')).join(' '),area=`${p},${h-p} ${line} ${w-p},${h-p}`;el.replaceChildren();el.classList.add('trend-rendered');el.setAttribute('aria-label',`${el.dataset.label||'المؤشر'} اتجاه ${delta>=0?'صاعد':'هابط'}`);el.innerHTML=`<svg class="mini-trend" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" focusable="false" aria-hidden="true"><polygon points="${area}" fill="${fill}"/><polyline points="${line}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`;}
+function renderSlots(){document.querySelectorAll('.trend-slot[data-label]').forEach(el=>{const s=seriesMap[el.dataset.label];if(s)renderOne(el,s.rows);});}
+async function boot(canonicalSeries){
+  if(Array.isArray(canonicalSeries)) canonicalSeries.forEach(s=>{if(s?.label)seriesMap[s.label]=s.series||s;});
+  if(!Array.isArray(canonicalSeries)&&window.KHATER_DATA?.macro){await Promise.all(defs.map(async([label,key])=>{try{seriesMap[label]=await window.KHATER_DATA.macro.getSeries(key)}catch(e){seriesMap[label]=null;}}));}
+  renderSlots();
 }
-async function boot(){
-  if(!window.KHATER_DATA?.macro)return;
-  await Promise.all(defs.map(async([label,key])=>{try{seriesMap[label]=await window.KHATER_DATA.macro.getSeries(key)}catch(e){seriesMap[label]=null}}));
-  document.querySelectorAll('.trend-slot[data-label]').forEach(el=>{const s=seriesMap[el.dataset.label];if(s)renderOne(el,s.rows)});
-}
-window.KHATER_CHARTS={boot,renderOne};
-document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,80),{once:true});
+window.KHATER_CHARTS={boot,renderOne,renderSlots};
 })(window);
