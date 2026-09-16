@@ -1,22 +1,17 @@
-/* Funds filter surface: compact by default, expandable on demand. */
+/* Funds filter surface: two rows by default, expandable on demand. */
 .page-funds .bench-list{
-  display:grid;
-  grid-template-rows:repeat(2,minmax(31px,auto));
-  grid-auto-flow:column;
-  grid-auto-columns:max-content;
-  align-items:stretch;
-  justify-content:start;
+  display:flex;
+  flex-wrap:wrap;
+  align-content:flex-start;
   gap:7px 8px;
   margin-top:7px;
   overflow:hidden;
-  padding-bottom:2px;
   max-height:69px;
   transition:max-height .2s ease;
 }
 .page-funds .bench-list.is-expanded{
   max-height:none;
-  overflow-x:auto;
-  overflow-y:hidden;
+  overflow:visible;
 }
 .page-funds .bench-chip{white-space:nowrap}
 .page-funds .filters-more{
@@ -30,6 +25,3 @@
   padding:4px 0;
 }
 .page-funds .filters-more:hover{text-decoration:underline}
-@media(max-width:760px){
-  .page-funds .bench-list{grid-template-rows:repeat(2,31px);max-height:69px}
-}
