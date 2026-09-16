@@ -18,20 +18,24 @@
 #tip{display:none;position:absolute;top:14px;right:14px;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-size:12px;min-width:210px;z-index:5;direction:rtl;box-shadow:0 8px 24px rgba(0,0,0,.08)}
 .asset-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
 .legend-item{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:transparent;color:inherit;border-radius:999px;padding:7px 11px;cursor:pointer;font:inherit;font-size:12px}
-.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:0 0 auto}
-.why{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}
-.why .card{border:1px solid var(--line);border-radius:18px;padding:18px;background:var(--card)}
-.why h3{margin:5px 0 8px}
-.why p{margin:0;line-height:1.9;font-size:13px}
-.modal{display:none;position:fixed;inset:0;background:#0009;z-index:40;align-items:center;justify-content:center;padding:18px}
-.modal.on{display:flex}
-.modal .box{background:var(--bg);border:1px solid var(--line);border-radius:16px;max-width:860px;width:100%;max-height:90vh;overflow:auto;padding:18px}
-#dchart{height:320px;direction:ltr}
-.badge-g{color:var(--good);font-size:13px}.badge-r{color:var(--bad);font-size:13px}
-@media(max-width:800px){
- .panel-head{flex-direction:column}
- .panel-note{white-space:normal}
- .investment-panel{padding:15px;border-radius:18px}
- #chart{height:360px}
- .why{grid-template-columns:1fr}
-}
+
+/* Embedded macro context: part of the Value of Money experience, not a competing page. */
+.embedded-economic-context{margin:0 0 22px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 10px 35px rgba(0,0,0,.045)}
+.context-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:18px}
+.context-head h2{margin:5px 0 7px;font-size:clamp(20px,2.6vw,28px);letter-spacing:-.2px}
+.context-head p{margin:0;max-width:760px;color:var(--muted);line-height:1.85;font-size:14px}
+.context-reference{flex:0 0 auto;border:1px solid var(--line);border-radius:10px;padding:9px 12px;color:var(--text);font-size:12px;text-decoration:none;white-space:nowrap;background:var(--bg)}
+.context-reference:hover{border-color:var(--accent)}
+.context-metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.context-metric{min-width:0;border:1px solid var(--line);border-radius:14px;padding:13px 14px;background:var(--bg)}
+.context-metric-top{display:flex;justify-content:space-between;gap:8px;align-items:center;color:var(--muted);font-size:11px}
+.context-date{font-family:var(--font-num);font-size:9px;white-space:nowrap}
+.context-metric strong{display:block;margin-top:9px;font-family:var(--font-num);font-size:clamp(18px,2.2vw,25px);font-weight:700;line-height:1.15;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.context-change{margin-top:7px;font-family:var(--font-num);font-size:11px;font-weight:700;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.context-change.up{color:#15803d}.context-change.down{color:#c53030}.context-change.flat{color:var(--muted)}
+.context-metric small{display:block;margin-top:5px;color:var(--dim);font-size:9px}
+.context-footer{display:flex;justify-content:space-between;gap:12px;margin-top:15px;padding-top:12px;border-top:1px solid var(--line);font-size:10px;color:var(--dim)}
+.context-loading{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.context-loading span{height:86px;border-radius:14px;background:linear-gradient(90deg,var(--bg),var(--card),var(--bg));background-size:200% 100%;animation:contextShimmer 1.2s ease-in-out infinite}.context-error{padding:14px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:12px}
+@keyframes contextShimmer{0%{background-position:0 0}100%{background-position:-200% 0}}
+@media(max-width:900px){.context-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.context-head{flex-direction:column}.context-reference{width:max-content}.context-footer{flex-direction:column}}
+@media(max-width:600px){.hero-mini{padding:24px 0 16px}.investment-panel,.embedded-economic-context{padding:15px;border-radius:17px}.panel-head{flex-direction:column;gap:10px}.panel-note{white-space:normal}.context-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.context-metric{padding:11px}.context-metric strong{font-size:18px}.context-loading{grid-template-columns:repeat(2,1fr)}#chart{height:330px}.context-footer{line-height:1.7}}
