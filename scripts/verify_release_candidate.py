@@ -109,6 +109,12 @@ for item in (
     "web/heatmap.html",
     "web/css/heatmap.css",
     "web/js/heatmap-redirect.js",
+    "web/js/engine.js",
+    "web/js/live.js",
+    "web/js/map-page.js",
+    "web/css/page-map.css",
+    "web/css/app.css",
+    "web/css/khater-design-system.css",
 ):
     if (ROOT / item).is_file():
         errors.append(f"retired surface still present: {item}")
