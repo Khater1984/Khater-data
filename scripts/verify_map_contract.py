@@ -16,6 +16,19 @@ for token in ["js/live.js", "js/map-page.js", "js/engine.js", "css/page-map.css"
     if token in html:
         raise SystemExit(f"Map contract failed: retired map/heatmap asset still referenced: {token}")
 
+for item in [
+    "web/js/live.js",
+    "web/js/map-page.js",
+    "web/js/engine.js",
+    "web/css/page-map.css",
+    "web/heatmap.html",
+    "web/css/heatmap.css",
+    "web/css/app.css",
+    "web/css/khater-design-system.css",
+]:
+    if (ROOT / item).is_file():
+        raise SystemExit(f"Map contract failed: retired file still present: {item}")
+
 print("Map contract checks passed")
 print(" - map.html is a wealth redirect")
-print(" - live pages do not load the retired map engine")
+print(" - engine/live/map-page/heatmap/CSS stubs absent")

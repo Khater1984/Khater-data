@@ -60,8 +60,6 @@ for token in required_tokens:
 for stub_name in ("app.css", "khater-design-system.css"):
     stub_path = WEB / "css" / stub_name
     if stub_path.is_file():
-        text = stub_path.read_text(encoding="utf-8")
-        if "platform-shell.css" not in text:
-            raise SystemExit(f"Platform identity failed: {stub_name} must import platform-shell.css")
+        raise SystemExit(f"Platform identity failed: retired identity stub still present: {stub_name}")
 
 print("Platform identity contract passed")
