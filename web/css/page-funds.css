@@ -1,4 +1,7 @@
-/* FUNDS PAGE — STRUCTURE ONLY. Visual identity is owned by khater-design-system.css. */
+/* Funds structure: layout module */
+@import url('./page-funds-layout.css');
+
+/* FUNDS PAGE — STRUCTURE ONLY. Visual identity is owned by platform-shell.css. */
 .page-funds{min-height:100vh;background:var(--kh-bg);color:var(--kh-ink);font-family:var(--kh-font)}
 .page-funds .funds-shell{width:min(100%,var(--kh-max));margin-inline:auto;padding:20px var(--kh-pad) 52px}
 
@@ -48,7 +51,7 @@
 .page-funds .block-title small{font-size:var(--kh-micro);color:var(--kh-muted)}
 .page-funds label{display:block;margin-bottom:9px}
 .page-funds label>span{display:block;margin-bottom:5px;font-size:var(--kh-micro);font-weight:700;color:var(--kh-muted)}
-.page-funds input,.page-funds select{width:100%;height:38px;border:1px solid var(--kh-border);border-radius:var(--kh-r-sm);background:var(--kh-surface);color:var(--kh-ink);padding:0 10px;transition:border-color var(--transition-fast),box-shadow var(--transition-fast),background var(--transition-fast)}
+.page-funds input,.page-funds select{width:100%;height:38px;border:1px solid var(--kh-border);border-radius:var(--kh-r-sm);background:var(--kh-surface);color:var(--kh-ink);padding:0 10px}
 .page-funds input:hover,.page-funds select:hover{border-color:var(--kh-border-strong);background:var(--kh-surface-2)}
 .page-funds input:focus,.page-funds select:focus{border-color:var(--kh-accent);box-shadow:0 0 0 3px var(--focus);outline:none;background:var(--kh-surface)}
 .page-funds .search-control>div{display:flex;align-items:center;border:1px solid var(--kh-border);border-radius:var(--kh-r-sm);background:var(--kh-surface);overflow:hidden}
@@ -95,8 +98,6 @@
 .page-funds tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--kh-surface-2) 42%,var(--kh-surface))}
 .page-funds tbody tr:hover td{background:var(--kh-surface-3)}
 .page-funds tbody tr:last-child td{border-bottom:0}
-.page-funds tbody tr.terminal-row-highlight td{background:var(--kh-warning-soft)}
-.page-funds tbody tr.terminal-row-highlight:hover td{background:color-mix(in srgb,var(--kh-warning-soft) 75%,var(--kh-surface-3))}
 .page-funds .rank-col{font-family:var(--kh-num);color:var(--kh-subtle);font-size:11px}
 .page-funds .fund-col{min-width:190px}
 .page-funds .fund-col a{font-weight:800;color:var(--kh-ink)}
