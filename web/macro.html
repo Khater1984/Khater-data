@@ -1,97 +1,22 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>الاقتصاد — محرك السوق | رادار السوق المصري</title>
-<script src="config.js"></script>
-<script src="js/platform-theme.js"></script>
-<link rel="stylesheet" href="css/app.css">
-<link rel="stylesheet" href="css/header.css">
-<link rel="stylesheet" href="css/page-macro.css">
-<link rel="stylesheet" href="css/platform-shell.css">
+<script src="config.js"></script><script src="js/platform-theme.js"></script>
+<link rel="stylesheet" href="css/app.css"><link rel="stylesheet" href="css/header.css"><link rel="stylesheet" href="css/page-macro.css"><link rel="stylesheet" href="css/platform-shell.css">
 </head>
 <body class="page-macro">
-<header class="site-header">
-  <div class="wrap">
-    <a class="skip-link" href="#main-content">تخطَّ إلى المحتوى الرئيسي</a>
-    <div class="logo">رادار السوق المصري<span>طبقة ذكاء فوق السوق — من السياق إلى القرار</span></div>
-    <nav aria-label="التنقل الرئيسي">
-      <a href="./index.html">الآن</a>
-      <a href="./wealth.html">قيمة ثروتي</a>
-      <a class="active" aria-current="page" href="./macro.html">الاقتصاد</a>
-      <a href="./categories.html">المناطق</a>
-      <a href="./funds.html">الصناديق</a>
-    </nav>
-  </div>
-</header>
+<header class="site-header"><div class="wrap"><a class="skip-link" href="#main-content">تخطَّ إلى المحتوى الرئيسي</a><div class="logo">رادار السوق المصري<span>طبقة ذكاء فوق السوق — من السياق إلى القرار</span></div><nav aria-label="التنقل الرئيسي"><a href="./index.html">الآن</a><a href="./wealth.html">قيمة ثروتي</a><a class="active" aria-current="page" href="./macro.html">الاقتصاد</a><a href="./categories.html">المناطق</a><a href="./funds.html">الصناديق</a></nav></div></header>
 <main id="main-content" class="wrap">
-  <section class="macro-hero">
-    <div class="macro-hero-copy">
-      <div class="eyebrow">ECONOMIC INTELLIGENCE · SYSTEM VIEW</div>
-      <h1>اقتصاد: محرك السوق</h1>
-      <p>هذه الصفحة لا تعيد سؤال «ماذا حدث لـ100 جنيه؟». هنا نقرأ النظام الذي يصنع تكلفة رأس المال: مسار التضخم، ممر العائد النقدي، شكل منحنى الأذون، والفروق التي تكشف كيف تتغير البيئة الاقتصادية.</p>
-      <div class="hero-meta"><span>طبقة البيانات: Supabase · public.macro_series</span><span id="hero-date">—</span></div>
-    </div>
-    <div class="coverage-card" aria-live="polite">
-      <span>نطاق البيانات الفعلي</span>
-      <strong id="coverage">—</strong>
-      <small id="source">جاري القراءة…</small>
-    </div>
-  </section>
-
-  <section class="system-panel panel" aria-labelledby="system-title">
-    <div class="section-head">
-      <div><div class="section-kicker">01 · SYSTEM READ</div><h2 id="system-title">قراءة النظام الاقتصادي</h2><p>مؤشرات مشتقة من السلاسل نفسها، هدفها وصف البيئة لا إصدار توصية.</p></div>
-      <span class="status-chip">LIVE READ MODEL</span>
-    </div>
-    <div class="regime-grid">
-      <article class="regime-main"><span>الحالة الحسابية</span><h3 id="regime-title">—</h3><p id="regime-copy">—</p><small id="conflict-note">—</small></article>
-      <div class="metric-grid">
-        <article><span>التضخم المركب · 12 شهرًا</span><strong id="metric-inflation">—</strong><small id="metric-inflation-note">—</small></article>
-        <article><span>هامش النقد مقابل التضخم</span><strong id="metric-margin">—</strong><small id="metric-margin-note">—</small></article>
-        <article><span>منحنى الأذون</span><strong id="metric-curve">—</strong><small id="metric-curve-note">—</small></article>
-        <article><span>أذون 91 مقابل الودائع</span><strong id="metric-spread">—</strong><small id="metric-spread-note">—</small></article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section panel" aria-labelledby="rates-title">
-    <div class="section-head"><div><div class="section-kicker">02 · COST OF CAPITAL</div><h2 id="rates-title">ممر تكلفة رأس المال</h2><p>نقرأ الودائع وأذون الخزانة كوحدة واحدة لفهم مستوى العائد النقدي واتجاهه، بدل عرضها كبطاقات منفصلة.</p></div></div>
-    <div id="rates-chart" class="macro-chart"></div>
-    <div class="chart-note">كل سلسلة تُرسم بوحدتها الأصلية كنسبة سنوية. لا توجد إعادة معايرة إلى 100 هنا.</div>
-  </section>
-
-  <section class="section panel" aria-labelledby="inflation-title">
-    <div class="section-head"><div><div class="section-kicker">03 · PRICE PRESSURE</div><h2 id="inflation-title">نبض الأسعار</h2><p>التضخم العام والأساسي على ترددهما الشهري الفعلي. الهدف هو قراءة السرعة الحالية للأسعار، لا حساب القوة الشرائية.</p></div></div>
-    <div id="inflation-chart" class="macro-chart"></div>
-    <div class="chart-note">القراءات الشهرية تُعرض كما وردت في قاعدة البيانات؛ لا يتم ملء الأشهر المفقودة.</div>
-  </section>
-
-  <section class="section panel" aria-labelledby="transmission-title">
-    <div class="section-head"><div><div class="section-kicker">04 · MARKET TRANSMISSION</div><h2 id="transmission-title">كيف انتقلت الحركة إلى الأسواق؟</h2><p>بدل تكرار أسعار الأصول، نعرض آخر تغير شهري متاح كأثر للحركة داخل النظام.</p></div></div>
-    <div id="change-grid" class="change-grid"></div>
-    <div class="transmission-note"><strong>ملاحظة:</strong> هذه قراءة وصفية للحركة الشهرية الأخيرة، وليست إثباتًا لعلاقة سببية بين المتغيرات.</div>
-  </section>
-
-  <section class="section panel" aria-labelledby="rate-table-title">
-    <div class="section-head"><div><div class="section-kicker">05 · RATE STRUCTURE</div><h2 id="rate-table-title">هيكل العائد النقدي الآن</h2><p>صف واحد لكل أداة مع تاريخها الفعلي، حتى لا تختلط القراءات ذات التواتر المختلف.</p></div></div>
-    <div class="table-wrap"><table><thead><tr><th scope="col">السلسلة</th><th scope="col">آخر قراءة</th><th scope="col">التاريخ</th></tr></thead><tbody id="rate-table-body"></tbody></table></div>
-  </section>
-
-  <section class="section method-panel" aria-labelledby="method-title">
-    <div class="section-head"><div><div class="section-kicker">06 · DATA CONTRACT</div><h2 id="method-title">حدود القراءة</h2></div></div>
-    <div class="method-grid">
-      <article><strong>مصدر واحد</strong><p>الصفحة تقرأ عبر <code>macro-service.js</code> فقط، وSupabase هو مصدر الحقيقة.</p></article>
-      <article><strong>لا قيم بديلة</strong><p>إذا غابت السلسلة أو لم تكن كافية، تظهر «—» بدل اختراع قراءة.</p></article>
-      <article><strong>التاريخ الفعلي</strong><p id="method-range">—</p></article>
-      <article><strong>التعارضات</strong><p id="method-conflicts">—</p></article>
-    </div>
-  </section>
-  <div id="macro-error" class="error-state" hidden>تعذر قراءة البيانات الفعلية من طبقة البيانات. لم يتم عرض أرقام بديلة.</div>
+<section class="macro-hero"><div class="macro-hero-copy"><div class="eyebrow">ECONOMIC INTELLIGENCE · SYSTEM VIEW</div><h1>اقتصاد: محرك السوق</h1><p>هذه الصفحة لا تعيد سؤال «ماذا حدث لـ100 جنيه؟». هنا نقرأ النظام الذي يصنع تكلفة رأس المال: مسار التضخم، ممر العائد النقدي، شكل منحنى الأذون، والفروق التي تكشف كيف تتغير البيئة الاقتصادية.</p><div class="hero-meta"><span>طبقة البيانات: Supabase · public.macro_series</span><span id="hero-date">—</span></div></div><div class="coverage-card" aria-live="polite"><span>نطاق البيانات الفعلي</span><strong id="coverage">—</strong><small id="source">جاري القراءة…</small></div></section>
+<section class="system-panel panel" aria-labelledby="system-title"><div class="section-head"><div><div class="section-kicker">01 · SYSTEM READ</div><h2 id="system-title">قراءة النظام الاقتصادي</h2><p>مؤشرات مشتقة من السلاسل نفسها، هدفها وصف البيئة لا إصدار توصية.</p></div><span class="status-chip">LIVE READ MODEL</span></div><div class="regime-grid"><article class="regime-main"><span>الحالة الحسابية</span><h3 id="regime-title">—</h3><p id="regime-copy">—</p><small id="conflict-note">—</small></article><div class="metric-grid"><article><span>التضخم المركب · 12 شهرًا</span><strong id="metric-inflation">—</strong><small id="metric-inflation-note">—</small></article><article><span>هامش النقد مقابل التضخم</span><strong id="metric-margin">—</strong><small id="metric-margin-note">—</small></article><article><span>منحنى الأذون</span><strong id="metric-curve">—</strong><small id="metric-curve-note">—</small></article><article><span>أذون 91 مقابل الودائع</span><strong id="metric-spread">—</strong><small id="metric-spread-note">—</small></article></div></div></section>
+<section class="section panel" aria-labelledby="rates-title"><div class="section-head"><div><div class="section-kicker">02 · COST OF CAPITAL</div><h2 id="rates-title">ممر تكلفة رأس المال</h2><p>نقرأ الودائع وأذون الخزانة كوحدة واحدة لفهم مستوى العائد النقدي واتجاهه، بدل عرضها كبطاقات منفصلة.</p></div></div><div id="rates-chart" class="macro-chart"></div><div class="chart-note">كل سلسلة تُرسم بوحدتها الأصلية كنسبة سنوية. لا توجد إعادة معايرة إلى 100 هنا.</div></section>
+<section class="section panel" aria-labelledby="inflation-title"><div class="section-head"><div><div class="section-kicker">03 · PRICE PRESSURE</div><h2 id="inflation-title">نبض الأسعار</h2><p>التضخم العام والأساسي على ترددهما الشهري الفعلي. الهدف هو قراءة السرعة الحالية للأسعار، لا حساب القوة الشرائية.</p></div></div><div id="inflation-chart" class="macro-chart"></div><div class="chart-note">القراءات الشهرية تُعرض كما وردت في قاعدة البيانات؛ لا يتم ملء الأشهر المفقودة.</div></section>
+<section class="section panel" aria-labelledby="transmission-title"><div class="section-head"><div><div class="section-kicker">04 · MARKET TRANSMISSION</div><h2 id="transmission-title">كيف انتقلت الحركة إلى الأسواق؟</h2><p>بدل تكرار أسعار الأصول، نعرض آخر تغير شهري متاح كأثر للحركة داخل النظام.</p></div></div><div id="change-grid" class="change-grid"></div><div class="transmission-note"><strong>ملاحظة:</strong> هذه قراءة وصفية للحركة الشهرية الأخيرة، وليست إثباتًا لعلاقة سببية بين المتغيرات.</div></section>
+<section class="section panel" aria-labelledby="rate-table-title"><div class="section-head"><div><div class="section-kicker">05 · RATE STRUCTURE</div><h2 id="rate-table-title">هيكل العائد النقدي الآن</h2><p>صف واحد لكل أداة مع تاريخها الفعلي، حتى لا تختلط القراءات ذات التواتر المختلف.</p></div></div><div class="table-wrap"><table><thead><tr><th scope="col">السلسلة</th><th scope="col">آخر قراءة</th><th scope="col">التاريخ</th></tr></thead><tbody id="rate-table-body"></tbody></table></div></section>
+<section class="section method-panel" aria-labelledby="method-title"><div class="section-head"><div><div class="section-kicker">06 · DATA CONTRACT</div><h2 id="method-title">حدود القراءة</h2></div></div><div class="method-grid"><article><strong>مصدر واحد</strong><p>الصفحة تقرأ عبر <code>macro-service.js</code> فقط، وSupabase هو مصدر الحقيقة.</p></article><article><strong>لا قيم بديلة</strong><p>إذا غابت السلسلة أو لم تكن كافية، تظهر «—» بدل اختراع قراءة.</p></article><article><strong>التاريخ الفعلي</strong><p id="method-range">—</p></article><article><strong>التعارضات</strong><p id="method-conflicts">—</p></article></div><div id="data-diagnostics" class="data-diagnostics" aria-live="polite"></div></section>
+<div id="macro-error" class="error-state" hidden>تعذر قراءة البيانات الفعلية من طبقة البيانات. لم يتم عرض أرقام بديلة.</div>
 </main>
-<script src="js/data/supabase-client.js"></script>
-<script src="js/data/macro-service.js"></script>
-<script src="js/macro-screen.js"></script>
-</body>
-</html>
+<script src="js/data/supabase-client.js"></script><script src="js/data/macro-service.js"></script><script src="js/macro-screen.js"></script>
+</body></html>
