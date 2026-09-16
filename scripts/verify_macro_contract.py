@@ -7,15 +7,15 @@ service = (ROOT / "web/js/data/macro-service.js").read_text(encoding="utf-8")
 screen = (ROOT / "web/js/macro-screen.js").read_text(encoding="utf-8")
 html = (ROOT / "web/macro.html").read_text(encoding="utf-8")
 
-for token in ["getSeries", "getAll", "buildView", "deriveSeries", "keysForMode", "annualizedInflation", "monthlyChanges", "readout", "/rest/v1/macro_series?"]:
+for token in ["getSeries", "getAll", "buildView", "buildEconomicReadModel", "deriveSeries", "keysForMode", "annualizedInflation", "monthlyChanges", "readout", "/rest/v1/macro_series?"]:
     if token not in service:
         raise SystemExit(f"Macro contract failed: service missing {token}")
 
-for token in ["svc.getAll()", "svc.readout(data)", "svc.monthlySnapshots", "svc.monthlyChanges", "svc.rangeText"]:
+for token in ["svc.getAll()", "svc.readout(data)", "data.readModel", "svc.buildEconomicReadModel", "svc.monthlySnapshots"]:
     if token not in screen:
         raise SystemExit(f"Macro contract failed: controller missing {token}")
 
-for forbidden in ["/rest/v1/", "window.KHATER_DATA.supabase", "macro_series?", "index100(", "purchasingPower(", "annualizedInflation("]:
+for forbidden in ["/rest/v1/", "window.KHATER_DATA.supabase", "macro_series?", "index100(", "purchasingPower(", "annualizedInflation(", "monthlyChanges("]:
     if forbidden in screen:
         raise SystemExit(f"Macro contract failed: screen owns domain/data logic: {forbidden}")
 
@@ -40,6 +40,6 @@ for legacy in [
             raise SystemExit(f"Macro contract failed: legacy macro asset still present: {legacy}")
 
 print("Macro contract checks passed")
-print(" - service: canonical macro read model + derivations")
-print(" - screen: economic intelligence rendering only")
+print(" - service: canonical economic read model + derivations")
+print(" - screen: read-model rendering only")
 print(" - legacy macro controller/intelligence layer: removed")
