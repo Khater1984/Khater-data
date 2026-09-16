@@ -1,8 +1,7 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>FUND DNA · Institutional Profile</title>
   <script src="config.js"></script>
   <link rel="stylesheet" href="css/app.css">
@@ -17,19 +16,16 @@
       <div class="logo">رادار السوق المصري<span>FUND DNA · ملف مؤسسي</span></div>
       <nav aria-label="التنقل الرئيسي">
         <a href="./index.html">البداية</a>
-        <a href="./map.html">ماذا حدث للفلوس؟</a>
+        <a href="./map.html" hidden aria-hidden="true">ماذا حدث للفلوس؟</a>
+        <a href="./categories.html">المناطق</a>
         <a href="./funds.html">الصناديق</a>
-        <a href="./categories.html">خريطة الفئات</a>
-        <a href="./macro.html">الاقتصاد</a>
-        <a href="./why.html">المنهج</a>
+        <a href="./wealth.html">قيمة ثروتي</a>
       </nav>
     </div>
   </header>
   <main id="main-content" class="wrap fund-page">
     <h1 class="visually-hidden">FUND DNA</h1>
-    <div id="app" class="fund-app" aria-live="polite">
-      <div class="loading">جاري تحميل FUND DNA…</div>
-    </div>
+    <div id="app" class="fund-app" aria-live="polite"><div class="loading">جاري تحميل FUND DNA…</div></div>
   </main>
 <script src="js/data/supabase-client.js"></script>
 <script src="js/data/fund-service.js"></script>
