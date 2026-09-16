@@ -1,4 +1,4 @@
-/* Macro intelligence — layout only. Typography from platform-shell. */
+/* Macro intelligence — layout only */
 .macro-intel .num,.macro-panel .num{
   direction:ltr;unicode-bidi:isolate;
   font-variant-numeric:tabular-nums lining-nums;

@@ -1,37 +1,18 @@
-/* FLUSI — layout only; identity from platform-shell */
-.page-map{background:var(--shell-bg);color:var(--shell-ink)}
-.hero-mini{padding:34px 0 22px;max-width:920px}
-.hero-mini h1{font-size:clamp(30px,4vw,46px);letter-spacing:-.5px;margin:7px 0 10px;color:var(--shell-ink)}
-.hero-mini .muted{font-size:15px;line-height:1.9;max-width:780px;color:var(--shell-muted)}
-.investment-panel{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:22px;padding:22px;margin:4px 0 22px;box-shadow:var(--shell-shadow)}
-.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:14px}
-.panel-head h2{margin:4px 0 5px;font-size:24px;color:var(--shell-ink)}
-.panel-head .muted{margin:0;line-height:1.8;font-size:13px;color:var(--shell-muted)}
-.section-kicker{font-family:var(--font-mono);font-size:10px;letter-spacing:1.2px;color:var(--shell-muted);font-weight:600}
-.panel-note{font-size:11px;color:var(--shell-muted);border:1px solid var(--shell-border);border-radius:999px;padding:7px 11px;white-space:nowrap;margin-top:2px}
-.seg,.ranges{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.seg button,.ranges button{cursor:pointer;border:1px solid var(--shell-border);background:var(--shell-surface);border-radius:10px;padding:8px 13px;font:inherit;color:var(--shell-ink)}
-.seg button.on,.ranges button.on{background:var(--shell-green);color:var(--shell-surface);border-color:transparent}
-.chart-wrap{position:relative;background:var(--shell-surface-soft);border:1px solid var(--shell-border);border-radius:16px;padding:4px;overflow:hidden}
-#chart{height:440px;direction:ltr;background:var(--shell-surface-soft)}
-#tip{display:none;position:absolute;top:14px;right:14px;background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:11px;padding:10px 12px;font-size:12px;min-width:210px;z-index:5;direction:rtl;box-shadow:var(--shell-shadow)}
-.asset-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
-.legend-item{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--shell-border);background:var(--shell-surface);color:var(--shell-ink);border-radius:999px;padding:7px 11px;cursor:pointer;font:inherit;font-size:12px}
-.embedded-economic-context{margin:0 0 22px;background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:22px;padding:22px;box-shadow:var(--shell-shadow)}
-.context-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:18px}
-.context-head h2{margin:5px 0 7px;font-size:clamp(20px,2.6vw,28px);color:var(--shell-ink)}
-.context-head p{margin:0;color:var(--shell-muted);font-size:13px;line-height:1.7}
-.context-reference{flex:0 0 auto;border:1px solid var(--shell-border);border-radius:10px;padding:9px 12px;color:var(--shell-ink);font-size:12px;text-decoration:none;white-space:nowrap;background:var(--shell-surface-soft)}
-.context-metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-.context-metric{min-width:0;border:1px solid var(--shell-border);border-radius:14px;padding:13px 14px;background:var(--shell-surface-soft)}
-.context-metric-top{display:flex;justify-content:space-between;gap:8px;align-items:center;color:var(--shell-muted);font-size:11px}
-.context-date{font-family:var(--font-mono);font-size:9px;white-space:nowrap}
-.context-metric strong{display:block;margin-top:9px;font-family:var(--font-mono);font-size:clamp(18px,2.2vw,25px);font-weight:700;line-height:1.15;direction:ltr;text-align:right;font-variant-numeric:tabular-nums;color:var(--shell-ink)}
-.context-change{margin-top:7px;font-family:var(--font-mono);font-size:11px;font-weight:700;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
-.context-change.up{color:var(--shell-green)}.context-change.down{color:var(--shell-red)}.context-change.flat{color:var(--shell-muted)}
-.context-metric small{display:block;margin-top:5px;color:var(--shell-muted);font-size:9px}
-.context-footer{display:flex;justify-content:space-between;gap:12px;margin-top:15px;padding-top:12px;border-top:1px solid var(--shell-border);font-size:10px;color:var(--shell-muted)}
-.context-loading{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.context-loading span{height:86px;border-radius:14px;background:var(--shell-surface-soft)}
-.context-error{padding:14px;border:1px dashed var(--shell-border);border-radius:12px;color:var(--shell-muted);font-size:12px}
-@media(max-width:900px){.context-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.context-head{flex-direction:column}}
-@media(max-width:600px){.hero-mini{padding:24px 0 16px}.investment-panel,.embedded-economic-context{padding:15px;border-radius:17px}.panel-head{flex-direction:column;gap:10px}.context-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.context-metric strong{font-size:18px}#chart{height:330px}}
+/* Map page — layout only. Typography from platform-shell. */
+.page-map .wrap{padding-bottom:48px}
+.page-map .hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.7fr);gap:16px;align-items:end;margin-bottom:18px}
+.page-map .hero h1{margin:0;font-size:var(--text-page);line-height:1.2}
+.page-map .hero p{margin:8px 0 0;color:var(--shell-muted);max-width:62ch;line-height:1.7}
+.page-map .section-kicker{font-size:10px;letter-spacing:1.2px;color:var(--shell-muted);font-weight:600;text-transform:uppercase}
+.page-map .context-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0}
+.page-map .context-card{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-md);padding:14px;box-shadow:var(--shell-shadow)}
+.page-map .context-date{font-size:9px;white-space:nowrap;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.page-map .context-metric strong{display:block;margin-top:9px;font-size:clamp(18px,2.2vw,25px);font-weight:800;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.page-map .context-change{margin-top:6px;font-size:12px;font-weight:700;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.page-map .investment-panel{margin-top:18px}
+.page-map .chart-wrap{min-height:400px}
+.page-map #chart{height:440px;width:100%}
+.page-map .seg button,.page-map .ranges button{height:36px;padding:0 14px}
+.page-map .why{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.page-map .tiles,#assets,#policy,h3 + .tiles{display:none}
+@media(max-width:800px){.page-map .why{grid-template-columns:1fr}.page-map .hero{grid-template-columns:1fr}}
