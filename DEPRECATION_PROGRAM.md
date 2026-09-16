@@ -30,6 +30,9 @@ executable program. A file does **not** stay forever because its name contains
 | `web/js/viz.js` | 0 references; palette/charts live in `platform-theme.js` / screens |
 | `web/js/score.js` | 0 references; SmartScore presentation is `fund-smartscore.js` |
 | `web/data/yearbook.json` | 0 references; snapshot not used by runtime or scripts |
+| `web/js/funds-terminal-polish.js` | **MERGE→DELETE** inlined into `funds-screen-v2.js` |
+| `web/js/funds-responsive-ui.js` | **MERGE→DELETE** inlined into `funds-screen-v2.js` |
+| `web/js/home-redesign.js` | **MERGE→DELETE** into `home-page.js` (earlier pass) |
 
 ### KEEP (canonical)
 
@@ -40,6 +43,7 @@ executable program. A file does **not** stay forever because its name contains
 | `web/css/page-*.css`, `fund-detail.css`, `opportunity-layer.css`, `accordion.css`, `macro-intelligence.css`, `brief-page.css` | Layout / structure only |
 | `web/js/data/*-service.js`, `supabase-client.js` | Canonical data layer |
 | `web/js/*-screen-v2.js`, `home-page.js`, `map-page.js`, fund-* modules | Canonical screens |
+| `web/js/funds-experience.js` | Funds composition entrypoint (screen + opportunity) |
 | `web/heatmap.html` + `heatmap-redirect.js` | Compatibility **route** only |
 
 ### KEEP — DEPRECATE (stub, do not edit)
@@ -52,22 +56,17 @@ executable program. A file does **not** stay forever because its name contains
 Both files are **one-line re-exports** of `platform-shell.css`. They are not a
 second design system.
 
-### MERGE (scheduled — not dual identity)
+### MERGE (remaining)
 
 | Asset | Merge into | Condition before merge |
 |-------|------------|------------------------|
-| `web/js/home-redesign.js` | `home-page.js` | Single renderer; one script tag on `index.html` |
-| `web/js/funds-terminal-polish.js` | `funds-screen-v2.js` | Visual-only helpers inlined; no behavior change |
-| `web/js/funds-responsive-ui.js` | `funds-screen-v2.js` | Same |
 | `web/js/macro-intelligence.js` + boot | `macro-screen-v2.js` | After parity check on macro page |
-
-Until merged, these remain **runtime dependencies** (not orphans).
 
 ### DEPRECATE name only (canonical code)
 
 | Name | Reality |
 |------|---------|
-| `funds-screen-v2.js` | Canonical funds screen |
+| `funds-screen-v2.js` | Canonical funds screen (+ former polish/responsive) |
 | `macro-screen-v2.js` | Canonical macro screen |
 | `categories-screen-v2.js` | Canonical categories screen |
 
@@ -102,7 +101,7 @@ Every consolidation pass:
 1. Run `python scripts/audit_frontend_references.py`
 2. For each `ORPHAN CANDIDATE`, record decision in the table above
 3. Execute DELETE for zero-ref dead code in the same PR when safe
-4. Execute at most one MERGE track per pass (prefer home or funds polish)
+4. Execute at most one MERGE track per pass
 5. Update this file’s dates and tables
 
 ## Relation to FRONTEND_CONSOLIDATION.md
