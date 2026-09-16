@@ -1,5 +1,6 @@
 /* Platform theme bridge — reads identity from platform-shell.css :root.
- * Charts use Cairo (same as platform typography contract).
+ * Charts use Cairo and semantic up/down colors from the platform identity.
+ * No chart vendor branding/watermark is requested by this bridge.
  */
 (function (window, document) {
   'use strict';
@@ -27,32 +28,35 @@
     var green = css('--shell-green', '#087f63');
     var red = css('--shell-red', '#c73538');
     var gold = css('--shell-gold', '#a9652b');
-    var muted = css('--shell-muted', '#607477');
+    var muted = css('--shell-muted', '#4a6063');
     var surface = css('--shell-surface', '#ffffff');
-    var soft = css('--shell-surface-soft', '#f7faf9');
-    var border = css('--shell-border', '#d9e2e1');
-    var ink = css('--shell-ink', '#0e2327');
+    var soft = css('--shell-surface-soft', '#f3f8f6');
+    var border = css('--shell-border', '#c5d4d0');
+    var ink = css('--shell-ink', '#0b1c1f');
     var caution = css('--shell-caution', '#9a7112');
+    var info = css('--shell-info', '#3d6b8a');
     var fontAr = css('--font-arabic', 'Cairo, sans-serif').replace(/^[\"']|[\"']$/g, '');
 
-    var palette = [green, gold, css('--shell-info', '#3d6b8a'), caution, muted, red, '#14B891', '#5D6E9A'];
+    var palette = [green, gold, info, caution, muted, red, '#14B891', '#5D6E9A'];
 
     return {
       color: {
-        bg: css('--shell-bg', '#f3f6f5'),
+        bg: css('--shell-bg', '#e7eeeb'),
         surface: surface,
         surfaceSoft: soft,
         ink: ink,
         muted: muted,
         border: border,
-        borderStrong: css('--shell-border-strong', '#bccdca'),
+        borderStrong: css('--shell-border-strong', '#a7bdb7'),
         up: green,
         down: red,
+        flat: muted,
         gold: gold,
         caution: caution,
+        info: info,
         chartPrimary: css('--chart-primary', green),
         chartSecondary: css('--chart-secondary', gold),
-        chartGrid: css('--chart-grid', '#e3ebe9'),
+        chartGrid: css('--chart-grid', '#dce8e4'),
         chartAxis: css('--chart-axis', muted)
       },
       font: {
@@ -65,7 +69,7 @@
         usd_egp_mid: green,
         gold_egp_oz: gold,
         silver_egp_oz: muted,
-        qqq_egp: css('--shell-info', '#3d6b8a'),
+        qqq_egp: info,
         spy_egp: green,
         egx30_close: green,
         deposit: caution,
@@ -76,19 +80,44 @@
       fillUp: rgbaFromHex(green, 0.12),
       fillDown: rgbaFromHex(red, 0.12),
       fillFlat: rgbaFromHex(muted, 0.10),
+      directionColor: function (direction) {
+        var d = String(direction || '').toLowerCase();
+        if (d === 'up' || d === 'positive' || d === 'gain') return green;
+        if (d === 'down' || d === 'negative' || d === 'loss') return red;
+        return muted;
+      },
+      directionFill: function (direction, alpha) {
+        var color = this.directionColor(direction);
+        return rgbaFromHex(color, Number.isFinite(Number(alpha)) ? Number(alpha) : 0.12);
+      },
       chartLayout: function () {
         return {
           background: { color: surface },
           textColor: ink,
           fontSize: 12,
-          fontFamily: 'Cairo, sans-serif',
+          fontFamily: fontAr,
           attributionLogo: false
         };
       },
       chartGrid: function () {
         return {
-          vertLines: { color: css('--chart-grid', soft) },
-          horzLines: { color: css('--chart-grid', soft) }
+          vertLines: { color: css('--chart-grid', '#dce8e4') },
+          horzLines: { color: css('--chart-grid', '#dce8e4') }
+        };
+      },
+      chartScale: function () {
+        return {
+          borderColor: border,
+          textColor: muted,
+          minimumWidth: 42,
+          visible: true
+        };
+      },
+      chartText: function () {
+        return {
+          color: ink,
+          fontFamily: fontAr,
+          fontSize: 12
         };
       },
       chartBorder: border,
@@ -99,6 +128,13 @@
         if (x < 0.55) return caution;
         if (x < 0.75) return muted;
         return green;
+      },
+      interaction: {
+        focusRing: css('--shell-focus-ring', 'rgba(8,127,99,.32)'),
+        transitionFast: css('--transition-fast', '140ms cubic-bezier(.2,.7,.2,1)'),
+        transitionNormal: css('--transition-normal', '220ms cubic-bezier(.2,.7,.2,1)'),
+        hoverBorder: css('--shell-border-strong', '#a7bdb7'),
+        activeBackground: css('--shell-green-soft', '#e6f4f0')
       },
       refresh: function () {
         window.KHATER_THEME = build();
@@ -112,7 +148,5 @@
     document.addEventListener('DOMContentLoaded', function () {
       window.KHATER_THEME = build();
     }, { once: true });
-  } else {
-    window.KHATER_THEME = build();
   }
 })(window, document);
