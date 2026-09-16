@@ -33,7 +33,7 @@
     var border = css('--shell-border', '#d9e2e1');
     var ink = css('--shell-ink', '#0e2327');
     var caution = css('--shell-caution', '#9a7112');
-    var fontAr = css('--font-arabic', 'Cairo, sans-serif').replace(/^["']|["']$/g, '');
+    var fontAr = css('--font-arabic', 'Cairo, sans-serif').replace(/^[\"']|[\"']$/g, '');
 
     var palette = [green, gold, css('--shell-info', '#3d6b8a'), caution, muted, red, '#14B891', '#5D6E9A'];
 
@@ -79,8 +79,10 @@
       chartLayout: function () {
         return {
           background: { color: surface },
-          textColor: muted,
-          fontFamily: 'Cairo, sans-serif'
+          textColor: ink,
+          fontSize: 12,
+          fontFamily: 'Cairo, sans-serif',
+          attributionLogo: false
         };
       },
       chartGrid: function () {
