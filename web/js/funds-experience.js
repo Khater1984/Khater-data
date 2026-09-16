@@ -1,21 +1,18 @@
 /*
  * Canonical Funds Experience Entry Point
  * --------------------------------------
- * This file owns composition/order for the Funds surface.
- * Data services remain the only data boundary; the modules below are presentation
- * modules with distinct responsibilities. Pages must load this entry point rather
- * than composing the experience stack themselves.
+ * Owns composition order for the Funds surface.
+ * Data services remain the only data boundary.
+ * Presentation stack: screen (includes former polish + responsive) → opportunity layer.
  */
 (function(window, document){
   'use strict';
-  if (window.KHATER_FUNDS_EXPERIENCE?.started) return;
-  window.KHATER_FUNDS_EXPERIENCE = { started: true, version: '1.0.0' };
+  if (window.KHATER_FUNDS_EXPERIENCE && window.KHATER_FUNDS_EXPERIENCE.started) return;
+  window.KHATER_FUNDS_EXPERIENCE = { started: true, version: '1.1.0' };
 
   const modules = [
     'js/funds-screen-v2.js',
-    'js/funds-terminal-polish.js',
-    'js/opportunity-layer.js',
-    'js/funds-responsive-ui.js'
+    'js/opportunity-layer.js'
   ];
 
   function load(src){
@@ -33,7 +30,7 @@
   }
 
   function boot(){
-    modules.reduce((p, src) => p.then(() => load(src)), Promise.resolve())
+    modules.reduce(function(p, src){ return p.then(function(){ return load(src); }); }, Promise.resolve())
       .catch(function(err){
         console.error('[funds-experience]', err);
         const rows = document.getElementById('rows');

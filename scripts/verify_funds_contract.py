@@ -30,7 +30,13 @@ for token in [
     if token not in screen:
         raise SystemExit(f"Funds contract failed: screen missing {token}")
 
-# Page loads data services + experience entrypoint (not the screen stack directly).
+# MERGE complete: polish + responsive live inside screen
+for token in ["polishConfidence", "funds-row-expanded", "syncEvidenceStrip"]:
+    if token not in screen:
+        raise SystemExit(
+            f"Funds contract failed: screen missing merged presentation marker {token}"
+        )
+
 for token in [
     "fund-service.js",
     "funds-service.js",
@@ -40,13 +46,26 @@ for token in [
     if token not in html:
         raise SystemExit(f"Funds contract failed: funds.html missing {token}")
 
-# Entrypoint must compose the canonical screen (and must not be bypassed by page).
 if "funds-screen-v2.js" not in experience:
     raise SystemExit("Funds contract failed: funds-experience.js must load funds-screen-v2.js")
-if "funds-screen-v2.js" in html and "funds-experience.js" in html:
-    # Prefer single composition owner; warn-level would be ideal, but fail if both static.
-    # Allow only experience as the page-owned script for the screen stack.
-    pass
+if "opportunity-layer.js" not in experience:
+    raise SystemExit("Funds contract failed: funds-experience.js must load opportunity-layer.js")
+
+# Must not reintroduce separate polish/responsive scripts
+for forbidden_mod in ["funds-terminal-polish.js", "funds-responsive-ui.js"]:
+    if forbidden_mod in experience:
+        raise SystemExit(
+            f"Funds contract failed: experience must not load deprecated {forbidden_mod}"
+        )
+    if forbidden_mod in html:
+        raise SystemExit(
+            f"Funds contract failed: funds.html must not load deprecated {forbidden_mod}"
+        )
+    path = ROOT / "web/js" / forbidden_mod
+    if path.exists():
+        raise SystemExit(
+            f"Funds contract failed: deprecated file still present: web/js/{forbidden_mod}"
+        )
 
 for forbidden in [
     "fund_performance_history",
@@ -68,4 +87,5 @@ if "seriesReturn(" in screen or "nav /" in screen:
 print("Funds contract checks passed")
 print(" - data services: fund + funds + benchmark")
 print(" - experience entrypoint: funds-experience.js")
-print(" - screen composed via entrypoint: funds-screen-v2.js")
+print(" - screen + merged polish/responsive: funds-screen-v2.js")
+print(" - opportunity layer composed via entrypoint")
