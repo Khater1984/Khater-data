@@ -48,7 +48,7 @@
 .site-header nav a[href="./macro.html"]{font-size:0}
 .site-header nav a[href="./macro.html"]::after{content:"الاقتصاد";font-size:12.5px}
 .site-header nav a[href="./categories.html"]{font-size:0}
-.site-header nav a[href="./categories.html"]::after{content:"المناطق";font-size:12.5px}
+.site-header nav a[href="./categories.html"]::after{content:"فئات الصناديق";font-size:12.5px}
 .site-header nav a[href="./funds.html"]{font-size:0}
 .site-header nav a[href="./funds.html"]::after{content:"الصناديق";font-size:12.5px}
 .site-header nav a[href="./map.html"],
@@ -58,7 +58,7 @@
   .site-header .logo{font-size:14px}
   .site-header .logo span{display:none}
   .site-header nav{gap:2px}
-  .site-header nav a{height:34px;padding-inline:10px}
+  .site-header nav a{height:34px;padding-inline:8px}
   .site-header nav a[href="./index.html"]::after,
   .site-header nav a[href="./wealth.html"]::after,
   .site-header nav a[href="./macro.html"]::after,

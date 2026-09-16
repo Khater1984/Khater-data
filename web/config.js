@@ -10,9 +10,9 @@ window.KHATER = {
 (function(){
   const canonical = [
     ['./index.html','الآن'],
-    ['./map.html','قيمة فلوسي'],
+    ['./wealth.html','قيمة ثروتي'],
     ['./macro.html','الاقتصاد'],
-    ['./categories.html','المناطق'],
+    ['./categories.html','فئات الصناديق'],
     ['./funds.html','الصناديق']
   ];
   const path = (location.pathname.split('/').pop() || 'index.html').toLowerCase();

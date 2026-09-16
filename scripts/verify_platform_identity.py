@@ -41,8 +41,8 @@ for name in PAGES:
 header = (WEB / "css/header.css").read_text(encoding="utf-8")
 if "platform-shell.css" not in header:
     raise SystemExit("Platform identity failed: header.css is not bound to platform-shell.css")
-if "categories.html" not in header or "المناطق" not in header:
-    raise SystemExit("Platform identity failed: header.css must expose the Areas route")
+if "categories.html" not in header or "فئات الصناديق" not in header:
+    raise SystemExit("Platform identity failed: header.css must expose the Fund Categories route")
 if "heatmap.html" in header:
     raise SystemExit("Platform identity failed: header.css still exposes retired heatmap route")
 

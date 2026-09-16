@@ -52,9 +52,7 @@
       (groups[key] = groups[key] || []).push(fund);
     });
 
-    const categories = Object.keys(groups).sort(function (a, b) {
-      return groups[b].length - groups[a].length;
-    }).map(function (name) {
+    const categories = Object.keys(groups).map(function (name) {
       const items = groups[name];
       const returns = items.map(function (item) { return item.ret; });
       const scores = items.map(function (item) { return item.score; });
@@ -72,6 +70,11 @@
           return b.ret - a.ret;
         })
       };
+    }).sort(function (a, b) {
+      if (a.medianReturn == null && b.medianReturn == null) return b.count - a.count;
+      if (a.medianReturn == null) return 1;
+      if (b.medianReturn == null) return -1;
+      return b.medianReturn - a.medianReturn;
     });
 
     return {

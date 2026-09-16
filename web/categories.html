@@ -2,64 +2,81 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>المناطق — فئات الصناديق | رادار السوق المصري</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f3f6f5">
+  <meta name="color-scheme" content="light">
+  <title>فئات الصناديق | رادار السوق المصري</title>
   <script src="config.js"></script>
   <link rel="stylesheet" href="css/header.css">
   <link rel="stylesheet" href="css/platform-shell.css">
-  <link rel="stylesheet" href="css/page-categories.css">
+  <link rel="stylesheet" href="css/page-categories.css?v=20260916-2">
 </head>
 <body class="page-categories">
-  <a class="skip-link" href="#main-content">تخط’ إلى المحتوى الرئيسي</a>
+  <a class="skip-link" href="#main-content">تخطّ إلى المحتوى الرئيسي</a>
   <header class="site-header">
     <div class="wrap">
-      <div class="logo">رادار السوق المصري<span>اكتشاف الفئات · مقارنة أوضح</span></div>
+      <div class="logo">رادار السوق المصري<span>فئات الصناديق · وسيط العائد الرسمي</span></div>
       <nav aria-label="التنقل الرئيسي">
         <a href="./index.html">الآن</a>
         <a href="./wealth.html">قيمة ثروتي</a>
         <a href="./macro.html">الاقتصاد</a>
-        <a href="./categories.html" class="active" aria-current="page">المناطق</a>
+        <a href="./categories.html" class="active" aria-current="page">فئات الصناديق</a>
         <a href="./funds.html">الصناديق</a>
         <a href="./map.html" hidden aria-hidden="true">قيمة ثروتي — توافق</a>
       </nav>
     </div>
   </header>
   <main id="main-content" class="cat-main">
-    <section class="cat-hero" aria-labelledby="cat-title">
+    <section class="hero cat-hero" aria-labelledby="cat-title">
       <div class="cat-hero-copy">
-        <div class="cat-kicker">CATEGORY ATLAS · WHERE</div>
-        <h1 id="cat-title">أين تتجمع الصناديق؟</h1>
-        <p>هذه الصفحة لا ترسم خريطة حرارية. هي طبقة اكتشاف: الفئة، حجمها، وسيط العائد الرسمي، ثم الصندوق نفسه.</p>
+        <div class="cat-kicker">فئات الصناديق</div>
+        <h1 id="cat-title">أي فئة تقود العائد الرسمي؟</h1>
+        <p>السؤال هنا ليس الصندوق الواحد. ابدأ من الفئة: حجمها، وسيط العائد الرسمي، ثم انتقل إلى الصندوق نفسه.</p>
+        <div class="cat-meta">
+          <span id="cat-stamp">جاري قراءة اللقطة الرسمية…</span>
+          <span>Supabase · Data Boundary</span>
+        </div>
       </div>
-      <aside class="cat-hero-aside" aria-live="polite">
-        <span>تغطية اللقطة</span>
-        <strong id="cat-coverage">—</strong>
-        <small id="cat-stamp">جاري القراءة من طبقة البيانات</small>
+      <aside class="cat-lead" aria-live="polite">
+        <span class="cat-lead-label">حكم اللقطة</span>
+        <strong id="cat-lead-name">جاري المزامنة…</strong>
+        <b id="cat-lead-return" class="flat">—</b>
+        <small id="cat-lead-note">وسيط العائد الرسمي للفئة الأعلى في الأفق المختار</small>
       </aside>
     </section>
+
+    <section class="cat-kpis" aria-label="مؤشرات اللقطة">
+      <article class="surface cat-kpi"><span>الفئات</span><strong id="cat-kpi-cats">—</strong></article>
+      <article class="surface cat-kpi"><span>الصناديق</span><strong id="cat-kpi-funds">—</strong></article>
+      <article class="surface cat-kpi"><span>بعائد رسمي</span><strong id="cat-kpi-returns">—</strong></article>
+      <article class="surface cat-kpi"><span>الأفق</span><strong id="cat-kpi-horizon">—</strong></article>
+    </section>
+
     <section class="cat-toolbar" aria-label="أفق الأداء">
       <div>
         <div class="cat-label">الأفق الرسمي</div>
-        <p>العائد المعروض هو آخر قراءة رسمية لكل صندوق في الأفق المختار، وليس حسابًا من NAV.</p>
+        <p>الرقم المعروض هو آخر عائد رسمي منشور للصندوق في الأفق المختار، وليس حسابًا من NAV.</p>
       </div>
       <div id="cat-horizons" class="cat-horizons" role="tablist" aria-label="آفاق الأداء"></div>
     </section>
+
     <section class="cat-section" aria-labelledby="cat-map-title">
       <div class="cat-section-head">
         <div>
-          <div class="cat-label">DISCOVER</div>
-          <h2 id="cat-map-title">الفئات</h2>
+          <div class="cat-label">الحكم ثم الرقم</div>
+          <h2 id="cat-map-title">الفئات حسب وسيط العائد</h2>
         </div>
-        <p id="cat-map-note">كل بطاقة تمثل فئة واحدة. الضغط يفتح الصناديق داخلها.</p>
+        <p id="cat-map-note">كل بطاقة فئة واحدة. اخترها لفتح صناديقها.</p>
       </div>
       <div id="cat-grid" class="cat-grid" aria-live="polite">
         <div class="cat-loading">جاري تحميل الفئات من البيانات الرسمية…</div>
       </div>
     </section>
+
     <section class="cat-section" aria-labelledby="cat-list-title">
       <div class="cat-section-head">
         <div>
-          <div class="cat-label">DRILL DOWN</div>
+          <div class="cat-label">التفاصيل ثم الخطوة التالية</div>
           <h2 id="cat-list-title">صناديق الفئة</h2>
         </div>
         <p id="cat-list-note">اختر فئة لعرض صناديقها مرتبة بالعائد الرسمي.</p>
@@ -67,13 +84,15 @@
       <div id="cat-funds" class="cat-funds surface">
         <div class="cat-empty">لم تُختر فئة بعد.</div>
       </div>
+      <a class="cat-next surface" href="./funds.html">عرض الكون كاملًا في شاشة الصناديق<span>←</span></a>
     </section>
-    <footer class="cat-foot" id="cat-foot">المصدر: Supabase عبر categories-service · لا خريطة حرارية · لا أرقام بديلة.</footer>
+
+    <footer class="cat-foot" id="cat-foot">المصدر: Supabase عبر categories-service · لا أرقام بديلة.</footer>
   </main>
-  <script src="js/data/supabase-client.js"></script>
-  <script src="js/data/fund-service.js"></script>
-  <script src="js/data/funds-service.js"></script>
-  <script src="js/data/categories-service.js"></script>
-  <script src="js/categories-screen-v2.js"></script>
+  <script src="js/data/supabase-client.js?v=20260916-2"></script>
+  <script src="js/data/fund-service.js?v=20260916-2"></script>
+  <script src="js/data/funds-service.js?v=20260916-2"></script>
+  <script src="js/data/categories-service.js?v=20260916-2"></script>
+  <script src="js/categories-screen-v2.js?v=20260916-2"></script>
 </body>
 </html>

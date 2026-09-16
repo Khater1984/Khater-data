@@ -1,6 +1,6 @@
 # Khater Experience Architecture V1
 
-Status: live product shell on `main`. Areas is a first-class simplified atlas. Heatmap is permanently retired.
+Status: live product shell on `main`. Fund Categories is a first-class simplified atlas. Heatmap is permanently retired.
 
 ## Product rule
 
@@ -11,7 +11,7 @@ The frontend is an investment-intelligence experience, not a collection of equal
 1. **الآن** — live/current market brief and hub.
 2. **قيمة ثروتي** — signature outcome experience.
 3. **الاقتصاد** — macro context / Why layer.
-4. **المناطق** — simplified category atlas: category → official median return → fund. No heatmap.
+4. **فئات الصناديق** — simplified category atlas: category → official median return → fund. No heatmap.
 5. **الصناديق** — searchable investment universe / investigation layer.
 
 Secondary surfaces:
@@ -34,7 +34,7 @@ Above the fold:
 - one regime judgement;
 - one explanatory sentence;
 - 3–4 dated market signals;
-- intent branches: Value of My Money, Economy, Areas, Funds;
+- intent branches: Value of My Money, Economy, Fund Categories, Funds;
 - a clear route into Funds without presenting it as the default answer.
 
 Home is a hub, not a portal full of links.
