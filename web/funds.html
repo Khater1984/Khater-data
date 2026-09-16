@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e7eeeb">
-<meta name="color-scheme" content="light">
+<meta name="color-scheme" content="only light">
 <title>رادار السوق المصري | الصناديق</title>
 <script src="config.js"></script>
 <link rel="stylesheet" href="css/header.css">
-<link rel="stylesheet" href="css/platform-shell.css">
-<link rel="stylesheet" href="css/page-funds.css">
-<link rel="stylesheet" href="css/opportunity-layer.css">
+<link rel="stylesheet" href="css/platform-shell.css?v=20260917-funds2">
+<link rel="stylesheet" href="css/page-funds.css?v=20260917-funds2">
+<link rel="stylesheet" href="css/opportunity-layer.css?v=20260917-funds2">
 </head>
 <body class="page-funds">
 <a class="skip-link" href="#main-content">تخطّ إلى المحتوى الرئيسي</a>
@@ -28,22 +28,16 @@
   </div>
 </header>
 <main id="main-content" class="funds-main">
-  <section class="hero funds-hero" aria-labelledby="funds-title">
-    <div class="funds-hero-copy">
-      <div class="funds-kicker">الصناديق</div>
-      <h1 id="funds-title">أين توجد العوائد التي تستحق النظر؟</h1>
-      <p>ابدأ من العائد الرسمي كما نشره مدير الصندوق، ثم اقرأ الجودة والثقة قبل الانتقال إلى ملف الصندوق.</p>
-      <div class="funds-meta">
-        <span id="marketHorizon">الأفق · —</span>
-        <span id="marketCoverage">التغطية · —</span>
-        <span id="marketDates">التقارير · —</span>
-      </div>
+  <section class="funds-hero" aria-labelledby="funds-title">
+    <div class="funds-kicker">الصناديق</div>
+    <h1 id="funds-title">أين توجد العوائد التي تستحق النظر؟</h1>
+    <p>ابدأ من العائد الرسمي كما نشره مدير الصندوق، ثم اقرأ الجودة قبل فتح ملف الصندوق.</p>
+    <p class="funds-path">العائد ← الجودة ← الصندوق</p>
+    <div class="funds-meta">
+      <span id="marketHorizon">الأفق · —</span>
+      <span id="marketCoverage">التغطية · —</span>
+      <span id="marketDates">التقارير · —</span>
     </div>
-    <aside class="funds-hero-aside" aria-label="طريقة القراءة">
-      <div class="label">مسار القراءة</div>
-      <strong>العائد ← الجودة ← الصندوق</strong>
-      <span>الترتيب بالعائد الأعلى. الرقم وحده لا يكفي.</span>
-    </aside>
   </section>
 
   <section class="opportunity-shell" id="opportunityLayer" aria-label="صناديق تستحق التحقق">
@@ -60,7 +54,7 @@
       <button id="reset" type="button">إعادة ضبط</button>
     </div>
     <aside class="control-rail" aria-label="مرشحات الاستكشاف">
-      <p class="date-rule">التاريخ يتبع الصندوق. العائد الرسمي يُقارَن بتاريخ تقريره.</p>
+      <p class="date-rule">التاريخ يتبع الصندوق. العائد يُقارَن بتاريخ تقريره.</p>
       <div class="funds-filters">
         <label class="select-control"><span>الأفق</span><select id="h" aria-label="الأفق الزمني"></select></label>
         <label class="search-control"><span>بحث</span><input id="q" aria-label="البحث باسم الصندوق أو المدير" placeholder="اسم الصندوق أو المدير"></label>
@@ -87,29 +81,8 @@
     </div>
     <div id="kpis" class="kpis" aria-label="مؤشرات النتائج"></div>
     <div class="evidence-strip" id="fundsEvidence" aria-label="أدلة البيانات"></div>
-    <div class="table-frame" aria-label="جدول الصناديق">
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>الصندوق</th>
-              <th>الفئة</th>
-              <th class="return-col">العائد الرسمي</th>
-              <th>مقابل السوق</th>
-              <th>SmartScore</th>
-              <th>التصنيف</th>
-              <th>المخاطرة</th>
-              <th>الثقة</th>
-              <th>التأهل</th>
-              <th>الإشارة</th>
-            </tr>
-          </thead>
-          <tbody id="rows">
-            <tr><td colspan="11" class="loading" role="status">جاري تحميل البيانات الرسمية…</td></tr>
-          </tbody>
-        </table>
-      </div>
+    <div id="rows" class="fund-results" aria-live="polite">
+      <div class="loading" role="status">جاري تحميل البيانات الرسمية…</div>
     </div>
   </section>
   <footer class="funds-foot">العائد الرسمي من تقرير الصندوق · ليست توصية استثمارية</footer>
@@ -118,6 +91,6 @@
 <script src="js/data/fund-service.js?v=20260913-6"></script>
 <script src="js/data/funds-service.js?v=20260913-6"></script>
 <script src="js/data/benchmark-service.js?v=20260913-6"></script>
-<script src="js/funds-experience.js?v=20260917-1"></script>
+<script src="js/funds-experience.js?v=20260917-2"></script>
 </body>
 </html>

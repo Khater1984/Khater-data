@@ -155,7 +155,7 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
-html{background:var(--shell-bg);color:var(--shell-ink);color-scheme:light;-webkit-text-size-adjust:100%;text-rendering:optimizeLegibility;-webkit-tap-highlight-color:color-mix(in srgb,var(--shell-green) 16%, transparent);overscroll-behavior-y:none}
+html{background:var(--shell-bg);color:var(--shell-ink);color-scheme:only light;-webkit-text-size-adjust:100%;text-rendering:optimizeLegibility;-webkit-tap-highlight-color:color-mix(in srgb,var(--shell-green) 16%, transparent);overscroll-behavior-y:none}
 body{margin:0;font-family:var(--font-arabic);font-size:var(--text-body);line-height:var(--leading-body);background:var(--shell-bg);color:var(--shell-ink);overflow-x:hidden;padding-bottom:var(--safe-bottom);overscroll-behavior-y:none;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 html,body,button,input,select,textarea,table,thead,tbody,th,td,a,label,span,div,p,small,strong,b,em,i,h1,h2,h3,h4,h5,h6{font-family:var(--font-arabic)}
 a,button,summary,input,select,textarea,label{touch-action:manipulation}
@@ -265,6 +265,9 @@ th,td{border-bottom:1px solid var(--shell-border);padding:11px 13px;vertical-ali
   .controls{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(prefers-color-scheme:dark){
+  html,body{background:#e7eeeb;color:#0b1c1f;color-scheme:only light}
+}
 @media(pointer:coarse){
   button,select,input,textarea,.market-sort,.market-filter,.view-tab,.seg button,.ranges button{min-height:44px}
 }
