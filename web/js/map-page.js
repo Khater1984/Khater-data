@@ -2,7 +2,12 @@ import { toLine, rebase, en } from "./engine.js";
 import { loadEngine } from "./live.js";
 import { mountPurchasingAccordion } from "./accordion.js";
 
-const COLORS={purchasing:"#D9383A",usd_egp_mid:"#0D9474",gold_egp_oz:"#C57633",silver_egp_oz:"#7A9A95",qqq_egp:"#5D6E9A",spy_egp:"#14B891",egx30_close:"#0D9474",deposit:"#B8841B",tbill:"#0D9474"};
+function seriesColors(){var t=window.KHATER_THEME&&window.KHATER_THEME.series||{};return{
+purchasing:t.purchasing||"#c73538",usd_egp_mid:t.usd_egp_mid||"#087f63",gold_egp_oz:t.gold_egp_oz||"#a9652b",
+silver_egp_oz:t.silver_egp_oz||"#607477",qqq_egp:t.qqq_egp||"#3d6b8a",spy_egp:t.spy_egp||"#087f63",
+egx30_close:t.egx30_close||"#087f63",deposit:t.deposit||"#9a7112",tbill:t.tbill||"#087f63"
+};}
+const COLORS=new Proxy({},{get:function(_,k){return seriesColors()[k];}});
 const LABELS={usd_egp_mid:"سعر الدولار",gold_egp_oz:"الذهب",silver_egp_oz:"الفضة",spy_egp:"الأسهم الأمريكية (S&P 500)",qqq_egp:"أسهم التكنولوجيا (ناسداك)",egx30_close:"البورصة المصرية (EGX30)",purchasing:"القوة الشرائية للنقد",deposit:"ودائع البنوك",tbill:"أذون الخزانة"};
 const META={
  usd_egp_mid:{text:"نفس الـ100 جنيه لو تحوّلت دولاراً في أول سعر متاح بعد يناير 2016 ثم قُيّمت بآخر سعر صرف في القاعدة.",href:"https://www.cbe.org.eg/en/economic-research/statistics/exchange-rates",link:"البنك المركزي — أسعار الصرف"},
@@ -33,7 +38,7 @@ function openDetail(key){
  modal.classList.add("on");
  const host=$("dchart");host.innerHTML="";
  if(state.detailChart){try{state.detailChart.remove()}catch(_){}state.detailChart=null}
- const c=LightweightCharts.createChart(host,{layout:{background:{color:"#FFFFFF"},textColor:"#4a6b6c",fontFamily:"IBM Plex Sans"},grid:{vertLines:{color:"#E1EFEA"},horzLines:{color:"#E1EFEA"}},rightPriceScale:{borderColor:"#CCE0DC",mode:1},timeScale:{borderColor:"#CCE0DC"},width:host.clientWidth,height:280});
+ const c=LightweightCharts.createChart(host,{layout:(window.KHATER_THEME&&window.KHATER_THEME.chartLayout&&window.KHATER_THEME.chartLayout())||{background:{color:"#fff"},textColor:"#607477",fontFamily:"IBM Plex Mono, Cairo, system-ui"},grid:(window.KHATER_THEME&&window.KHATER_THEME.chartGrid&&window.KHATER_THEME.chartGrid())||{vertLines:{color:"#f8fafb"},horzLines:{color:"#f8fafb"}},rightPriceScale:{borderColor:(window.KHATER_THEME&&window.KHATER_THEME.chartBorder)||"#d9e2e1",mode:1},timeScale:{borderColor:(window.KHATER_THEME&&window.KHATER_THEME.chartBorder)||"#d9e2e1"},width:host.clientWidth,height:280});
  state.detailChart=c;
  const s=c.addLineSeries({color:COLORS[key],lineWidth:2.3});s.setData(rb);c.timeScale().fitContent();
 }
@@ -56,7 +61,7 @@ function renderLegend(){
 function visibleRange(){const end="2026-12-31";return state.range==="all"?{from:START,to:end}:state.range==="5"?{from:"2021-01-01",to:end}:{from:"2024-01-01",to:end}}
 
 const chartEl=$("chart");
-const chart=LightweightCharts.createChart(chartEl,{layout:{background:{color:"#FFFFFF"},textColor:"#4a6b6c",fontFamily:"IBM Plex Sans"},grid:{vertLines:{color:"#E1EFEA"},horzLines:{color:"#E1EFEA"}},rightPriceScale:{borderColor:"#CCE0DC",mode:1},timeScale:{borderColor:"#CCE0DC"}});
+const chart=LightweightCharts.createChart(chartEl,{layout:(window.KHATER_THEME&&window.KHATER_THEME.chartLayout&&window.KHATER_THEME.chartLayout())||{background:{color:"#fff"},textColor:"#607477",fontFamily:"IBM Plex Mono, Cairo, system-ui"},grid:(window.KHATER_THEME&&window.KHATER_THEME.chartGrid&&window.KHATER_THEME.chartGrid())||{vertLines:{color:"#f8fafb"},horzLines:{color:"#f8fafb"}},rightPriceScale:{borderColor:(window.KHATER_THEME&&window.KHATER_THEME.chartBorder)||"#d9e2e1",mode:1},timeScale:{borderColor:(window.KHATER_THEME&&window.KHATER_THEME.chartBorder)||"#d9e2e1"}});
 window.__mapChart=chart;
 new ResizeObserver(()=>chart.applyOptions({width:chartEl.clientWidth,height:440})).observe(chartEl);
 
