@@ -33,6 +33,7 @@ executable program. A file does **not** stay forever because its name contains
 | `web/js/funds-terminal-polish.js` | **MERGE→DELETE** inlined into `funds-screen-v2.js` |
 | `web/js/funds-responsive-ui.js` | **MERGE→DELETE** inlined into `funds-screen-v2.js` |
 | `web/js/home-redesign.js` | **MERGE→DELETE** into `home-page.js` (earlier pass) |
+| `web/js/macro-intelligence-boot.js` | **MERGE→DELETE** into `macro-screen-v2.js` |
 
 ### KEEP (canonical)
 
@@ -44,6 +45,7 @@ executable program. A file does **not** stay forever because its name contains
 | `web/js/data/*-service.js`, `supabase-client.js` | Canonical data layer |
 | `web/js/*-screen-v2.js`, `home-page.js`, `map-page.js`, fund-* modules | Canonical screens |
 | `web/js/funds-experience.js` | Funds composition entrypoint (screen + opportunity) |
+| `web/js/macro-intelligence.js` | Shared Market Regime helpers (macro page + funds opportunity) |
 | `web/heatmap.html` + `heatmap-redirect.js` | Compatibility **route** only |
 
 ### KEEP — DEPRECATE (stub, do not edit)
@@ -60,14 +62,14 @@ second design system.
 
 | Asset | Merge into | Condition before merge |
 |-------|------------|------------------------|
-| `web/js/macro-intelligence.js` + boot | `macro-screen-v2.js` | After parity check on macro page |
+| *(none scheduled)* | | Next pass: optional CSS stub removal (`app.css` / design-system) after gate update |
 
 ### DEPRECATE name only (canonical code)
 
 | Name | Reality |
 |------|---------|
 | `funds-screen-v2.js` | Canonical funds screen (+ former polish/responsive) |
-| `macro-screen-v2.js` | Canonical macro screen |
+| `macro-screen-v2.js` | Canonical macro screen (+ former intelligence boot) |
 | `categories-screen-v2.js` | Canonical categories screen |
 
 Do not create `v3` / `final` / `fix` parallel files. Change the canonical file.
