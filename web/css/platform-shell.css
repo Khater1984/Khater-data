@@ -144,10 +144,7 @@
 *,*::before,*::after{box-sizing:border-box}
 html{background:var(--shell-bg);color:var(--shell-ink);-webkit-text-size-adjust:100%;text-rendering:optimizeLegibility}
 body{margin:0;font-family:var(--font-arabic);font-size:var(--text-body);line-height:var(--leading-body);background:var(--shell-bg);color:var(--shell-ink);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-/* Global Typography Contract — Cairo only (text + numbers) */
-html,body,button,input,select,textarea,table,thead,tbody,th,td,a,label,span,div,p,small,strong,b,em,i,h1,h2,h3,h4,h5,h6{
-  font-family:var(--font-arabic);
-}
+html,body,button,input,select,textarea,table,thead,tbody,th,td,a,label,span,div,p,small,strong,b,em,i,h1,h2,h3,h4,h5,h6{font-family:var(--font-arabic)}
 ::selection{background:rgba(8,127,99,.16);color:var(--shell-ink)}
 :focus-visible{outline:3px solid var(--shell-focus-ring);outline-offset:2px}
 
@@ -169,9 +166,7 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{ou
 .num,.numeric-data,.tabular-nums,.return-col,.pct,[data-financial-number],.value,.side-number,.market-item b,.rank-col,.report-date,.smart-score-ring,.kpi b,.path-number{
   font-family:var(--font-arabic);
   font-variant-numeric:tabular-nums lining-nums;
-  direction:ltr;
-  unicode-bidi:isolate;
-  letter-spacing:-.01em;
+  direction:ltr;unicode-bidi:isolate;letter-spacing:-.01em;
 }
 .up,.positive,.good,.is-up,[data-direction="up"]{color:var(--shell-green)}
 .dn,.down,.negative,.bad,.is-down,[data-direction="down"]{color:var(--shell-red)}
@@ -248,3 +243,30 @@ th,td{border-bottom:1px solid #e6eeec;padding:11px 13px;vertical-align:middle;fo
 @media(max-width:800px){.page-map .why{grid-template-columns:1fr}}
 @media(max-width:760px){:root{--shell-content:calc(100% - 24px);--header-h:58px}main.wrap,main.funds-shell,main.brief-shell,.page,.fund-page{padding-block:14px 34px}.site-header .wrap{min-height:58px;padding-inline:12px;gap:12px}.site-header .logo{font-size:14px}.site-header nav a{height:34px;padding-inline:10px;font-size:11px}.hero,.hero-zone,.brief-hero,.hero-mini{padding:18px;border-radius:var(--radius-md)}.hero h1,.hero-zone h1,.hero-mini h1{font-size:28px}.controls{grid-template-columns:1fr}.map-stage{height:360px}.heat-stage{height:480px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* --------------------------------------------------------------------------
+   TYPOGRAPHY ENFORCEMENT (legacy cleanup)
+   Page CSS must NOT set font-family. Numeric alignment only via tabular-nums.
+   --font-mono / --kh-num are aliases to Cairo for old selectors only.
+   -------------------------------------------------------------------------- */
+.page-funds .market-item b,
+.page-funds .kpi b,
+.page-funds .rank-col,
+.page-funds .return-col,
+.page-funds td .num,
+.page-funds .report-date,
+.page-funds .smart-score-ring,
+.page-funds thead th.return-col,
+.fund-page .num,
+.opp-card b,
+.opp-card .num,
+.pp-metric b,
+.macro-intel .num,
+.macro-panel .num,
+.context-metric strong,
+.context-date,
+.context-change,
+.section-kicker {
+  font-family: var(--font-arabic);
+  font-variant-numeric: tabular-nums lining-nums;
+}
