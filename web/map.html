@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="css/accordion.css?v=nile6"/>
 <link rel="stylesheet" href="css/page-map.css?v=nile6"/>
 <link rel="stylesheet" href="css/header.css"/>
+<link rel="stylesheet" href="css/platform-shell.css?v=20260916-v1">
 <script src="config.js"></script>
 <script src="js/data/supabase-client.js"></script>
 <script src="js/data/macro-service.js"></script>
@@ -16,69 +17,14 @@
 </head>
 <body class="page-map">
 <a class="skip-link" href="#main-content">تخطَّ إلى المحتوى الرئيسي</a>
-<header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>طبقة ذكاء فوق السوق — من السياق إلى القرار</span></div><nav aria-label="التنقل الرئيسي">
-<a href="./index.html">الآن</a>
-<a class="active" aria-current="page" href="./map.html">قيمة فلوسي</a>
-<a href="./categories.html">المناطق</a>
-<a href="./funds.html">الصناديق</a>
-</nav></div></header>
+<header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>طبقة ذكاء فوق السوق — من السياق إلى القرار</span></div><nav aria-label="التنقل الرئيسي"><a href="./index.html">الآن</a><a class="active" aria-current="page" href="./map.html">قيمة فلوسي</a><a href="./categories.html">المناطق</a><a href="./funds.html">الصناديق</a></nav></div></header>
 <main id="main-content" class="wrap">
-<section class="hero-mini">
-  <div class="eyebrow">VALUE OF MONEY · SIGNATURE EXPERIENCE</div>
-  <h1>ماذا حدث لقيمة فلوسي؟</h1>
-  <p class="muted">نقارن مسار المال عبر الأصول والقوة الشرائية، ثم نقرأ السياق الاقتصادي الذي يفسّر الفروق بين هذه المسارات.</p>
-</section>
-
-<section class="investment-panel" aria-labelledby="investment-title">
-  <div class="panel-head">
-    <div>
-      <div class="section-kicker">INVESTMENT PERFORMANCE</div>
-      <h2 id="investment-title">نمو رأس المال عبر الأصول</h2>
-      <p class="muted">كل المسارات معاد تأسيسها عند 100 جنيه في أول نقطة متاحة، حتى تكون المقارنة الزمنية عادلة.</p>
-    </div>
-    <div class="panel-note">المقارنة تاريخية وليست توصية استثمارية</div>
-  </div>
-
-  <div class="seg" role="tablist" aria-label="نوع المقارنة">
-    <button type="button" class="on" role="tab" aria-selected="true" data-g="value">الأصول الاستثمارية</button>
-    <button type="button" role="tab" aria-selected="false" data-g="policy">النقد والسياسة النقدية</button>
-  </div>
-
-  <div class="ranges" role="tablist" aria-label="النطاق الزمني">
-    <button type="button" class="on" role="tab" aria-selected="true" data-r="all">منذ 2016</button>
-    <button type="button" role="tab" aria-selected="false" data-r="5">آخر 5 سنوات</button>
-    <button type="button" role="tab" aria-selected="false" data-r="2">آخر سنتين</button>
-  </div>
-
-  <div class="chart-wrap">
-    <div id="tip" aria-live="polite"></div>
-    <div id="chart" role="img" aria-label="رسم بياني لمقارنة نمو رأس المال عبر الأصول"></div>
-  </div>
-  <div id="assetLegend" class="asset-legend" aria-label="الأصول المعروضة"></div>
-</section>
-
-<section class="embedded-economic-context" aria-labelledby="economic-context-title">
-  <div id="embedded-economic-context">
-    <div class="context-loading" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-  </div>
-</section>
-
-<section class="why">
-  <div class="card">
-    <div class="section-kicker">PURCHASING POWER</div>
-    <h3>ما الذي حدث للنقد؟</h3>
-    <p id="pound"></p>
-  </div>
-  <div class="card">
-    <div class="section-kicker">HOW TO READ</div>
-    <h3>كيف تقرأ الرسم؟</h3>
-    <p>الرسم يوضح مسارات القيمة التاريخية بعد توحيد نقطة البداية. ارتفاع المسار يعني نمواً أكبر لرأس المال مقارنة بنقطة البداية، بينما انخفاض القوة الشرائية يوضح أثر التضخم على النقد غير المستثمر.</p>
-  </div>
-</section>
-
+<section class="hero-mini"><div class="eyebrow">VALUE OF MONEY · SIGNATURE EXPERIENCE</div><h1>ماذا حدث لقيمة فلوسي؟</h1><p class="muted">نقارن مسار المال عبر الأصول والقوة الشرائية، ثم نقرأ السياق الاقتصادي الذي يفسّر الفروق بين هذه المسارات.</p></section>
+<section class="investment-panel" aria-labelledby="investment-title"><div class="panel-head"><div><div class="section-kicker">INVESTMENT PERFORMANCE</div><h2 id="investment-title">نمو رأس المال عبر الأصول</h2><p class="muted">كل المسارات معاد تأسيسها عند 100 جنيه في أول نقطة متاحة، حتى تكون المقارنة الزمنية عادلة.</p></div><div class="panel-note">المقارنة تاريخية وليست توصية استثمارية</div></div><div class="seg" role="tablist" aria-label="نوع المقارنة"><button type="button" class="on" role="tab" aria-selected="true" data-g="value">الأصول الاستثمارية</button><button type="button" role="tab" aria-selected="false" data-g="policy">النقد والسياسة النقدية</button></div><div class="ranges" role="tablist" aria-label="النطاق الزمني"><button type="button" class="on" role="tab" aria-selected="true" data-r="all">منذ 2016</button><button type="button" role="tab" aria-selected="false" data-r="5">آخر 5 سنوات</button><button type="button" role="tab" aria-selected="false" data-r="2">آخر سنتين</button></div><div class="chart-wrap"><div id="tip" aria-live="polite"></div><div id="chart" role="img" aria-label="رسم بياني لمقارنة نمو رأس المال عبر الأصول"></div></div><div id="assetLegend" class="asset-legend" aria-label="الأصول المعروضة"></div></section>
+<section class="embedded-economic-context" aria-labelledby="economic-context-title"><div id="embedded-economic-context"><div class="context-loading" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div></div></section>
+<section class="why"><div class="card"><div class="section-kicker">PURCHASING POWER</div><h3>ما الذي حدث للنقد؟</h3><p id="pound"></p></div><div class="card"><div class="section-kicker">HOW TO READ</div><h3>كيف تقرأ الرسم؟</h3><p>الرسم يوضح مسارات القيمة التاريخية بعد توحيد نقطة البداية. ارتفاع المسار يعني نمواً أكبر لرأس المال مقارنة بنقطة البداية، بينما انخفاض القوة الشرائية يوضح أثر التضخم على النقد غير المستثمر.</p></div></section>
 <div id="pp-root" class="pp-wrap"></div>
 </main>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle" hidden><div class="box"><button id="mclose" class="primary modal-close" type="button">إغلاق</button><h2 id="mtitle"></h2><p class="muted" id="msum"></p><div id="dchart" role="img" aria-label="تفاصيل المسار المحدد"></div><p class="muted modal-method" id="mmethod"></p></div></div>
-<script src="js/value-context.js"></script>
-<script type="module" src="./js/map-page.js?v=nile6"></script>
+<script src="js/value-context.js"></script><script type="module" src="./js/map-page.js?v=nile6"></script>
 </body></html>
