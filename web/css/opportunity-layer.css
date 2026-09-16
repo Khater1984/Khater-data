@@ -1,55 +1,66 @@
-/* LAYOUT ONLY — Nile V3 light institutional */
+/* Opportunity layer — layout only. Colors/type from platform-shell.css */
 .opportunity-shell{
-  margin:18px 0 24px;border:1px solid #cce0dc;border-radius:12px;
-  background:#ffffff!important;overflow:hidden;box-shadow:0 1px 3px rgba(12,35,40,.04);
-  color:#0c2328!important;
+  margin:18px 0 24px;
+  border:1px solid var(--shell-border);
+  border-radius:var(--radius-md);
+  background:var(--shell-surface);
+  overflow:hidden;
+  box-shadow:var(--shell-shadow);
+  color:var(--shell-ink);
 }
 .opp-head{
   display:flex;justify-content:space-between;gap:18px;padding:22px 24px;
-  border-bottom:1px solid #cce0dc;flex-wrap:wrap;
-  background:#ffffff!important;color:#0c2328!important;
+  border-bottom:1px solid var(--shell-border);flex-wrap:wrap;
+  background:var(--shell-surface);color:var(--shell-ink);
 }
-.opp-kicker{font-size:9px;letter-spacing:.18em;color:#c57633!important;font-weight:800}
-.opp-head h2{font-size:22px;margin:7px 0;color:#0c2328!important}
-.opp-head p{margin:0;color:#4a6b6c!important;line-height:1.7;font-size:12px;max-width:700px}
+.opp-kicker{
+  font-size:var(--text-micro);letter-spacing:var(--tracking-kicker);
+  color:var(--shell-gold);font-weight:800;
+}
+.opp-head h2{font-size:22px;margin:7px 0;color:var(--shell-ink)}
+.opp-head p{margin:0;color:var(--shell-muted);line-height:1.7;font-size:12px;max-width:700px}
 .opp-regime{
-  min-width:200px;padding:12px 14px;border:1px solid #cce0dc;border-radius:8px;
-  background:#ebf2f0!important;color:#0c2328!important;
+  min-width:200px;padding:12px 14px;border:1px solid var(--shell-border);
+  border-radius:var(--radius-sm);background:var(--shell-surface-soft);color:var(--shell-ink);
 }
-.opp-regime span{display:block;font-size:10px;color:#4a6b6c!important;font-weight:700}
-.opp-regime b{display:block;margin-top:4px;font-size:14px;color:#0c2328!important}
-.opp-regime small{display:block;margin-top:4px;font-size:10px;color:#4a6b6c!important}
-.opp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:16px;background:#ffffff!important}
+.opp-regime span{display:block;font-size:10px;color:var(--shell-muted);font-weight:700}
+.opp-regime b{display:block;margin-top:4px;font-size:14px;color:var(--shell-ink)}
+.opp-regime small{display:block;margin-top:4px;font-size:10px;color:var(--shell-muted)}
+.opp-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
+  padding:16px;background:var(--shell-surface);
+}
 .opp-card,.opp-card.hero,article.opp-card{
-  min-height:140px;padding:14px;border:1px solid #cce0dc;border-radius:12px;
-  background:#ffffff!important;color:#0c2328!important;text-decoration:none;
-  box-shadow:0 1px 3px rgba(12,35,40,.04);
+  min-height:140px;padding:14px;border:1px solid var(--shell-border);
+  border-radius:var(--radius-md);background:var(--shell-surface);color:var(--shell-ink);
+  text-decoration:none;box-shadow:var(--shell-shadow);
 }
-.opp-card span{display:block;font-size:11px;color:#4a6b6c!important;font-weight:700;margin-bottom:6px}
+.opp-card span{display:block;font-size:11px;color:var(--shell-muted);font-weight:700;margin-bottom:6px}
 .opp-card strong,.opp-card .pct{
-  font-family:"IBM Plex Mono",monospace;font-size:22px;font-weight:700;
-  direction:ltr;unicode-bidi:isolate;color:#0c2328!important;
+  font-family:var(--font-mono);font-size:22px;font-weight:700;
+  direction:ltr;unicode-bidi:isolate;color:var(--shell-ink);
+  font-variant-numeric:tabular-nums;
 }
-.opp-card h3{font-size:14px;margin:0 0 6px;color:#0c2328!important}
-.opp-card p,.opp-card em{color:#4a6b6c!important;font-size:12px;line-height:1.6}
-.opp-card a{color:#0d9474!important;text-decoration:none;font-weight:700}
-.opp-leaders{padding:16px 24px 8px;border-top:1px solid #cce0dc;background:#ffffff!important}
-.leaders-head b{font-size:13px;color:#0c2328!important}
+.opp-card h3{font-size:14px;margin:0 0 6px;color:var(--shell-ink)}
+.opp-card p,.opp-card em{color:var(--shell-muted);font-size:12px;line-height:1.6;font-style:normal}
+.opp-card a{color:var(--shell-green);text-decoration:none;font-weight:700}
+.opp-leaders{padding:16px 24px 8px;border-top:1px solid var(--shell-border);background:var(--shell-surface)}
+.leaders-head b{font-size:13px;color:var(--shell-ink)}
 .leader-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
 .leader,a.leader{
-  min-height:120px;padding:12px;border:1px solid #cce0dc;border-radius:12px;
-  background:#ffffff!important;color:#0c2328!important;text-decoration:none;
-  box-shadow:0 1px 3px rgba(12,35,40,.04);
+  min-height:120px;padding:12px;border:1px solid var(--shell-border);
+  border-radius:var(--radius-md);background:var(--shell-surface);color:var(--shell-ink);
+  text-decoration:none;box-shadow:var(--shell-shadow);
 }
-.leader h3{font-size:13px;margin:0 0 6px;color:#0c2328!important}
-.leader .pct{
-  font-family:"IBM Plex Mono",monospace;font-size:20px;font-weight:700;
-  direction:ltr;unicode-bidi:isolate;color:#0c2328!important;
+.leader span{display:block;font-size:10px;color:var(--shell-muted);font-weight:700}
+.leader strong{display:block;margin-top:6px;font-size:13px;color:var(--shell-ink)}
+.leader .pct,.leader b.num{
+  font-family:var(--font-mono);direction:ltr;unicode-bidi:isolate;color:var(--shell-green);
 }
-.leader i,.leader span{font-size:11px;color:#4a6b6c!important;font-style:normal}
-.opp-foot{padding:14px 24px 18px;border-top:1px solid #cce0dc;background:#ebf2f0!important;color:#4a6b6c!important;font-size:12px}
-.opp-foot b{color:#0c2328!important}
-.opportunity-loading,.opportunity-error{padding:24px;text-align:center;color:#4a6b6c!important;background:#ffffff!important}
-.mini-list a{display:block;padding:6px 0;color:#0c2328!important;text-decoration:none;font-size:12px;border-bottom:1px solid #cce0dc}
-.mini-list em{color:#4a6b6c!important;font-style:normal;font-size:11px}
-@media(max-width:900px){.opp-grid{grid-template-columns:1fr}.leader-strip{grid-template-columns:1fr 1fr}}
+.opp-empty,.opportunity-loading{
+  padding:28px 20px;text-align:center;color:var(--shell-muted);font-size:13px;
+}
+@media(max-width:960px){
+  .opp-grid{grid-template-columns:1fr}
+  .opp-head{flex-direction:column}
+}
