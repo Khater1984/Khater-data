@@ -2,12 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>فلوسي — أصول ونمو الاستثمار</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="css/khater-design-system.css?v=nile5">
-<link rel="stylesheet" href="css/app.css?v=nile5"/>
-<link rel="stylesheet" href="css/accordion.css?v=nile5"/>
-<link rel="stylesheet" href="css/page-map.css?v=nile5"/>
+<title>قيمة فلوسي — قيمة المال والسياق الاقتصادي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/khater-design-system.css?v=nile6">
+<link rel="stylesheet" href="css/app.css?v=nile6"/>
+<link rel="stylesheet" href="css/accordion.css?v=nile6"/>
+<link rel="stylesheet" href="css/page-map.css?v=nile6"/>
 <link rel="stylesheet" href="css/header.css"/>
 <script src="config.js"></script>
 <script src="js/data/supabase-client.js"></script>
@@ -18,16 +18,15 @@
 <a class="skip-link" href="#main-content">تخطَّ إلى المحتوى الرئيسي</a>
 <header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>طبقة ذكاء فوق السوق — من السياق إلى القرار</span></div><nav aria-label="التنقل الرئيسي">
 <a href="./index.html">الآن</a>
-<a class="active" aria-current="page" href="./map.html">فلوسي</a>
-<a href="./macro.html">الاقتصاد</a>
+<a class="active" aria-current="page" href="./map.html">قيمة فلوسي</a>
 <a href="./categories.html">المناطق</a>
 <a href="./funds.html">الصناديق</a>
 </nav></div></header>
 <main id="main-content" class="wrap">
 <section class="hero-mini">
-  <div class="eyebrow">FLUSI · ASSETS &amp; INVESTMENT GROWTH</div>
-  <h1>أصول ونمو الاستثمار</h1>
-  <p class="muted">قارن كيف كان يمكن لرأس مال ابتدائي قدره 100 جنيه أن ينمو عبر الأصول المختلفة منذ 2016، باستخدام السلاسل الرسمية المتاحة في قاعدة البيانات.</p>
+  <div class="eyebrow">VALUE OF MONEY · SIGNATURE EXPERIENCE</div>
+  <h1>ماذا حدث لقيمة فلوسي؟</h1>
+  <p class="muted">نقارن مسار المال عبر الأصول والقوة الشرائية، ثم نقرأ السياق الاقتصادي الذي يفسّر الفروق بين هذه المسارات.</p>
 </section>
 
 <section class="investment-panel" aria-labelledby="investment-title">
@@ -58,6 +57,12 @@
   <div id="assetLegend" class="asset-legend" aria-label="الأصول المعروضة"></div>
 </section>
 
+<section class="embedded-economic-context" aria-labelledby="economic-context-title">
+  <div id="embedded-economic-context">
+    <div class="context-loading" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+</section>
+
 <section class="why">
   <div class="card">
     <div class="section-kicker">PURCHASING POWER</div>
@@ -65,7 +70,7 @@
     <p id="pound"></p>
   </div>
   <div class="card">
-    <div class="section-kicker">CONTEXT</div>
+    <div class="section-kicker">HOW TO READ</div>
     <h3>كيف تقرأ الرسم؟</h3>
     <p>الرسم يوضح مسارات القيمة التاريخية بعد توحيد نقطة البداية. ارتفاع المسار يعني نمواً أكبر لرأس المال مقارنة بنقطة البداية، بينما انخفاض القوة الشرائية يوضح أثر التضخم على النقد غير المستثمر.</p>
   </div>
@@ -74,5 +79,6 @@
 <div id="pp-root" class="pp-wrap"></div>
 </main>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle" hidden><div class="box"><button id="mclose" class="primary modal-close" type="button">إغلاق</button><h2 id="mtitle"></h2><p class="muted" id="msum"></p><div id="dchart" role="img" aria-label="تفاصيل المسار المحدد"></div><p class="muted modal-method" id="mmethod"></p></div></div>
-<script type="module" src="./js/map-page.js?v=nile5"></script>
+<script src="js/value-context.js"></script>
+<script type="module" src="./js/map-page.js?v=nile6"></script>
 </body></html>
