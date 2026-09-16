@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Guard the Categories/Fund Atlas screen's canonical architecture."""
+"""Guard the simplified Categories/Fund Atlas screen."""
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,7 +34,13 @@ hits = [token for token in forbidden if token in controller]
 if hits:
     raise SystemExit("Categories contract failed: controller bypasses canonical service: " + ", ".join(hits))
 
-if "css/page-categories.css" not in service and "css/page-categories.css" not in html:
+if "heatmap" in html.lower() or "treemap" in controller.lower() or "treemap" in html.lower():
+    raise SystemExit("Categories contract failed: heatmap/treemap must stay out of the simplified atlas")
+
+if "css/page-categories.css" not in html:
     raise SystemExit("Categories contract failed: canonical page stylesheet is not referenced")
+
+if "css/header.css" not in html:
+    raise SystemExit("Categories contract failed: shared header stylesheet is missing")
 
 print("Categories financial/UI contract passed")

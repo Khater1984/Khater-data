@@ -23,6 +23,7 @@ PAGE_CSS = [
     "page-funds.css", "page-funds-layout.css", "page-map.css",
     "page-macro.css", "brief-page.css", "fund-detail.css", "opportunity-layer.css",
     "accordion.css", "macro-intelligence.css", "category-context.css",
+    "page-categories.css",
 ]
 
 errors = []

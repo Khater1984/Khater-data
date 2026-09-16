@@ -11,7 +11,7 @@ if not PAGES:
     raise SystemExit("Frontend production contract failed: no HTML pages found")
 
 violations = []
-RETIRED = ("categories.html", "heatmap.html", "categories-service.js", "categories-screen-v2.js", "page-categories.css")
+RETIRED = ("heatmap.html", "heatmap-redirect.js", "heatmap.css")
 
 for page in PAGES:
     text = page.read_text(encoding="utf-8", errors="ignore")
@@ -40,7 +40,9 @@ required = [
     "web/js/data/supabase-client.js",
     "web/js/data/funds-service.js",
     "web/js/data/macro-service.js",
+    "web/js/data/categories-service.js",
     "web/css/fund-detail.css",
+    "web/categories.html",
     "scripts/verify_frontend_boundaries.py",
 ]
 for item in required:
@@ -48,11 +50,7 @@ for item in required:
         violations.append(f"missing canonical architecture anchor: {item}")
 
 for item in (
-    "web/categories.html",
     "web/heatmap.html",
-    "web/js/data/categories-service.js",
-    "web/js/categories-screen-v2.js",
-    "web/css/page-categories.css",
     "web/css/heatmap.css",
     "web/js/heatmap-redirect.js",
     "web/js/category-context.js",
@@ -71,5 +69,6 @@ print(f"Pages checked: {len(PAGES)}")
 print("Data boundary: enforced")
 print("Shared navigation: enforced")
 print("Inline JavaScript: absent")
-print("Retired Areas/Heatmap surface: absent")
+print("Simplified Areas atlas: present")
+print("Retired Heatmap surface: absent")
 print("Canonical architecture anchors: present")

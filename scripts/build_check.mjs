@@ -2,10 +2,10 @@ import { access, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const root = new URL('../web/', import.meta.url).pathname;
-const required = ['index.html', 'funds.html', 'fund.html', 'macro.html', 'wealth.html', 'map.html', 'why.html', 'config.js'];
+const required = ['index.html', 'funds.html', 'fund.html', 'macro.html', 'wealth.html', 'categories.html', 'map.html', 'why.html', 'config.js'];
 for (const file of required) await access(join(root, file));
 
-const retired = ['categories.html', 'heatmap.html'];
+const retired = ['heatmap.html'];
 for (const file of retired) {
   try {
     await access(join(root, file));

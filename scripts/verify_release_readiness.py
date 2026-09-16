@@ -76,8 +76,8 @@ for page in pages:
     if p.inline_style_data.strip(): errors.append(f"{rel}: inline CSS remains")
     if re.search(r"\son[a-z]+\s*=", text, re.I): errors.append(f"{rel}: inline event handler remains")
     if re.search(r"href\s*=\s*['\"]\s*javascript:", text, re.I): errors.append(f"{rel}: javascript URL remains")
-    if "categories.html" in text or "heatmap.html" in text:
-        errors.append(f"{rel}: retired Areas/Heatmap route remains")
+    if "heatmap.html" in text:
+        errors.append(f"{rel}: retired Heatmap route remains")
     dup = sorted({x for x in p.ids if p.ids.count(x) > 1})
     for x in dup: errors.append(f"{rel}: duplicate id={x}")
 
@@ -100,6 +100,7 @@ for path in WEB.rglob("*.js"):
 required = [
     "web/config.js", "web/css/header.css", "web/js/data/supabase-client.js",
     "web/js/data/fund-service.js", "web/js/data/macro-service.js",
+    "web/js/data/categories-service.js", "web/categories.html",
     "web/css/fund-detail.css",
     "scripts/verify_release_candidate.py", ".github/workflows/quality-gate.yml",
 ]
@@ -107,7 +108,7 @@ for item in required:
     if not (ROOT / item).is_file(): errors.append(f"missing release anchor: {item}")
 
 all_html = "\n".join(p.read_text(encoding="utf-8", errors="ignore") for p in pages)
-for marker in ("index.html", "wealth.html", "macro.html", "funds.html", "fund.html"):
+for marker in ("index.html", "wealth.html", "macro.html", "categories.html", "funds.html", "fund.html"):
     if marker not in all_html: warnings.append(f"navigation marker not found globally: {marker}")
 
 for path in WEB.rglob("*.js"):

@@ -66,8 +66,8 @@ for page in PAGES:
         errors.append(f"{rel}: inline event handler attribute remains")
     if re.search(r'href\s*=\s*["\']\s*javascript:', text, re.I):
         errors.append(f"{rel}: javascript: URL remains")
-    if "categories.html" in text or "heatmap.html" in text:
-        errors.append(f"{rel}: retired Areas/Heatmap route remains")
+    if "heatmap.html" in text:
+        errors.append(f"{rel}: retired Heatmap route remains")
 
     for ref in re.findall(r'(?:src|href)=["\']([^"\']+)', text, re.I):
         if ref.startswith(("http://", "https://", "#", "mailto:", "data:")):
@@ -95,6 +95,7 @@ required = [
     "web/js/data/supabase-client.js",
     "web/js/data/fund-service.js",
     "web/js/data/macro-service.js",
+    "web/js/data/categories-service.js",
     "web/css/header.css",
     "web/css/fund-detail.css",
     "scripts/verify_frontend_boundaries.py",
@@ -105,9 +106,7 @@ for item in required:
         errors.append(f"missing production anchor: {item}")
 
 for item in (
-    "web/categories.html",
     "web/heatmap.html",
-    "web/js/data/categories-service.js",
     "web/css/heatmap.css",
     "web/js/heatmap-redirect.js",
 ):
@@ -130,4 +129,4 @@ print("duplicate ids: absent")
 print("Supabase boundary: enforced")
 print("browser credential safety: checked")
 print("canonical anchors: present")
-print("retired Areas/Heatmap surface: absent")
+print("retired Heatmap surface: absent")

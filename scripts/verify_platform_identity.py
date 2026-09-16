@@ -4,7 +4,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
-PAGES = ["index.html", "wealth.html", "macro.html", "funds.html", "fund.html"]
+PAGES = ["index.html", "wealth.html", "macro.html", "categories.html", "funds.html", "fund.html"]
 
 FORBIDDEN_LINKS = [
     "nile-page-overrides.css",
@@ -17,10 +17,11 @@ PRIMARY_NAV = [
     'href="./index.html"',
     'href="./wealth.html"',
     'href="./macro.html"',
+    'href="./categories.html"',
     'href="./funds.html"',
 ]
 
-RETIRED_ROUTES = ["categories.html", "heatmap.html"]
+RETIRED_ROUTES = ["heatmap.html"]
 
 for name in PAGES:
     path = WEB / name
@@ -40,9 +41,10 @@ for name in PAGES:
 header = (WEB / "css/header.css").read_text(encoding="utf-8")
 if "platform-shell.css" not in header:
     raise SystemExit("Platform identity failed: header.css is not bound to platform-shell.css")
-for retired in ("categories.html", "المناطق"):
-    if retired in header:
-        raise SystemExit(f"Platform identity failed: header.css still exposes retired Areas route ({retired})")
+if "categories.html" not in header or "المناطق" not in header:
+    raise SystemExit("Platform identity failed: header.css must expose the Areas route")
+if "heatmap.html" in header:
+    raise SystemExit("Platform identity failed: header.css still exposes retired heatmap route")
 
 shell = (WEB / "css/platform-shell.css").read_text(encoding="utf-8")
 required_tokens = [
