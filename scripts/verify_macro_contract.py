@@ -11,7 +11,7 @@ for token in ["getSeries", "getAll", "buildView", "buildEconomicReadModel", "der
     if token not in service:
         raise SystemExit(f"Macro contract failed: service missing {token}")
 
-for token in ["svc.getAll()", "svc.readout(data)", "data.readModel", "svc.buildEconomicReadModel", "svc.monthlySnapshots"]:
+for token in ["svc.getAll()", "svc.readout(data)", "data.readModel", "svc.buildEconomicReadModel", "toChartRows", "model.rates", "model.inflation", "model.transmission", "model.completeness"]:
     if token not in screen:
         raise SystemExit(f"Macro contract failed: controller missing {token}")
 
@@ -41,5 +41,5 @@ for legacy in [
 
 print("Macro contract checks passed")
 print(" - service: canonical economic read model + derivations")
-print(" - screen: read-model rendering only")
+print(" - screen: normalized chart rendering at the experience boundary")
 print(" - legacy macro controller/intelligence layer: removed")
