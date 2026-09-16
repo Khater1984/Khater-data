@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 """Guard the Fund Detail CSS ownership contract.
 
-This check is intentionally conservative: it verifies the canonical surface
-contract exists in fund-detail.css and that the protected legacy module import
-order remains intact. It does not attempt heuristic CSS rewrites.
+Canonical surface lives only in fund-detail.css (no separate fund-*.css modules).
 """
 from pathlib import Path
-import re
 
 ROOT = Path(__file__).resolve().parents[1]
 ENTRY = ROOT / "web/css/fund-detail.css"
+LEGACY_MODULES = [
+    ROOT / "web/css/fund.css",
+    ROOT / "web/css/fund-chart.css",
+    ROOT / "web/css/fund-price.css",
+    ROOT / "web/css/fund-profile.css",
+]
 
 text = ENTRY.read_text(encoding="utf-8")
 
@@ -27,17 +30,17 @@ if missing:
         + ", ".join(missing)
     )
 
-imports = re.findall(r"@import\s+url\('([^']+)'\);", text)
-expected = [
-    "./fund.css",
-    "./fund-chart.css",
-    "./fund-price.css",
-    "./fund-profile.css",
-]
-if imports[:4] != expected:
+if "@import" in text and "fund.css" in text:
     raise SystemExit(
         "FUND DETAIL CSS OWNERSHIP CHECK FAILED\n"
-        f" - protected module order changed: {imports[:4]}"
+        " - fund-detail.css must not @import split fund modules; inline ownership only"
     )
+
+for path in LEGACY_MODULES:
+    if path.exists():
+        raise SystemExit(
+            "FUND DETAIL CSS OWNERSHIP CHECK FAILED\n"
+            f" - retired module still present: {path.relative_to(ROOT)}"
+        )
 
 print("FUND DETAIL CSS OWNERSHIP CHECK PASSED")

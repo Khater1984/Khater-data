@@ -5,12 +5,6 @@ ROOT = Path(__file__).resolve().parents[1]
 HTML = ROOT / "web/fund.html"
 ENTRY = ROOT / "web/css/fund-detail.css"
 
-required_imports = [
-    "./fund.css",
-    "./fund-chart.css",
-    "./fund-price.css",
-    "./fund-profile.css",
-]
 legacy_css = [
     "css/fund.css",
     "css/fund-chart.css",
@@ -22,7 +16,6 @@ html = HTML.read_text(encoding="utf-8")
 entry = ENTRY.read_text(encoding="utf-8")
 errors = []
 
-# Allow cache-busting query strings while requiring the canonical asset path.
 canonical_href = re.search(
     r'<link\s+[^>]*href=["\']css/fund-detail\.css(?:\?[^"\']*)?["\'][^>]*>',
     html,
@@ -34,22 +27,17 @@ if not canonical_href:
 for css in legacy_css:
     if re.search(rf'<link\s+[^>]*href=["\']{re.escape(css)}(?:\?[^"\']*)?["\'][^>]*>', html, flags=re.IGNORECASE):
         errors.append(f"fund.html must not load legacy Fund Detail stylesheet directly: {css}")
+    if (ROOT / "web" / css).exists():
+        errors.append(f"retired Fund Detail stylesheet still on disk: {css}")
 
-imports = re.findall(r"@import\s+url\(['\"]([^'\"]+)['\"]\)", entry)
-if imports != required_imports:
-    errors.append(
-        "fund-detail.css import order must remain: "
-        + " → ".join(required_imports)
-    )
+for token in ["--fd-line:", "--fd-radius-card:", ".metric,", ".card {"]:
+    if token not in entry:
+        errors.append(f"fund-detail.css missing ownership token: {token}")
 
 if errors:
     print("FUND DETAIL CSS ARCHITECTURE CHECK FAILED")
-    for error in errors:
-        print(f" - {error}")
+    for e in errors:
+        print(" -", e)
     raise SystemExit(1)
 
 print("FUND DETAIL CSS ARCHITECTURE CHECK PASSED")
-print(" - canonical entrypoint: css/fund-detail.css")
-print(" - cache-busting query strings allowed")
-print(" - legacy modules remain encapsulated behind the canonical entrypoint")
-print(" - module order is locked")

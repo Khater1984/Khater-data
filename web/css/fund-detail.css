@@ -1,29 +1,25 @@
-@import url('./khater-platform-visual.css');
+/* Fund Detail — single entrypoint (layout + ownership contract).
+ * Visual identity comes from platform-shell.css via header/app stubs.
+ * Do not reintroduce separate fund-*.css identity modules.
+ */
 
-/* LAYOUT ONLY — Nile V3. Canonical Fund Detail entrypoint.
-   Protected import order + ownership surface contract. */
-@import url('./fund.css');
-@import url('./fund-chart.css');
-@import url('./fund-price.css');
-@import url('./fund-profile.css');
-
-/* Ownership surface contract (required by verify_fund_css_ownership) */
+/* Ownership surface contract (verify_fund_css_ownership) */
 .fund-detail-page,
 .fund-page {
-  --fd-line: var(--river-line, #cce0dc);
+  --fd-line: var(--river-line, var(--shell-border, #cce0dc));
   --fd-radius-card: var(--radius-md, 12px);
-  --fd-card-gradient: linear-gradient(180deg, #ffffff 0%, var(--nile-canvas, #ebf2f0) 100%);
-  background: var(--nile-paper, #f4f8f7);
-  color: var(--ink-dark, #0c2328);
+  --fd-card-gradient: linear-gradient(180deg, #ffffff 0%, var(--nile-canvas, var(--shell-surface-soft, #ebf2f0)) 100%);
+  background: var(--nile-paper, var(--shell-bg, #f4f8f7));
+  color: var(--ink-dark, var(--shell-ink, #0c2328));
   font-family: var(--font-arabic, Cairo, system-ui, sans-serif);
 }
 
 .metric,
 .card {
-  background: var(--card-white, #ffffff);
+  background: var(--card-white, var(--shell-surface, #ffffff));
   border: 1px solid var(--fd-line);
   border-radius: var(--fd-radius-card);
-  box-shadow: var(--shadow-1, 0 1px 3px rgba(12, 35, 40, 0.04));
+  box-shadow: var(--shadow-1, var(--shell-shadow, 0 1px 3px rgba(12, 35, 40, 0.04)));
 }
 
 .visually-hidden {
@@ -37,3 +33,37 @@
   white-space: nowrap;
   border: 0;
 }
+
+/* --- inlined from fund.css --- */
+/* LAYOUT ONLY — Nile V3 tokens from platform-shell */
+.fund-page{padding:24px 0 80px;background:var(--nile-paper);color:var(--ink-dark);font-family:var(--font-arabic)}
+.fund-page .hero{
+  border:1px solid var(--river-line);border-radius:var(--radius-md);padding:24px;
+  background:var(--card-white);box-shadow:var(--shadow-1)
+}
+.fund-page .eyebrow,.fund-page .muted,.fund-page .note{color:var(--ink-muted);font-size:11px}
+.fund-page h1{font-size:clamp(28px,4vw,48px);margin:8px 0;color:var(--ink-dark)}
+.fund-page .card,.fund-page .panel,.fund-page .kpi{
+  background:var(--card-white);border:1px solid var(--river-line);border-radius:var(--radius-md);
+  padding:14px;box-shadow:var(--shadow-1);color:var(--ink-dark)
+}
+.fund-page table{width:100%;border-collapse:collapse;background:var(--card-white)}
+.fund-page th{background:var(--nile-canvas);color:var(--ink-muted);font-size:10px;padding:10px}
+.fund-page td{border-bottom:1px solid var(--river-line);padding:10px;color:var(--ink-dark)}
+.fund-page .num{font-family:var(--font-mono);direction:ltr;unicode-bidi:isolate}
+.up{color:var(--perf-up)}.down{color:var(--perf-down)}
+
+/* --- inlined from fund-chart.css --- */
+.chart-top,.chart-wrap,.chartbox{background:var(--card-white);border:1px solid var(--river-line);border-radius:var(--radius-md);padding:14px;color:var(--ink-dark)}
+
+/* --- inlined from fund-price.css --- */
+.hero-pro,.price-board{background:var(--card-white);border:1px solid var(--river-line);border-radius:var(--radius-md);padding:16px;color:var(--ink-dark)}.price-board .num{font-family:var(--font-mono);direction:ltr;unicode-bidi:isolate}
+
+/* --- inlined from fund-profile.css --- */
+.fund-profile,.profile-hero,.profile-grid{background:var(--card-white);border:1px solid var(--river-line);border-radius:var(--radius-md);color:var(--ink-dark)}.profile-grid{display:grid;gap:12px;padding:16px}
+
+/* --- inlined from fund-decision.css --- */
+.decision-card{margin:14px 0 0;border:1px solid var(--river-line);border-radius:var(--radius-md);background:var(--card-white);padding:16px;color:var(--ink-dark);box-shadow:var(--shadow-1)}.decision-card h2,.decision-card h3{color:var(--ink-dark)}.decision-card p{color:var(--ink-muted)}
+
+/* --- inlined from fund-release-hardening.css --- */
+.decision-category-note{margin-top:6px}.metric-compact{font-size:24px!important}.metric-qualification{font-size:22px!important}.fund-manager-logo{max-width:100%;max-height:100%;object-fit:contain}.hero-logo-box.fallback{display:grid;place-items:center}.tabs button:focus-visible{outline:2px solid var(--gold2,#f4d991);outline-offset:3px}.tab-panel[role=tabpanel]{scroll-margin-top:84px}.tab-panel.is-loading{opacity:.62;pointer-events:none;min-height:120px;position:relative}.tab-panel.is-loading:after{content:'جارٍ التحميل…';display:block;text-align:center;color:var(--muted,#8993a3);padding:24px;font-size:11px}.tab-context-status{white-space:nowrap}.decision-path{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.decision-path i{opacity:.55}.fund-page a:focus-visible,.fund-page button:focus-visible{outline:2px solid var(--gold2,#f4d991);outline-offset:3px}.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}@media(max-width:560px){.tabs{grid-template-columns:1fr 1fr}.tabs button{min-height:48px}.tab-context{gap:8px}.decision-path{font-size:10px}.metric-compact,.metric-qualification{font-size:20px!important}}
