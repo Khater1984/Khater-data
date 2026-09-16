@@ -11,7 +11,6 @@
   --fd-card-gradient: linear-gradient(180deg, var(--shell-surface) 0%, var(--nile-canvas, var(--shell-surface-soft)) 100%);
   background: var(--nile-paper, var(--shell-bg));
   color: var(--ink-dark, var(--shell-ink));
-  font-family: var(--font-arabic, Cairo, system-ui, sans-serif);
 }
 
 .metric,
@@ -35,7 +34,7 @@
 }
 
 /* --- inlined from fund.css --- */
-.fund-page{padding:24px 0 80px;background:var(--nile-paper);color:var(--ink-dark);font-family:var(--font-arabic)}
+.fund-page{padding:24px 0 80px;background:var(--nile-paper);color:var(--ink-dark)}
 .fund-page .hero{
   border:1px solid var(--river-line);border-radius:var(--radius-md);padding:24px;
   background:var(--card-white);box-shadow:var(--shadow-1)
@@ -49,14 +48,14 @@
 .fund-page table{width:100%;border-collapse:collapse;background:var(--card-white)}
 .fund-page th{background:var(--nile-canvas);color:var(--ink-muted);font-size:10px;padding:10px}
 .fund-page td{border-bottom:1px solid var(--river-line);padding:10px;color:var(--ink-dark)}
-.fund-page .num{font-family:var(--font-mono);direction:ltr;unicode-bidi:isolate}
+.fund-page .num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
 .up{color:var(--perf-up)}.down{color:var(--perf-down)}
 
 /* --- inlined from fund-chart.css --- */
 .chart-top,.chart-wrap,.chartbox{background:var(--card-white);border:1px solid var(--river-line);border-radius:var(--radius-md);padding:14px;color:var(--ink-dark)}
 
 /* --- inlined from fund-price.css --- */
-.hero-pro,.price-board{background:var(--card-white);border:1px solid var(--river-line);border-radius:var(--radius-md);padding:16px;color:var(--ink-dark)}.price-board .num{font-family:var(--font-mono);direction:ltr;unicode-bidi:isolate}
+.hero-pro,.price-board{background:var(--card-white);border:1px solid var(--river-line);border-radius:var(--radius-md);padding:16px;color:var(--ink-dark)}.price-board .num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
 
 /* --- inlined from fund-profile.css --- */
 .fund-profile,.profile-hero,.profile-grid{background:var(--card-white);border:1px solid var(--river-line);border-radius:var(--radius-md);color:var(--ink-dark)}.profile-grid{display:grid;gap:12px;padding:16px}
