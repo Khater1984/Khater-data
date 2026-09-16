@@ -13,26 +13,52 @@ on:
       - 'web/js/fund-evidence.js'
       - 'web/js/fund-profile.js'
       - 'web/js/fund-tabs.js'
-      - 'web/css/fund.css'
-      - 'web/css/fund-chart.css'
-      - 'web/css/fund-profile.css'
-      - 'web/css/fund-price.css'
+      - 'web/js/fund-detail-controller.js'
+      - 'web/js/fund-detail-boot.js'
+      - 'web/css/fund-detail.css'
+      - 'scripts/verify_fund_detail_contract.py'
+      - 'scripts/verify_fund_detail_css_architecture.py'
+      - 'scripts/verify_fund_css_ownership.py'
+      - '.github/workflows/fund-qa.yml'
     branches: [main]
 
 jobs:
-  syntax:
+  fund-qa:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Check JavaScript syntax
         run: |
-          set -e
-          for f in web/js/fund-core.js web/js/fund-performance.js web/js/fund-risk.js web/js/fund-benchmark.js web/js/fund-smartscore.js web/js/fund-evidence.js web/js/fund-profile.js web/js/fund-tabs.js; do
+          set -euo pipefail
+          for f in \
+            web/js/fund-core.js \
+            web/js/fund-performance.js \
+            web/js/fund-risk.js \
+            web/js/fund-benchmark.js \
+            web/js/fund-smartscore.js \
+            web/js/fund-evidence.js \
+            web/js/fund-profile.js \
+            web/js/fund-tabs.js \
+            web/js/fund-detail-controller.js \
+            web/js/fund-detail-boot.js
+          do
             node --check "$f"
           done
+
       - name: Check required tab contracts
         run: |
-          set -e
+          set -euo pipefail
           grep -q 'FUND_TABS.performance' web/js/fund-performance.js
           grep -q 'FUND_TABS.risk' web/js/fund-risk.js
           grep -q 'FUND_TABS.benchmark' web/js/fund-benchmark.js
@@ -46,8 +72,15 @@ jobs:
           grep -q 'fund-evidence.js' web/fund.html
           grep -q 'fund-profile.js' web/fund.html
           grep -q 'fund-tabs.js' web/fund.html
-      - name: Check canonical fund-price dependency
+          grep -q 'fund-detail.css' web/fund.html
+
+      - name: Canonical Fund Detail contracts
         run: |
-          set -e
-          test -s web/css/fund-price.css
-          grep -q 'fund-price.css' web/js/fund-core.js
+          set -euo pipefail
+          python scripts/verify_fund_detail_contract.py
+          python scripts/verify_fund_detail_css_architecture.py
+          python scripts/verify_fund_css_ownership.py
+          test ! -e web/css/fund.css
+          test ! -e web/css/fund-chart.css
+          test ! -e web/css/fund-price.css
+          test ! -e web/css/fund-profile.css
