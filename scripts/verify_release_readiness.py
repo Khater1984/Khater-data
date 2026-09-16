@@ -61,7 +61,6 @@ pages = sorted(WEB.glob("*.html"))
 if not pages:
     errors.append("no web HTML pages found")
 
-# Product shell and accessibility contract.
 for page in pages:
     rel = page.relative_to(ROOT).as_posix()
     text = page.read_text(encoding="utf-8", errors="ignore")
@@ -77,17 +76,17 @@ for page in pages:
     if p.inline_style_data.strip(): errors.append(f"{rel}: inline CSS remains")
     if re.search(r"\son[a-z]+\s*=", text, re.I): errors.append(f"{rel}: inline event handler remains")
     if re.search(r"href\s*=\s*['\"]\s*javascript:", text, re.I): errors.append(f"{rel}: javascript URL remains")
+    if "categories.html" in text or "heatmap.html" in text:
+        errors.append(f"{rel}: retired Areas/Heatmap route remains")
     dup = sorted({x for x in p.ids if p.ids.count(x) > 1})
     for x in dup: errors.append(f"{rel}: duplicate id={x}")
 
-    # Local references must resolve from the page directory.
     for ref in re.findall(r"(?:src|href)=[\"']([^\"']+)", text, re.I):
         if ref.startswith(("http://", "https://", "#", "mailto:", "data:", "tel:")): continue
         clean = ref.split("?",1)[0].split("#",1)[0]
         if not clean or "${" in clean: continue
         if not (page.parent / clean).resolve().is_file(): errors.append(f"{rel}: broken local reference {ref}")
 
-# Browser code must remain inside the canonical service/data boundary.
 for path in WEB.rglob("*.js"):
     rel = path.relative_to(ROOT).as_posix()
     text = path.read_text(encoding="utf-8", errors="ignore")
@@ -98,22 +97,19 @@ for path in WEB.rglob("*.js"):
     if re.search(r"(?:api[_-]?key|secret)\s*[:=]\s*['\"][A-Za-z0-9_-]{32,}", text, re.I):
         warnings.append(f"{rel}: possible hard-coded credential-like value")
 
-# Required architecture anchors.
 required = [
     "web/config.js", "web/css/header.css", "web/js/data/supabase-client.js",
     "web/js/data/fund-service.js", "web/js/data/macro-service.js",
-    "web/js/data/categories-service.js", "web/css/fund-detail.css",
+    "web/css/fund-detail.css",
     "scripts/verify_release_candidate.py", ".github/workflows/quality-gate.yml",
 ]
 for item in required:
     if not (ROOT / item).is_file(): errors.append(f"missing release anchor: {item}")
 
-# Navigation coherence: each major surface should be represented somewhere in the browser shell.
 all_html = "\n".join(p.read_text(encoding="utf-8", errors="ignore") for p in pages)
-for marker in ("index.html", "macro.html", "categories.html", "funds.html", "fund.html"):
+for marker in ("index.html", "wealth.html", "macro.html", "funds.html", "fund.html"):
     if marker not in all_html: warnings.append(f"navigation marker not found globally: {marker}")
 
-# No accidental debug artifacts in production browser code.
 for path in WEB.rglob("*.js"):
     text = path.read_text(encoding="utf-8", errors="ignore")
     rel = path.relative_to(ROOT).as_posix()

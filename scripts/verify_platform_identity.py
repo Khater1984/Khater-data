@@ -4,22 +4,35 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
-PAGES = ["index.html", "map.html", "categories.html", "funds.html", "fund.html"]
+PAGES = ["index.html", "wealth.html", "macro.html", "funds.html", "fund.html"]
 
 FORBIDDEN_LINKS = [
     "nile-page-overrides.css",
     "khater-platform-identity.css",
     "page-funds-final.css",
+    "heatmap.css",
 ]
+
+PRIMARY_NAV = [
+    'href="./index.html"',
+    'href="./wealth.html"',
+    'href="./macro.html"',
+    'href="./funds.html"',
+]
+
+RETIRED_ROUTES = ["categories.html", "heatmap.html"]
 
 for name in PAGES:
     path = WEB / name
     html = path.read_text(encoding="utf-8")
     if "css/header.css" not in html:
         raise SystemExit(f"Platform identity failed: {name} missing shared header stylesheet")
-    for href in ['href="./index.html"', 'href="./map.html"', 'href="./categories.html"', 'href="./funds.html"']:
+    for href in PRIMARY_NAV:
         if href not in html:
             raise SystemExit(f"Platform identity failed: {name} missing primary navigation route {href}")
+    for retired in RETIRED_ROUTES:
+        if retired in html:
+            raise SystemExit(f"Platform identity failed: {name} still references retired route {retired}")
     for bad in FORBIDDEN_LINKS:
         if bad in html:
             raise SystemExit(f"Platform identity failed: {name} still links retired stylesheet {bad}")
@@ -27,6 +40,9 @@ for name in PAGES:
 header = (WEB / "css/header.css").read_text(encoding="utf-8")
 if "platform-shell.css" not in header:
     raise SystemExit("Platform identity failed: header.css is not bound to platform-shell.css")
+for retired in ("categories.html", "المناطق"):
+    if retired in header:
+        raise SystemExit(f"Platform identity failed: header.css still exposes retired Areas route ({retired})")
 
 shell = (WEB / "css/platform-shell.css").read_text(encoding="utf-8")
 required_tokens = [

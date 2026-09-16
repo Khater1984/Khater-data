@@ -20,9 +20,9 @@ FORBIDDEN_RE = [
     re.compile(r"font-family\s*:\s*[^;]*\bSegoe UI\b", re.I),
 ]
 PAGE_CSS = [
-    "page-funds.css", "page-funds-layout.css", "page-map.css", "page-categories.css",
+    "page-funds.css", "page-funds-layout.css", "page-map.css",
     "page-macro.css", "brief-page.css", "fund-detail.css", "opportunity-layer.css",
-    "accordion.css", "macro-intelligence.css", "heatmap.css", "category-context.css",
+    "accordion.css", "macro-intelligence.css", "category-context.css",
 ]
 
 errors = []

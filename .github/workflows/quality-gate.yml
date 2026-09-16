@@ -49,9 +49,6 @@ jobs:
       - name: Financial contracts
         run: python scripts/verify_financial_contracts.py
 
-      - name: Categories contract
-        run: python scripts/verify_categories_contract.py
-
       - name: Funds contract
         run: python scripts/verify_funds_contract.py
 

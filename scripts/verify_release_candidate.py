@@ -8,7 +8,6 @@ Supabase schema untouched.
 from html.parser import HTMLParser
 from pathlib import Path
 import re
-import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
@@ -67,8 +66,9 @@ for page in PAGES:
         errors.append(f"{rel}: inline event handler attribute remains")
     if re.search(r'href\s*=\s*["\']\s*javascript:', text, re.I):
         errors.append(f"{rel}: javascript: URL remains")
+    if "categories.html" in text or "heatmap.html" in text:
+        errors.append(f"{rel}: retired Areas/Heatmap route remains")
 
-    # Validate local script and stylesheet references at the page boundary.
     for ref in re.findall(r'(?:src|href)=["\']([^"\']+)', text, re.I):
         if ref.startswith(("http://", "https://", "#", "mailto:", "data:")):
             continue
@@ -79,14 +79,12 @@ for page in PAGES:
         if not target.is_file():
             errors.append(f"{rel}: broken local reference {ref}")
 
-# No browser code outside the canonical data layer may talk to Supabase REST directly.
 for path in WEB.rglob("*.js"):
     rel = path.relative_to(ROOT).as_posix()
     text = path.read_text(encoding="utf-8", errors="ignore")
     if "/js/data/" not in rel and "/rest/v1/" in text:
         errors.append(f"{rel}: direct Supabase REST outside web/js/data")
 
-# Browser config must never contain a service-role credential marker.
 config = WEB / "config.js"
 if config.is_file():
     text = config.read_text(encoding="utf-8", errors="ignore")
@@ -97,7 +95,6 @@ required = [
     "web/js/data/supabase-client.js",
     "web/js/data/fund-service.js",
     "web/js/data/macro-service.js",
-    "web/js/data/categories-service.js",
     "web/css/header.css",
     "web/css/fund-detail.css",
     "scripts/verify_frontend_boundaries.py",
@@ -106,6 +103,16 @@ required = [
 for item in required:
     if not (ROOT / item).is_file():
         errors.append(f"missing production anchor: {item}")
+
+for item in (
+    "web/categories.html",
+    "web/heatmap.html",
+    "web/js/data/categories-service.js",
+    "web/css/heatmap.css",
+    "web/js/heatmap-redirect.js",
+):
+    if (ROOT / item).is_file():
+        errors.append(f"retired surface still present: {item}")
 
 if errors:
     print("RELEASE CANDIDATE AUDIT FAILED")
@@ -123,3 +130,4 @@ print("duplicate ids: absent")
 print("Supabase boundary: enforced")
 print("browser credential safety: checked")
 print("canonical anchors: present")
+print("retired Areas/Heatmap surface: absent")

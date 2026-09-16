@@ -2,8 +2,18 @@ import { access, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const root = new URL('../web/', import.meta.url).pathname;
-const required = ['index.html', 'funds.html', 'fund.html', 'categories.html', 'macro.html', 'map.html', 'why.html', 'config.js'];
+const required = ['index.html', 'funds.html', 'fund.html', 'macro.html', 'wealth.html', 'map.html', 'why.html', 'config.js'];
 for (const file of required) await access(join(root, file));
+
+const retired = ['categories.html', 'heatmap.html'];
+for (const file of retired) {
+  try {
+    await access(join(root, file));
+    throw new Error(`retired surface still on disk: ${file}`);
+  } catch (err) {
+    if (err && err.message && err.message.includes('retired surface')) throw err;
+  }
+}
 
 const html = await readFile(join(root, 'fund.html'), 'utf8');
 const requiredFundAssets = [
@@ -24,8 +34,6 @@ for (const asset of requiredFundAssets) {
   }
 }
 
-// Fund Detail CSS is a single inlined entrypoint (no split modules).
-// Split files fund.css / fund-chart.css / fund-price.css / fund-profile.css were retired.
 const cssEntry = await readFile(join(root, 'css', 'fund-detail.css'), 'utf8');
 const requiredOwnership = [
   '--fd-line:',
@@ -50,7 +58,6 @@ for (const name of retiredModules) {
     throw new Error(`retired Fund Detail stylesheet still on disk: css/${name}`);
   } catch (err) {
     if (err && err.message && err.message.includes('retired Fund Detail')) throw err;
-    // ENOENT expected
   }
 }
 
