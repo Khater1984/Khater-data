@@ -1,8 +1,9 @@
 /* ==========================================================================
-   Nile Market Intelligence — Platform Shell V4.3
+   Nile Market Intelligence — Platform Shell V4.4
    Single identity · Cairo for all text and numbers (no Mono UI)
    Product chrome: paper, header rail, shared surfaces.
    Type scale: pages bind --text-* tokens; they do not invent sizes.
+   Device environment: safe-area, tap, overscroll, print, contrast preference.
    Financial up/down hues are unchanged.
    ========================================================================== */
 @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap");
@@ -29,7 +30,11 @@
   --shell-info-soft:#e9f1f6;
   --shell-shadow:0 1px 1px rgba(11,28,31,.05),0 10px 28px rgba(11,28,31,.06);
   --shell-shadow-hover:0 2px 6px rgba(11,28,31,.06),0 18px 40px rgba(11,28,31,.09);
-  --shell-content:min(100% - 32px,1560px);
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-left:env(safe-area-inset-left,0px);
+  --safe-right:env(safe-area-inset-right,0px);
+  --shell-content:min(100% - 32px - var(--safe-left) - var(--safe-right),1560px);
   --shell-max:1560px;
   --shell-pad:clamp(14px,2.2vw,34px);
   --shell-gap:16px;
@@ -150,9 +155,10 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
-html{background:var(--shell-bg);color:var(--shell-ink);color-scheme:light;-webkit-text-size-adjust:100%;text-rendering:optimizeLegibility}
-body{margin:0;font-family:var(--font-arabic);font-size:var(--text-body);line-height:var(--leading-body);background:var(--shell-bg);color:var(--shell-ink);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+html{background:var(--shell-bg);color:var(--shell-ink);color-scheme:light;-webkit-text-size-adjust:100%;text-rendering:optimizeLegibility;-webkit-tap-highlight-color:color-mix(in srgb,var(--shell-green) 16%, transparent);overscroll-behavior-y:none}
+body{margin:0;font-family:var(--font-arabic);font-size:var(--text-body);line-height:var(--leading-body);background:var(--shell-bg);color:var(--shell-ink);overflow-x:hidden;padding-bottom:var(--safe-bottom);overscroll-behavior-y:none;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 html,body,button,input,select,textarea,table,thead,tbody,th,td,a,label,span,div,p,small,strong,b,em,i,h1,h2,h3,h4,h5,h6{font-family:var(--font-arabic)}
+a,button,summary,input,select,textarea,label{touch-action:manipulation}
 ::selection{background:color-mix(in srgb,var(--shell-green) 18%, transparent);color:var(--shell-ink)}
 :focus-visible{outline:3px solid var(--shell-focus-ring);outline-offset:2px}
 
@@ -244,7 +250,7 @@ th,td{border-bottom:1px solid var(--shell-border);padding:11px 13px;vertical-ali
 @media(max-width:1050px){.site-header .wrap{align-items:stretch;padding-block:10px;flex-direction:column;gap:10px}.site-header nav{width:100%}.hero{grid-template-columns:1fr}.controls{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
 @media(max-width:760px){
   :root{
-    --shell-content:calc(100% - 24px);
+    --shell-content:calc(100% - 24px - var(--safe-left) - var(--safe-right));
     --header-h:58px;
     --text-hero:30px;
     --text-page:22px;
@@ -259,6 +265,25 @@ th,td{border-bottom:1px solid var(--shell-border);padding:11px 13px;vertical-ali
   .controls{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(pointer:coarse){
+  button,select,input,textarea,.market-sort,.market-filter,.view-tab,.seg button,.ranges button{min-height:44px}
+}
+@media(prefers-contrast:more){
+  :root{
+    --shell-ink:#061314;
+    --shell-muted:#2f4548;
+    --shell-border:#8aa19c;
+    --shell-border-strong:#5e7872;
+    --shell-focus-ring:rgba(8,127,99,.55);
+  }
+  .surface,.card,.panel,.table-frame,.investment-panel{border-width:2px}
+}
+@media print{
+  html,body{background:#fff;color:#000;padding:0}
+  .site-header{position:static;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .skip-link,.site-header::before{display:none}
+  a{color:inherit}
+}
 
 /* --------------------------------------------------------------------------
    TYPOGRAPHY ENFORCEMENT (legacy cleanup)
