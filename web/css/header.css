@@ -1,14 +1,9 @@
-/* KHATER PLATFORM — shared navigation component. Tokens come from khater-design-system.css. */
-.site-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);border-bottom:1px solid var(--kh-border);backdrop-filter:blur(14px)}
-.site-header .wrap{max-width:var(--kh-max);margin:0 auto;min-height:66px;height:auto;padding:9px var(--kh-pad);display:flex;align-items:center;justify-content:space-between;gap:var(--kh-gap);box-sizing:border-box}
-.site-header .logo{font-family:var(--kh-font)!important;font-weight:800;font-size:16px;line-height:1.3;color:var(--kh-ink-strong)!important;white-space:nowrap;flex:0 0 auto}
-.site-header .logo span{display:block;font-size:10px;line-height:1.5;color:var(--kh-subtle)!important;font-weight:500;margin-top:1px}
-.site-header nav{display:flex;align-items:center;justify-content:flex-end;gap:4px;flex:1 1 auto;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
-.site-header nav::-webkit-scrollbar{display:none}
-.site-header nav a{display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 13px;border-radius:var(--kh-r-sm);border:1px solid transparent;color:var(--kh-muted)!important;text-decoration:none;font-family:var(--kh-font)!important;font-size:12px;font-weight:700;white-space:nowrap;flex:0 0 auto;transition:color var(--kh-speed) var(--kh-ease),background var(--kh-speed) var(--kh-ease),border-color var(--kh-speed) var(--kh-ease),transform var(--kh-speed) var(--kh-ease)}
-.site-header nav a:hover{color:var(--kh-ink-strong)!important;background:var(--kh-surface-2)}
-.site-header nav a.active{color:var(--kh-accent)!important;background:var(--kh-accent-soft);border-color:#c7dce6;font-weight:800;box-shadow:var(--kh-shadow-1)}
-.site-header nav a:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
-@media(max-width:860px){.site-header .wrap{flex-direction:column;align-items:stretch;gap:8px;padding-inline:16px}.site-header nav{justify-content:flex-start;padding-bottom:2px}.site-header nav a{height:36px;padding:0 11px}}
-@media(max-width:560px){.site-header .wrap{padding-inline:14px}.site-header .logo{font-size:15px}}
+/* SHARED NAVIGATION — V4 institutional light header */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.94);border-bottom:1px solid var(--kh-border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.site-header .wrap{max-width:var(--kh-max);min-height:62px;padding:7px var(--kh-pad);margin:0 auto;display:flex;align-items:center;gap:26px;box-sizing:border-box}
+.site-header .logo{font-family:var(--kh-font)!important;font-weight:800;font-size:16px;line-height:1.2;color:var(--kh-ink-strong)!important;white-space:nowrap;flex:0 0 auto;letter-spacing:-.02em}.site-header .logo span{display:block;font-size:9px;line-height:1.4;color:var(--kh-subtle)!important;font-weight:600;margin-top:2px;letter-spacing:.02em}
+.site-header nav{display:flex;align-items:center;justify-content:flex-start;gap:3px;flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none}.site-header nav::-webkit-scrollbar{display:none}
+.site-header nav a{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 14px;border-radius:8px;border:1px solid transparent;color:var(--kh-muted)!important;text-decoration:none;font-family:var(--kh-font)!important;font-size:12px;font-weight:700;white-space:nowrap;flex:0 0 auto;transition:color var(--kh-speed) var(--kh-ease),background var(--kh-speed) var(--kh-ease),border-color var(--kh-speed) var(--kh-ease),transform var(--kh-speed) var(--kh-ease)}
+.site-header nav a:hover{color:var(--kh-ink-strong)!important;background:var(--kh-surface-2)}.site-header nav a.active{color:var(--kh-accent)!important;background:var(--kh-accent-soft);border-color:rgba(8,127,99,.18);font-weight:800}.site-header nav a:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+@media(max-width:760px){.site-header .wrap{min-height:56px;padding-inline:12px;gap:12px}.site-header .logo{font-size:14px}.site-header .logo span{display:none}.site-header nav{gap:2px}.site-header nav a{height:34px;padding:0 10px;font-size:11px}}
 @media(prefers-reduced-motion:reduce){.site-header nav a{transition:none}}
