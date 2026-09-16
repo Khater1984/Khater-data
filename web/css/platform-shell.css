@@ -1,8 +1,8 @@
 /* ==========================================================================
-   Nile Market Intelligence — Platform Shell V4.1
-   Single identity source · Institutional Financial Intelligence
+   Nile Market Intelligence — Platform Shell V4.1 + Cairo Typography Contract
+   Single identity · Cairo for all text and numbers (no Mono UI)
    ========================================================================== */
-@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap");
 
 :root{
   --shell-bg:#f3f6f5;
@@ -31,8 +31,9 @@
   --shell-pad:clamp(14px,2.2vw,34px);
   --shell-gap:16px;
   --header-h:64px;
-  --font-arabic:"Cairo",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --font-mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+  --font-arabic:"Cairo",sans-serif;
+  --kh-font:var(--font-arabic);
+  --font-mono:var(--font-arabic);
   --text-hero:clamp(30px,3.4vw,46px);
   --text-page:clamp(22px,2.3vw,32px);
   --text-section:clamp(17px,1.45vw,22px);
@@ -108,8 +109,7 @@
   --kh-positive-soft:var(--shell-positive-soft);
   --kh-warning:var(--shell-warning);
   --kh-warning-soft:var(--shell-warning-soft);
-  --kh-font:var(--font-arabic);
-  --kh-num:var(--font-mono);
+  --kh-num:var(--font-arabic);
   --kh-r-sm:var(--radius-sm);
   --kh-r-md:var(--radius-md);
   --kh-r-lg:var(--radius-lg);
@@ -136,7 +136,7 @@
   --bad:var(--shell-red);
   --gold:var(--shell-gold);
   --font:var(--font-arabic);
-  --font-num:var(--font-mono);
+  --font-num:var(--font-arabic);
   --radius:var(--radius-md);
   --shadow-1:var(--shell-shadow);
 }
@@ -144,6 +144,10 @@
 *,*::before,*::after{box-sizing:border-box}
 html{background:var(--shell-bg);color:var(--shell-ink);-webkit-text-size-adjust:100%;text-rendering:optimizeLegibility}
 body{margin:0;font-family:var(--font-arabic);font-size:var(--text-body);line-height:var(--leading-body);background:var(--shell-bg);color:var(--shell-ink);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+/* Global Typography Contract — Cairo only (text + numbers) */
+html,body,button,input,select,textarea,table,thead,tbody,th,td,a,label,span,div,p,small,strong,b,em,i,h1,h2,h3,h4,h5,h6{
+  font-family:var(--font-arabic);
+}
 ::selection{background:rgba(8,127,99,.16);color:var(--shell-ink)}
 :focus-visible{outline:3px solid var(--shell-focus-ring);outline-offset:2px}
 
@@ -162,7 +166,13 @@ button:hover,.market-sort:hover,.market-filter:hover,.heat-tool:hover,.view-tab:
 button.active,.market-sort.active,.market-filter.active,.heat-tool.active,.view-tab.active,button.on,[aria-selected="true"]{background:var(--shell-green-soft);color:var(--shell-green);border-color:rgba(8,127,99,.28)}
 button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--shell-focus-ring);outline-offset:2px}
 
-.num,.numeric-data,.tabular-nums,.return-col,.pct,[data-financial-number],.value,.side-number,.market-item b{font-family:var(--font-mono);font-variant-numeric:tabular-nums lining-nums;direction:ltr;unicode-bidi:isolate;letter-spacing:-.01em}
+.num,.numeric-data,.tabular-nums,.return-col,.pct,[data-financial-number],.value,.side-number,.market-item b,.rank-col,.report-date,.smart-score-ring,.kpi b,.path-number{
+  font-family:var(--font-arabic);
+  font-variant-numeric:tabular-nums lining-nums;
+  direction:ltr;
+  unicode-bidi:isolate;
+  letter-spacing:-.01em;
+}
 .up,.positive,.good,.is-up,[data-direction="up"]{color:var(--shell-green)}
 .dn,.down,.negative,.bad,.is-down,[data-direction="down"]{color:var(--shell-red)}
 .bg-up{background:var(--shell-green-soft)}
@@ -174,11 +184,11 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{ou
 .evidence-strip,.nile-evidence,.table-meta{font-size:var(--text-micro);color:var(--shell-muted);letter-spacing:.01em}
 
 table{border-collapse:separate;border-spacing:0;width:100%}
-thead th{background:linear-gradient(180deg,var(--shell-surface-soft),#f1f5f4);color:var(--shell-muted);border-bottom:1px solid var(--shell-border-strong);font-weight:800;font-size:var(--text-micro);letter-spacing:.04em;text-transform:uppercase;height:var(--table-head-h)}
+thead th{background:linear-gradient(180deg,var(--shell-surface-soft),#f1f5f4);color:var(--shell-muted);border-bottom:1px solid var(--shell-border-strong);font-weight:800;font-size:var(--text-micro);letter-spacing:.04em;text-transform:uppercase;height:var(--table-head-h);font-family:var(--font-arabic)}
 tbody tr{background:var(--shell-surface);transition:background var(--transition-fast)}
 tbody tr:nth-child(even){background:#fbfcfc}
 tbody tr:hover{background:var(--shell-green-soft)}
-th,td{border-bottom:1px solid #e6eeec;padding:11px 13px;vertical-align:middle}
+th,td{border-bottom:1px solid #e6eeec;padding:11px 13px;vertical-align:middle;font-family:var(--font-arabic)}
 
 .hero,.hero-zone,.brief-hero,.hero-mini{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-lg);box-shadow:var(--shell-shadow);padding:var(--space-5) 28px;position:relative;overflow:hidden}
 .hero::before,.brief-hero::before,.hero-mini::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(180deg,var(--shell-green),var(--shell-gold));opacity:.9}
@@ -193,7 +203,7 @@ th,td{border-bottom:1px solid #e6eeec;padding:11px 13px;vertical-align:middle}
 .path-card h3{margin:0;font-size:16px;color:var(--shell-ink)}
 .path-card p{margin:0;font-size:13px;color:var(--shell-muted);line-height:1.55;flex:1}
 .path-card b{font-size:12px;color:var(--shell-green)}
-.path-number{font-family:var(--font-mono);font-size:11px;color:var(--shell-gold);font-weight:700;letter-spacing:.04em}
+.path-number{font-family:var(--font-arabic);font-size:11px;color:var(--shell-gold);font-weight:700;letter-spacing:.04em;font-variant-numeric:tabular-nums}
 
 .investment-panel{padding:18px 20px}
 .investment-panel .panel-head{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--space-4);flex-wrap:wrap;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--shell-border)}
@@ -209,7 +219,7 @@ th,td{border-bottom:1px solid #e6eeec;padding:11px 13px;vertical-align:middle}
 .legend-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
 
 .controls{display:grid;grid-template-columns:minmax(280px,1fr) repeat(2,minmax(180px,240px));align-items:center;gap:10px;padding:10px;background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-md);box-shadow:var(--shell-shadow)}
-.controls input,.controls select{height:42px;background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-sm);font-size:13px}
+.controls input,.controls select{height:42px;background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-sm);font-size:13px;font-family:var(--font-arabic)}
 .view-tabs{display:flex;gap:5px}
 .view-tab.active{background:var(--shell-green);color:#fff;border-color:var(--shell-green)}
 .grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:16px}
