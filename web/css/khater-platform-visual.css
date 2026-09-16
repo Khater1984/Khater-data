@@ -1,7 +1,2 @@
-/*
- * Compatibility entrypoint.
- * The platform identity is now owned by platform-shell.css.
- * Keep this filename for existing pages during the migration so no page
- * loses its visual contract while the implementation is centralized.
- */
-@import url('./platform-shell.css?v=20260916-v1');
+/* DEPRECATED — do not edit. Identity lives only in platform-shell.css */
+@import url('./platform-shell.css');

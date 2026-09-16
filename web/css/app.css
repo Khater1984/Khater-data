@@ -1,2 +1,2 @@
-/* Compatibility layer only. Identity = khater-design-system.css */
-@import url('./khater-design-system.css');
+/* DEPRECATED — do not edit. Identity lives only in platform-shell.css */
+@import url('./platform-shell.css');

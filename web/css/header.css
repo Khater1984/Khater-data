@@ -1,4 +1,4 @@
-@import url('./platform-shell.css?v=20260916-v2');
+@import url('./platform-shell.css');
 /* SHARED NAVIGATION — centralized platform chrome V5 */
 .site-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);border-bottom:1px solid var(--shell-border,var(--kh-border));box-shadow:0 1px 0 rgba(16,38,42,.025);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
 .site-header .wrap{max-width:1560px;min-height:68px;padding:7px 16px;margin:0 auto;display:flex;align-items:center;gap:32px;box-sizing:border-box}
@@ -6,7 +6,6 @@
 .site-header nav{display:flex;align-items:center;justify-content:flex-start;gap:4px;flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none}.site-header nav::-webkit-scrollbar{display:none}
 .site-header nav a{display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 15px;border-radius:8px;border:1px solid transparent;color:var(--shell-muted,var(--kh-muted))!important;text-decoration:none;font-family:var(--kh-font,"Cairo",sans-serif)!important;font-size:12px;font-weight:700;white-space:nowrap;flex:0 0 auto;transition:color 150ms ease,background 150ms ease,border-color 150ms ease,transform 150ms ease}
 .site-header nav a:hover{color:var(--shell-ink,var(--kh-ink-strong))!important;background:#f1f5f4}.site-header nav a.active{color:var(--shell-green,var(--kh-accent))!important;background:var(--shell-green-soft,var(--kh-accent-soft));border-color:rgba(8,127,99,.18);font-weight:800}.site-header nav a:focus-visible{outline:3px solid rgba(8,127,99,.24);outline-offset:2px}
-/* Legacy labels are normalized here so individual pages cannot drift. */
 .site-header nav a[href="./index.html"]{font-size:0}.site-header nav a[href="./index.html"]::after{content:"الآن";font-size:12px}
 .site-header nav a[href="./map.html"]{font-size:0}.site-header nav a[href="./map.html"]::after{content:"قيمة فلوسي";font-size:12px}
 .site-header nav a[href="./categories.html"]{font-size:0}.site-header nav a[href="./categories.html"]::after{content:"المناطق";font-size:12px}

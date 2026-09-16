@@ -1,18 +1,28 @@
 #!/usr/bin/env python3
+"""Guard: one visual identity source — platform-shell.css."""
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
 PAGES = ["index.html", "map.html", "categories.html", "funds.html", "fund.html"]
 
+FORBIDDEN_LINKS = [
+    "nile-page-overrides.css",
+    "khater-platform-identity.css",
+    "page-funds-final.css",
+]
+
 for name in PAGES:
     path = WEB / name
     html = path.read_text(encoding="utf-8")
-    if 'css/header.css' not in html:
+    if "css/header.css" not in html:
         raise SystemExit(f"Platform identity failed: {name} missing shared header stylesheet")
-    for href in ['href=\"./index.html\"', 'href=\"./map.html\"', 'href=\"./categories.html\"', 'href=\"./funds.html\"']:
+    for href in ['href="./index.html"', 'href="./map.html"', 'href="./categories.html"', 'href="./funds.html"']:
         if href not in html:
             raise SystemExit(f"Platform identity failed: {name} missing primary navigation route {href}")
+    for bad in FORBIDDEN_LINKS:
+        if bad in html:
+            raise SystemExit(f"Platform identity failed: {name} still links retired stylesheet {bad}")
 
 header = (WEB / "css/header.css").read_text(encoding="utf-8")
 if "platform-shell.css" not in header:
@@ -27,8 +37,11 @@ for token in required_tokens:
     if token not in shell:
         raise SystemExit(f"Platform identity failed: platform-shell.css missing {token}")
 
-legacy = (WEB / "css/khater-platform-visual.css").read_text(encoding="utf-8")
-if "@import url('./platform-shell.css" not in legacy:
-    raise SystemExit("Platform identity failed: legacy visual entrypoint is not delegated to platform-shell.css")
+for stub_name in ("app.css", "khater-design-system.css"):
+    stub_path = WEB / "css" / stub_name
+    if stub_path.is_file():
+        text = stub_path.read_text(encoding="utf-8")
+        if "platform-shell.css" not in text:
+            raise SystemExit(f"Platform identity failed: {stub_name} must import platform-shell.css")
 
 print("Platform identity contract passed")
