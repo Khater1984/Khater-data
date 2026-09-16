@@ -5,9 +5,9 @@ ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "web/fund.html"
 
 REQUIRED_CSS = [
-    "css/app.css",
     "css/header.css",
     "css/fund-detail.css",
+    "css/platform-shell.css",
 ]
 REQUIRED_JS = [
     "js/data/supabase-client.js",
