@@ -1,16 +1,50 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>قيمة ثروتي — قيمة المال والسياق الاقتصادي</title>
-<script src="config.js"></script><script src="js/platform-theme.js"></script><script src="js/data/supabase-client.js"></script><script src="js/data/macro-service.js"></script><script src="js/data/wealth-service.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>قيمة ثروتي — ماذا حدث لـ100 جنيه منذ 2016؟</title>
+<script src="config.js"></script>
+<script src="js/platform-theme.js"></script>
+<script src="js/data/supabase-client.js"></script>
+<script src="js/data/macro-service.js"></script>
+<script src="js/data/wealth-service.js"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
-<link rel="stylesheet" href="css/app.css"><link rel="stylesheet" href="css/header.css"><link rel="stylesheet" href="css/page-wealth.css"><link rel="stylesheet" href="css/platform-shell.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/header.css">
+<link rel="stylesheet" href="css/page-wealth.css">
+<link rel="stylesheet" href="css/platform-shell.css">
 </head>
-<body class="page-wealth"><a class="skip-link" href="#main-content">تخطَّ إلى المحتوى الرئيسي</a><header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>طبقة ذكاء فوق السوق — من السياق إلى القرار</span></div><nav aria-label="التنقل الرئيسي"><a href="./index.html">الآن</a><a class="active" aria-current="page" href="./wealth.html">قيمة ثروتي</a><a href="./macro.html">الاقتصاد</a><a href="./categories.html">المناطق</a><a href="./funds.html">الصناديق</a></nav></div></header>
-<main id="main-content" class="wrap"><section class="hero-mini"><div class="eyebrow">VALUE OF WEALTH · SIGNATURE EXPERIENCE</div><h1>ماذا حدث لقيمة ثروتي؟</h1><p class="muted">نقارن مسار المال عبر الأصول والقوة الشرائية، ثم نقرأ السياق الاقتصادي الذي يفسّر الفروق بين هذه المسارات.</p></section>
-<section class="investment-panel" aria-labelledby="investment-title"><div class="panel-head"><div><div class="section-kicker">WEALTH PERFORMANCE</div><h2 id="investment-title">نمو الثروة عبر الأصول</h2><p class="muted">كل المسارات معاد تأسيسها عند 100 جنيه في أول نقطة متاحة، حتى تكون المقارنة الزمنية عادلة.</p></div><div class="panel-note">المقارنة تاريخية وليست توصية استثمارية</div></div><div class="seg" role="tablist" aria-label="نوع المقارنة"><button type="button" class="on" role="tab" aria-selected="true" data-g="value">الأصول الاستثمارية</button><button type="button" role="tab" aria-selected="false" data-g="money">النقد والقوة الشرائية</button><button type="button" role="tab" aria-selected="false" data-g="rates">العائد النقدي</button></div><div class="ranges" role="tablist" aria-label="النطاق الزمني"><button type="button" class="on" role="tab" aria-selected="true" data-r="all">منذ 2016</button><button type="button" role="tab" aria-selected="false" data-r="5">آخر 5 سنوات</button><button type="button" role="tab" aria-selected="false" data-r="2">آخر سنتين</button></div><div class="chart-wrap"><div id="tip" aria-live="polite"></div><div id="chart" role="img" aria-label="رسم بياني لمقارنة نمو الثروة عبر الأصول"></div></div><div id="assetLegend" class="asset-legend" aria-label="الأصول المعروضة"></div></section>
-<section class="embedded-economic-context" aria-labelledby="economic-context-title"><div id="embedded-economic-context"><div class="context-loading" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div></div></section>
-<section class="why"><div class="card"><div class="section-kicker">PURCHASING POWER</div><h3>ما الذي حدث للنقد؟</h3><p id="pound"></p></div><div class="card"><div class="section-kicker">HOW TO READ</div><h3>كيف تقرأ الرسم؟</h3><p>الرسم يوضح مسارات القيمة التاريخية بعد توحيد نقطة البداية. ارتفاع المسار يعني نموًا أكبر لرأس المال مقارنة بنقطة البداية، بينما انخفاض القوة الشرائية يوضح أثر التضخم على النقد غير المستثمر.</p></div></section><div id="pp-root" class="pp-wrap"></div></main>
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle" hidden><div class="box"><button id="mclose" class="primary modal-close" type="button">إغلاق</button><h2 id="mtitle"></h2><p class="muted" id="msum"></p><div id="dchart" role="img" aria-label="تفاصيل المسار المحدد"></div><p class="muted modal-method" id="mmethod"></p></div></div>
-<script src="js/value-context.js"></script><script type="module" src="./js/wealth-page.js"></script></body></html>
+<body class="page-wealth">
+<a class="skip-link" href="#main-content">تخطَّ إلى المحتوى الرئيسي</a>
+<header class="site-header"><div class="wrap"><div class="logo">رادار السوق المصري<span>طبقة ذكاء فوق السوق — من السياق إلى القرار</span></div><nav aria-label="التنقل الرئيسي"><a href="./index.html">الآن</a><a class="active" aria-current="page" href="./wealth.html">قيمة ثروتي</a><a href="./macro.html">الاقتصاد</a><a href="./categories.html">المناطق</a><a href="./funds.html">الصناديق</a></nav></div></header>
+<main id="main-content" class="wrap" id="main-state">
+<section class="wealth-hero" aria-labelledby="wealth-title">
+  <div class="wealth-hero-copy"><div class="eyebrow">VALUE OF WEALTH · SIGNATURE EXPERIENCE</div><h1 id="wealth-title">ماذا حدث لـ100 جنيه منذ 2016؟</h1><p>نبدأ من 100 جنيه ونرى كيف تغيرت قوته الشرائية عبر الزمن. بعد ذلك نضع أداء الأصول في مسار منفصل حتى لا تختلط قوة الجنيه بأداء الاستثمار.</p><div class="hero-meta"><span>المصدر: Supabase · السلاسل الفعلية</span><span id="hero-date">—</span></div></div>
+  <div class="hero-value"><span>القيمة الشرائية المتبقية</span><strong id="hero-value">—</strong><em id="hero-loss">—</em></div>
+</section>
+
+<section class="primary-story panel" aria-labelledby="power-title">
+  <div class="story-head"><div><div class="section-kicker">01 · PURCHASING POWER</div><h2 id="power-title">القوة الشرائية للنقد</h2><p id="power-summary">—</p></div><div class="story-rule">100 جنيه = نقطة البداية</div></div>
+  <div class="chart-frame"><div id="power-chart" role="img" aria-label="القوة الشرائية لمئة جنيه منذ 2016"></div><div id="power-tip" class="chart-tip" hidden></div></div>
+  <div id="year-strip" class="year-strip" aria-label="القيم السنوية للقوة الشرائية"></div>
+  <div class="method-note"><span>المنهجية: تراكم عكسي للتضخم الشهري الفعلي في قاعدة البيانات.</span><span>القيمة تمثل قوة شرائية مكافئة، وليست رصيدًا نقديًا فعليًا.</span></div>
+</section>
+
+<section class="comparison panel" aria-labelledby="asset-title">
+  <div class="story-head"><div><div class="section-kicker">02 · ASSET CONTEXT</div><h2 id="asset-title">ماذا حدث لمسارات الأصول؟</h2><p>كل أصل هنا مُعاد تأسيسه عند 100 عند أول نقطة متاحة في سلسلته، بهدف المقارنة البصرية للمسارات دون خلطها مع القوة الشرائية للنقد.</p></div><div class="story-rule">مقارنة تاريخية · ليست توصية</div></div>
+  <div class="asset-chart-wrap"><div id="asset-chart" role="img" aria-label="مقارنة مسارات الأصول معاد تأسيسها عند 100"></div><div id="asset-tip" class="asset-tip" hidden></div></div>
+  <div id="asset-legend" class="asset-legend" aria-label="الأصول المعروضة"></div>
+</section>
+
+<section class="context panel" aria-labelledby="context-title">
+  <div class="story-head"><div><div class="section-kicker">03 · ECONOMIC CONTEXT</div><h2 id="context-title">ما الذي يفسّر حركة القيمة؟</h2><p>هذه أرقام مرجعية للسياق فقط. نعرضها كما وصلت من السلاسل الفعلية، دون تحويلها إلى توصية أو استنتاج استثماري جاهز.</p></div><a class="context-link" href="./macro.html">استكشف الاقتصاد بالتفصيل ←</a></div>
+  <div id="context-grid" class="context-grid"></div>
+  <div class="context-source">المصدر: Supabase · آخر قراءة فعلية لكل سلسلة</div>
+</section>
+
+<section class="reading panel" aria-labelledby="reading-title"><div class="section-kicker">HOW TO READ</div><h2 id="reading-title">كيف تقرأ الصفحة؟</h2><div class="reading-grid"><div><strong>القوة الشرائية</strong><p>تجيب عن سؤال: ماذا بقي من قيمة 100 جنيه بعد أثر التضخم المتراكم؟</p></div><div><strong>مسارات الأصول</strong><p>تجيب عن سؤال مختلف: كيف تحركت قيمة الأصول نفسها عبر الزمن إذا بدأ كل مسار من 100؟</p></div><div><strong>السياق الاقتصادي</strong><p>يضع التضخم وسعر الصرف والذهب وEGX30 والعائد النقدي بجوار القصة دون أن يستبدل البيانات باستنتاجات.</p></div></div></section>
+</main>
+<script type="module" src="./js/wealth-page.js"></script>
+</body>
+</html>
