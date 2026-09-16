@@ -1,5 +1,6 @@
-/* Macro intelligence — layout only; identity from platform-shell */
-.macro-intel,.macro-panel{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-md);box-shadow:var(--shell-shadow);color:var(--shell-ink)}
-.macro-intel h2,.macro-panel h2{color:var(--shell-ink)}
-.macro-intel p,.macro-panel p{color:var(--shell-muted)}
-.macro-intel .num,.macro-panel .num{font-family:var(--font-mono);direction:ltr;unicode-bidi:isolate}
+/* Macro intelligence — layout only. Typography from platform-shell. */
+.macro-intel .num,.macro-panel .num{
+  direction:ltr;unicode-bidi:isolate;
+  font-variant-numeric:tabular-nums lining-nums;
+}
+.macro-intel,.macro-panel{color:var(--shell-ink)}

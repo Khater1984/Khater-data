@@ -1,2 +1,2 @@
-/* Heatmap — layout only; identity from platform-shell */
-.page-heatmap{background:var(--shell-bg);color:var(--shell-ink);font-family:var(--font-arabic)}
+/* Heatmap page — layout only */
+.page-heatmap{background:var(--shell-bg);color:var(--shell-ink)}
