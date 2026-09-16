@@ -1,4 +1,0 @@
-/* Category context — layout only; identity from platform-shell */
-.category-context,.cat-context{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-md);box-shadow:var(--shell-shadow);color:var(--shell-ink)}
-.category-context h2,.cat-context h2{color:var(--shell-ink)}
-.category-context p,.cat-context p{color:var(--shell-muted)}
