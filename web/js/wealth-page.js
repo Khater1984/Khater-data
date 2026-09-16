@@ -1,4 +1,4 @@
-import { mountPurchasingAccordion } from "./accordion.js";
+import { mountPurchasingPower } from "./wealth-purchasing.js";
 
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\\':'&#39;'}[c]));
@@ -58,7 +58,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   try{
     snapshot=await window.KHATER_DATA.wealth.snapshot();
     setupChart();wire();status();render();renderLegend();
-    mountPurchasingAccordion($('pp-root'),snapshot);
+    mountPurchasingPower($('pp-root'),snapshot);
     const cash=snapshot.money?.[0]?.value;
     if(cash!=null)$('pound').textContent=`القوة الشرائية للمؤشر النقدي تبدأ من 100 وتتحرك مع التضخم الشهري الفعلي الموجود في قاعدة البيانات. آخر قراءة: ${fmt(cash)}.`;
   }catch(error){
