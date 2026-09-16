@@ -1,9 +1,7 @@
-/* Market Intelligence mini-trends — lightweight, data-bound SVG renderer.
- * TradingView remains available for full interactive charts elsewhere; Home mini-trends
- * deliberately use SVG so there is no attribution/watermark inside tiny cards.
- */
+/* Market Intelligence mini-trends — SVG; colors/fonts from KHATER_THEME (platform-shell). */
 (function(window){'use strict';
-const COLORS={up:'#0b8f67',down:'#d13f3f',flat:'#71808d',fillUp:'rgba(11,143,103,.12)',fillDown:'rgba(209,63,63,.12)'};
+function theme(){return window.KHATER_THEME||{};}
+function COLORS(){var t=theme();return{up:(t.color&&t.color.up)||'#087f63',down:(t.color&&t.color.down)||'#c73538',flat:(t.color&&t.color.muted)||'#607477',fillUp:t.fillUp||'rgba(8,127,99,.12)',fillDown:t.fillDown||'rgba(199,53,56,.12)',fillFlat:t.fillFlat||'rgba(96,116,119,.10)'};}
 const defs=[['USD / EGP','usd_egp_mid'],['EGX30','egx30_close'],['Gold / EGP','gold_egp_oz'],['Silver / EGP','silver_egp_oz'],['S&P 500 / EGP','spy_egp'],['NASDAQ 100 / EGP','qqq_egp'],['BTC / EGP','btc_egp']];
 const seriesMap={};
 function renderOne(el,rows){
@@ -11,8 +9,9 @@ function renderOne(el,rows){
   const values=rows.map(r=>({d:r.ts_date,v:Number(r.value)})).filter(x=>x.d&&Number.isFinite(x.v)).slice(-45);
   if(values.length<2)return;
   const first=values[0].v,last=values[values.length-1].v,delta=last-first;
-  const color=delta>0?COLORS.up:delta<0?COLORS.down:COLORS.flat;
-  const fill=delta>0?COLORS.fillUp:delta<0?COLORS.fillDown:'rgba(113,128,141,.10)';
+  const C=COLORS();
+  const color=delta>0?C.up:delta<0?C.down:C.flat;
+  const fill=delta>0?C.fillUp:delta<0?C.fillDown:C.fillFlat;
   const min=Math.min(...values.map(x=>x.v)),max=Math.max(...values.map(x=>x.v)),range=max-min||1;
   const w=240,h=48,p=2;
   const pts=values.map((x,i)=>{const px=p+(i/(values.length-1))*(w-p*2);const py=h-p-((x.v-min)/range)*(h-p*2);return [px,py]});
