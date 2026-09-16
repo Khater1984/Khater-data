@@ -1,7 +1,6 @@
 /* ==========================================================================
-   Nile Market Intelligence — Platform Shell V4
-   Institutional Financial Intelligence identity (single source).
-   Typography · Color · Space · Surfaces · Charts · States · Density
+   Nile Market Intelligence — Platform Shell V4.1
+   Single identity source · Institutional Financial Intelligence
    ========================================================================== */
 @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 
@@ -27,7 +26,6 @@
   --shell-info-soft:#e9f1f6;
   --shell-shadow:0 1px 2px rgba(14,35,39,.04),0 8px 24px rgba(14,35,39,.05);
   --shell-shadow-hover:0 2px 4px rgba(14,35,39,.05),0 16px 40px rgba(14,35,39,.08);
-  --shell-shadow-inset:inset 0 1px 0 rgba(255,255,255,.65);
   --shell-content:min(100% - 32px,1560px);
   --shell-max:1560px;
   --shell-pad:clamp(14px,2.2vw,34px);
@@ -155,7 +153,7 @@ main.wrap,main.funds-shell,main.brief-shell,.page,.fund-page{padding-block:var(-
 h1,h2,h3,h4{color:var(--shell-ink);letter-spacing:var(--tracking-tight);font-weight:800;line-height:var(--leading-tight)}
 .eyebrow,.section-label,.micro-kicker,.status,.nile-kicker,.context-eyebrow,.section-kicker{color:var(--shell-gold);font-size:var(--text-micro);font-weight:800;letter-spacing:var(--tracking-kicker);text-transform:uppercase}
 
-.surface,.card,.panel,.investment-panel,.table-frame,.evidence-table-wrap,.brief-regime,.brief-meaning,.path-card,.signal-card,.chartbox,.coverage{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-md);box-shadow:var(--shell-shadow)}
+.surface,.card,.panel,.investment-panel,.table-frame,.evidence-table-wrap,.brief-regime,.brief-meaning,.path-card,.signal-card,.chartbox,.coverage,.control-rail,.results-zone .table-frame,.opportunity-shell .surface{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-md);box-shadow:var(--shell-shadow)}
 .path-card:hover,.signal-card:hover,.surface.is-interactive:hover{box-shadow:var(--shell-shadow-hover);border-color:var(--shell-border-strong);transition:box-shadow var(--transition-normal),border-color var(--transition-fast)}
 
 button,select,input,textarea{font-family:var(--font-arabic)}
@@ -164,7 +162,7 @@ button:hover,.market-sort:hover,.market-filter:hover,.heat-tool:hover,.view-tab:
 button.active,.market-sort.active,.market-filter.active,.heat-tool.active,.view-tab.active,button.on,[aria-selected="true"]{background:var(--shell-green-soft);color:var(--shell-green);border-color:rgba(8,127,99,.28)}
 button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--shell-focus-ring);outline-offset:2px}
 
-.num,.numeric-data,.tabular-nums,.return-col,.pct,[data-financial-number],.value,.side-number{font-family:var(--font-mono);font-variant-numeric:tabular-nums lining-nums;direction:ltr;unicode-bidi:isolate;letter-spacing:-.01em}
+.num,.numeric-data,.tabular-nums,.return-col,.pct,[data-financial-number],.value,.side-number,.market-item b{font-family:var(--font-mono);font-variant-numeric:tabular-nums lining-nums;direction:ltr;unicode-bidi:isolate;letter-spacing:-.01em}
 .up,.positive,.good,.is-up,[data-direction="up"]{color:var(--shell-green)}
 .dn,.down,.negative,.bad,.is-down,[data-direction="down"]{color:var(--shell-red)}
 .bg-up{background:var(--shell-green-soft)}
@@ -183,7 +181,7 @@ tbody tr:hover{background:var(--shell-green-soft)}
 th,td{border-bottom:1px solid #e6eeec;padding:11px 13px;vertical-align:middle}
 
 .hero,.hero-zone,.brief-hero,.hero-mini{background:var(--shell-surface);border:1px solid var(--shell-border);border-radius:var(--radius-lg);box-shadow:var(--shell-shadow);padding:var(--space-5) 28px;position:relative;overflow:hidden}
-.hero::before,.brief-hero::before,.hero-mini::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(180deg,var(--shell-green),var(--shell-gold));opacity:.85}
+.hero::before,.brief-hero::before,.hero-mini::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(180deg,var(--shell-green),var(--shell-gold));opacity:.9}
 .hero h1,.hero-zone h1,.brief-hero h1,.hero-mini h1{margin:0;max-width:24ch;font-size:var(--text-hero);line-height:var(--leading-tight);letter-spacing:var(--tracking-tight);color:var(--shell-ink)}
 .hero p,.hero-zone p,.brief-hero p,.hero-mini .muted,.brief-lede{max-width:64ch;font-size:15px;line-height:1.75;color:var(--shell-muted)}
 
