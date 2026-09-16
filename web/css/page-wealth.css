@@ -1,0 +1,15 @@
+/* قيمة ثروتي — layout only. Shared identity remains in platform-shell.css. */
+.page-wealth .wrap{padding-bottom:48px}
+.page-wealth .hero-mini{margin:28px 0 18px}
+.page-wealth .hero-mini h1{margin:0;font-size:var(--text-page);line-height:1.2}
+.page-wealth .hero-mini p{margin:8px 0 0;color:var(--shell-muted);max-width:70ch;line-height:1.7}
+.page-wealth .section-kicker{font-size:10px;letter-spacing:1.2px;color:var(--shell-muted);font-weight:600;text-transform:uppercase}
+.page-wealth .investment-panel{margin-top:18px}
+.page-wealth .chart-wrap{min-height:400px;position:relative}
+.page-wealth #chart{height:440px;width:100%}
+.page-wealth .seg button,.page-wealth .ranges button{height:36px;padding:0 14px}
+.page-wealth .why{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.page-wealth .context-date{font-size:9px;white-space:nowrap;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.page-wealth .context-metric strong{display:block;margin-top:9px;font-size:clamp(18px,2.2vw,25px);font-weight:800;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.page-wealth .context-change{margin-top:6px;font-size:12px;font-weight:700;direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+@media(max-width:800px){.page-wealth .why{grid-template-columns:1fr}}
