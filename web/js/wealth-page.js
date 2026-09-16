@@ -1,6 +1,8 @@
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\\':'&#39;'}[c]));
-const fmt=(n,d=1)=>Number.isFinite(Number(n))?Number(n).toLocaleString('ar-EG',{maximumFractionDigits:d}):'—';
+/* Platform numeric identity: RTL UI, Latin financial digits 0-9. */
+const fmt=(n,d=1)=>Number.isFinite(Number(n))?Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:d}):'—';
+const pct=(n,d=1)=>Number.isFinite(Number(n))?`${Number(n)>0?'+':''}${fmt(n,d)}%`:'—';
 const LABELS={usd_egp_mid:'الدولار',gold_egp_oz:'الذهب',silver_egp_oz:'الفضة',egx30_close:'EGX30',spy_egp:'S&P 500',qqq_egp:'ناسداك 100',btc_egp:'بيتكوين'};
 const COLORS=window.KHATER_THEME?.series||{};
 let snapshot=null,powerChart=null,assetChart=null,powerSeries=null,assetSeries={};
