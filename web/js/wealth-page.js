@@ -4,105 +4,13 @@ const fmt=(n,d=1)=>Number.isFinite(Number(n))?Number(n).toLocaleString('ar-EG',{
 const LABELS={usd_egp_mid:'الدولار',gold_egp_oz:'الذهب',silver_egp_oz:'الفضة',egx30_close:'EGX30',spy_egp:'S&P 500',qqq_egp:'ناسداك 100',btc_egp:'بيتكوين'};
 const COLORS=window.KHATER_THEME?.series||{};
 let snapshot=null,powerChart=null,assetChart=null,powerSeries=null,assetSeries={};
-
 function sorted(rows){return (rows||[]).filter(r=>Number.isFinite(Number(r.value))&&r.date).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));}
-function yearly(rows){
-  const out=[];
-  for(const r of sorted(rows)){
-    const year=String(r.date).slice(0,4),last=out.at(-1);
-    if(!last||last.year!==year)out.push({year,value:Number(r.value),date:r.date});
-    else {last.value=Number(r.value);last.date=r.date;}
-  }
-  return out;
-}
-function powerPointText(p){return `${p.year} — قيمة 100 جنيه = ${fmt(p.value)} جنيه — تآكل ${fmt(100-p.value)}%`}
+function yearly(rows){const out=[];for(const r of sorted(rows)){const year=String(r.date).slice(0,4),last=out.at(-1);if(!last||last.year!==year)out.push({year,value:Number(r.value),date:r.date});else{last.value=Number(r.value);last.date=r.date;}}return out;}
 function chartLayout(){return window.KHATER_THEME?.chartLayout?.()||{background:{color:'#fff'},textColor:'#607477'};}
 function chartGrid(){return window.KHATER_THEME?.chartGrid?.()||{vertLines:{color:'#edf2f1'},horzLines:{color:'#edf2f1'}};}
-
-function renderHero(){
-  const points=yearly(snapshot.money?.[0]?.rows);
-  const latest=points.at(-1),loss=latest?100-latest.value:null;
-  $('hero-value').textContent=latest?`${fmt(latest.value)} جنيه`: '—';
-  $('hero-loss').textContent=latest?`تآكل ${fmt(loss)}% من القوة الشرائية`: 'غير متاح';
-  $('hero-date').textContent=latest?`آخر سنة مكتملة في السلسلة: ${latest.year}`:'—';
-  $('power-summary').textContent=latest?`من 100 جنيه عند بداية السلسلة، بقيت قوة شرائية تعادل ${fmt(latest.value)} جنيه وفق التضخم الشهري الفعلي المسجل في قاعدة البيانات.`:'لا تتوفر قراءة كافية.';
-}
-
-function setupPowerChart(){
-  const el=$('power-chart');
-  powerChart=LightweightCharts.createChart(el,{layout:chartLayout(),grid:chartGrid(),rightPriceScale:{borderColor:'var(--shell-border)'},timeScale:{borderColor:'var(--shell-border)',rightOffset:2},handleScroll:false,handleScale:false,crosshair:{mode:LightweightCharts.CrosshairMode.Normal}});
-  powerSeries=powerChart.addLineSeries({color:COLORS.cpi_headline_mom_pct||'#087f63',lineWidth:3,title:'القوة الشرائية'});
-  const rows=sorted(snapshot.money?.[0]?.rows).map(r=>({time:r.date,value:Number(r.value)}));
-  powerSeries.setData(rows);
-  powerSeries.createPriceLine({price:100,color:COLORS.usd_egp_mid||'#8b9795,lineWidth':1,lineStyle:2,axisLabelVisible:true,title:'100 جنيه'});
-  powerChart.timeScale().fitContent();
-  powerChart.subscribeCrosshairMove(param=>{
-    const tip=$('power-tip');
-    if(!tip||!param.time){if(tip)tip.hidden=true;return;}
-    const value=param.seriesData.get(powerSeries)?.value;
-    if(value==null){tip.hidden=true;return;}
-    const date=String(param.time).slice(0,10);
-    const year=date.slice(0,4);
-    tip.innerHTML=`<strong>${year}</strong><span>قيمة 100 جنيه = ${fmt(value)} جنيه</span><em>تآكل ${fmt(100-value)}%</em>`;
-    tip.hidden=false;
-  });
-  new ResizeObserver(()=>powerChart.applyOptions({width:el.clientWidth,height:420})).observe(el);
-}
-
-function renderYearStrip(){
-  const root=$('year-strip'),points=yearly(snapshot.money?.[0]?.rows);
-  root.innerHTML=points.map(p=>`<button type="button" class="year-point" data-date="${esc(p.date)}"><span>${p.year}</span><strong>${fmt(p.value)}</strong><small>${fmt(100-p.value)}% تآكل</small></button>`).join('');
-  root.addEventListener('click',e=>{
-    const b=e.target.closest('.year-point');if(!b)return;
-    powerChart.timeScale().setVisibleRange({from:`${b.dataset.date}`,to:`${b.dataset.date}`});
-    root.querySelectorAll('.year-point').forEach(x=>x.classList.toggle('is-selected',x===b));
-  });
-}
-
-function setupAssetChart(){
-  const el=$('asset-chart');
-  assetChart=LightweightCharts.createChart(el,{layout:chartLayout(),grid:chartGrid(),rightPriceScale:{borderColor:'var(--shell-border)'},timeScale:{borderColor:'var(--shell-border)'},handleScroll:true,handleScale:true});
-  const assets=snapshot.assets||[];
-  assets.forEach(item=>{
-    const data=sorted(item.rows).map(r=>({time:r.date,value:Number(r.value)}));
-    if(!data.length)return;
-    const series=assetChart.addLineSeries({color:COLORS[item.key]||'#087f63',lineWidth:2,title:item.label});
-    series.setData(data);assetSeries[item.key]=series;
-  });
-  assetChart.timeScale().fitContent();
-  assetChart.subscribeCrosshairMove(param=>{
-    const tip=$('asset-tip');
-    if(!tip||!param.time){if(tip)tip.hidden=true;return;}
-    const items=Object.entries(assetSeries).map(([key,s])=>{const v=param.seriesData.get(s)?.value;return v==null?'':`<div><span>${esc(LABELS[key]||key)}</span><strong>${fmt(v)}</strong></div>`}).filter(Boolean).join('');
-    if(!items){tip.hidden=true;return;}
-    tip.innerHTML=`<small>${esc(String(param.time))}</small>${items}`;tip.hidden=false;
-  });
-  new ResizeObserver(()=>assetChart.applyOptions({width:el.clientWidth,height:360})).observe(el);
-  $('asset-legend').innerHTML=assets.map(item=>`<span><i style="background:${esc(COLORS[item.key]||'#087f63')}"></i>${esc(item.label)}</span>`).join('');
-}
-
-function renderContext(){
-  const map=[
-    ['التضخم العام','cpi_headline_mom_pct','% شهري',2],
-    ['الدولار / الجنيه','usd_egp_mid','جنيه لكل دولار',2],
-    ['الذهب / الجنيه','gold_egp_oz','جنيه للأونصة',0],
-    ['EGX30','egx30_close','نقطة',1],
-    ['أذون 91 يومًا','tbill_91_avg_yield_pct','% سنوي',2]
-  ];
-  const lookup=Object.fromEntries((snapshot.rates||[]).map(x=>[x.key,x]));
-  const assetLookup=Object.fromEntries((snapshot.assets||[]).map(x=>[x.key,x]));
-  $('context-grid').innerHTML=map.map(([label,key,unit,d])=>{
-    const item=lookup[key]||assetLookup[key];const row=item?.rows?.at(-1);
-    return `<article><span>${label}</span><strong>${row?fmt(row.value,d):'—'}</strong><small>${unit} · ${row?.date||'—'}</small></article>`;
-  }).join('');
-}
-
-window.addEventListener('DOMContentLoaded',async()=>{
-  try{
-    snapshot=await window.KHATER_DATA.wealth.snapshot();
-    renderHero();setupPowerChart();renderYearStrip();setupAssetChart();renderContext();
-  }catch(error){
-    console.error('[wealth-page]',error);
-    $('main-state').innerHTML='<div class="error-state">تعذر قراءة البيانات الفعلية من طبقة البيانات. لم يتم عرض أرقام بديلة.</div>';
-  }
-});
+function renderHero(){const points=yearly(snapshot.money?.[0]?.rows),latest=points.at(-1),loss=latest?100-latest.value:null;$('hero-value').textContent=latest?`${fmt(latest.value)} جنيه`:'—';$('hero-loss').textContent=latest?`تآكل ${fmt(loss)}% من القوة الشرائية`:'غير متاح';$('hero-date').textContent=latest?`آخر قراءة: ${latest.year}`:'—';$('power-summary').textContent=latest?`من 100 جنيه عند بداية السلسلة، بقيت قوة شرائية تعادل ${fmt(latest.value)} جنيه وفق التضخم الشهري الفعلي المسجل في قاعدة البيانات.`:'لا تتوفر قراءة كافية.';}
+function setupPowerChart(){const el=$('power-chart');powerChart=LightweightCharts.createChart(el,{layout:chartLayout(),grid:chartGrid(),rightPriceScale:{borderColor:'var(--shell-border)'},timeScale:{borderColor:'var(--shell-border)',rightOffset:2},handleScroll:false,handleScale:false,crosshair:{mode:LightweightCharts.CrosshairMode.Normal}});powerSeries=powerChart.addLineSeries({color:COLORS.cpi_headline_mom_pct||'#087f63',lineWidth:3,title:'القوة الشرائية'});powerSeries.setData(sorted(snapshot.money?.[0]?.rows).map(r=>({time:r.date,value:Number(r.value)})));powerSeries.createPriceLine({price:100,color:'#8b9795',lineWidth:1,lineStyle:2,axisLabelVisible:true,title:'100 جنيه'});powerChart.timeScale().fitContent();powerChart.subscribeCrosshairMove(param=>{const tip=$('power-tip');if(!tip||!param.time){if(tip)tip.hidden=true;return;}const value=param.seriesData.get(powerSeries)?.value;if(value==null){tip.hidden=true;return;}tip.innerHTML=`<strong>${String(param.time).slice(0,4)}</strong><span>قيمة 100 جنيه = ${fmt(value)} جنيه</span><em>تآكل ${fmt(100-value)}%</em>`;tip.hidden=false;});new ResizeObserver(()=>powerChart.applyOptions({width:el.clientWidth,height:420})).observe(el);}
+function renderYearStrip(){const root=$('year-strip'),points=yearly(snapshot.money?.[0]?.rows);root.innerHTML=points.map(p=>`<button type="button" class="year-point" data-date="${esc(p.date)}"><span>${p.year}</span><strong>${fmt(p.value)}</strong><small>${fmt(100-p.value)}% تآكل</small></button>`).join('');root.addEventListener('click',e=>{const b=e.target.closest('.year-point');if(!b)return;const point=points.find(p=>p.date===b.dataset.date);if(!point)return;powerChart.timeScale().setVisibleRange({from:point.date,to:point.date});root.querySelectorAll('.year-point').forEach(x=>x.classList.toggle('is-selected',x===b));});}
+function setupAssetChart(){const el=$('asset-chart');assetChart=LightweightCharts.createChart(el,{layout:chartLayout(),grid:chartGrid(),rightPriceScale:{borderColor:'var(--shell-border)'},timeScale:{borderColor:'var(--shell-border)'},handleScroll:true,handleScale:true});const assets=snapshot.assets||[];assets.forEach(item=>{const data=sorted(item.rows).map(r=>({time:r.date,value:Number(r.value)}));if(!data.length)return;const series=assetChart.addLineSeries({color:COLORS[item.key]||'#087f63',lineWidth:2,title:item.label});series.setData(data);assetSeries[item.key]=series;});assetChart.timeScale().fitContent();assetChart.subscribeCrosshairMove(param=>{const tip=$('asset-tip');if(!tip||!param.time){if(tip)tip.hidden=true;return;}const items=Object.entries(assetSeries).map(([key,s])=>{const v=param.seriesData.get(s)?.value;return v==null?'':`<div><span>${esc(LABELS[key]||key)}</span><strong>${fmt(v)}</strong></div>`}).filter(Boolean).join('');if(!items){tip.hidden=true;return;}tip.innerHTML=`<small>${esc(String(param.time))}</small>${items}`;tip.hidden=false;});new ResizeObserver(()=>assetChart.applyOptions({width:el.clientWidth,height:360})).observe(el);$('asset-legend').innerHTML=assets.map(item=>`<span><i style="background:${esc(COLORS[item.key]||'#087f63')}"></i>${esc(item.label)}</span>`).join('');}
+function renderContext(){const map=[['التضخم العام','cpi_headline_mom_pct','% شهري',2],['الدولار / الجنيه','usd_egp_mid','جنيه لكل دولار',2],['الذهب / الجنيه','gold_egp_oz','جنيه للأونصة',0],['EGX30','egx30_close','نقطة',1],['أذون 91 يومًا','tbill_91_avg_yield_pct','% سنوي',2]];const lookup=Object.fromEntries((snapshot.rates||[]).map(x=>[x.key,x])),assetLookup=Object.fromEntries((snapshot.assets||[]).map(x=>[x.key,x]));$('context-grid').innerHTML=map.map(([label,key,unit,d])=>{const item=lookup[key]||assetLookup[key],row=item?.rows?.at(-1);return `<article><span>${label}</span><strong>${row?fmt(row.value,d):'—'}</strong><small>${unit} · ${row?.date||'—'}</small></article>`;}).join('');}
+window.addEventListener('DOMContentLoaded',async()=>{try{snapshot=await window.KHATER_DATA.wealth.snapshot();renderHero();setupPowerChart();renderYearStrip();setupAssetChart();renderContext();}catch(error){console.error('[wealth-page]',error);$('main-state').innerHTML='<div class="error-state">تعذر قراءة البيانات الفعلية من طبقة البيانات. لم يتم عرض أرقام بديلة.</div>';}});
