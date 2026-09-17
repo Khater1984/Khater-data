@@ -19,11 +19,17 @@ jobs:
       - run: pip install -r requirements.txt
       - name: NAV integrity unit tests
         run: python -m unittest discover -s tests -p 'test_*.py'
+      - name: Safe ingest startup check
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          python -c "import scripts.ingest_nav_safe as s; print('SUPABASE_URL set:', bool(s.legacy.BASE)); print('SUPABASE_SERVICE_KEY set:', bool(s.legacy.KEY))"
       - name: Safe live NAV ingest
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-        run: python scripts/ingest_nav_safe.py
+        run: python -X faulthandler scripts/ingest_nav_safe.py
       - name: Sanitize optional source dates
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
