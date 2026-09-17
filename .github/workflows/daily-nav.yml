@@ -38,6 +38,11 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python scripts/check_nav_coverage.py
+      - name: NAV freshness report
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scripts/nav_freshness_report.py
       - name: Export public snapshots
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
