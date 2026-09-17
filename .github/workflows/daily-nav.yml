@@ -23,6 +23,11 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python scripts/ingest_nav.py
+      - name: Sanitize NAV sources without published dates
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scripts/sanitize_optional_nav_dates.py
       - name: Repair dynamic NAV sources (Azimut API + Snduk RSC)
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
