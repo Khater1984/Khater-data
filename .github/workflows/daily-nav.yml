@@ -33,20 +33,20 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python scripts/fix_effective_weights.py
-      - name: Export public snapshots
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-        run: python scripts/export_public.py
       - name: NAV coverage gate
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python scripts/check_nav_coverage.py
+      - name: Export public snapshots
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scripts/export_public.py
       - name: Commit snapshots
         run: |
           git config user.name "khater-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add web/data/engine_data.json web/data/funds_dna.json web/data/nav_coverage.json web/data/nav_coverage_gate.json
+          git add web/data/engine_data.json web/data/funds_dna.json web/data/nav_coverage.json web/data/nav_coverage_gate.json web/data/nav_freshness.json
           git diff --cached --quiet || git commit -m "chore: refresh public snapshots"
           git push
