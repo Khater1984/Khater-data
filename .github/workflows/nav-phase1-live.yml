@@ -1,0 +1,33 @@
+name: NAV Phase 1 live verification
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: NAV integrity unit tests
+        run: python -m unittest discover -s tests -p 'test_*.py'
+      - name: Safe ingest startup and Supabase check
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          python -c "import os,requests; u=os.environ['SUPABASE_URL'].rstrip('/'); k=os.environ['SUPABASE_SERVICE_KEY']; r=requests.get(u+'/rest/v1/funds',headers={'apikey':k,'Authorization':'Bearer '+k},params={'select':'fund_id','limit':'1'},timeout=20); print('Supabase funds HTTP:',r.status_code); r.raise_for_status()"
+          python -c "import scripts.ingest_nav_safe as s; print('safe ingest import: OK')"
+      - name: Safe live NAV ingest
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python -X faulthandler scripts/ingest_nav_safe.py
