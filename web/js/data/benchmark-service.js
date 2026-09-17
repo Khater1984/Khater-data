@@ -58,7 +58,7 @@ async function getBatch(horizon){
     const page=await S.rpc('fund_benchmark_comparison_batch',{
       p_horizon:horizon,
       p_series_keys:KEYS.map(k=>BENCHMARKS[k].series)
-    },{cache:false,cacheKey:'benchmark-batch/v3/'+horizon+'/'+offset,limit:pageSize,offset});
+    },{cache:false,cacheKey:'benchmark-batch/v3/'+horizon+'/'+offset,query:'limit='+pageSize+'&offset='+offset});
     const rows=Array.isArray(page)?page:[];
     all.push(...rows);
     if(rows.length<pageSize) break;
