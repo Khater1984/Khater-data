@@ -1,31 +1,27 @@
 #!/usr/bin/env python3
 """Safe NAV ingest entrypoint.
 
-This is the production entrypoint for the existing NAV scrapers in
-``ingest_nav.py``.  It deliberately reuses the existing source parsers but
-replaces the unsafe row/promotion behavior at runtime:
-
-- source ``as_of_date`` is preserved exactly; missing dates stay null
-- undated candidates may be staged for audit but can never reach nav_official
-- an older candidate can never replace a newer nav_official row
-- legitimate future source dates are not rejected here; weekly-fund policy is
-  handled separately once fund frequency is wired into the data contract
-
-The legacy scraper module remains the source-parser library; this file is the
-workflow entrypoint until that module can be safely refactored without losing
-source-specific parsing behavior.
+This wrapper reuses the existing source parsers while enforcing the Phase 1
+NAV promotion rules at the staging/official boundary.
 """
 from __future__ import annotations
 
 import sys
 from datetime import datetime, timezone
+from pathlib import Path
 
-from scripts import ingest_nav as legacy
+# When executed as ``python scripts/ingest_nav_safe.py``, Python puts
+# ``scripts/`` (not the repository root) on sys.path.  Import the existing
+# parser as a sibling module so the GitHub Actions entrypoint works reliably.
+SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+import ingest_nav as legacy
 
 
-# Keep the original parser surface intact while removing its unsafe date
-# fallback from the production execution path.
 def safe_row(extracted, nav, asof, url, sid, fund, score, extra=None, currency="EGP"):
+    """Build a staging row without ever fabricating an as-of date."""
     return {
         "run_id": legacy.RUN_ID,
         "extracted_name": extracted,
@@ -46,10 +42,9 @@ def safe_row(extracted, nav, asof, url, sid, fund, score, extra=None, currency="
 def safe_upsert_official(matched_rows):
     """Promote only dated candidates and never move official history backwards."""
     now = datetime.now(timezone.utc).isoformat()
-
-    # One candidate per fund: dated rows only, newest source date wins.
     best = {}
     skipped_no_date = 0
+
     for row in matched_rows:
         fid = row.get("fund_id")
         if not fid:
@@ -64,9 +59,7 @@ def safe_upsert_official(matched_rows):
 
     existing = {
         x["fund_id"]: x
-        for x in legacy.sb_get(
-            "nav_official", select="fund_id,as_of_date", limit="1000"
-        )
+        for x in legacy.sb_get("nav_official", select="fund_id,as_of_date", limit="1000")
     }
 
     payload = []
@@ -78,25 +71,22 @@ def safe_upsert_official(matched_rows):
         if current_date and current_date > incoming_date:
             skipped_older += 1
             continue
-        payload.append(
-            {
-                "fund_id": fid,
-                "nav": row["nav"],
-                "currency": row.get("currency") or "EGP",
-                "as_of_date": incoming_date,
-                "source_id": row.get("source_id"),
-                "source_url": row.get("source_url"),
-                "verified_at": now,
-            }
-        )
+        payload.append({
+            "fund_id": fid,
+            "nav": row["nav"],
+            "currency": row.get("currency") or "EGP",
+            "as_of_date": incoming_date,
+            "source_id": row.get("source_id"),
+            "source_url": row.get("source_url"),
+            "verified_at": now,
+        })
 
     ok = 0
     failed = 0
     for i in range(0, len(payload), 40):
-        batch = payload[i : i + 40]
+        batch = payload[i:i + 40]
         response = legacy.sb_post(
-            "nav_official",
-            batch,
+            "nav_official", batch,
             prefer="resolution=merge-duplicates,return=minimal",
         )
         if response.status_code in (200, 201):
@@ -126,8 +116,6 @@ def safe_upsert_official(matched_rows):
 
 
 def main():
-    # Monkey-patch only the two unsafe boundaries. All source-specific parsers
-    # remain the existing production implementations.
     legacy.row = safe_row
     legacy.upsert_official = safe_upsert_official
 
@@ -157,22 +145,14 @@ def main():
     for name, scraper in scrapers:
         try:
             rows = scraper()
-            print(
-                f"{name}: {len(rows)} extracted, "
-                f"{sum(1 for row in rows if row['fund_id'])} matched"
-            )
+            print(f"{name}: {len(rows)} extracted, {sum(1 for row in rows if row['fund_id'])} matched")
             all_rows.extend(rows)
         except Exception as exc:
             print(f"{name} ERROR {type(exc).__name__}: {exc}")
 
     if all_rows:
         response = legacy.sb_post("nav_staging", all_rows)
-        print(
-            "staging",
-            response.status_code,
-            len(all_rows),
-            response.text[:200] if response.status_code not in (200, 201) else "OK",
-        )
+        print("staging", response.status_code, len(all_rows), response.text[:200] if response.status_code not in (200, 201) else "OK")
 
     matched = [row for row in all_rows if row.get("fund_id")]
     ok, n = safe_upsert_official(matched)
