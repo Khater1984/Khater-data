@@ -1,26 +1,20 @@
 #!/usr/bin/env python3
 """Repair NAV sources whose values live in JSON/RSC payloads.
 
-Sources covered here:
-- Azimut: official JSON API, last_nav.nav + last_nav.date
-- Snduk: official fund detail pages, currentPrice + lastPriceUpdate
+Sources covered:
+- Azimut official JSON API: last_nav.nav + last_nav.date
+- Snduk official fund detail pages: currentPrice + lastPriceUpdate
 
-Safety rules:
-- no source date => do not promote
-- future source dates => reject
-- never replace a newer official NAV with an older candidate
-- every promoted candidate is also retained in nav_staging
+Safety: no date => no promotion; future dates are rejected; older candidates
+never replace newer official NAVs; every accepted candidate is staged first.
 """
 from __future__ import annotations
 
-import json
 import os
 import re
 from datetime import date, datetime, timezone
 from difflib import SequenceMatcher
-
 import requests
-from bs4 import BeautifulSoup
 
 BASE = os.environ["SUPABASE_URL"].rstrip("/")
 KEY = os.environ["SUPABASE_SERVICE_KEY"]
@@ -30,12 +24,10 @@ RUN_ID = "repair_dynamic_" + datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S"
 TODAY = date.today().isoformat()
 
 AZIMUT_ID = {
-    1: "Bank ABC Fund I", 2: "Ebank Fund II", 3: "*Maashy", 4: "Ataa", 5: "Edkhar",
-    6: "AZ Foras", 8: "Ebank Fund (El Khabeer)", 10: "Azimut Target Maturity Fund-Target 2027 USD",
-    11: "Bank Nxt Fund III (Sanady)", 12: "Menthum", 14: "AZ Naser", 15: "AZ Value",
-    16: "AZ Gold", 17: "AZ Halan", 18: "AZ-Foras Shariah",
-    19: "Azimut Target Maturity Fund-Target 2029 USD", 21: "AZ Thndr",
-    22: "Azimut Target Maturity Fund-Target 2030 USD", 23: "AZ-LV",
+    1: "Bank ABC Fund I", 2: "Ebank Fund II", 3: "*Maashy", 4: "Ataa", 5: "Edkhar", 6: "AZ Foras",
+    8: "Ebank Fund (El Khabeer)", 10: "Azimut Target Maturity Fund-Target 2027 USD", 11: "Bank Nxt Fund III (Sanady)",
+    12: "Menthum", 14: "AZ Naser", 15: "AZ Value", 16: "AZ Gold", 17: "AZ Halan", 18: "AZ-Foras Shariah",
+    19: "Azimut Target Maturity Fund-Target 2029 USD", 21: "AZ Thndr", 22: "Azimut Target Maturity Fund-Target 2030 USD", 23: "AZ-LV",
 }
 
 
@@ -50,10 +42,12 @@ def post(path, payload):
     r.raise_for_status()
 
 
-def patch_official(fid, payload):
-    r = requests.patch(
-        f"{BASE}/rest/v1/nav_official?fund_id=eq.{fid}",
-        headers={**H, "Prefer": "return=minimal"}, json=payload, timeout=30,
+def upsert_official(payload):
+    r = requests.post(
+        f"{BASE}/rest/v1/nav_official",
+        headers={**H, "Prefer": "resolution=merge-duplicates,return=minimal"},
+        json=payload,
+        timeout=30,
     )
     r.raise_for_status()
 
@@ -63,8 +57,7 @@ def norm(s):
 
 
 def match_name(name, funds):
-    n = norm(name)
-    best, score = None, 0.0
+    n = norm(name); best, score = None, 0.0
     for f in funds:
         c = norm(f["canonical_name"])
         sc = 1.0 if n == c else SequenceMatcher(None, n, c).ratio()
@@ -76,24 +69,27 @@ def match_name(name, funds):
 
 
 def promote(fid, name, nav, asof, source_id, source_url, raw):
-    if not asof or asof > TODAY:
-        return "rejected_future_or_no_date"
+    if not asof:
+        return "rejected_no_date"
+    if asof > TODAY:
+        return "rejected_future"
     existing = next((x for x in OFFICIAL if x["fund_id"] == fid), None)
     old = existing.get("as_of_date") if existing else None
     if old and old > asof:
         return "rejected_older"
 
+    canonical = next((x["canonical_name"] for x in FUNDS if x["fund_id"] == fid), name)
     staging = {
         "run_id": RUN_ID, "extracted_name": name, "nav": nav, "currency": "EGP",
         "as_of_date": asof, "source_url": source_url, "source_id": source_id,
-        "fund_id": fid, "canonical_name": next((x["canonical_name"] for x in FUNDS if x["fund_id"] == fid), name),
-        "match_status": "matched", "match_score": 1, "verification_status": "verified",
-        "raw": raw,
+        "fund_id": fid, "canonical_name": canonical, "match_status": "matched",
+        "match_score": 1, "verification_status": "verified", "raw": raw,
     }
     post("nav_staging", staging)
-    patch_official(fid, {
-        "nav": nav, "currency": "EGP", "as_of_date": asof, "source_id": source_id,
-        "source_url": source_url, "verified_at": datetime.now(timezone.utc).isoformat(),
+    upsert_official({
+        "fund_id": fid, "nav": nav, "currency": "EGP", "as_of_date": asof,
+        "source_id": source_id, "source_url": source_url,
+        "verified_at": datetime.now(timezone.utc).isoformat(),
     })
     return "promoted"
 
@@ -107,16 +103,12 @@ def repair_azimut():
     done = {"seen": 0, "promoted": 0, "older": 0, "future": 0, "nodate": 0}
     for item in items:
         done["seen"] += 1
-        fid_num = item.get("id")
-        last = item.get("last_nav") or {}
-        nav = last.get("nav")
-        asof = str(last.get("date") or "")[:10] or None
+        fid_num = item.get("id"); last = item.get("last_nav") or {}
+        nav = last.get("nav"); asof = str(last.get("date") or "")[:10] or None
         if nav is None or not asof:
-            done["nodate"] += 1
-            continue
+            done["nodate"] += 1; continue
         if asof > TODAY:
-            done["future"] += 1
-            continue
+            done["future"] += 1; continue
         label = AZIMUT_ID.get(fid_num) or item.get("name") or item.get("fund_name") or str(fid_num)
         fund = next((f for f in FUNDS if f["canonical_name"] == label), None)
         score = 1.0 if fund else 0.0
@@ -145,12 +137,10 @@ def repair_snduk():
             if not m_date:
                 m_date = re.search(r'lastPriceUpdate\\?":\\?"([0-9]{4}-[0-9]{2}-[0-9]{2})', html)
             if not m_nav or not m_date:
-                done["nodate"] += 1
-                continue
+                done["nodate"] += 1; continue
             nav = float(m_nav.group(1)); asof = m_date.group(1)
             if asof > TODAY:
-                done["future"] += 1
-                continue
+                done["future"] += 1; continue
             status = promote(f["fund_id"], f["canonical_name"], nav, asof, f.get("source_id") or "src_snduk", url, {"parser": "snduk_rsc", "currentPrice": nav, "lastPriceUpdate": asof})
             if status == "promoted": done["promoted"] += 1
             elif status == "rejected_older": done["older"] += 1
