@@ -17,6 +17,12 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: NAV integrity unit tests
+        run: python -m unittest discover -s tests -p 'test_*.py'
+
       - name: Baseline
         run: python scripts/verify_baseline.py
 
