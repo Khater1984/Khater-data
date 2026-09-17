@@ -277,7 +277,13 @@ def main():
     if not legacy.BASE or not legacy.KEY:
         sys.exit("Missing SUPABASE_URL / SUPABASE_SERVICE_KEY")
 
-    funds = legacy.load_funds()
+    # The fallback needs the canonical fund currency. The legacy loader
+    # intentionally omits it, so the safe Phase-2 entrypoint loads it here.
+    funds = legacy.sb_get(
+        "funds",
+        select="fund_id,canonical_name,management_company,price_update_url,metadata,currency",
+        limit="1000",
+    )
     by_name, match = legacy.matcher(funds)
     scrapers = [
         ("hermes", lambda: legacy.scrape_hermes(match)),
