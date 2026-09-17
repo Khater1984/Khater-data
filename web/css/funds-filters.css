@@ -18,7 +18,7 @@
   margin-top:8px;
   border:0;
   background:transparent;
-  color:var(--accent,#176b5b);
+  color:var(--shell-green);
   font:inherit;
   font-weight:700;
   cursor:pointer;
