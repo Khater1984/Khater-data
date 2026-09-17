@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static guards for the canonical Fund Profile and Funds financial-data contract."""
+"""Static guards for the canonical Fund Detail and Funds financial-data contract."""
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,15 +30,10 @@ REQUIRED = {
     "NAV is a separate table": ("fund_price_history", "service"),
     "canonical bundle includes evidence": ("evidence", "service"),
     "evidence UI consumes bundle": ("const e=F.evidence", "evidence"),
-    "SmartScore V3 weights centralized": ("SMARTSCORE_V3", "service"),
-    "V3 performance weight": ("performance: 0.30", "service"),
-    "V3 risk weight": ("risk: 0.25", "service"),
-    "V3 benchmark weight": ("benchmark: 0.25", "service"),
-    "V3 inflation weight": ("inflation: 0.10", "service"),
-    "V3 consistency weight": ("consistency: 0.10", "service"),
+    "SmartScore methodology target remains explicit": ("SMARTSCORE_V3", "service"),
     "Data Quality outside score": ("data_quality_in_score: false", "service"),
-    "SmartScore status is explicit": ("scoreMethodology", "smartscore"),
-    "SmartScore V3 UI": ("SMARTSCORE V3.0", "smartscore"),
+    "SmartScore version comes from stored evaluation": ("s.methodology_version||e.methodology_version", "smartscore"),
+    "SmartScore stored weights are consumed": ("e.effective_weights", "smartscore"),
     "V3 inflation component is explicit": ("c.inflation", "smartscore"),
     "V3 track factor is visible": ("Track Factor", "smartscore"),
     "Data Quality is not a sixth score": ("Data Quality ·", "smartscore"),
@@ -62,7 +57,10 @@ if "seriesReturn(" in TEXT["performance"]:
 html = TEXT["html"]
 required_order = [
     "js/data/supabase-client.js",
+    "js/data/benchmark-registry.js",
+    "js/data/benchmark-service.js",
     "js/data/fund-service.js",
+    "js/data/macro-service.js",
     "js/fund-core.js",
     "js/fund-performance.js",
     "js/fund-risk.js",
