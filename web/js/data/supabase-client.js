@@ -12,7 +12,9 @@
 
   async function request(path, method, body, options) {
     const opts = options || {};
-    const key = opts.cacheKey || method + ' ' + path + (body == null ? '' : ' ' + JSON.stringify(body));
+    const query = opts.query ? ('?' + String(opts.query).replace(/^\?/, '')) : '';
+    const finalPath = path + query;
+    const key = opts.cacheKey || method + ' ' + finalPath + (body == null ? '' : ' ' + JSON.stringify(body));
     if (opts.cache !== false && method === 'GET' && cache.has(key)) return cache.get(key);
     if (!config.url || !config.key) throw new Error('إعدادات Supabase غير متاحة.');
     const controller = new AbortController();
@@ -24,7 +26,7 @@
         Accept: 'application/json'
       };
       if (body != null) headers['Content-Type'] = 'application/json';
-      const response = await fetch(url(path), {
+      const response = await fetch(url(finalPath), {
         method,
         headers,
         body: body == null ? undefined : JSON.stringify(body),
