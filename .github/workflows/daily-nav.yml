@@ -38,6 +38,11 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python scripts/export_public.py
+      - name: NAV coverage gate
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scripts/check_nav_coverage.py
       - name: Commit snapshots
         run: |
           git config user.name "khater-bot"
@@ -45,9 +50,3 @@ jobs:
           git add web/data/engine_data.json web/data/funds_dna.json web/data/nav_coverage.json web/data/nav_coverage_gate.json
           git diff --cached --quiet || git commit -m "chore: refresh public snapshots"
           git push
-      - name: NAV coverage report
-        continue-on-error: true
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-        run: python scripts/check_nav_coverage.py || true
