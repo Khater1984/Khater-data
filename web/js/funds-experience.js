@@ -11,8 +11,8 @@
   window.KHATER_FUNDS_EXPERIENCE = { started: true, version: '1.1.0' };
 
   const modules = [
-    'js/funds-screen-v2.js',
-    'js/opportunity-layer.js'
+    'js/funds-screen-v2.js?v=20260917-funds5',
+    'js/opportunity-layer.js?v=20260917-funds5'
   ];
 
   function load(src){
