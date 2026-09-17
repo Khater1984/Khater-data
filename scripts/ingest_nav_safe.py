@@ -190,9 +190,6 @@ def _explicit_snduk_alias(name, funds):
     normalized = re.sub(r"[^a-z0-9]+", " ", str(name or "").lower()).strip()
     for fund in funds:
         if fund.get("fund_id") == "misr_money_market_euro__ci_asset_management":
-            # Verified identity: EIMA calls this Misr Money Market (Euro), while
-            # Snduk publishes it as Banque Misr Mutual Fund in Euro. Both are
-            # CI Asset Management, EUR, and 2007-origin funds.
             if "banque misr mutual fund in euro" in normalized:
                 return fund, 1.0
     return None, 0.0
@@ -308,8 +305,6 @@ def main():
         except Exception as exc:
             print(f"{name} ERROR {type(exc).__name__}: {exc}")
 
-    # Phase 2 fallback: Snduk is a third-party source and is selected only
-    # when no current usable manager candidate exists for the fund.
     snduk_fallback = _snduk_fallback_rows(funds, match)
     selected_fallbacks = _select_fallbacks(all_rows, snduk_fallback)
     if selected_fallbacks:
