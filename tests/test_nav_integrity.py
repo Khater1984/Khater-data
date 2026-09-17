@@ -193,6 +193,33 @@ class NavIntegrityTests(unittest.TestCase):
         self.assertIsNone(row["as_of_date"])
         self.assertNotEqual(row["as_of_date"], safe.TODAY.isoformat())
 
+    def test_misr_euro_snduk_alias_is_explicitly_verified(self):
+        funds = [{
+            "fund_id": "misr_money_market_euro__ci_asset_management",
+            "canonical_name": "Misr Money Market (Euro)",
+            "management_company": "CI Asset Management",
+            "currency": "EUR",
+            "inception_date": "2007-06-01",
+        }]
+        fund, score = safe._explicit_snduk_alias("Banque Misr Mutual Fund in Euro ( day by day Euro )", funds)
+        self.assertIsNotNone(fund)
+        self.assertEqual(fund["fund_id"], "misr_money_market_euro__ci_asset_management")
+        self.assertEqual(score, 1.0)
+
+    def test_snduk_fallback_uses_fund_currency_not_default_egp(self):
+        fund = {
+            "fund_id": "misr_money_market_euro__ci_asset_management",
+            "canonical_name": "Misr Money Market (Euro)",
+            "currency": "EUR",
+        }
+        row = safe.safe_row(
+            "Banque Misr Mutual Fund in Euro", 11.95, "2026-09-15",
+            "https://snduk.com/eg/page/mutual-funds-prices-today?lang=en",
+            "src_snduk", fund, 1.0, {"fallback": True}, currency=(fund.get("currency") or "EGP"),
+        )
+        self.assertEqual(row["currency"], "EUR")
+        self.assertEqual(row["source_id"], "src_snduk")
+
 
 if __name__ == "__main__":
     unittest.main()
