@@ -185,6 +185,19 @@ def safe_upsert_official(matched_rows):
     return ok, len(payload)
 
 
+def _explicit_snduk_alias(name, funds):
+    """Resolve only identity matches that are verified outside fuzzy name matching."""
+    normalized = re.sub(r"[^a-z0-9]+", " ", str(name or "").lower()).strip()
+    for fund in funds:
+        if fund.get("fund_id") == "misr_money_market_euro__ci_asset_management":
+            # Verified identity: EIMA calls this Misr Money Market (Euro), while
+            # Snduk publishes it as Banque Misr Mutual Fund in Euro. Both are
+            # CI Asset Management, EUR, and 2007-origin funds.
+            if "banque misr mutual fund in euro" in normalized:
+                return fund, 1.0
+    return None, 0.0
+
+
 def _snduk_fallback_rows(funds, match):
     """Read Snduk's consolidated price table and return matched third-party rows."""
     import requests
@@ -210,7 +223,9 @@ def _snduk_fallback_rows(funds, match):
             nav = legacy.parse_num(price_text)
             if not name or nav is None or not asof:
                 continue
-            fund, score = match(name)
+            fund, score = _explicit_snduk_alias(name, funds)
+            if not fund:
+                fund, score = match(name)
             if not fund or score < 0.84:
                 continue
             key = (fund["fund_id"], asof)
@@ -228,6 +243,7 @@ def _snduk_fallback_rows(funds, match):
                     "source_page": SNDuk_PRICES_URL,
                     "table_cells": cells,
                 },
+                currency=(fund.get("currency") or "EGP"),
             ))
     print(f"snduk fallback: {len(out)} matched rows")
     return out
