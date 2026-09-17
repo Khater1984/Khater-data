@@ -49,6 +49,12 @@
     return window.KHATER_THEME || {};
   }
 
+  function svgLook() {
+    const T = theme();
+    if (T && typeof T.svgAppearance === 'function') return T.svgAppearance();
+    return { line: 'var(--shell-green)', fill: 'rgba(8,127,99,.12)', axis: 'var(--chart-grid)', width: 2.5 };
+  }
+
   function svgChart(rows) {
     const w = 900, h = 280, padL = 54, padR = 18, padT = 18, padB = 36;
     const vals = rows.map(function (r) { return n(r.return_pct); });
@@ -79,13 +85,13 @@
       return '<circle class="chart-dot" cx="' + X(i).toFixed(1) + '" cy="' + Y(Number(r.return_pct)).toFixed(1) + '" r="3.5"></circle>' +
         '<circle class="chart-hit" data-i="' + i + '" cx="' + X(i).toFixed(1) + '" cy="' + Y(Number(r.return_pct)).toFixed(1) + '" r="12" fill="transparent"></circle>';
     }).join('');
+    const look = svgLook();
     const zero = Y(0);
-    const color = (theme().color && theme().color.chartPrimary) || 'var(--shell-green)';
     return '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="السجل الرسمي للعائد المتحرك">' +
       grid +
-      '<line class="chart-axis" x1="' + padL + '" y1="' + zero.toFixed(1) + '" x2="' + (w - padR) + '" y2="' + zero.toFixed(1) + '"/>' +
-      '<polyline class="chart-fill" points="' + area + '" style="fill:' + ((theme().fillUp) || 'rgba(8,127,99,.12)') + '"/>' +
-      '<polyline class="chart-line" points="' + line + '" style="stroke:' + color + '"/>' +
+      '<line class="chart-axis" x1="' + padL + '" y1="' + zero.toFixed(1) + '" x2="' + (w - padR) + '" y2="' + zero.toFixed(1) + '" style="stroke:' + look.axis + '"/>' +
+      '<polyline class="chart-fill" points="' + area + '" style="fill:' + look.fill + '"/>' +
+      '<polyline class="chart-line" points="' + line + '" style="stroke:' + look.line + ';stroke-width:' + look.width + '"/>' +
       dots + dates +
       '</svg>';
   }
