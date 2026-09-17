@@ -23,6 +23,11 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python scripts/ingest_nav.py
+      - name: Repair dynamic NAV sources (Azimut API + Snduk RSC)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scripts/repair_dynamic_nav_sources.py
       - name: Repair PFI NAV extraction
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
