@@ -7,7 +7,7 @@ from pathlib import Path
 import requests
 BASE=os.environ["SUPABASE_URL"].rstrip("/"); KEY=os.environ["SUPABASE_SERVICE_KEY"]
 H={"apikey":KEY,"Authorization":f"Bearer {KEY}"}
-SUPPORTED={"efgholding.com","cicapital.com","primeholdingco.com","aaim.com.eg","beltoneholding.com","azimut.eg","nicapital.com.eg","hc-si.com","pfi-am.com.eg","granite.eg","snduk.com","w1.abkegypt.com","zaldi-capital.com","afim.com.eg"}
+SUPPORTED={"efgholding.com","cicapital.com","primeholdingco.com","aaim.com.eg","beltoneholding.com","azimut.eg","nicapital.com.eg","hc-si.com","pfi-am.com.eg","granite.eg","snduk.com","w1.abkegypt.com","zaldi-capital.com","afim.com.eg","nbk.com"}
 def host_of(url):
     if not url or "://" not in url: return ""
     return url.split("/")[2].replace("www.","")
