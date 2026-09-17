@@ -12,29 +12,9 @@ concurrency:
   cancel-in-progress: true
 jobs:
   quality:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Check Python syntax
-        run: python -m compileall -q scripts
-      - name: Check baseline
-        run: python scripts/verify_baseline.py
-      - name: Check JavaScript syntax and inline policy
-        run: |
-          set -euo pipefail
-          for file in web/js/*.js web/js/data/*.js; do node --check "$file"; done
-          python scripts/check_inline_js.py
-      - name: Check financial data contract
-        run: python scripts/verify_financial_contracts.py
-      - name: Check project build contract
-        run: node scripts/build_check.mjs
+    uses: ./.github/workflows/quality-gate.yml
+    permissions:
+      contents: read
 
   deploy:
     needs: quality
