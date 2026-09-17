@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import re
 import sys
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -122,7 +122,7 @@ def safe_upsert_official(matched_rows):
         if not asof:
             skipped_no_date += 1
             continue
-        accepted, status = _future_policy(asof, row.get("source_id") or "")
+        accepted, _ = _future_policy(asof, row.get("source_id") or "")
         if not accepted:
             skipped_future += 1
             continue
@@ -190,11 +190,7 @@ def _snduk_fallback_rows(funds, match):
     import requests
 
     try:
-        response = requests.get(
-            SNDuk_PRICES_URL,
-            headers=legacy.UA,
-            timeout=45,
-        )
+        response = requests.get(SNDuk_PRICES_URL, headers=legacy.UA, timeout=45)
         response.raise_for_status()
     except Exception as exc:
         print(f"snduk fallback ERROR {type(exc).__name__}: {exc}")
@@ -222,13 +218,7 @@ def _snduk_fallback_rows(funds, match):
                 continue
             seen.add(key)
             out.append(safe_row(
-                name,
-                nav,
-                asof,
-                SNDuk_PRICES_URL,
-                "src_snduk",
-                fund,
-                score,
+                name, nav, asof, SNDuk_PRICES_URL, "src_snduk", fund, score,
                 {
                     "fallback": True,
                     "fallback_reason": "manager_nav_missing_or_stale",
@@ -243,25 +233,28 @@ def _snduk_fallback_rows(funds, match):
     return out
 
 
-def _select_fallbacks(funds, all_rows, snduk_rows):
+def _select_fallbacks(all_rows, snduk_rows):
     """Use Snduk only where the current manager extraction is not usable."""
     current = {}
     for row in all_rows:
         fid = row.get("fund_id")
-        if not fid:
-            continue
-        if row.get("source_id") == "src_snduk":
+        if not fid or row.get("source_id") == "src_snduk":
             continue
         if _is_usable_current_candidate(row):
             current.setdefault(fid, []).append(row)
 
-    selected = []
-    for row in snduk_rows:
-        fid = row.get("fund_id")
-        if not fid or current.get(fid):
-            continue
-        selected.append(row)
-    return selected
+    return [row for row in snduk_rows if row.get("fund_id") and not current.get(row["fund_id"])]
+
+
+def _normalize_source_ids(rows):
+    """Align parser aliases with the canonical sources registry."""
+    for row in rows:
+        if row.get("source_id") == "src_zaldi":
+            row["source_id"] = "src_zaldi_capital"
+            raw = row.get("raw") if isinstance(row.get("raw"), dict) else {}
+            raw["source_id_normalized_from"] = "src_zaldi"
+            row["raw"] = raw
+    return rows
 
 
 def main():
@@ -293,7 +286,7 @@ def main():
     all_rows = []
     for name, scraper in scrapers:
         try:
-            rows = scraper()
+            rows = _normalize_source_ids(scraper())
             print(f"{name}: {len(rows)} extracted, {sum(1 for row in rows if row['fund_id'])} matched")
             all_rows.extend(rows)
         except Exception as exc:
@@ -302,7 +295,7 @@ def main():
     # Phase 2 fallback: Snduk is a third-party source and is selected only
     # when no current usable manager candidate exists for the fund.
     snduk_fallback = _snduk_fallback_rows(funds, match)
-    selected_fallbacks = _select_fallbacks(funds, all_rows, snduk_fallback)
+    selected_fallbacks = _select_fallbacks(all_rows, snduk_fallback)
     if selected_fallbacks:
         print(f"snduk fallback selected: {len(selected_fallbacks)} funds")
         all_rows.extend(selected_fallbacks)
