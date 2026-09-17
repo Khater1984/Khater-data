@@ -10,32 +10,52 @@
     return base + (String(path).startsWith('/') ? path : '/' + path);
   }
 
-  async function get(path, options) {
+  async function request(path, method, body, options) {
     const opts = options || {};
-    const key = opts.cacheKey || path;
-    if (opts.cache !== false && cache.has(key)) return cache.get(key);
+    const query = opts.query ? ('?' + String(opts.query).replace(/^\?/, '')) : '';
+    const finalPath = path + query;
+    const key = opts.cacheKey || method + ' ' + finalPath + (body == null ? '' : ' ' + JSON.stringify(body));
+    if (opts.cache !== false && method === 'GET' && cache.has(key)) return cache.get(key);
     if (!config.url || !config.key) throw new Error('إعدادات Supabase غير متاحة.');
     const controller = new AbortController();
     const timer = setTimeout(function () { controller.abort(); }, opts.timeout || DEFAULT_TIMEOUT);
     try {
-      const response = await fetch(url(path), {
-        method: 'GET',
-        headers: { apikey: config.key, Authorization: 'Bearer ' + config.key, Accept: 'application/json' },
+      const headers = {
+        apikey: config.key,
+        Authorization: 'Bearer ' + config.key,
+        Accept: 'application/json'
+      };
+      if (body != null) headers['Content-Type'] = 'application/json';
+      const response = await fetch(url(finalPath), {
+        method,
+        headers,
+        body: body == null ? undefined : JSON.stringify(body),
         signal: controller.signal
       });
-      const body = await response.json().catch(function () { return null; });
-      if (!response.ok) throw new Error((body && (body.message || body.error_description || body.error)) || ('HTTP ' + response.status));
-      if (opts.cache !== false) cache.set(key, body);
-      return body;
+      const responseBody = await response.json().catch(function () { return null; });
+      if (!response.ok) {
+        throw new Error((responseBody && (responseBody.message || responseBody.error_description || responseBody.error || responseBody.hint)) || ('HTTP ' + response.status));
+      }
+      if (opts.cache !== false && method === 'GET') cache.set(key, responseBody);
+      return responseBody;
     } finally {
       clearTimeout(timer);
     }
+  }
+
+  async function get(path, options) {
+    return request(path, 'GET', null, options);
+  }
+
+  async function rpc(functionName, params, options) {
+    if (!functionName) throw new Error('Supabase RPC function name is required.');
+    return request('/rest/v1/rpc/' + encodeURIComponent(functionName), 'POST', params || {}, options);
   }
 
   function clear() { cache.clear(); }
   function escape(value) { return String(value == null ? '' : value).replace(/[&<>\"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]; }); }
 
   window.KHATER_DATA = window.KHATER_DATA || {};
-  window.KHATER_DATA.supabase = { get: get, clear: clear, config: config };
+  window.KHATER_DATA.supabase = { get: get, rpc: rpc, clear: clear, config: config };
   window.KHATER_DATA.escape = escape;
 })(window);
