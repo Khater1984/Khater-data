@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Clear source dates for publishers that do not publish a NAV date.
 
-This is a data-hygiene repair, not a NAV-value repair.  It deliberately
+This is a data-hygiene repair, not a NAV-value repair. It deliberately
 clears only manager-source rows whose published source is known to omit the
-NAV date.  Third-party dated sources such as Snduk are never touched merely
-because a fund's manager source is undated.
+NAV date. Dated third-party rows such as Snduk are never touched.
 """
 from __future__ import annotations
 
@@ -72,17 +71,17 @@ def main():
     cleared_staging = 0
     cleared_official = 0
     for fund_id in targets:
-        # Preserve NAV values; remove only the unverified source date.
-        patch(
-            "nav_staging",
-            f"fund_id=eq.{fund_id}&as_of_date=not.is.null",
-            {"as_of_date": None},
-        )
-        cleared_staging += 1
+        # Clear only rows from the confirmed undated manager sources.  This
+        # must not touch dated Snduk/Azimut/other fallback rows for the same
+        # fund.
+        for source_id in optional_source_ids:
+            patch(
+                "nav_staging",
+                f"fund_id=eq.{fund_id}&source_id=eq.{source_id}&as_of_date=not.is.null",
+                {"as_of_date": None},
+            )
+            cleared_staging += 1
 
-        # This affects only the manager-source official row.  If a later
-        # fallback promoted a third-party source, source_id will differ and
-        # that row must remain intact.
         official = get(
             "nav_official",
             select="fund_id,source_id",
@@ -99,7 +98,8 @@ def main():
 
     print(
         "optional-date sanitizer: "
-        f"targets={len(targets)} staging_targets={cleared_staging} "
+        f"targets={len(targets)} staging_source_checks="
+        f"{len(targets) * len(optional_source_ids)} "
         f"official_targets={cleared_official}"
     )
 
