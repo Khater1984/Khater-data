@@ -3,6 +3,7 @@
   'use strict';
   const macro=window.KHATER_DATA&&window.KHATER_DATA.macro;
   if(!macro) throw new Error('wealth-service.js requires macro-service.js');
+  if(typeof macro.deriveSeries!=='function') throw new Error('wealth-service.js requires macro-service derivation helpers');
 
   const ASSETS=[
     ['usd_egp_mid','الدولار','سعر الصرف'],
@@ -22,17 +23,9 @@
     ['tbill_364_avg_yield_pct','أذون 364 يومًا','% سنوي']
   ];
   const last=rows=>rows&&rows.length?rows[rows.length-1]:null;
-  const normalize=rows=>{
-    if(!rows.length)return[];
-    const base=Number(rows[0].value);
-    if(!Number.isFinite(base)||base===0)return[];
-    return rows.map(r=>({date:r.ts_date,value:Number(r.value)/base*100}));
-  };
-  const purchasing=rows=>{
-    let level=100;
-    return rows.map(r=>{const rate=Number(r.value);if(!Number.isFinite(rate))return null;level*=1/(1+rate/100);return{date:r.ts_date,value:level};}).filter(Boolean);
-  };
-  const rate=rows=>rows.map(r=>({date:r.ts_date,value:Number(r.value)})).filter(r=>Number.isFinite(r.value));
+  const normalize=rows=>macro.deriveSeries({rows:Array.isArray(rows)?rows:[]},'assets');
+  const purchasing=rows=>macro.deriveSeries({rows:Array.isArray(rows)?rows:[]},'money');
+  const rate=rows=>macro.deriveSeries({rows:Array.isArray(rows)?rows:[]},'rates');
   const change=(rows,days)=>{
     if(rows.length<2)return null;
     const latest=rows[rows.length-1],cut=new Date(latest.date+'T00:00:00');cut.setDate(cut.getDate()-days);

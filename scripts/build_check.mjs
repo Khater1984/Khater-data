@@ -38,9 +38,8 @@ const cssEntry = await readFile(join(root, 'css', 'fund-detail.css'), 'utf8');
 const requiredOwnership = [
   '--fd-line:',
   '--fd-radius-card:',
-  '--fd-card-gradient:',
-  '.metric,',
-  '.card {',
+  '.fund-detail-page .metric',
+  '.fund-detail-page .card',
 ];
 for (const token of requiredOwnership) {
   if (!cssEntry.includes(token)) {

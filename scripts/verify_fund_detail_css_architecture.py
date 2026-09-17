@@ -30,7 +30,7 @@ for css in legacy_css:
     if (ROOT / "web" / css).exists():
         errors.append(f"retired Fund Detail stylesheet still on disk: {css}")
 
-for token in ["--fd-line:", "--fd-radius-card:", ".metric,", ".card {"]:
+for token in ["--fd-line:", "--fd-radius-card:", ".fund-detail-page .metric", ".fund-detail-page .card"]:
     if token not in entry:
         errors.append(f"fund-detail.css missing ownership token: {token}")
 
