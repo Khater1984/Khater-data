@@ -85,5 +85,22 @@ for stub_name in ("app.css", "khater-design-system.css"):
     if stub_path.is_file():
         raise SystemExit(f"Platform identity failed: retired identity stub still present: {stub_name}")
 
+# Cascade lock: platform-shell.css must be the last application stylesheet on every device page
+for name in DEVICE_PAGES:
+    path = WEB / name
+    if not path.exists():
+        continue
+    html = path.read_text(encoding="utf-8")
+    hrefs = re.findall(r'href=["\'](css/[^"\']+)["\']', html)
+    app = [h for h in hrefs if h.startswith("css/")]
+    if not app:
+        raise SystemExit(f"Platform identity failed: {name} has no css links")
+    last = app[-1].split("?")[0]
+    if not last.endswith("platform-shell.css"):
+        raise SystemExit(
+            f"Platform identity failed: {name} must load platform-shell.css last (got {last})"
+        )
+
 print("Platform identity contract passed")
 print(" - device environment: viewport-fit, theme-color, safe-area, tap, print")
+print(" - cascade: platform-shell.css is last stylesheet on device pages")
