@@ -26,6 +26,9 @@ jobs:
       - name: Frontend boundaries
         run: python scripts/verify_frontend_boundaries.py
 
+      - name: Runtime architecture boundaries
+        run: python scripts/verify_runtime_architecture.py
+
       - name: Platform identity
         run: python scripts/verify_platform_identity.py
 
