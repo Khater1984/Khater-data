@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Funds surface contract — data boundary + canonical experience entrypoint."""
+"""Funds surface contract — data boundary + explicit experience composition."""
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 service = (ROOT / "web/js/data/funds-service.js").read_text(encoding="utf-8")
 screen = (ROOT / "web/js/funds-screen-v2.js").read_text(encoding="utf-8")
 html = (ROOT / "web/funds.html").read_text(encoding="utf-8")
-experience = (ROOT / "web/js/funds-experience.js").read_text(encoding="utf-8")
 
 for token in [
     "getUniverse",
@@ -15,7 +14,7 @@ for token in [
     "evaluateBenchmarks",
     "fund.canonicalPerformance",
     "fund.evaluateBenchmarks",
-    "fund.getBenchmarks",
+    "benchmarks.getBenchmark",
 ]:
     if token not in service:
         raise SystemExit(f"Funds contract failed: service missing {token}")
@@ -30,42 +29,30 @@ for token in [
     if token not in screen:
         raise SystemExit(f"Funds contract failed: screen missing {token}")
 
-# MERGE complete: polish + responsive live inside screen
 for token in ["polishConfidence", "funds-row-expanded", "syncEvidenceStrip"]:
     if token not in screen:
-        raise SystemExit(
-            f"Funds contract failed: screen missing merged presentation marker {token}"
-        )
+        raise SystemExit(f"Funds contract failed: screen missing merged presentation marker {token}")
 
+# Explicit runtime composition: no dynamic experience loader is required.
 for token in [
     "fund-service.js",
     "funds-service.js",
     "benchmark-service.js",
-    "funds-experience.js",
+    "funds-screen-v2.js",
+    "opportunity-layer.js",
 ]:
     if token not in html:
         raise SystemExit(f"Funds contract failed: funds.html missing {token}")
 
-if "funds-screen-v2.js" not in experience:
-    raise SystemExit("Funds contract failed: funds-experience.js must load funds-screen-v2.js")
-if "opportunity-layer.js" not in experience:
-    raise SystemExit("Funds contract failed: funds-experience.js must load opportunity-layer.js")
+if "funds-experience.js" in html:
+    raise SystemExit("Funds contract failed: funds.html must not use the retired dynamic Funds experience loader")
 
-# Must not reintroduce separate polish/responsive scripts
 for forbidden_mod in ["funds-terminal-polish.js", "funds-responsive-ui.js"]:
-    if forbidden_mod in experience:
-        raise SystemExit(
-            f"Funds contract failed: experience must not load deprecated {forbidden_mod}"
-        )
     if forbidden_mod in html:
-        raise SystemExit(
-            f"Funds contract failed: funds.html must not load deprecated {forbidden_mod}"
-        )
+        raise SystemExit(f"Funds contract failed: funds.html must not load deprecated {forbidden_mod}")
     path = ROOT / "web/js" / forbidden_mod
     if path.exists():
-        raise SystemExit(
-            f"Funds contract failed: deprecated file still present: web/js/{forbidden_mod}"
-        )
+        raise SystemExit(f"Funds contract failed: deprecated file still present: web/js/{forbidden_mod}")
 
 for forbidden in [
     "fund_performance_history",
@@ -78,14 +65,11 @@ for forbidden in [
 ]:
     if forbidden in screen:
         raise SystemExit(f"Funds contract failed: UI bypasses canonical services via {forbidden}")
-    if forbidden in experience:
-        raise SystemExit(f"Funds contract failed: experience entrypoint bypasses services via {forbidden}")
 
 if "seriesReturn(" in screen or "nav /" in screen:
     raise SystemExit("Funds contract failed: browser-side financial return calculation detected")
 
 print("Funds contract checks passed")
 print(" - data services: fund + funds + benchmark")
-print(" - experience entrypoint: funds-experience.js")
-print(" - screen + merged polish/responsive: funds-screen-v2.js")
-print(" - opportunity layer composed via entrypoint")
+print(" - explicit runtime composition: screen + opportunity layer")
+print(" - no dynamic Funds experience loader")
