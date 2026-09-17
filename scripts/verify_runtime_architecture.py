@@ -15,6 +15,7 @@ fund_benchmark = read("web/js/fund-benchmark.js")
 funds_service = read("web/js/data/funds-service.js")
 fund_html = read("web/fund.html")
 funds_html = read("web/funds.html")
+categories_html = read("web/categories.html")
 
 if "function rpc(" not in transport or "rpc: rpc" not in transport:
     errors.append("supabase-client.js must own the shared RPC transport")
@@ -31,34 +32,38 @@ if "D.benchmarks" not in fund_benchmark or "getForFund" not in fund_benchmark:
 if "D.benchmarks" not in funds_service or "benchmarks.getBenchmark" not in funds_service:
     errors.append("funds-service.js must delegate benchmark reads to the canonical benchmark service")
 
-fund_required_order = [
+
+def check_order(html, assets, page):
+    last = -1
+    for asset in assets:
+        pos = html.find(asset)
+        if pos == -1 or pos < last:
+            errors.append(page + " dependency order is not canonical: " + " → ".join(assets))
+            break
+        last = pos
+
+check_order(fund_html, [
     "js/data/supabase-client.js",
     "js/data/benchmark-registry.js",
     "js/data/benchmark-service.js",
     "js/data/fund-service.js",
-]
-last = -1
-for asset in fund_required_order:
-    pos = fund_html.find(asset)
-    if pos == -1 or pos < last:
-        errors.append("fund.html dependency order is not canonical: " + " → ".join(fund_required_order))
-        break
-    last = pos
+], "fund.html")
 
-funds_required_order = [
+check_order(funds_html, [
     "js/data/supabase-client.js",
     "js/data/benchmark-registry.js",
     "js/data/benchmark-service.js",
     "js/data/fund-service.js",
     "js/data/funds-service.js",
-]
-last = -1
-for asset in funds_required_order:
-    pos = funds_html.find(asset)
-    if pos == -1 or pos < last:
-        errors.append("funds.html dependency order is not canonical: " + " → ".join(funds_required_order))
-        break
-    last = pos
+], "funds.html")
+
+check_order(categories_html, [
+    "js/data/supabase-client.js",
+    "js/data/benchmark-registry.js",
+    "js/data/benchmark-service.js",
+    "js/data/fund-service.js",
+    "js/data/funds-service.js",
+], "categories.html")
 
 for path in (WEB / "js" / "data").glob("*.js"):
     if path.name == "supabase-client.js":
