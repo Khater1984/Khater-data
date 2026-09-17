@@ -18,11 +18,13 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - name: Mutual-fund NAV ingest
+      - name: NAV integrity unit tests
+        run: python -m unittest discover -s tests -p 'test_*.py'
+      - name: Mutual-fund NAV ingest (safe promotion)
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-        run: python scripts/ingest_nav.py
+        run: python scripts/ingest_nav_safe.py
       - name: Sanitize NAV sources without published dates
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
