@@ -51,8 +51,23 @@
     if (offset != null) qs.push('offset=' + String(offset));
     return '/rest/v1/' + table + '?' + qs.join('&');
   }
-  function today() { return new Date().toISOString().slice(0, 10); }
+  function today() {
+    try {
+      return new Date().toLocaleDateString('en-CA', { timeZone: 'Africa/Cairo' });
+    } catch (e) {
+      return new Date().toISOString().slice(0, 10);
+    }
+  }
   function currentOrPast(value) { return value && String(value).slice(0, 10) <= today(); }
+  function acceptedNavDate(value) {
+    const d = value && String(value).slice(0, 10);
+    if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return false;
+    if (d <= today()) return true;
+    const t = Date.parse(today() + 'T00:00:00Z');
+    const n = Date.parse(d + 'T00:00:00Z');
+    if (!Number.isFinite(t) || !Number.isFinite(n)) return false;
+    return Math.round((n - t) / 86400000) <= 7;
+  }
   function validReturn(value) { const n = Number(value); return value != null && Number.isFinite(n) ? n : null; }
   function validNav(value) { const n = Number(value); return Number.isFinite(n) && n > 0 ? n : null; }
 
@@ -82,7 +97,7 @@
   function canonicalNAV(rows) {
     const map = Object.create(null), conflicts = [];
     (rows || []).forEach(function (row) {
-      if (!row || !currentOrPast(row.as_of_date) || validNav(row.nav) == null) return;
+      if (!row || !acceptedNavDate(row.as_of_date) || validNav(row.nav) == null) return;
       const key = String(row.as_of_date), normalized = Object.assign({}, row, {nav:validNav(row.nav)});
       if (!map[key]) map[key] = normalized;
       else if (Number(map[key].nav) !== Number(normalized.nav)) conflicts.push({key:key,kept:map[key].source_id||null,conflicting:normalized.source_id||null});

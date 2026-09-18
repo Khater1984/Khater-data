@@ -290,7 +290,7 @@ def main():
         ("ci", lambda: legacy.scrape_ci(by_name, match)),
         ("prime", lambda: legacy.scrape_prime(match)),
         ("aaim", lambda: legacy.scrape_aaim(by_name, match)),
-        ("beltone", lambda: legacy.scrape_beltone_en(by_name)),
+        ("beltone", lambda: legacy.scrape_beltone_en(by_name, match)),
         ("azimut", lambda: legacy.scrape_azimut(by_name)),
         ("ni", lambda: legacy.scrape_ni(by_name, match)),
         ("hc", lambda: legacy.scrape_hc(match)),

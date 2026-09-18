@@ -102,6 +102,7 @@ BELTONE_ALIAS = {
     "egyptian sport fund": "Sports Fund",
     "beltone fixed income usd fund": "Beltone Fixed Income USD Fund",
     "beltone 2nd tranche b cobonat fund": "B-Couponat",
+    "beltone fixed income fund b secure": "B-Secure",
 }
 
 AAIM_ALIAS = {
@@ -365,17 +366,44 @@ def scrape_aaim(by_name, match):
     return out
 
 
-def scrape_beltone_en(by_name):
+BELTONE_ROW_RE = re.compile(
+    r"([A-Za-z][A-Za-z0-9 «»\"“”'’\-(),./&]+?)\s+(\d+(?:\.\d+)?)\s+(\d{4}-\d{2}-\d{2})\s+(20\d{2}-\d{2}-\d{2})"
+)
+
+
+def parse_beltone_listings(text):
+    """Parse Beltone's static EN funds page. Integer NAVs (e.g. B-Secure = 2) are valid."""
+    out = []
+    for name, nav, inception, asof in BELTONE_ROW_RE.findall(text or ""):
+        out.append({
+            "name": name.strip(),
+            "nav": float(nav),
+            "inception": inception,
+            "as_of_date": asof,
+        })
+    return out
+
+
+def scrape_beltone_en(by_name, match=None):
     url = "https://www.beltoneholding.com/en/business-line/asset-management-1"
     text = re.sub(r"\s+", " ", BeautifulSoup(fetch(url), "lxml").get_text(" ", strip=True))
-    pat = re.compile(r"([A-Za-z][A-Za-z0-9 «»\"'’\-(),./&]+?)\s+(\d+\.\d+)\s+(\d{4}-\d{2}-\d{2})\s+(20\d{2}-\d{2}-\d{2})")
     out = []
-    for name, nav, _inc, asof in pat.findall(text):
+    unmatched = []
+    for item in parse_beltone_listings(text):
+        name, nav, asof = item["name"], item["nav"], item["as_of_date"]
         alias = BELTONE_ALIAS.get(norm(name))
-        f = by_name.get(alias) if alias else None
-        if not f:
+        fund = by_name.get(alias) if alias else None
+        score = 1.0 if fund else 0.0
+        if not fund and match:
+            fund, score = match(name, "Beltone Asset Management")
+        if not fund and match:
+            fund, score = match(name)
+        if not fund:
+            unmatched.append(f"{name}@{asof}={nav}")
             continue
-        out.append(row(name, float(nav), asof, url, "src_beltone_funds", f, 1.0))
+        out.append(row(name, nav, asof, url, "src_beltone_funds", fund, score))
+    if unmatched:
+        print("beltone unmatched:", "; ".join(unmatched))
     return out
 
 
@@ -683,7 +711,7 @@ def main():
         ("ci", lambda: scrape_ci(by_name, match)),
         ("prime", lambda: scrape_prime(match)),
         ("aaim", lambda: scrape_aaim(by_name, match)),
-        ("beltone", lambda: scrape_beltone_en(by_name)),
+        ("beltone", lambda: scrape_beltone_en(by_name, match)),
         ("azimut", lambda: scrape_azimut(by_name)),
         ("ni", lambda: scrape_ni(by_name, match)),
         ("hc", lambda: scrape_hc(match)),

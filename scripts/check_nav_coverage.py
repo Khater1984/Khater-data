@@ -21,6 +21,8 @@ BASE = os.environ["SUPABASE_URL"].rstrip("/")
 KEY = os.environ["SUPABASE_SERVICE_KEY"]
 H = {"apikey": KEY, "Authorization": f"Bearer {KEY}"}
 FUTURE_MAX_DAYS = 7
+BELTONE_HOST = "beltoneholding.com"
+BELTONE_SOURCE = "src_beltone_funds"
 SUPPORTED = {
     "efgholding.com", "cicapital.com", "primeholdingco.com", "aaim.com.eg",
     "beltoneholding.com", "azimut.eg", "nicapital.com.eg", "hc-si.com",
@@ -79,6 +81,11 @@ def main():
     for r in current_rows:
         if r.get("fund_id") and r.get("match_status") == "matched":
             current_by_fund.setdefault(r["fund_id"], []).append(r)
+    beltone_ran = any(
+        (r.get("source_id") == BELTONE_SOURCE or host_of(r.get("source_url") or "") == BELTONE_HOST)
+        and r.get("match_status") == "matched"
+        for r in current_rows
+    )
 
     by_official = {r["fund_id"]: r for r in official}
     rows = []
@@ -122,6 +129,11 @@ def main():
             status = "CURRENT_OFFICIAL_NOT_RUN"
         elif off_future == "bounded_future":
             status = "BOUNDED_FUTURE_OFFICIAL"
+        elif beltone_ran and host == BELTONE_HOST and fid not in current_by_fund:
+            status = "FAIL_FAMILY_MISS"
+            hard_failures.append(
+                f"{f['canonical_name']} [{host}] Beltone page ran this cycle but this fund was not extracted (official as_of={d})"
+            )
         else:
             status = "STALE_NOT_EXTRACTED"
 

@@ -220,6 +220,39 @@ class NavIntegrityTests(unittest.TestCase):
         self.assertEqual(row["currency"], "EUR")
         self.assertEqual(row["source_id"], "src_snduk")
 
+    def test_beltone_integer_nav_and_curly_quotes_extract_b_secure(self):
+        sample = (
+            'Egyptian Sport Fund 199.45 2021-12-19 2026-09-20 12.3% '
+            'Beltone Fixed Income Fund “B-Secure” 2 2022-11-02 2026-09-20 17.71% '
+            'Beltone 2nd tranche "B-Cobonat" Fund 1.03 2026-07-16 2026-09-20 -'
+        )
+        rows = safe.legacy.parse_beltone_listings(sample)
+        names = [r["name"] for r in rows]
+        self.assertIn('Beltone Fixed Income Fund “B-Secure”', names)
+        b_secure = next(r for r in rows if "B-Secure" in r["name"])
+        self.assertEqual(b_secure["nav"], 2.0)
+        self.assertEqual(b_secure["as_of_date"], "2026-09-20")
+        self.assertEqual(
+            safe.legacy.BELTONE_ALIAS.get(safe.legacy.norm(b_secure["name"])),
+            "B-Secure",
+        )
+
+    def test_beltone_alias_resolves_b_secure_via_matcher(self):
+        funds = [{
+            "fund_id": "b_secure__beltone_asset_management",
+            "canonical_name": "B-Secure",
+            "management_company": "Beltone Asset Management",
+            "metadata": {},
+        }]
+        by_name, match = safe.legacy.matcher(funds)
+        extracted = 'Beltone Fixed Income Fund “B-Secure”'
+        alias = safe.legacy.BELTONE_ALIAS.get(safe.legacy.norm(extracted))
+        self.assertEqual(alias, "B-Secure")
+        self.assertEqual(by_name[alias]["fund_id"], "b_secure__beltone_asset_management")
+        fund, score = match(extracted, "Beltone Asset Management")
+        self.assertIsNotNone(fund)
+        self.assertGreaterEqual(score, 0.84)
+
 
 if __name__ == "__main__":
     unittest.main()
