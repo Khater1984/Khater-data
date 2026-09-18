@@ -244,14 +244,39 @@ class NavIntegrityTests(unittest.TestCase):
             "management_company": "Beltone Asset Management",
             "metadata": {},
         }]
-        by_name, match = safe.legacy.matcher(funds)
+        by_name, _match = safe.legacy.matcher(funds)
         extracted = 'Beltone Fixed Income Fund “B-Secure”'
         alias = safe.legacy.BELTONE_ALIAS.get(safe.legacy.norm(extracted))
         self.assertEqual(alias, "B-Secure")
         self.assertEqual(by_name[alias]["fund_id"], "b_secure__beltone_asset_management")
-        fund, score = match(extracted, "Beltone Asset Management")
-        self.assertIsNotNone(fund)
-        self.assertGreaterEqual(score, 0.84)
+
+    def test_beltone_gems_has_no_alias_and_does_not_replace_consumer(self):
+        gems = "Beltone Gems Equity Fund- USD"
+        consumer = "Beltone Consumer Fund"
+        self.assertIsNone(safe.legacy.BELTONE_ALIAS.get(safe.legacy.norm(gems)))
+        self.assertEqual(safe.legacy.BELTONE_ALIAS.get(safe.legacy.norm(consumer)), "Beltone Consumer Fund")
+        sample = (
+            f"{consumer} 1.84 2025-02-16 2026-09-20 1.2% "
+            f"{gems} 12.59 2007-10-08 2026-09-20 3.4% "
+            'Beltone Fixed Income Fund “B-Secure” 2 2022-11-02 2026-09-20 17.71%'
+        )
+        rows = safe.legacy.parse_beltone_listings(sample)
+        by_name = {
+            "Beltone Consumer Fund": {"fund_id": "beltone_consumer_fund__beltone_asset_management"},
+            "B-Secure": {"fund_id": "b_secure__beltone_asset_management"},
+        }
+        assigned = {}
+        unmatched = []
+        for item in rows:
+            alias = safe.legacy.BELTONE_ALIAS.get(safe.legacy.norm(item["name"]))
+            fund = by_name.get(alias) if alias else None
+            if not fund:
+                unmatched.append(item["name"])
+                continue
+            assigned[fund["fund_id"]] = item["nav"]
+        self.assertTrue(any("Gems" in name for name in unmatched))
+        self.assertEqual(assigned["beltone_consumer_fund__beltone_asset_management"], 1.84)
+        self.assertEqual(assigned["b_secure__beltone_asset_management"], 2.0)
 
 
 if __name__ == "__main__":

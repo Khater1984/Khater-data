@@ -389,22 +389,25 @@ def scrape_beltone_en(by_name, match=None):
     text = re.sub(r"\s+", " ", BeautifulSoup(fetch(url), "lxml").get_text(" ", strip=True))
     out = []
     unmatched = []
+    seen = {}
     for item in parse_beltone_listings(text):
         name, nav, asof = item["name"], item["nav"], item["as_of_date"]
         alias = BELTONE_ALIAS.get(norm(name))
         fund = by_name.get(alias) if alias else None
-        score = 1.0 if fund else 0.0
-        if not fund and match:
-            fund, score = match(name, "Beltone Asset Management")
-        if not fund and match:
-            fund, score = match(name)
+        # Beltone labels share "Beltone … Fund". A 0.84 fuzzy match maps
+        # Gems Equity (not in the catalog) onto Consumer. Alias-only.
         if not fund:
             unmatched.append(f"{name}@{asof}={nav}")
             continue
-        out.append(row(name, nav, asof, url, "src_beltone_funds", fund, score))
+        rec = row(name, nav, asof, url, "src_beltone_funds", fund, 1.0)
+        fid = fund["fund_id"]
+        prev = seen.get(fid)
+        if prev and prev["match_score"] >= rec["match_score"]:
+            continue
+        seen[fid] = rec
     if unmatched:
         print("beltone unmatched:", "; ".join(unmatched))
-    return out
+    return list(seen.values())
 
 
 def scrape_azimut(by_name):
