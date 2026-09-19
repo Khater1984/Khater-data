@@ -1,9 +1,9 @@
 {
-  "run_id": "run_20260917_131647",
+  "run_id": "run_20260919_113939",
   "funds": 208,
-  "ok": 203,
-  "fail": 0,
-  "unsupported": 5,
+  "ok": 188,
+  "fail": 1,
+  "unsupported": 4,
   "rows": [
     {
       "fund_id": "az_halan__azimut_egypt_asset_management",
@@ -12,8 +12,8 @@
       "rule": "azimut",
       "status": "OK",
       "this_run": true,
-      "nav": 1.82446,
-      "as_of_date": "2026-09-13"
+      "nav": 1.83056,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "misr_money_market_egp__ci_asset_management",
@@ -43,7 +43,7 @@
       "status": "OK",
       "this_run": true,
       "nav": 2.24,
-      "as_of_date": "2026-09-13"
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "agricultural_bank_of_egypt_fund_al_massy__hermes_portfolio_and_fund_management",
@@ -52,8 +52,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 78.67,
-      "as_of_date": "2026-09-10"
+      "nav": 78.49,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "afaaq__arab_african_investment_management",
@@ -70,10 +70,10 @@
       "name": "Misr Money Market (Euro)",
       "host": "",
       "rule": null,
-      "status": "UNSUPPORTED_HOST",
-      "this_run": false,
-      "nav": null,
-      "as_of_date": null
+      "status": "OK_UNOFFICIAL_HOST",
+      "this_run": true,
+      "nav": 11.9519,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "maksab_second_tranche_euro__alpha_zaldi",
@@ -152,8 +152,8 @@
       "rule": "zaldi",
       "status": "OK",
       "this_run": true,
-      "nav": 111.39464,
-      "as_of_date": "2026-09-01"
+      "nav": 112.2842,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "ciam_1st_issue_real_estate__ci_asset_management",
@@ -172,8 +172,8 @@
       "rule": "azimut",
       "status": "OK",
       "this_run": true,
-      "nav": 957.97515,
-      "as_of_date": "2026-09-12"
+      "nav": 961.2309,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "zaldi_el_masry__zaldi_investments",
@@ -182,8 +182,8 @@
       "rule": "zaldi",
       "status": "OK",
       "this_run": true,
-      "nav": 13.4,
-      "as_of_date": "2026-08-30"
+      "nav": 13.77,
+      "as_of_date": "2026-09-12"
     },
     {
       "fund_id": "ciam_8th_issue_ipos__ci_asset_management",
@@ -192,7 +192,7 @@
       "rule": "ci",
       "status": "OK",
       "this_run": true,
-      "nav": 11.64,
+      "nav": 11.5929,
       "as_of_date": "2026-09-17"
     },
     {
@@ -222,8 +222,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 1.56,
-      "as_of_date": "2026-09-13"
+      "nav": 1.55,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "ni_capital_15_30__ni_capital",
@@ -232,8 +232,8 @@
       "rule": "ni",
       "status": "OK",
       "this_run": true,
-      "nav": 21.97893,
-      "as_of_date": "2026-09-16"
+      "nav": 22.01132,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "national_bank_of_egypt_fund_iii__x",
@@ -242,8 +242,8 @@
       "rule": "afim",
       "status": "OK",
       "this_run": true,
-      "nav": 651.5,
-      "as_of_date": "2026-09-17"
+      "nav": 348.32703,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "mubasher_equity__mubasher_asset_management",
@@ -251,9 +251,9 @@
       "host": "english.mubasher.info",
       "rule": null,
       "status": "OK_UNOFFICIAL_HOST",
-      "this_run": false,
-      "nav": 2.013,
-      "as_of_date": "2026-08-30"
+      "this_run": true,
+      "nav": 2.053,
+      "as_of_date": "2026-09-15"
     },
     {
       "fund_id": "odin_4__x",
@@ -310,10 +310,10 @@
       "name": "Prime NMOW",
       "host": "primeholdingco.com",
       "rule": "prime",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": true,
       "nav": 13.0895,
-      "as_of_date": "2026-09-17"
+      "as_of_date": null
     },
     {
       "fund_id": "kenz_foras_equity__arab_african_investment_management",
@@ -342,8 +342,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 1.89,
-      "as_of_date": "2026-09-13"
+      "nav": 1.84,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "national_bank_of_kuwait_fund_namaa__nbk_capital_asset_management_egypt",
@@ -362,8 +362,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 48.01,
-      "as_of_date": "2026-09-13"
+      "nav": 49.17,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "national_bank_of_kuwait_hayat__nbk_capital_asset_management_egypt",
@@ -442,18 +442,18 @@
       "rule": "ni",
       "status": "OK",
       "this_run": true,
-      "nav": 21.9777,
-      "as_of_date": "2026-09-16"
+      "nav": 22.3122,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "aman_micro_finance__prime_investments",
       "name": "Aman Micro Finance",
       "host": "primeholdingco.com",
       "rule": "prime",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": false,
       "nav": 1.85529,
-      "as_of_date": "2026-09-08"
+      "as_of_date": null
     },
     {
       "fund_id": "national_bank_of_kuwait_fund_ishraq__nbk_capital_asset_management_egypt",
@@ -492,8 +492,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 1037.06,
-      "as_of_date": "2026-09-13"
+      "nav": 1040.62,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "saib_fund_iii_al_rabeh__hermes_portfolio_and_fund_management",
@@ -502,8 +502,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 458.6575,
-      "as_of_date": "2026-09-16"
+      "nav": 459.30781,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "manasek__hermes_portfolio_and_fund_management",
@@ -532,8 +532,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 47.61,
-      "as_of_date": "2026-09-13"
+      "nav": 47.77,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "al_baraka_bank_egypt_al_barakat__hermes_portfolio_and_fund_management",
@@ -542,8 +542,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 264.1,
-      "as_of_date": "2026-09-16"
+      "nav": 264.49,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "housing_development_bank_al_tameer__arab_african_investment_management",
@@ -582,8 +582,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 75.33,
-      "as_of_date": "2026-09-13"
+      "nav": 75.59,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "attijariwafa_bankfund__beltone_asset_management",
@@ -592,8 +592,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 3990.54,
-      "as_of_date": "2026-09-13"
+      "nav": 4004.27,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "iskan_insurance__arab_african_investment_management",
@@ -622,7 +622,7 @@
       "rule": "ci",
       "status": "OK",
       "this_run": true,
-      "nav": 39.19,
+      "nav": 38.4039,
       "as_of_date": "2026-09-17"
     },
     {
@@ -632,8 +632,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 1.02,
-      "as_of_date": "2026-09-13"
+      "nav": 1.03,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "ciam__ci_asset_management",
@@ -652,8 +652,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 421.53,
-      "as_of_date": "2026-09-13"
+      "nav": 422.94,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "delta_life_insurance__x",
@@ -673,7 +673,7 @@
       "status": "OK",
       "this_run": true,
       "nav": 1.69,
-      "as_of_date": "2026-09-13"
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "national_bank_of_egypt_fund_v__x",
@@ -682,8 +682,8 @@
       "rule": "afim",
       "status": "OK",
       "this_run": true,
-      "nav": 57.3,
-      "as_of_date": "2026-09-17"
+      "nav": 2546.7077,
+      "as_of_date": "2026-09-16"
     },
     {
       "fund_id": "cib_fund_takamol__ci_asset_management",
@@ -722,8 +722,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 61.69336,
-      "as_of_date": "2026-09-16"
+      "nav": 61.77917,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "hermes_gold__hermes_portfolio_and_fund_management",
@@ -732,8 +732,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 91.86048,
-      "as_of_date": "2026-09-16"
+      "nav": 91.24236,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "cib_fund_i_osoul__ci_asset_management",
@@ -752,8 +752,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 1838.55,
-      "as_of_date": "2026-09-10"
+      "nav": 1832.82,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "menthum_grow_egx_30_capped__beltone_asset_management",
@@ -762,8 +762,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 1.73,
-      "as_of_date": "2026-09-13"
+      "nav": 1.71,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "hermes__hermes_portfolio_and_fund_management",
@@ -810,10 +810,10 @@
       "name": "National Bank of Egypt Fund II",
       "host": "afim.com.eg",
       "rule": "afim",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": true,
       "nav": 320.3,
-      "as_of_date": "2026-09-17"
+      "as_of_date": null
     },
     {
       "fund_id": "national_bank_of_kuwait_al_mizan__nbk_capital_asset_management_egypt",
@@ -832,8 +832,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 64.69,
-      "as_of_date": "2026-09-13"
+      "nav": 63.77,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "bank_nxt_fund_i__hermes_portfolio_and_fund_management",
@@ -842,8 +842,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 26.87681,
-      "as_of_date": "2026-09-16"
+      "nav": 26.91675,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "kenoz_egx33_shariah_index_tracker_shariah__arab_african_investment_management",
@@ -872,8 +872,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 1.65,
-      "as_of_date": "2026-09-13"
+      "nav": 1.63,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "blom_bank_fund_ii__cfh_asset_management",
@@ -922,8 +922,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 1498.56,
-      "as_of_date": "2026-09-16"
+      "nav": 1500.76,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "b_secure__beltone_asset_management",
@@ -931,9 +931,9 @@
       "host": "beltoneholding.com",
       "rule": "beltone",
       "status": "OK",
-      "this_run": false,
-      "nav": 1.98,
-      "as_of_date": "2026-08-30"
+      "this_run": true,
+      "nav": 2.0,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "menthum_usd__ci_asset_management",
@@ -952,8 +952,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 653.01,
-      "as_of_date": "2026-09-10"
+      "nav": 656.21,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "hermes_equity__hermes_portfolio_and_fund_management",
@@ -962,8 +962,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 119.99,
-      "as_of_date": "2026-09-16"
+      "nav": 121.4,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "kfh_bank_alpha__hermes_portfolio_and_fund_management",
@@ -980,10 +980,10 @@
       "name": "NBE & Al Baraka Bank Egypt Fund (Bashayer)",
       "host": "afim.com.eg",
       "rule": "afim",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": true,
       "nav": 406.5,
-      "as_of_date": "2026-09-17"
+      "as_of_date": null
     },
     {
       "fund_id": "cib_fund_ii_istthmar__ci_asset_management",
@@ -1002,8 +1002,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 1420.18,
-      "as_of_date": "2026-09-10"
+      "nav": 1414.41,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "banque_misr_fund_iii__ci_asset_management",
@@ -1012,7 +1012,7 @@
       "rule": "ci",
       "status": "OK",
       "this_run": true,
-      "nav": 35.32,
+      "nav": 34.99,
       "as_of_date": "2026-09-17"
     },
     {
@@ -1042,8 +1042,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 101.5809,
-      "as_of_date": "2026-09-16"
+      "nav": 101.7304,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "credit_agricole_egypt_fund_iii__hermes_portfolio_and_fund_management",
@@ -1052,8 +1052,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 1140.93,
-      "as_of_date": "2026-09-16"
+      "nav": 1142.64,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "cib_fund_iv_hamaya__ci_asset_management",
@@ -1080,20 +1080,20 @@
       "name": "National Bank of Egypt VIII",
       "host": "afim.com.eg",
       "rule": "afim",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": false,
       "nav": 2525.5,
-      "as_of_date": "2026-09-01"
+      "as_of_date": null
     },
     {
       "fund_id": "tamayoz__x",
       "name": "Tamayoz",
       "host": "afim.com.eg",
       "rule": "afim",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": true,
       "nav": 17.3,
-      "as_of_date": "2026-09-17"
+      "as_of_date": null
     },
     {
       "fund_id": "pfi_cashi__pfi_asset_management",
@@ -1122,28 +1122,28 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 0.79,
-      "as_of_date": "2026-09-13"
+      "nav": 0.77,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "dahab__x",
       "name": "Dahab",
       "host": "afim.com.eg",
       "rule": "afim",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": true,
       "nav": 181.4,
-      "as_of_date": "2026-09-17"
+      "as_of_date": null
     },
     {
       "fund_id": "granite_first_fund__granite_fund_management",
       "name": "Granite First Fund",
       "host": "granite.eg",
       "rule": "granite",
-      "status": "OK",
+      "status": "FAIL_NO_DATE",
       "this_run": true,
       "nav": 1.65778,
-      "as_of_date": "2026-09-17"
+      "as_of_date": null
     },
     {
       "fund_id": "al_ahli_bank_of_kuwait_egypt_fund_i__sigma_asset_management",
@@ -1152,8 +1152,8 @@
       "rule": "abk",
       "status": "OK",
       "this_run": true,
-      "nav": 418.35,
-      "as_of_date": "2026-09-08"
+      "nav": 419.95,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "fawry__ci_asset_management",
@@ -1192,8 +1192,8 @@
       "rule": "snduk",
       "status": "OK",
       "this_run": true,
-      "nav": 832.28,
-      "as_of_date": "2026-09-16"
+      "nav": 847.4,
+      "as_of_date": "2026-09-18"
     },
     {
       "fund_id": "misr_money_market__ci_asset_management",
@@ -1212,8 +1212,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 856.38,
-      "as_of_date": "2026-09-10"
+      "nav": 853.54,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "gig_makaseb_fund_first_tranche__ni_capital",
@@ -1222,8 +1222,8 @@
       "rule": "ni",
       "status": "OK",
       "this_run": true,
-      "nav": 20.83155,
-      "as_of_date": "2026-09-16"
+      "nav": 20.86258,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "aspire_rawajj__x",
@@ -1242,8 +1242,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 1.93,
-      "as_of_date": "2026-09-13"
+      "nav": 1.92,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "al_baraka_bank_egypt_al_motawazen__x",
@@ -1282,8 +1282,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 198.82,
-      "as_of_date": "2026-09-13"
+      "nav": 199.45,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "fab_misr_modkharaty__hermes_portfolio_and_fund_management",
@@ -1292,8 +1292,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 76.53387,
-      "as_of_date": "2026-09-16"
+      "nav": 76.64373,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "banque_du_caire_fund_i__hermes_portfolio_and_fund_management",
@@ -1302,8 +1302,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 48.05,
-      "as_of_date": "2026-09-10"
+      "nav": 47.88,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "banque_misr_fund_ii__ci_asset_management",
@@ -1312,7 +1312,7 @@
       "rule": "ci",
       "status": "OK",
       "this_run": true,
-      "nav": 23.9,
+      "nav": 23.68,
       "as_of_date": "2026-09-17"
     },
     {
@@ -1352,8 +1352,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 74.73,
-      "as_of_date": "2026-09-13"
+      "nav": 74.99,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "arope_insurance_misr_fund__cfh_asset_management",
@@ -1382,8 +1382,8 @@
       "rule": "azimut",
       "status": "OK",
       "this_run": true,
-      "nav": 1.47982,
-      "as_of_date": "2026-09-16"
+      "nav": 1.50555,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "housing_development_bank_mawared__pfi_asset_management",
@@ -1412,8 +1412,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 1.17,
-      "as_of_date": "2026-09-13"
+      "nav": 1.18,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "beltone_egx_35_tracker__beltone_asset_management",
@@ -1422,8 +1422,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 1.53,
-      "as_of_date": "2026-09-13"
+      "nav": 1.51,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "az_gold__azimut_egypt_asset_management",
@@ -1432,8 +1432,8 @@
       "rule": "azimut",
       "status": "OK",
       "this_run": true,
-      "nav": 24.28333,
-      "as_of_date": "2026-09-16"
+      "nav": 24.1079,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "basata__ci_asset_management",
@@ -1462,8 +1462,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 76.08,
-      "as_of_date": "2026-09-13"
+      "nav": 75.83,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "az_thndr__azimut_egypt_asset_management",
@@ -1472,8 +1472,8 @@
       "rule": "azimut",
       "status": "OK",
       "this_run": true,
-      "nav": 1.32771,
-      "as_of_date": "2026-09-17"
+      "nav": 1.32945,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "suez_canal_bank_al_suez_al_youmi__ci_asset_management",
@@ -1502,8 +1502,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 2.18,
-      "as_of_date": "2026-09-13"
+      "nav": 2.14,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "bank_abc_fund_i__azimut_egypt_asset_management",
@@ -1512,8 +1512,8 @@
       "rule": "azimut",
       "status": "OK",
       "this_run": true,
-      "nav": 705.07115,
-      "as_of_date": "2026-09-10"
+      "nav": 702.03,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "al_ahli_bank_of_kuwait_egypt_fund_ii__sigma_asset_management",
@@ -1532,8 +1532,8 @@
       "rule": "azimut",
       "status": "OK",
       "this_run": true,
-      "nav": 697.21482,
-      "as_of_date": "2026-09-10"
+      "nav": 693.55,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "bonds_fixed_income_usd_fund__arab_african_investment_management",
@@ -1572,8 +1572,8 @@
       "rule": "afim",
       "status": "OK",
       "this_run": true,
-      "nav": 173.2,
-      "as_of_date": "2026-09-17"
+      "nav": 651.47,
+      "as_of_date": "2026-09-13"
     },
     {
       "fund_id": "edkhar__azimut_egypt_asset_management",
@@ -1582,8 +1582,8 @@
       "rule": "azimut",
       "status": "OK",
       "this_run": true,
-      "nav": 21.29763,
-      "as_of_date": "2026-09-17"
+      "nav": 21.32078,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "az_foras__azimut_egypt_asset_management",
@@ -1592,18 +1592,18 @@
       "rule": "azimut",
       "status": "OK",
       "this_run": true,
-      "nav": 52.70791,
-      "as_of_date": "2026-09-16"
+      "nav": 53.49442,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "ebank_fund_iii_konooz__prime_investments",
       "name": "Ebank Fund III (Konooz)",
       "host": "primeholdingco.com",
       "rule": "prime",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": false,
       "nav": 877.9242,
-      "as_of_date": "2026-09-08"
+      "as_of_date": null
     },
     {
       "fund_id": "stream__cfh_asset_management",
@@ -1622,8 +1622,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 132.78,
-      "as_of_date": "2026-09-16"
+      "nav": 134.94,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "credit_agricole_egypt_fund_iv_al_thiqa__hc_securities_investment",
@@ -1652,8 +1652,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 235.71,
-      "as_of_date": "2026-09-13"
+      "nav": 235.24,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "saib_adib_fund_sanabel__ci_asset_management",
@@ -1672,8 +1672,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 685.55188,
-      "as_of_date": "2026-09-10"
+      "nav": 682.64871,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "fab_misr_fund_etm_nan__hc_securities_investment",
@@ -1702,8 +1702,8 @@
       "rule": "ni",
       "status": "OK",
       "this_run": true,
-      "nav": 20.78635,
-      "as_of_date": "2026-09-16"
+      "nav": 20.81733,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "egyptian_arab_land_bank_fund_al_masry__x",
@@ -1720,10 +1720,10 @@
       "name": "Maksab First Tranche USD $",
       "host": "zaldi-capital.com",
       "rule": "zaldi",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": false,
       "nav": 1.18135,
-      "as_of_date": "2026-09-01"
+      "as_of_date": null
     },
     {
       "fund_id": "arab_bank_fund_yomaty__beltone_asset_management",
@@ -1732,8 +1732,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 74.5,
-      "as_of_date": "2026-09-13"
+      "nav": 74.76,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "maashy__azimut_egypt_asset_management",
@@ -1752,8 +1752,8 @@
       "rule": "azimut",
       "status": "OK",
       "this_run": true,
-      "nav": 1.80318,
-      "as_of_date": "2026-09-17"
+      "nav": 1.80553,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "shefa_orman_charity_fund__ci_asset_management",
@@ -1772,8 +1772,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 784.82523,
-      "as_of_date": "2026-09-16"
+      "nav": 785.98177,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "fibe_cib_aman__ci_asset_management",
@@ -1810,10 +1810,10 @@
       "name": "Hourus",
       "host": "afim.com.eg",
       "rule": "afim",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": true,
       "nav": 21.1,
-      "as_of_date": "2026-09-17"
+      "as_of_date": null
     },
     {
       "fund_id": "arab_african_international_bank_guard__arab_african_investment_management",
@@ -1842,8 +1842,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 633.6574,
-      "as_of_date": "2026-09-16"
+      "nav": 634.6089,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "ciam_4th_issue_consumption__ci_asset_management",
@@ -1872,8 +1872,8 @@
       "rule": "azimut",
       "status": "OK",
       "this_run": true,
-      "nav": 2.05025,
-      "as_of_date": "2026-09-16"
+      "nav": 2.08277,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "ciam_gold__ci_asset_management",
@@ -1910,20 +1910,20 @@
       "name": "Wethaq",
       "host": "afim.com.eg",
       "rule": "afim",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": true,
       "nav": 23.7,
-      "as_of_date": "2026-09-17"
+      "as_of_date": null
     },
     {
       "fund_id": "national_bank_of_egypt_fund_iv__x",
       "name": "National Bank of Egypt Fund IV",
       "host": "afim.com.eg",
       "rule": "afim",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": true,
       "nav": 303.2,
-      "as_of_date": "2026-09-17"
+      "as_of_date": null
     },
     {
       "fund_id": "beltone_egx100_index_tracker_meya_meya__beltone_asset_management",
@@ -1932,8 +1932,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 2.61,
-      "as_of_date": "2026-09-13"
+      "nav": 2.58,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "credit_agricole_egypt_fund_i__hermes_portfolio_and_fund_management",
@@ -1942,8 +1942,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 1992.96,
-      "as_of_date": "2026-09-10"
+      "nav": 1985.39,
+      "as_of_date": "2026-09-17"
     },
     {
       "fund_id": "target_first_fund__target_asset_management",
@@ -1962,8 +1962,8 @@
       "rule": "hermes",
       "status": "OK",
       "this_run": true,
-      "nav": 982.977,
-      "as_of_date": "2026-09-16"
+      "nav": 984.462,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "arab_african_international_bank_shield__arab_african_investment_management",
@@ -1982,8 +1982,8 @@
       "rule": "hc",
       "status": "OK",
       "this_run": true,
-      "nav": 74.0207,
-      "as_of_date": "2026-09-12"
+      "nav": 74.26823,
+      "as_of_date": "2026-09-19"
     },
     {
       "fund_id": "ci_misr_al_youmy__ci_asset_management",
@@ -2000,10 +2000,10 @@
       "name": "Al Ahly Hayat",
       "host": "afim.com.eg",
       "rule": "afim",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": true,
       "nav": 365.6,
-      "as_of_date": "2026-09-17"
+      "as_of_date": null
     },
     {
       "fund_id": "beltone_financial_fund__beltone_asset_management",
@@ -2012,18 +2012,18 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 1.81,
-      "as_of_date": "2026-09-13"
+      "nav": 1.86,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "egyptian_gulf_bank_tharaa__prime_investments",
       "name": "Egyptian Gulf Bank (Tharaa)",
       "host": "primeholdingco.com",
       "rule": "prime",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": false,
       "nav": 45.9714,
-      "as_of_date": "2026-09-08"
+      "as_of_date": null
     },
     {
       "fund_id": "az_naser__azimut_egypt_asset_management",
@@ -2032,8 +2032,8 @@
       "rule": "azimut",
       "status": "OK",
       "this_run": true,
-      "nav": 18.36592,
-      "as_of_date": "2026-09-17"
+      "nav": 18.39073,
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "misr_al_mostakbal_fund__hc_securities_investment",
@@ -2041,9 +2041,9 @@
       "host": "hc-si.com",
       "rule": "hc",
       "status": "OK",
-      "this_run": false,
-      "nav": 87.94,
-      "as_of_date": "2026-08-26"
+      "this_run": true,
+      "nav": 89.78,
+      "as_of_date": "2026-09-13"
     },
     {
       "fund_id": "b_couponat__beltone_asset_management",
@@ -2053,17 +2053,17 @@
       "status": "OK",
       "this_run": true,
       "nav": 1.03,
-      "as_of_date": "2026-09-13"
+      "as_of_date": "2026-09-20"
     },
     {
       "fund_id": "national_bank_of_egypt_vii__x",
       "name": "National Bank of Egypt VII",
       "host": "afim.com.eg",
       "rule": "afim",
-      "status": "OK",
+      "status": "NAV_NO_DATE",
       "this_run": true,
       "nav": 331.5,
-      "as_of_date": "2026-09-17"
+      "as_of_date": null
     },
     {
       "fund_id": "menthum__azimut_egypt_asset_management",
@@ -2082,8 +2082,8 @@
       "rule": "beltone",
       "status": "OK",
       "this_run": true,
-      "nav": 859.65,
-      "as_of_date": "2026-09-13"
+      "nav": 854.81,
+      "as_of_date": "2026-09-20"
     }
   ]
 }
