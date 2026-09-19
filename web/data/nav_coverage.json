@@ -1,5 +1,5 @@
 {
-  "run_id": "run_20260919_113939",
+  "run_id": "run_20260919_130157",
   "funds": 208,
   "ok": 188,
   "fail": 1,
@@ -251,7 +251,7 @@
       "host": "english.mubasher.info",
       "rule": null,
       "status": "OK_UNOFFICIAL_HOST",
-      "this_run": true,
+      "this_run": false,
       "nav": 2.053,
       "as_of_date": "2026-09-15"
     },
@@ -2041,7 +2041,7 @@
       "host": "hc-si.com",
       "rule": "hc",
       "status": "OK",
-      "this_run": true,
+      "this_run": false,
       "nav": 89.78,
       "as_of_date": "2026-09-13"
     },
