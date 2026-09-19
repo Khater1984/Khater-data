@@ -1,0 +1,88 @@
+"""Snduk fallback identity: explicit alias only + currency gate."""
+import os
+import unittest
+from unittest.mock import patch
+
+os.environ.setdefault("SUPABASE_URL", "https://example.supabase.co")
+os.environ.setdefault("SUPABASE_SERVICE_KEY", "test-key")
+
+from scripts import ingest_nav_safe as safe
+
+
+class SndukFallbackIdentityTests(unittest.TestCase):
+    def test_rejects_non_explicit_names(self):
+        funds = [
+            {"fund_id": "granite_first_fund__granite_fund_management", "canonical_name": "Granite First Fund", "currency": "EGP"},
+            {"fund_id": "maksab_second_tranche_euro", "canonical_name": "Maksab Second Tranche (Euro)", "currency": "EUR"},
+            {"fund_id": "maksab_oz_euro", "canonical_name": "Maksab OZ Euro", "currency": "EUR"},
+            {"fund_id": "misr_money_market_euro__ci_asset_management", "canonical_name": "Misr Money Market (Euro)", "currency": "EUR"},
+        ]
+        for snduk_name in (
+            "Granite Fixed Income Fund EGP",
+            "Granite USD Fixed Income Fund",
+            "Granite First Fund",
+            "Maksab Second Tranche (Euro)",
+            "Maksab OZ Euro",
+            "Maksab OZ - Euro",
+        ):
+            fund, score = safe._explicit_snduk_alias(snduk_name, funds)
+            self.assertIsNone(fund, msg=f"{snduk_name!r} must not be an explicit alias")
+            self.assertEqual(score, 0.0)
+
+    def test_granite_first_not_aliased_to_fixed_income(self):
+        funds = [{"fund_id": "granite_first_fund__granite_fund_management", "canonical_name": "Granite First Fund", "currency": "EGP"}]
+        for name in ("Granite Fixed Income Fund EGP", "Granite USD Fixed Income Fund"):
+            fund, _ = safe._explicit_snduk_alias(name, funds)
+            self.assertIsNone(fund)
+
+    def test_maksab_second_tranche_not_aliased_to_oz_euro(self):
+        funds = [
+            {"fund_id": "maksab_second_tranche_euro", "canonical_name": "Maksab Second Tranche (Euro)", "currency": "EUR"},
+            {"fund_id": "maksab_oz_euro", "canonical_name": "Maksab OZ Euro", "currency": "EUR"},
+        ]
+        self.assertIsNone(safe._explicit_snduk_alias("Maksab OZ Euro", funds)[0])
+        self.assertIsNone(safe._explicit_snduk_alias("Maksab Second Tranche (Euro)", funds)[0])
+
+    def test_currency_mismatch_rejects(self):
+        self.assertFalse(safe._currencies_compatible("EUR", "EGP"))
+        self.assertFalse(safe._currencies_compatible("EGP", "USD"))
+        self.assertFalse(safe._currencies_compatible("EUR", None))
+        self.assertTrue(safe._currencies_compatible("EUR", "EURO"))
+        self.assertTrue(safe._currencies_compatible("EGP", "EGP"))
+
+    def test_fallback_does_not_call_fuzzy_match(self):
+        funds = [{"fund_id": "granite_first_fund__granite_fund_management", "canonical_name": "Granite First Fund", "currency": "EGP"}]
+
+        def boom(_name):
+            raise AssertionError("generic fuzzy match must not run on Snduk fallback")
+
+        html = """<html><body><table>
+          <tr><th>Fund</th><th>Type</th><th>Date</th><th>Price</th></tr>
+          <tr><td>99 Granite Fixed Income Fund EGP</td><td>Fixed Income</td>
+              <td>Sep 17, 2026</td><td>EGP 1.1822</td></tr>
+        </table></body></html>"""
+
+        class Resp:
+            text = html
+            def raise_for_status(self):
+                return None
+
+        with patch("requests.get", return_value=Resp()):
+            rows = safe._snduk_fallback_rows(funds, match=boom)
+        self.assertEqual(rows, [])
+
+    def test_misr_euro_alias_still_works(self):
+        funds = [{
+            "fund_id": "misr_money_market_euro__ci_asset_management",
+            "canonical_name": "Misr Money Market (Euro)",
+            "currency": "EUR",
+        }]
+        fund, score = safe._explicit_snduk_alias(
+            "Banque Misr Mutual Fund in Euro ( day by day Euro )", funds
+        )
+        self.assertIsNotNone(fund)
+        self.assertEqual(score, 1.0)
+
+
+if __name__ == "__main__":
+    unittest.main()
