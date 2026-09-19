@@ -2,6 +2,7 @@ import os
 import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
+import requests
 
 os.environ.setdefault("SUPABASE_URL", "https://example.supabase.co")
 os.environ.setdefault("SUPABASE_SERVICE_KEY", "test-key")
@@ -277,6 +278,61 @@ class NavIntegrityTests(unittest.TestCase):
         self.assertTrue(any("Gems" in name for name in unmatched))
         self.assertEqual(assigned["beltone_consumer_fund__beltone_asset_management"], 1.84)
         self.assertEqual(assigned["b_secure__beltone_asset_management"], 2.0)
+
+
+from datetime import timedelta
+from scripts import repair_dynamic_nav_sources as repair
+
+
+class DynamicRepairTests(unittest.TestCase):
+    def test_staging_row_matches_ingest_contract(self):
+        row, accepted, policy = repair.staging_row(
+            "az_lv__azimut_egypt_asset_management", "AZ-LV", 1.50555, "2026-09-17",
+            "src_azimut_funds", "https://azimut.eg/funds", "AZ-LV", {"api_id": 23},
+        )
+        self.assertTrue(accepted)
+        self.assertEqual(policy, "current_or_past")
+        self.assertEqual(row["verification_status"], "pending")
+        self.assertEqual(row["match_score"], 1.0)
+        self.assertEqual(row["nav"], 1.50555)
+        self.assertTrue(row["run_id"].startswith("repair_dynamic_"))
+        self.assertNotEqual(row["verification_status"], "verified")
+        self.assertNotIn("last_nav", row["raw"])
+
+    def test_bounded_future_azimut_date_is_accepted(self):
+        future = (repair.TODAY + timedelta(days=1)).isoformat()
+        ok, policy = repair.future_status(future)
+        self.assertTrue(ok)
+        self.assertEqual(policy, "bounded_future")
+
+    def test_future_outside_window_is_rejected(self):
+        future = (repair.TODAY + timedelta(days=8)).isoformat()
+        ok, policy = repair.future_status(future)
+        self.assertFalse(ok)
+        self.assertEqual(policy, "future_outside_window")
+
+    def test_unknown_azimut_page_ids_are_not_aliased(self):
+        self.assertNotIn(25, repair.AZIMUT_ID)
+        self.assertNotIn(27, repair.AZIMUT_ID)
+        self.assertNotIn(24, repair.AZIMUT_ID)
+        self.assertEqual(repair.AZIMUT_ID[23], "AZ-LV")
+
+    def test_promote_skips_future_outside_window_without_posting(self):
+        future = (repair.TODAY + timedelta(days=8)).isoformat()
+        funds = [{"fund_id": "fid", "canonical_name": "AZ-LV"}]
+        with patch.object(repair, "post") as post, patch.object(repair, "upsert_official") as upsert:
+            status = repair.promote("fid", "AZ-LV", 1.5, future, "src_azimut_funds", "https://azimut.eg/funds", {}, funds, [])
+            self.assertEqual(status, "rejected_future")
+            post.assert_not_called()
+            upsert.assert_not_called()
+
+    def test_promote_http_error_is_failed_not_raised(self):
+        funds = [{"fund_id": "fid", "canonical_name": "AZ-LV"}]
+        err = requests.HTTPError("400 nav_staging: bad", response=SimpleNamespace(status_code=400, text="bad"))
+        with patch.object(repair, "post", side_effect=err), patch.object(repair, "upsert_official") as upsert:
+            status = repair.promote("fid", "AZ-LV", 1.5, "2026-09-17", "src_azimut_funds", "https://azimut.eg/funds", {"api_id": 23}, funds, [])
+            self.assertEqual(status, "failed")
+            upsert.assert_not_called()
 
 
 if __name__ == "__main__":

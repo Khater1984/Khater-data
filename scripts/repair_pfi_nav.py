@@ -12,7 +12,9 @@ MAP={'gig money market fund':'GIG Insurance','gig equity fund':'GIG Insurance - 
 def get(path,**params):
  r=requests.get(f"{BASE}/rest/v1/{path}",headers=H,params=params,timeout=30); r.raise_for_status(); return r.json()
 def post(path,payload,prefer='return=minimal'):
- r=requests.post(f"{BASE}/rest/v1/{path}",headers={**H,"Prefer":prefer},json=payload,timeout=30); r.raise_for_status()
+ r=requests.post(f"{BASE}/rest/v1/{path}",headers={**H,"Prefer":prefer},json=payload,timeout=30)
+ if r.status_code>=400:
+  raise requests.HTTPError(f"{r.status_code} {path}: {r.text[:500]}",response=r)
 def main():
  html=requests.get(URL,headers={'User-Agent':'Mozilla/5.0'},timeout=40).text
  text=re.sub(r'\s+',' ',BeautifulSoup(html,'lxml').get_text(' ',strip=True))
@@ -24,9 +26,12 @@ def main():
   nav=float(m.group(1).replace(',','')); dt=datetime.strptime(m.group(2),'%d-%m-%Y').date().isoformat(); f=by.get(canon)
   if not f: continue
   if (existing.get(f['fund_id']) or {}).get('as_of_date','') >= dt: continue
-  rows.append({'run_id':'repair_'+datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S'),'extracted_name':label,'nav':nav,'currency':'EGP','as_of_date':dt,'source_url':URL,'source_id':SID,'fund_id':f['fund_id'],'canonical_name':canon,'match_status':'matched','match_score':1,'verification_status':'verified','raw':{'repair':'pfi_rendered_page'}})
+  rows.append({'run_id':'repair_'+datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S'),'extracted_name':label,'nav':nav,'currency':'EGP','as_of_date':dt,'source_url':URL,'source_id':SID,'fund_id':f['fund_id'],'canonical_name':canon,'match_status':'matched','match_score':1.0,'verification_status':'pending','raw':{'repair':'pfi_rendered_page'}})
  for r in rows:
-  post('nav_staging',r)
-  post('nav_official',{'fund_id':r['fund_id'],'nav':r['nav'],'currency':'EGP','as_of_date':r['as_of_date'],'source_id':SID,'source_url':URL,'verified_at':datetime.now(timezone.utc).isoformat()},'resolution=merge-duplicates,return=minimal')
+  try:
+   post('nav_staging',r)
+   post('nav_official',{'fund_id':r['fund_id'],'nav':r['nav'],'currency':'EGP','as_of_date':r['as_of_date'],'source_id':SID,'source_url':URL,'verified_at':datetime.now(timezone.utc).isoformat()},'resolution=merge-duplicates,return=minimal')
+  except Exception as e:
+   print('PFI promote FAIL', r.get('canonical_name'), getattr(e, 'response', None) and getattr(e.response, 'text', '')[:300] or e)
  print(f'PFI repair: {len(rows)} newer NAVs promoted from official source')
 if __name__=='__main__': main()
