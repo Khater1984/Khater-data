@@ -30,6 +30,20 @@ delete from public.fund_price_history
 where (fund_id='siula_money_market__ni_capital' and source_id='src_aaim_funds')
    or (fund_id='national_bank_of_egypt_fund_iii__x' and source_id='src_hc_si');
 
+insert into public.nav_staging
+  (run_id,fund_id,extracted_name,canonical_name,nav,currency,as_of_date,source_url,source_id,match_status,match_score,verification_status,raw)
+select v.run_id,v.fund_id,v.canonical_name,v.canonical_name,v.nav,v.currency,v.as_of_date,v.source_url,
+       'src_eima_weekly_tw','matched',1.0,'accepted',v.raw_payload
+from (
+  values
+    ('repair_20260920_identity_audit','siula_money_market__ni_capital','Siula Money Market',24.68231::numeric,'EGP','2026-09-03'::date,'https://eima.org.eg/wp-content/uploads/2026/09/performance-03-of-September-2026-Time-Weighted.pdf','{"repair":"cross_manager_contamination","provenance":"eima_weekly_official_industry_report","identity_match":"exact_fund_id","frequency_provenance":"weekly"}'::jsonb),
+    ('repair_20260920_identity_audit','national_bank_of_egypt_fund_iii__x','National Bank of Egypt Fund III',648.55::numeric,'EGP','2026-09-03'::date,'https://eima.org.eg/wp-content/uploads/2026/09/performance-03-of-September-2026-Time-Weighted.pdf','{"repair":"cross_manager_contamination","provenance":"eima_weekly_official_industry_report","identity_match":"exact_fund_id","frequency_provenance":"weekly"}'::jsonb)
+) v(run_id,fund_id,canonical_name,nav,currency,as_of_date,source_url,raw_payload)
+where not exists (
+  select 1 from public.nav_staging s
+  where s.run_id=v.run_id and s.fund_id=v.fund_id
+);
+
 insert into public.nav_official
   (fund_id,nav,currency,as_of_date,source_id,source_url,staging_id,verified_at)
 select *
