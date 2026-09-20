@@ -584,14 +584,14 @@ def main():
     )
     by_name, match = legacy.matcher(funds)
     scrapers = [
-        ("hermes", lambda: legacy.scrape_hermes(match)),
-        ("ci", lambda: legacy.scrape_ci(by_name, match)),
-        ("prime", lambda: legacy.scrape_prime(match)),
+        ("hermes", lambda: legacy.scrape_hermes(by_name)),
+        ("ci", lambda: legacy.scrape_ci(by_name)),
+        ("prime", lambda: legacy.scrape_prime(by_name)),
         ("aaim", lambda: legacy.scrape_aaim(by_name, match)),
         ("beltone", lambda: legacy.scrape_beltone_en(by_name, match)),
         ("azimut", lambda: legacy.scrape_azimut(by_name)),
-        ("ni", lambda: legacy.scrape_ni(by_name, match)),
-        ("hc", lambda: legacy.scrape_hc(match)),
+        ("ni", lambda: legacy.scrape_ni(by_name)),
+        ("hc", lambda: legacy.scrape_hc(by_name)),
         ("pfi", lambda: legacy.scrape_pfi(by_name)),
         ("granite", lambda: legacy.scrape_granite(by_name)),
         ("snduk", lambda: legacy.scrape_snduk(funds)),
