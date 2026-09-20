@@ -20,7 +20,7 @@ from datetime import date, datetime, timezone
 
 import requests
 
-from scripts import ingest_nav_safe as safe_nav
+import ingest_nav_safe as safe_nav
 
 BASE = os.environ["SUPABASE_URL"].rstrip("/")
 KEY = os.environ["SUPABASE_SERVICE_KEY"]
