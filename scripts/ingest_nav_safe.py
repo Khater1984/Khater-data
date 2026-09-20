@@ -221,6 +221,8 @@ def _source_allowed_for_fund(row, fund_meta, source_meta):
         )
     if source_id == "src_eima_weekly_tw":
         return raw.get("identity_match") == "exact_fund_id"
+    if source_id == "src_eima_performance_integrated":
+        return raw.get("identity_match") == "exact_fund_id"
 
     scope = source_meta.get("management_company_scope")
     if scope:
