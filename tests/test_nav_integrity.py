@@ -130,6 +130,7 @@ class NavIntegrityTests(unittest.TestCase):
             rows_extracted=200,
             rows_matched=190,
             fallback_selected=2,
+            fallback_sources={"snduk": 2, "eima_weekly": 0},
             fallback_scan_attempted=True,
             source_errors=[],
             attempted_sources=["hermes", "ci", "snduk"],
@@ -198,6 +199,44 @@ class NavIntegrityTests(unittest.TestCase):
         safe._normalize_source_ids(rows)
         self.assertEqual(rows[0]["source_id"], "src_zaldi_capital")
         self.assertEqual(rows[0]["raw"]["source_id_normalized_from"], "src_zaldi")
+
+
+    @patch.object(safe.legacy, "sb_get")
+    def test_eima_fallback_uses_exact_latest_weekly_identity(self, sb_get):
+        fund = {
+            "fund_id": "fund-1",
+            "canonical_name": "Test Fund",
+            "currency": "EGP",
+        }
+        sb_get.side_effect = [
+            [{"report_date": "2026-09-03"}],
+            [{
+                "fund_id": "fund-1",
+                "report_date": "2026-09-03",
+                "nav_value": 123.45,
+                "currency": "EGP",
+                "source_id": "src_eima_weekly_tw",
+                "raw": {
+                    "pdf_name": "Test Fund",
+                    "source_url": "https://eima.org.eg/example.pdf",
+                },
+            }],
+        ]
+        rows = safe._latest_eima_fallback_rows([fund])
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["fund_id"], "fund-1")
+        self.assertEqual(rows[0]["nav"], 123.45)
+        self.assertEqual(rows[0]["as_of_date"], "2026-09-03")
+        self.assertEqual(rows[0]["source_id"], "src_eima_weekly_tw")
+        self.assertEqual(rows[0]["raw"]["identity_match"], "exact_fund_id")
+        self.assertEqual(rows[0]["raw"]["frequency_provenance"], "weekly")
+
+
+    def test_fallback_priority_prefers_snduk_over_eima(self):
+        snduk = [{"fund_id": "fund-1", "as_of_date": "2026-09-17", "source_id": "src_snduk"}]
+        eima = [{"fund_id": "fund-1", "as_of_date": "2026-09-03", "source_id": "src_eima_weekly_tw"}]
+        selected = safe._select_fallbacks([], snduk, eima)
+        self.assertEqual(selected, snduk)
 
     def test_snduk_fallback_is_selected_only_without_current_manager_candidate(self):
         snduk = [{"fund_id": "fund-1", "as_of_date": "2026-09-17", "source_id": "src_snduk"}]
