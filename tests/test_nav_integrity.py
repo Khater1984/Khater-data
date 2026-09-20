@@ -120,6 +120,7 @@ class NavIntegrityTests(unittest.TestCase):
             "fund_id": "fund-1",
             "alias_name": "Test Fund Provider Label",
             "normalized_alias": "test fund provider label",
+            "alias_source": "snduk:verified_identity:2026-09-19",
             "match_confidence": 1.0,
         }]
         resolved, score = safe._explicit_snduk_alias("Test Fund Provider Label", [fund], aliases)
