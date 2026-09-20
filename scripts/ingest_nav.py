@@ -107,21 +107,21 @@ BELTONE_ALIAS = {
 
 AAIM_ALIAS = {
     "shield equity": "Arab African International Bank (Shield)",
-    "juman money market": "Suez Canal Bank (Juman)",
-    "iskan money market": "Housing & Development Bank (Iskan)",
-    "diamond money market": "CIB Fund II (Diamond)",
+    "juman money market": "Arab African International Bank (Juman)",
+    "iskan money market": "Iskan Insurance",
+    "diamond money market": "Diamond",
     "gozoor fixed income egp": "AAIB (Gozoor)",
     "guard capital protection": "Arab African International Bank (Guard)",
     "afaaq fixed income egp": "Afaaq",
     "istsmar w aman fixed income egp": "Misr Insurance (Istithmar and Aman)",
-    "misr takaful sharia compliant money market": "Misr Takaful Fund",
-    "bareeq fixed income egp": "Misr Life Insurance (Bareeq)",
-    "el fanar money market": "El Fanar",
+    "misr takaful sharia compliant money market": "Misr Takaful",
+    "bareeq fixed income egp": "Bareeq",
+    "el fanar money market": "Fanar",
     "al tameer equity": "Housing & Development Bank ( AL Tameer)",
     "kenz shariah sharia compliant equity": "Kenoz EGX33 Shariah Index Tracker – Shariah",
-    "sarwaty money market": "Sarwaty",
+    "sarwaty money market": "Sarwaty*",
     "gosour equity": "Gosour",
-    "bond fixed income usd": "Bond$",
+    "bond fixed income usd": "Bonds Fixed Income USD Fund",
 }
 
 PFI_ALIAS = {
@@ -354,13 +354,21 @@ def scrape_aaim(by_name, match):
     for m in pat.finditer(text):
         name, nav, cur, dt = m.group(1).strip(), float(m.group(2)), m.group(3).upper(), parse_date(m.group(4))
         name = re.sub(r"^(Funds|الصناديق)\s+", "", name).strip()
-        alias = AAIM_ALIAS.get(norm(name))
-        f = by_name.get(alias) if alias else None
-        sc = 1.0 if f else 0
+        normalized_name = norm(name)
+        # AAIM's text may include page boilerplate before a fund label.
+        # Resolve only against registered AAIM provider labels, longest-first.
+        alias = next(
+            (key for key in sorted(AAIM_ALIAS, key=len, reverse=True)
+             if normalized_name.endswith(norm(key))),
+            None,
+        )
+        f = by_name.get(AAIM_ALIAS[alias]) if alias else None
         if not f:
-            f, sc = match(name)
+            canonical = next((k for k in by_name if norm(k) == normalized_name), None)
+            f = by_name.get(canonical) if canonical else None
         if not f:
             continue
+        sc = 1.0
         r = row(name, nav, dt, url, "src_aaim_funds", f, sc, currency=cur)
         out.append(r)
     return out
