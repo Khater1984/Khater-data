@@ -77,6 +77,10 @@ def main():
 
     run_id = latest_ingest_run(staging)
     current_rows = [r for r in staging if r.get("run_id") == run_id]
+    current_run_funds = {
+        r["fund_id"] for r in current_rows
+        if r.get("fund_id") and r.get("match_status") == "matched"
+    }
     current_by_fund = {}
     for r in current_rows:
         if r.get("fund_id") and r.get("match_status") == "matched":
@@ -103,7 +107,12 @@ def main():
         off_future = future_status(d, today)
         candidate_future = future_status(candidate_date, today)
 
-        if host not in SUPPORTED:
+        if not candidates:
+            status = "FAIL_NOT_ATTEMPTED"
+            hard_failures.append(
+                f"{f['canonical_name']} [{host or 'no-host'}] was not attempted in current run"
+            )
+        elif host not in SUPPORTED:
             status = "UNSUPPORTED_HOST" if nav is None else "OK_UNSUPPORTED_HOST"
         elif nav is None:
             status = "FAIL_NO_NAV"
@@ -157,7 +166,13 @@ def main():
         "future_date_policy": {"max_days": FUTURE_MAX_DAYS, "meaning": "source-published bounded future date"},
         "current_run_id": run_id,
         "current_run_rows": len(current_rows),
+        "current_run_unique_funds": len(current_run_funds),
         "funds": len(funds),
+        "attempt_coverage": {
+            "attempted_unique_funds": len(current_run_funds),
+            "funds": len(funds),
+            "not_attempted": len(funds) - len(current_run_funds),
+        },
         "counts": counts,
         "rows": rows,
     }
