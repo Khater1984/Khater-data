@@ -776,6 +776,12 @@ def main():
     if not BASE or not KEY:
         sys.exit("Missing SUPABASE_URL / SUPABASE_SERVICE_KEY")
     funds = load_funds()
+    aliases = sb_get(
+        "fund_name_aliases",
+        select="fund_id,alias_name,alias_source,normalized_alias,match_confidence",
+        limit="5000",
+    )
+    set_provider_alias_registry(aliases, funds)
     by_name, match = matcher(funds)
     scrapers = [
         ("hermes", lambda: scrape_hermes(by_name)),
