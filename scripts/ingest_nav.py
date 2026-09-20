@@ -55,6 +55,41 @@ def norm(s):
     return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9]+", " ", (s or "").lower())).strip()
 
 
+
+PROVIDER_ALIAS_REGISTRY = {}
+
+
+def set_provider_alias_registry(aliases, funds):
+    """Load verified provider aliases from the database identity registry."""
+    by_id = {f.get("fund_id"): f for f in funds}
+    registry = {}
+    for alias in aliases or []:
+        source = str(alias.get("alias_source") or "")
+        match = re.match(r"^([a-z0-9_]+):verified_identity:", source)
+        if not match:
+            continue
+        if float(alias.get("match_confidence") or 0) < 1.0:
+            continue
+        fund = by_id.get(alias.get("fund_id"))
+        alias_name = alias.get("alias_name")
+        if not fund or not alias_name:
+            continue
+        provider = match.group(1)
+        registry.setdefault(provider, {})[norm(alias_name)] = fund
+    PROVIDER_ALIAS_REGISTRY.clear()
+    PROVIDER_ALIAS_REGISTRY.update(registry)
+
+
+def provider_alias_match(name, provider):
+    """Resolve exact provider labels from the centralized DB registry."""
+    normalized = norm(name)
+    registry = PROVIDER_ALIAS_REGISTRY.get(provider, {})
+    for alias_norm in sorted(registry, key=len, reverse=True):
+        if normalized == alias_norm or normalized.endswith(" " + alias_norm):
+            return registry[alias_norm], 1.0
+    return None, 0.0
+
+
 def parse_num(s):
     s = re.sub(r"[^\d.\-]", "", (s or "").replace(",", ""))
     try:
@@ -234,33 +269,6 @@ def exact_manager_match(extracted, by_name, manager):
     return None, 0.0
 
 
-PRIME_ALIAS = {
-    "konooz": "Ebank Fund III (Konooz)",
-    "tharaa": "Egyptian Gulf Bank (Tharaa)",
-    "aman money market fund": "Aman Micro Finance",
-    "prime nmw": "Prime NMOW",
-}
-
-NI_ALIAS = {
-    "siula money market fund": "Siula Money Market",
-    "15 30 fixed income fund": "NI Capital 15/30",
-    "makaseb 1st tranche": "GIG Makaseb Fund First Tranche",
-    "makaseb 2nd tranche": "GIG Makaseb Fund Second Tranche",
-    "sahmy fund": "NI Capital (Sahmy Fund)",
-    "sahmy 70 fund": "NI Capital EGX 70",
-    "education for life": "The charitable education Fund",
-}
-
-HC_ALIAS = {
-    "suez canal bank fund no 1": "Suez Canal Bank Fund I",
-    "agricultural bank of egypt fund no 2 al hasad al yaumy": "Agricultural Bank of Egypt (Al Hasad Al Yaumy)",
-    "qnb tadawol": "QNB AlAHLI (Tadawol)",
-    "misr al mostakbal company investment fund": "Misr Al Mostakbal Fund",
-    "credit agricole bank egypt balanced fund no 4": "Credit Agricole Egypt Fund IV (Al Thiqa)",
-    "fab misr al awal daily cumulative return fund for liquidity": "Fab Misr (Al Awal)",
-    "fab misr etm nan capital preservation fund": "FAB Misr Fund (Etm'nan)",
-}
-
 def matcher(funds):
     by_name = {f["canonical_name"]: f for f in funds}
 
@@ -384,13 +392,7 @@ def scrape_prime(by_name):
                     break
             if name and nav:
                 normalized_name = norm(name).lstrip("*").strip()
-                alias = next(
-                    (k for k in sorted(PRIME_ALIAS, key=len, reverse=True)
-                     if normalized_name.endswith(norm(k))),
-                    None,
-                )
-                f = by_name.get(PRIME_ALIAS[alias]) if alias else None
-                sc = 1.0 if f else 0.0
+                f, sc = provider_alias_match(normalized_name, "prime")
                 if not f:
                     f, sc = exact_manager_match(name, by_name, "Prime Investments")
                 if not f:
@@ -561,23 +563,7 @@ def scrape_ni(by_name, match=None):
     for m in pat.finditer(text):
         name, dt, nav = m.group(1).strip(), parse_date(m.group(2)), float(m.group(3))
         normalized_name = norm(name)
-        alias_key = next(
-            (k for k in sorted(mapping, key=len, reverse=True)
-             if normalized_name.endswith(norm(k))),
-            None,
-        )
-        canonical = mapping.get(alias_key) if alias_key else None
-        f = by_name.get(canonical) if canonical else None
-        sc = 1.0 if f else 0.0
-        if not f:
-            alias_key = next(
-                (k for k in sorted(NI_ALIAS, key=len, reverse=True)
-                 if normalized_name.endswith(norm(k))),
-                None,
-            )
-            canonical = NI_ALIAS.get(alias_key) if alias_key else None
-            f = by_name.get(canonical) if canonical else None
-            sc = 1.0 if f else 0.0
+        f, sc = provider_alias_match(normalized_name, "ni")
         if not f:
             f, sc = exact_manager_match(name, by_name, "NI Capital")
         if not f:
@@ -594,9 +580,7 @@ def scrape_hc(by_name):
     for name, nav, asof in pat.findall(text):
         if "YOUR TRUSTED" in name or len(name) > 80:
             continue
-        alias = HC_ALIAS.get(norm(name.strip()))
-        f = by_name.get(alias) if alias else None
-        sc = 1.0 if f else 0.0
+        f, sc = provider_alias_match(name.strip(), "hc")
         if not f:
             f, sc = exact_manager_match(name, by_name, "HC Securities & Investment")
         if not f:
