@@ -26,7 +26,7 @@ H = {
     "Content-Type": "application/json",
 }
 UA = {"User-Agent": "Mozilla/5.0 (compatible; KhaterNAV/1.0; +https://github.com/Khater1984/Khater-data)"}
-RUN_ID = "run_" + datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+RUN_ID = os.getenv("NAV_RUN_ID") or ("run_" + datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S"))
 
 
 def sb_get(path, **params):
