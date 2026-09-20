@@ -581,12 +581,12 @@ class NavIntegrityTests(unittest.TestCase):
                     "fund_id": fund_id, "nav": 1.66, "as_of_date": None,
                     "source_id": "src_snduk", "source_url": "https://snduk.com/x",
                 }])
-                    sb_post.assert_not_called()
-                    safe.safe_upsert_official([{
-                        "fund_id": fund_id, "nav": 1.66, "as_of_date": "2026-09-16",
-                        "source_id": "src_snduk", "source_url": "https://snduk.com/x",
-                    }])
-                    sb_post.assert_not_called()
+                sb_post.assert_not_called()
+                safe.safe_upsert_official([{
+                    "fund_id": fund_id, "nav": 1.66, "as_of_date": "2026-09-16",
+                    "source_id": "src_snduk", "source_url": "https://snduk.com/x",
+                }])
+                sb_post.assert_not_called()
 
     def test_today_label_is_never_used_as_as_of_date(self):
         row = safe.safe_row(
