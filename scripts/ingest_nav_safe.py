@@ -168,22 +168,6 @@ def _quarantine_outlier(row, current, move_pct):
         )
 
 
-SOURCE_MANAGER_SCOPE = {
-    "src_efg_hermes_funds": "Hermes Portfolio and Fund Management",
-    "src_cicapital_fundprice": "CI Asset Management",
-    "src_prime_am": "Prime Investments",
-    "src_nicapital_am": "NI Capital",
-    "src_hc_si": "HC Securities & Investment",
-    "src_pfi_funds": "PFI Asset Management",
-    "src_afim_investment": "Al Ahly Financial Investments Management",
-    "src_aaim_funds": "Arab African Investment Management",
-    "src_beltone_funds": "Beltone Asset Management",
-    "src_azimut_funds": "Azimut Egypt Asset Management",
-    "src_granite_eg": "Granite Fund Management",
-    "src_zaldi_capital": "Zaldi Investments",
-}
-
-
 def _normalize_manager(value):
     return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
@@ -202,6 +186,18 @@ def _fund_registry():
     }
 
 
+def _source_manager_scope():
+    return {
+        x["source_id"]: x.get("management_company_scope")
+        for x in legacy.sb_get(
+            "sources",
+            select="source_id,management_company_scope",
+            limit="1000",
+        )
+        if x.get("management_company_scope")
+    }
+
+
 def _is_usable_current_candidate(row):
     asof = row.get("as_of_date")
     if not asof:
@@ -215,6 +211,7 @@ def safe_upsert_official(matched_rows):
     now = datetime.now(timezone.utc).isoformat()
     existing = _existing_official()
     registry = _fund_registry()
+    source_manager_scope = _source_manager_scope()
     best = {}
     skipped_no_date = 0
     skipped_future = 0
@@ -247,7 +244,7 @@ def safe_upsert_official(matched_rows):
             continue
 
         source_id = row.get("source_id")
-        expected_manager = SOURCE_MANAGER_SCOPE.get(source_id)
+        expected_manager = source_manager_scope.get(source_id)
         actual_manager = fund_meta.get("management_company")
         if expected_manager and _normalize_manager(actual_manager) != _normalize_manager(expected_manager):
             skipped_manager += 1
