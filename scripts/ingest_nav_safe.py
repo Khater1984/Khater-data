@@ -707,7 +707,7 @@ def main():
                 })
                 print(f"{name} ERROR {type(exc).__name__}: {exc}")
 
-        snduk_fallback = _snduk_fallback_rows(funds, match, aliases)
+        snduk_fallback = _snduk_fallback_rows(funds, None, aliases)
         eima_fallback = _latest_eima_fallback_rows(funds)
         fallback_scan_attempted = True
         selected = _select_fallbacks(all_rows, snduk_fallback, eima_fallback)
