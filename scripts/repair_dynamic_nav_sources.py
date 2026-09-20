@@ -20,11 +20,13 @@ from datetime import date, datetime, timezone
 
 import requests
 
+from scripts import ingest_nav_safe as safe_nav
+
 BASE = os.environ["SUPABASE_URL"].rstrip("/")
 KEY = os.environ["SUPABASE_SERVICE_KEY"]
 H = {"apikey": KEY, "Authorization": f"Bearer {KEY}", "Content-Type": "application/json"}
 UA = {"User-Agent": "Mozilla/5.0 (compatible; KhaterNAV/1.0; +https://github.com/Khater1984/Khater-data)"}
-RUN_ID = "repair_dynamic_" + datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+RUN_ID = os.getenv("NAV_RUN_ID") or ("repair_dynamic_" + datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S"))
 TODAY = date.today()
 FUTURE_MAX_DAYS = 7
 
@@ -42,22 +44,10 @@ def get(path, **params):
     return r.json()
 
 
-def post(path, payload):
-    r = requests.post(f"{BASE}/rest/v1/{path}", headers={**H, "Prefer": "return=minimal"}, json=payload, timeout=30)
+def post(path, payload, prefer="return=minimal"):
+    r = requests.post(f"{BASE}/rest/v1/{path}", headers={**H, "Prefer": prefer}, json=payload, timeout=30)
     if r.status_code >= 400:
         raise requests.HTTPError(f"{r.status_code} {path}: {r.text[:500]}", response=r)
-    return r
-
-
-def upsert_official(payload):
-    r = requests.post(
-        f"{BASE}/rest/v1/nav_official",
-        headers={**H, "Prefer": "resolution=merge-duplicates,return=minimal"},
-        json=payload,
-        timeout=30,
-    )
-    if r.status_code >= 400:
-        raise requests.HTTPError(f"{r.status_code} nav_official: {r.text[:500]}", response=r)
     return r
 
 
@@ -109,19 +99,20 @@ def promote(fid, name, nav, asof, source_id, source_url, raw, funds, official, c
         return "rejected_older"
 
     canonical = next((x["canonical_name"] for x in funds if x["fund_id"] == fid), name)
-    staging, _, _ = staging_row(fid, name, nav, asof, source_id, source_url, canonical, raw, currency)
+    staging, _, _ = staging_row(
+        fid, name, nav, asof, source_id, source_url, canonical, raw, currency
+    )
     try:
-        post("nav_staging", staging)
-        upsert_official({
-            "fund_id": fid, "nav": float(nav), "currency": currency or "EGP", "as_of_date": asof,
-            "source_id": source_id, "source_url": source_url,
-            "verified_at": datetime.now(timezone.utc).isoformat(),
-        })
+        staged_response = post("nav_staging", staging, prefer="return=representation")
+        staged_response.raise_for_status()
+        staged = staged_response.json()
+        if isinstance(staged, list) and staged:
+            staging["id"] = staged[0].get("id")
+        ok, n = safe_nav.safe_upsert_official([staging])
+        return "promoted" if ok and n else "failed"
     except requests.HTTPError as exc:
         print(f"promote FAIL {canonical} as_of={asof} nav={nav}: {exc}")
         return "failed"
-    return "promoted"
-
 
 def repair_azimut(funds, official):
     url = "https://app.azimut.eg/api/fund/list?size=100&web=true"
