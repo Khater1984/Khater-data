@@ -232,6 +232,8 @@ def _explicit_snduk_alias(name, funds, aliases=None):
     for alias in aliases or []:
         if alias.get("alias_name") is None or alias.get("fund_id") not in by_id:
             continue
+        if not str(alias.get("alias_source") or "").startswith("snduk:verified_identity:"):
+            continue
         alias_norm = alias.get("normalized_alias")
         if alias_norm is None:
             alias_norm = re.sub(r"\s+", " ", str(alias.get("alias_name") or "").lower()).strip()
