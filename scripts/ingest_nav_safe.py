@@ -617,13 +617,13 @@ def main():
         limit="5000",
     )
     legacy.set_provider_alias_registry(aliases, funds)
-    by_name, match = legacy.matcher(funds)
+    by_name = {f["canonical_name"]: f for f in funds}
     scrapers = [
         ("hermes", lambda: legacy.scrape_hermes(by_name)),
         ("ci", lambda: legacy.scrape_ci(by_name)),
         ("prime", lambda: legacy.scrape_prime(by_name)),
-        ("aaim", lambda: legacy.scrape_aaim(by_name, match)),
-        ("beltone", lambda: legacy.scrape_beltone_en(by_name, match)),
+        ("aaim", lambda: legacy.scrape_aaim(by_name, None)),
+        ("beltone", lambda: legacy.scrape_beltone_en(by_name, None)),
         ("azimut", lambda: legacy.scrape_azimut(by_name)),
         ("ni", lambda: legacy.scrape_ni(by_name)),
         ("hc", lambda: legacy.scrape_hc(by_name)),
