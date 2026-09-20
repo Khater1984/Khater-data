@@ -51,6 +51,11 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python scripts/repair_nav_integrity.py
+      - name: NAV publication contract gate
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scripts/validate_nav_contract.py
       - name: Macro reference ingest
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
