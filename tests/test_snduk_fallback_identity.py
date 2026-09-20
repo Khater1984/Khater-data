@@ -79,13 +79,13 @@ class SndukFallbackIdentityTests(unittest.TestCase):
         }]
         aliases = [{
             "fund_id": "misr_money_market_euro__ci_asset_management",
-            "alias_name": "Banque Misr Mutual Fund in Euro",
-            "normalized_alias": "banque misr mutual fund in euro",
+            "alias_name": "Banque Misr Mutual Fund in Euro ( day by day Euro )",
+            "normalized_alias": "banque misr mutual fund in euro day by day euro",
             "alias_source": "snduk:verified_identity:2026-09-19",
             "match_confidence": 1.0,
         }]
         fund, score = safe._explicit_snduk_alias(
-            "Banque Misr Mutual Fund in Euro", funds, aliases
+            "Banque Misr Mutual Fund in Euro ( day by day Euro )", funds, aliases
         )
         self.assertIsNotNone(fund)
         self.assertEqual(score, 1.0)
