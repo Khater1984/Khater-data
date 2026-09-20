@@ -33,6 +33,12 @@ jobs:
         run: |
           python -c "import os,requests; u=os.environ['SUPABASE_URL'].rstrip('/'); k=os.environ['SUPABASE_SERVICE_KEY']; r=requests.get(u+'/rest/v1/funds',headers={'apikey':k,'Authorization':'Bearer '+k},params={'select':'fund_id','limit':'1'},timeout=20); print('Supabase funds HTTP:',r.status_code); r.raise_for_status()"
           python -c "import scripts.ingest_nav_safe as s; print('safe ingest import: OK')"
+      - name: NAV publication contract gate
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scripts/validate_nav_contract.py
+
       - name: Safe live NAV ingest
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_live_ingest == true }}
         env:
