@@ -7,6 +7,7 @@ os.environ.setdefault("SUPABASE_URL", "https://example.supabase.co")
 os.environ.setdefault("SUPABASE_SERVICE_KEY", "test-key")
 
 from scripts import ingest_nav_safe as safe
+from scripts import ingest_nav as legacy_ingest
 
 
 class NavIntegrityTests(unittest.TestCase):
@@ -261,7 +262,6 @@ class NavIntegrityTests(unittest.TestCase):
 
     @patch.object(legacy_ingest, "fetch")
     def test_alpha_odin_parser_requires_exact_identity_and_source_date(self, fetch):
-        from scripts import ingest_nav as legacy_ingest
         funds = [{
             "fund_id": "odin4",
             "canonical_name": "Odin 4",
