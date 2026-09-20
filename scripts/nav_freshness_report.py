@@ -48,6 +48,17 @@ def classify_freshness(nav, as_of_date, today=None):
     return "STALE"
 
 
+
+def classify_source(source_id):
+    if source_id == "src_snduk":
+        return "third_party_snduk"
+    if source_id == "src_eima_weekly_tw":
+        return "official_industry_weekly"
+    if source_id and source_id.startswith("src_"):
+        return "manager_or_registered_source"
+    return "unknown"
+
+
 def main():
     funds = get(
         "funds",
@@ -77,16 +88,25 @@ def main():
             except ValueError:
                 future_days = None
 
+        age_days = None
+        if d:
+            try:
+                age_days = (today - date.fromisoformat(d)).days
+            except ValueError:
+                age_days = None
+
         rows.append({
             **f,
             "host": host(f.get("price_update_url") or ""),
             "nav": n.get("nav"),
             "as_of_date": d,
             "source_id": n.get("source_id"),
+            "source_role": classify_source(n.get("source_id")),
             "verified_at": n.get("verified_at"),
             "updated_at": n.get("updated_at"),
             "freshness_status": status,
             "future_days": future_days,
+            "age_days": age_days,
         })
 
     out = {
