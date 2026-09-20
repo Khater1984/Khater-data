@@ -16,6 +16,8 @@ jobs:
   ingest:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      NAV_RUN_ID: run_${{ github.run_id }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
