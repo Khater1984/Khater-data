@@ -168,12 +168,35 @@ def _quarantine_outlier(row, current, move_pct):
         )
 
 
-def _fund_currencies():
+SOURCE_MANAGER_SCOPE = {
+    "src_efg_hermes_funds": "Hermes Portfolio and Fund Management",
+    "src_cicapital_fundprice": "CI Asset Management",
+    "src_prime_am": "Prime Investments",
+    "src_nicapital_am": "NI Capital",
+    "src_hc_si": "HC Securities & Investment",
+    "src_pfi_funds": "PFI Asset Management",
+    "src_afim_investment": "Al Ahly Financial Investments Management",
+    "src_aaim_funds": "Arab African Investment Management",
+    "src_beltone_funds": "Beltone Asset Management",
+    "src_azimut_funds": "Azimut Egypt Asset Management",
+    "src_granite_eg": "Granite Fund Management",
+    "src_zaldi_capital": "Zaldi Investments",
+}
+
+
+def _normalize_manager(value):
+    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
+
+
+def _fund_registry():
     return {
-        x["fund_id"]: _normalize_currency(x.get("currency"))
+        x["fund_id"]: {
+            "currency": _normalize_currency(x.get("currency")),
+            "management_company": x.get("management_company"),
+        }
         for x in legacy.sb_get(
             "funds",
-            select="fund_id,currency",
+            select="fund_id,currency,management_company",
             limit="1000",
         )
     }
@@ -191,11 +214,12 @@ def safe_upsert_official(matched_rows):
     """Promote only dated candidates and never move official history backwards."""
     now = datetime.now(timezone.utc).isoformat()
     existing = _existing_official()
-    currencies = _fund_currencies()
+    registry = _fund_registry()
     best = {}
     skipped_no_date = 0
     skipped_future = 0
     skipped_currency = 0
+    skipped_manager = 0
 
     for row in matched_rows:
         fid = row.get("fund_id")
@@ -210,7 +234,8 @@ def safe_upsert_official(matched_rows):
             skipped_future += 1
             continue
 
-        expected_currency = currencies.get(fid)
+        fund_meta = registry.get(fid) or {}
+        expected_currency = fund_meta.get("currency")
         incoming_currency = _normalize_currency(row.get("currency"))
         if not expected_currency or not incoming_currency or expected_currency != incoming_currency:
             skipped_currency += 1
@@ -218,6 +243,18 @@ def safe_upsert_official(matched_rows):
                 row,
                 f"Automatic promotion blocked: currency mismatch "
                 f"(expected={expected_currency}, incoming={incoming_currency}).",
+            )
+            continue
+
+        source_id = row.get("source_id")
+        expected_manager = SOURCE_MANAGER_SCOPE.get(source_id)
+        actual_manager = fund_meta.get("management_company")
+        if expected_manager and _normalize_manager(actual_manager) != _normalize_manager(expected_manager):
+            skipped_manager += 1
+            _quarantine_review(
+                row,
+                f"Automatic promotion blocked: source-manager mismatch "
+                f"(source={source_id}, expected={expected_manager}, actual={actual_manager}).",
             )
             continue
 
@@ -287,8 +324,8 @@ def safe_upsert_official(matched_rows):
         "official promotion: "
         f"upserted={ok} candidates={len(payload)} "
         f"skipped_no_date={skipped_no_date} skipped_future={skipped_future} "
-        f"skipped_currency={skipped_currency} skipped_older={skipped_older} "
-        f"skipped_outliers={skipped_outliers} failed={failed}"
+        f"skipped_currency={skipped_currency} skipped_manager={skipped_manager} "
+        f"skipped_older={skipped_older} skipped_outliers={skipped_outliers} failed={failed}"
     )
     return ok, len(payload)
 
