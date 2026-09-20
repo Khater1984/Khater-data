@@ -86,6 +86,17 @@ class NavIntegrityTests(unittest.TestCase):
         manager = [{"fund_id": "fund-1", "as_of_date": "2026-09-17", "source_id": "src_manager"}]
         self.assertEqual(safe._select_fallbacks(manager, snduk), [])
 
+
+    def test_freshness_classifies_bounded_future_as_current(self):
+        future = (safe.TODAY + __import__("datetime").timedelta(days=3)).isoformat()
+        from scripts.nav_freshness_report import classify_freshness
+        self.assertEqual(classify_freshness(10.0, future, safe.TODAY), "CURRENT_BOUNDED_FUTURE")
+
+    def test_freshness_classifies_future_outside_window_separately(self):
+        future = (safe.TODAY + __import__("datetime").timedelta(days=8)).isoformat()
+        from scripts.nav_freshness_report import classify_freshness
+        self.assertEqual(classify_freshness(10.0, future, safe.TODAY), "FUTURE_OUTSIDE_WINDOW")
+
     def test_granite_undated_nav_is_not_promoted(self):
         fund = {"fund_id": "granite_first_fund__granite_fund_management", "canonical_name": "Granite First Fund"}
         row = safe.safe_row(
