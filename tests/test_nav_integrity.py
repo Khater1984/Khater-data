@@ -128,6 +128,18 @@ class NavIntegrityTests(unittest.TestCase):
         unresolved, unresolved_score = safe._explicit_snduk_alias("Test Fund", [fund], aliases)
         self.assertIsNone(unresolved)
         self.assertEqual(unresolved_score, 0.0)
+        wrong_provider = [{
+            "fund_id": "fund-1",
+            "alias_name": "Test Fund Provider Label",
+            "normalized_alias": "test fund provider label",
+            "alias_source": "other_provider:verified_identity:2026-09-19",
+            "match_confidence": 1.0,
+        }]
+        unresolved, unresolved_score = safe._explicit_snduk_alias(
+            "Test Fund Provider Label", [fund], wrong_provider
+        )
+        self.assertIsNone(unresolved)
+        self.assertEqual(unresolved_score, 0.0)
 
     def test_snduk_fallback_preserves_snduk_provenance(self):
         fund = {"fund_id": "granite_first_fund__granite_fund_management", "canonical_name": "Granite First Fund"}
