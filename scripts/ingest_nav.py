@@ -107,56 +107,7 @@ def parse_date(s):
     return None
 
 
-BELTONE_ALIAS = {
-    "mid bank fund 2": "MID Bank Fund II",
-    "mid bank fund 1": "MID Bank Fund I",
-    "abc mazaya": "Bank ABC Fund (Mazaya)",
-    "banque du caire ii el kahera el yawmi": "Banque Du Caire Fund II",
-    "arab bank yomaty": "Arab Bank Fund (Yomaty)",
-    "saib money market fund": "Saib (Yaumy Fund)",
-    "misr insurance fund": "Misr Insurance Fund",
-    "attijariwafa bank money market fund": "Attijariwafa BankFund",
-    "beltone 3rd tranche b yawmy fund": "B-Youmy",
-    "adib islamic": "ADIB Egypt Shari'a Compliant (Al Nahrda Fund)",
-    "egx 30 etf": "EGX30 Index ETF- EGX30 Index ETF",
-    "beltone egx33 wafra shariah tracker": "Beltone EGX33 Shariah Index Tracker – Wafra",
-    "beltone egx100 tracker": "Beltone EGX100 Index Tracker – Meya Meya",
-    "beltone financial fund": "Beltone Financial Fund",
-    "beltone real estate fund": "Beltone Real Estate Fund",
-    "beltone industrial fund": "Beltone Industrial Fund",
-    "beltone consumer fund": "Beltone Consumer Fund",
-    "menthum grow fund": "Menthum Grow EGX 30 Capped",
-    "egx35 lv": "Beltone EGX 35 Tracker",
-    "beltone egx70 tracker": "B70- EGX 70 Tracker",
-    "beltone evolve gold fund sabayek": "Sabayek",
-    "beltone evolve silver fund fadda": "Beltone Fada",
-    "b alpha": "B-Alpha",
-    "suez canal bank ii agial": "Suez Canal Bank Fund II (Al Agial)",
-    "qnba tawazon": "QNB Al Ahli (Tawazon)",
-    "egyptian sport fund": "Sports Fund",
-    "beltone fixed income usd fund": "Beltone Fixed Income USD Fund",
-    "beltone 2nd tranche b cobonat fund": "B-Couponat",
-    "beltone fixed income fund b secure": "B-Secure",
-}
 
-AAIM_ALIAS = {
-    "shield equity": "Arab African International Bank (Shield)",
-    "juman money market": "Arab African International Bank (Juman)",
-    "iskan money market": "Iskan Insurance",
-    "diamond money market": "Diamond",
-    "gozoor fixed income egp": "AAIB (Gozoor)",
-    "guard capital protection": "Arab African International Bank (Guard)",
-    "afaaq fixed income egp": "Afaaq",
-    "istsmar w aman fixed income egp": "Misr Insurance (Istithmar and Aman)",
-    "misr takaful sharia compliant money market": "Misr Takaful",
-    "bareeq fixed income egp": "Bareeq",
-    "el fanar money market": "Fanar",
-    "al tameer equity": "Housing & Development Bank ( AL Tameer)",
-    "kenz shariah sharia compliant equity": "Kenoz EGX33 Shariah Index Tracker – Shariah",
-    "sarwaty money market": "Sarwaty*",
-    "gosour equity": "Gosour",
-    "bond fixed income usd": "Bonds Fixed Income USD Fund",
-}
 
 PFI_ALIAS = {
     "gig money market": "GIG Insurance",
@@ -368,7 +319,7 @@ def scrape_prime(by_name):
     return out
 
 
-def scrape_aaim(by_name, match):
+def scrape_aaim(by_name, match=None):
     url = "https://aaim.com.eg/en/what-we-offer/funds"
     text = re.sub(r"\s+", " ", BeautifulSoup(fetch(url), "lxml").get_text(" ", strip=True))
     pat = re.compile(r"(.+?)\s+(\d+\.\d+)\s+(EGP|USD)\s+Last update\s+(\d{1,2} \w{3},? \d{4})", re.I)
@@ -376,21 +327,13 @@ def scrape_aaim(by_name, match):
     for m in pat.finditer(text):
         name, nav, cur, dt = m.group(1).strip(), float(m.group(2)), m.group(3).upper(), parse_date(m.group(4))
         name = re.sub(r"^(Funds|الصناديق)\s+", "", name).strip()
-        normalized_name = norm(name)
-        # AAIM's text may include page boilerplate before a fund label.
-        # Resolve only against registered AAIM provider labels, longest-first.
-        alias = next(
-            (key for key in sorted(AAIM_ALIAS, key=len, reverse=True)
-             if normalized_name.endswith(norm(key))),
-            None,
-        )
-        f = by_name.get(AAIM_ALIAS[alias]) if alias else None
+        # AAIM's page can prefix the provider label with boilerplate.
+        # Resolve only through the centralized verified provider registry.
+        f, sc = provider_alias_match(name, "aaim")
         if not f:
-            canonical = next((k for k in by_name if norm(k) == normalized_name), None)
-            f = by_name.get(canonical) if canonical else None
+            f, sc = exact_manager_match(name, by_name, "Arab African Investment Management")
         if not f:
             continue
-        sc = 1.0
         r = row(name, nav, dt, url, "src_aaim_funds", f, sc, currency=cur)
         out.append(r)
     return out
@@ -422,14 +365,13 @@ def scrape_beltone_en(by_name, match=None):
     seen = {}
     for item in parse_beltone_listings(text):
         name, nav, asof = item["name"], item["nav"], item["as_of_date"]
-        alias = BELTONE_ALIAS.get(norm(name))
-        fund = by_name.get(alias) if alias else None
-        # Beltone labels share "Beltone … Fund". A 0.84 fuzzy match maps
-        # Gems Equity (not in the catalog) onto Consumer. Alias-only.
+        fund, score = provider_alias_match(name, "beltone")
+        if not fund:
+            fund, score = exact_manager_match(name, by_name, "Beltone Asset Management")
         if not fund:
             unmatched.append(f"{name}@{asof}={nav}")
             continue
-        rec = row(name, nav, asof, url, "src_beltone_funds", fund, 1.0)
+        rec = row(name, nav, asof, url, "src_beltone_funds", fund, score)
         fid = fund["fund_id"]
         prev = seen.get(fid)
         if prev and prev["match_score"] >= rec["match_score"]:
