@@ -115,12 +115,13 @@ class NavIntegrityTests(unittest.TestCase):
     @patch.object(safe.legacy, "sb_post")
     def test_run_observability_persists_shared_run_metrics(self, sb_post, patch_request):
         sb_post.return_value = SimpleNamespace(status_code=201, text="")
-        safe._record_run_start(14)
+        safe._record_run_start(14, 208)
         sb_post.assert_called_once()
         start_payload = sb_post.call_args.args[1][0]
         self.assertEqual(start_payload["run_id"], safe.legacy.RUN_ID)
         self.assertEqual(start_payload["status"], "running")
         self.assertEqual(start_payload["sources_attempted"], 14)
+        self.assertEqual(start_payload["meta"]["target_fund_count"], 208)
 
         patch_request.return_value = SimpleNamespace(status_code=204, text="")
         safe._record_run_finish(
@@ -129,7 +130,10 @@ class NavIntegrityTests(unittest.TestCase):
             rows_extracted=200,
             rows_matched=190,
             fallback_selected=2,
+            fallback_scan_attempted=True,
             source_errors=[],
+            attempted_sources=["hermes", "ci", "snduk"],
+            target_fund_count=208,
         )
         patch_request.assert_called_once()
         finish_payload = patch_request.call_args.kwargs["json"]
@@ -137,6 +141,9 @@ class NavIntegrityTests(unittest.TestCase):
         self.assertEqual(finish_payload["rows_extracted"], 200)
         self.assertEqual(finish_payload["rows_matched"], 190)
         self.assertEqual(finish_payload["meta"]["fallback_selected"], 2)
+        self.assertTrue(finish_payload["meta"]["fallback_scan_attempted"])
+        self.assertEqual(finish_payload["meta"]["attempted_sources"], ["hermes", "ci", "snduk"])
+        self.assertEqual(finish_payload["meta"]["target_fund_count"], 208)
 
 
     @patch.object(safe.legacy.requests, "patch")
