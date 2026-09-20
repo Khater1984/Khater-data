@@ -234,7 +234,7 @@ def _explicit_snduk_alias(name, funds, aliases=None):
             continue
         alias_norm = alias.get("normalized_alias")
         if alias_norm is None:
-            alias_norm = re.sub(r"s+", " ", str(alias.get("alias_name") or "").lower()).strip()
+            alias_norm = re.sub(r"\s+", " ", str(alias.get("alias_name") or "").lower()).strip()
         alias_norm = re.sub(r"[^a-z0-9]+", " ", alias_norm).strip()
         if alias_norm == normalized and float(alias.get("match_confidence") or 0) >= 1.0:
             return by_id[alias["fund_id"]], 1.0
