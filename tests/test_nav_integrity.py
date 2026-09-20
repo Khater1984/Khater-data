@@ -128,6 +128,37 @@ class NavIntegrityTests(unittest.TestCase):
         self.assertEqual(finish_payload["rows_matched"], 190)
         self.assertEqual(finish_payload["meta"]["fallback_selected"], 2)
 
+
+    @patch.object(safe.legacy.requests, "patch")
+    @patch.object(safe.legacy, "sb_post")
+    @patch.object(safe.legacy, "sb_get")
+    def test_currency_mismatch_is_quarantined_before_promotion(self, sb_get, sb_post, patch_request):
+        sb_get.side_effect = [
+            [{
+                "fund_id": "fund-1",
+                "nav": 10.0,
+                "currency": "USD",
+                "as_of_date": "2026-09-19",
+                "source_id": "src_test",
+            }],
+            [{"fund_id": "fund-1", "currency": "USD"}],
+        ]
+        safe.safe_upsert_official([{
+            "id": 124,
+            "fund_id": "fund-1",
+            "nav": 10.1,
+            "currency": "EGP",
+            "as_of_date": "2026-09-19",
+            "source_id": "src_test",
+            "source_url": "https://manager.example/fund",
+        }])
+        sb_post.assert_not_called()
+        patch_request.assert_called_once()
+        payload = patch_request.call_args.kwargs["json"]
+        self.assertEqual(payload["verification_status"], "needs_review")
+        self.assertIn("expected=USD", payload["notes"])
+        self.assertIn("incoming=EGP", payload["notes"])
+
     def test_zaldi_source_alias_is_normalized(self):
         rows = [{"source_id": "src_zaldi", "raw": {}}]
         safe._normalize_source_ids(rows)
