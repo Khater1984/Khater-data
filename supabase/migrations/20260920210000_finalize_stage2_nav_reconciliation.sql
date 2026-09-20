@@ -50,7 +50,8 @@ where h.source_id='src_snduk'
 -- Exact Snduk fallback for Banque Misr Day-by-Day / CI Misr Money Market.
 insert into public.nav_staging
 (run_id,fund_id,extracted_name,canonical_name,nav,currency,as_of_date,source_url,source_id,match_status,match_score,verification_status,raw)
-values
+select *
+from (values
 ('repair_20260920_authorized_snduk',
  'misr_money_market_egp__ci_asset_management',
  'Banque Misr Day by Day Fund Daily Cumulative Return','Misr Money Market',
@@ -65,7 +66,11 @@ values
  'https://snduk.com/eg/funds/mubasher-equity-fund?lang=en',
  'src_snduk','matched',1.0,'accepted',
  '{"fallback":true,"provenance":"third_party_snduk","date_provenance":"snduk","frequency_provenance":"snduk_published_frequency","identity_match":"explicit_alias"}'::jsonb)
-on conflict do nothing;
+) v(run_id,fund_id,extracted_name,canonical_name,nav,currency,as_of_date,source_url,source_id,match_status,match_score,verification_status,raw)
+where not exists (
+  select 1 from public.nav_staging s
+  where s.run_id=v.run_id and s.fund_id=v.fund_id
+);
 
 update public.nav_official n
 set nav=s.nav,currency=s.currency,as_of_date=s.as_of_date,
