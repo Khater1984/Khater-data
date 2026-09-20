@@ -83,7 +83,7 @@ def main() -> int:
         id_list = ",".join(str(int(value)) for value in staging_ids)
         staging = sb_get(
             "nav_staging",
-            select="id,fund_id,nav,currency,as_of_date,source_id,verification_status",
+            select="id,fund_id,nav,currency,as_of_date,source_id,verification_status,raw",
             id=f"in.({id_list})",
             verification_status="neq.rejected",
             limit=str(len(staging_ids)),
@@ -120,7 +120,10 @@ def main() -> int:
                 f"currency mismatch: {fund['canonical_name']} "
                 f"expected={fund.get('currency')} incoming={n.get('currency')}"
             )
-        if not source_allowed(n, fund):
+        source_row = dict(n)
+        if n.get("staging_id") and n["staging_id"] in staging_by_id:
+            source_row["raw"] = staging_by_id[n["staging_id"]].get("raw")
+        if not source_allowed(source_row, fund):
             errors.append(
                 f"source identity not authorized: {fund['canonical_name']} "
                 f"source={n.get('source_id')}"
