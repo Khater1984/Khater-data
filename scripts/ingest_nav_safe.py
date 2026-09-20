@@ -538,6 +538,7 @@ def main():
     run_error = None
     fallback_selected = 0
     staging_error = False
+    promotion_partial = False
     try:
         for name, scraper in scrapers:
             try:
@@ -582,13 +583,16 @@ def main():
 
         matched = [row for row in all_rows if row.get("fund_id")]
         ok, n = safe_upsert_official(matched)
+        promotion_partial = ok < n
         print(f"official upserted {ok}/{n} run={legacy.RUN_ID}")
         legacy.audit_coverage(funds, matched)
     except Exception as exc:
         run_error = f"{type(exc).__name__}: {exc}"
         raise
     finally:
-        status = "failed" if run_error else ("partial" if source_errors or staging_error else "success")
+        status = "failed" if run_error else (
+            "partial" if source_errors or staging_error or promotion_partial else "success"
+        )
         _record_run_finish(
             status=status,
             sources_attempted=len(scrapers),
