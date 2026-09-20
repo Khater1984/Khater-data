@@ -682,47 +682,10 @@ def upsert_official(matched_rows):
 
 
 def main():
-    if not BASE or not KEY:
-        sys.exit("Missing SUPABASE_URL / SUPABASE_SERVICE_KEY")
-    funds = load_funds()
-    aliases = sb_get(
-        "fund_name_aliases",
-        select="fund_id,alias_name,alias_source,normalized_alias,match_confidence",
-        limit="5000",
+    raise SystemExit(
+        "Direct legacy NAV ingestion is disabled. Run scripts/ingest_nav_safe.py "
+        "so every promotion passes the central NAV contract."
     )
-    set_provider_alias_registry(aliases, funds)
-    by_name = {f["canonical_name"]: f for f in funds}
-    scrapers = [
-        ("hermes", lambda: scrape_hermes(by_name)),
-        ("ci", lambda: scrape_ci(by_name)),
-        ("prime", lambda: scrape_prime(by_name)),
-        ("aaim", lambda: scrape_aaim(by_name, match)),
-        ("beltone", lambda: scrape_beltone_en(by_name, match)),
-        ("azimut", lambda: scrape_azimut(by_name)),
-        ("ni", lambda: scrape_ni(by_name)),
-        ("hc", lambda: scrape_hc(by_name)),
-        ("pfi", lambda: scrape_pfi(by_name)),
-        ("granite", lambda: scrape_granite(by_name)),
-        ("snduk", lambda: scrape_snduk(funds)),
-        ("abk", lambda: scrape_abk(funds)),
-        ("zaldi", lambda: scrape_zaldi(funds)),
-        ("afim", lambda: scrape_afim(by_name)),
-    ]
-    all_rows = []
-    for name, fn in scrapers:
-        try:
-            rows = fn()
-            print(f"{name}: {len(rows)} extracted, {sum(1 for r in rows if r['fund_id'])} matched")
-            all_rows.extend(rows)
-        except Exception as e:
-            print(f"{name} ERROR {type(e).__name__}: {e}")
-    if all_rows:
-        rr = sb_post("nav_staging", all_rows)
-        print("staging", rr.status_code, len(all_rows), rr.text[:200] if rr.status_code not in (200, 201) else "OK")
-    matched = [r for r in all_rows if r.get("fund_id")]
-    ok, n = upsert_official(matched)
-    print(f"official upserted {ok}/{n} run={RUN_ID}")
-    audit_coverage(funds, matched)
 
 
 SUPPORTED_HOSTS = {
