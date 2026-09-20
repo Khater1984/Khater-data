@@ -258,6 +258,48 @@ class NavIntegrityTests(unittest.TestCase):
         self.assertEqual(score, 0.0)
 
 
+
+    @patch.object(legacy_ingest, "fetch")
+    def test_alpha_odin_parser_requires_exact_identity_and_source_date(self, fetch):
+        from scripts import ingest_nav as legacy_ingest
+        funds = [{
+            "fund_id": "odin4",
+            "canonical_name": "Odin 4",
+            "management_company": "Alpha Financial Investments Management",
+            "currency": "EGP",
+        }]
+        aliases = [{
+            "fund_id": "odin4",
+            "alias_name": "Odin Money Market Fund Odin 4",
+            "alias_source": "alpha:verified_identity:2026-09-20",
+            "match_confidence": 1.0,
+        }]
+        legacy_ingest.set_provider_alias_registry(aliases, funds)
+
+        fetch.return_value = """
+        <table>
+          <tr><td>Odin Money Market Fund Odin 4</td><td>1.2681</td><td>16 Sep 2026</td></tr>
+        </table>
+        """
+        rows = legacy_ingest.scrape_alpha_odin(
+            {"Odin 4": funds[0]}
+        )
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["fund_id"], "odin4")
+        self.assertEqual(rows[0]["nav"], 1.2681)
+        self.assertEqual(rows[0]["as_of_date"], "2026-09-16")
+        self.assertEqual(rows[0]["source_id"], "src_alpha_odin")
+
+        fetch.return_value = """
+        <table>
+          <tr><td>Odin Money Market Fund Odin 4</td><td>1.2681</td></tr>
+        </table>
+        """
+        self.assertEqual(
+            legacy_ingest.scrape_alpha_odin({"Odin 4": funds[0]}),
+            [],
+        )
+
     def test_provider_alias_registry_is_exact_and_provider_scoped(self):
         funds = [
             {"fund_id": "prime-1", "canonical_name": "Ebank Fund III (Konooz)", "management_company": "Prime Investments"},
