@@ -92,10 +92,45 @@ def _existing_official():
         x["fund_id"]: x
         for x in legacy.sb_get(
             "nav_official",
-            select="fund_id,as_of_date,source_id",
+            select="fund_id,nav,currency,as_of_date,source_id",
             limit="1000",
         )
     }
+
+
+OUTLIER_MAX_ABS_MOVE = 0.50
+
+
+def _quarantine_outlier(row, current, move_pct):
+    """Keep a large unexplained NAV move in staging for manual/source review."""
+    staging_id = row.get("id")
+    message = (
+        f"Automatic promotion blocked: NAV moved {move_pct:.2%} "
+        f"from {current.get('nav')} to {row.get('nav')}."
+    )
+    if not staging_id:
+        print(f"outlier quarantine (no staging id): {row.get('fund_id')} {message}")
+        return
+
+    try:
+        response = legacy.requests.patch(
+            f"{legacy.BASE}/rest/v1/nav_staging?id=eq.{staging_id}",
+            headers={**legacy.H, "Prefer": "return=minimal"},
+            json={
+                "verification_status": "needs_review",
+                "notes": message,
+            },
+            timeout=20,
+        )
+        print(
+            f"outlier quarantine: staging_id={staging_id} "
+            f"status={response.status_code} {message}"
+        )
+    except Exception as exc:
+        print(
+            f"outlier quarantine ERROR staging_id={staging_id} "
+            f"{type(exc).__name__}: {exc}"
+        )
 
 
 def _is_usable_current_candidate(row):
@@ -132,6 +167,7 @@ def safe_upsert_official(matched_rows):
 
     payload = []
     skipped_older = 0
+    skipped_outliers = 0
     for row in best.values():
         fid = row["fund_id"]
         incoming_date = row["as_of_date"]
@@ -139,6 +175,17 @@ def safe_upsert_official(matched_rows):
         if current_date and current_date > incoming_date:
             skipped_older += 1
             continue
+
+        current = existing.get(fid) or {}
+        current_nav = current.get("nav")
+        incoming_nav = row.get("nav")
+        if current_nav not in (None, 0) and incoming_nav not in (None, 0):
+            move_pct = abs(float(incoming_nav) / float(current_nav) - 1.0)
+            if move_pct >= OUTLIER_MAX_ABS_MOVE:
+                skipped_outliers += 1
+                _quarantine_outlier(row, current, move_pct)
+                continue
+
         payload.append({
             "fund_id": fid,
             "nav": row["nav"],
@@ -180,7 +227,8 @@ def safe_upsert_official(matched_rows):
         "official promotion: "
         f"upserted={ok} candidates={len(payload)} "
         f"skipped_no_date={skipped_no_date} skipped_future={skipped_future} "
-        f"skipped_older={skipped_older} failed={failed}"
+        f"skipped_older={skipped_older} skipped_outliers={skipped_outliers} "
+        f"failed={failed}"
     )
     return ok, len(payload)
 
