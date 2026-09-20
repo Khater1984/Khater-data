@@ -5,6 +5,7 @@ import os,re
 from datetime import datetime, timezone
 import requests
 from bs4 import BeautifulSoup
+from scripts import ingest_nav_safe as safe_nav
 BASE=os.environ["SUPABASE_URL"].rstrip("/"); KEY=os.environ["SUPABASE_SERVICE_KEY"]
 H={"apikey":KEY,"Authorization":f"Bearer {KEY}","Content-Type":"application/json"}
 URL="https://pfi-am.com.eg/funds/"; SID="src_pfi_funds"
@@ -29,8 +30,10 @@ def main():
   rows.append({'run_id':'repair_'+datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S'),'extracted_name':label,'nav':nav,'currency':'EGP','as_of_date':dt,'source_url':URL,'source_id':SID,'fund_id':f['fund_id'],'canonical_name':canon,'match_status':'matched','match_score':1.0,'verification_status':'pending','raw':{'repair':'pfi_rendered_page'}})
  for r in rows:
   try:
-   post('nav_staging',r)
-   post('nav_official',{'fund_id':r['fund_id'],'nav':r['nav'],'currency':'EGP','as_of_date':r['as_of_date'],'source_id':SID,'source_url':URL,'verified_at':datetime.now(timezone.utc).isoformat()},'resolution=merge-duplicates,return=minimal')
+   staged=post('nav_staging',r,'return=representation').json()
+   if isinstance(staged,list) and staged:
+    r['id']=staged[0].get('id')
+   safe_nav.safe_upsert_official([r])
   except Exception as e:
    print('PFI promote FAIL', r.get('canonical_name'), getattr(e, 'response', None) and getattr(e.response, 'text', '')[:300] or e)
  print(f'PFI repair: {len(rows)} newer NAVs promoted from official source')
