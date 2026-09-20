@@ -11,7 +11,6 @@ import re
 import sys
 import warnings
 from datetime import datetime, timezone
-from difflib import SequenceMatcher
 
 import requests
 from bs4 import BeautifulSoup
@@ -269,45 +268,13 @@ def exact_manager_match(extracted, by_name, manager):
     return None, 0.0
 
 
-def matcher(funds):
-    by_name = {f["canonical_name"]: f for f in funds}
-
-    def match(extracted, manager_hint=None):
-        if extracted in by_name:
-            return by_name[extracted], 1.0
-        n = norm(extracted)
-        best, sc = None, 0.0
-        for f in funds:
-            if manager_hint and f.get("management_company") != manager_hint:
-                continue
-            cands = [f["canonical_name"]]
-            md = f.get("metadata") or {}
-            if isinstance(md, dict):
-                for k in ("info_label", "price_page_label"):
-                    v = md.get(k)
-                    if v and not str(v).startswith("http"):
-                        cands.append(str(v))
-            for c in cands:
-                nn = norm(c)
-                ratio = SequenceMatcher(None, n, nn).ratio()
-                if n == nn:
-                    ratio = 1.0
-                elif n in nn or nn in n:
-                    ratio = max(ratio, 0.84)
-                if ratio > sc:
-                    sc, best = ratio, f
-        return (best, sc) if sc >= 0.84 else (None, sc)
-
-    return by_name, match
-
-
 def row(extracted, nav, asof, url, sid, fund, score, extra=None, currency="EGP"):
     return {
         "run_id": RUN_ID,
         "extracted_name": extracted,
         "nav": float(nav),
         "currency": currency,
-        "as_of_date": (asof or datetime.now(timezone.utc).date().isoformat()),
+        "as_of_date": asof or None,
         "source_url": url,
         "source_id": sid,
         "fund_id": None if not fund else fund["fund_id"],
@@ -782,7 +749,7 @@ def main():
         limit="5000",
     )
     set_provider_alias_registry(aliases, funds)
-    by_name, match = matcher(funds)
+    by_name = {f["canonical_name"]: f for f in funds}
     scrapers = [
         ("hermes", lambda: scrape_hermes(by_name)),
         ("ci", lambda: scrape_ci(by_name)),
