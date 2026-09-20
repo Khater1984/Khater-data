@@ -210,6 +210,54 @@ class NavIntegrityTests(unittest.TestCase):
         self.assertEqual(payload["verification_status"], "needs_review")
         self.assertIn("source-manager mismatch", payload["notes"])
 
+
+    def test_aaim_and_beltone_aliases_are_provider_scoped(self):
+        from scripts import ingest_nav as legacy_ingest
+        funds = [
+            {
+                "fund_id": "aaim-1",
+                "canonical_name": "Arab African International Bank (Juman)",
+                "management_company": "Arab African Investment Management",
+            },
+            {
+                "fund_id": "beltone-1",
+                "canonical_name": "B-Alpha",
+                "management_company": "Beltone Asset Management",
+            },
+        ]
+        aliases = [
+            {
+                "fund_id": "aaim-1",
+                "alias_name": "Juman Money Market",
+                "alias_source": "aaim:verified_identity:2026-09-20",
+                "match_confidence": 1.0,
+            },
+            {
+                "fund_id": "beltone-1",
+                "alias_name": "B Alpha",
+                "alias_source": "beltone:verified_identity:2026-09-20",
+                "match_confidence": 1.0,
+            },
+        ]
+        legacy_ingest.set_provider_alias_registry(aliases, funds)
+
+        fund, score = legacy_ingest.provider_alias_match("Juman Money Market", "aaim")
+        self.assertEqual(fund["fund_id"], "aaim-1")
+        self.assertEqual(score, 1.0)
+
+        fund, score = legacy_ingest.provider_alias_match("B Alpha", "beltone")
+        self.assertEqual(fund["fund_id"], "beltone-1")
+        self.assertEqual(score, 1.0)
+
+        fund, score = legacy_ingest.provider_alias_match("B Alpha", "aaim")
+        self.assertIsNone(fund)
+        self.assertEqual(score, 0.0)
+
+        fund, score = legacy_ingest.provider_alias_match("Juman Money Market Extra", "aaim")
+        self.assertIsNone(fund)
+        self.assertEqual(score, 0.0)
+
+
     def test_provider_alias_registry_is_exact_and_provider_scoped(self):
         funds = [
             {"fund_id": "prime-1", "canonical_name": "Ebank Fund III (Konooz)", "management_company": "Prime Investments"},
