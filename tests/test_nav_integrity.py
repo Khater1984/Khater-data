@@ -176,6 +176,23 @@ class NavIntegrityTests(unittest.TestCase):
         self.assertIn("expected=USD", payload["notes"])
         self.assertIn("incoming=EGP", payload["notes"])
 
+
+    def test_aaim_alias_registry_targets_own_manager_funds(self):
+        from scripts import ingest_nav as legacy_ingest
+        expected = {
+            "shield equity": "Arab African International Bank (Shield)",
+            "juman money market": "Arab African International Bank (Juman)",
+            "iskan money market": "Iskan Insurance",
+            "diamond money market": "Diamond",
+            "misr takaful sharia compliant money market": "Misr Takaful",
+            "bareeq fixed income egp": "Bareeq",
+            "el fanar money market": "Fanar",
+            "sarwaty money market": "Sarwaty*",
+            "bond fixed income usd": "Bonds Fixed Income USD Fund",
+        }
+        for source_label, canonical in expected.items():
+            self.assertEqual(legacy_ingest.AAIM_ALIAS[source_label], canonical)
+
     def test_zaldi_source_alias_is_normalized(self):
         rows = [{"source_id": "src_zaldi", "raw": {}}]
         safe._normalize_source_ids(rows)
