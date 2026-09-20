@@ -207,7 +207,7 @@ where not exists (
   select 1 from public.nav_staging s
   where s.run_id='repair_20260920_aaim_identity'
     and s.fund_id=v.fund_id
-)
+);
 
 update public.nav_official n
 set nav=s.nav,currency=s.currency,as_of_date=s.as_of_date,
@@ -235,7 +235,7 @@ where not exists (
   select 1 from public.nav_staging s
   where s.run_id='repair_20260920_identity_audit'
     and s.fund_id=v.fund_id
-)
+);
 
 update public.nav_official n
 set nav=s.nav,currency=s.currency,as_of_date=s.as_of_date,
