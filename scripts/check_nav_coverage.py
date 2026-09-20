@@ -32,6 +32,7 @@ SOURCE_TO_HOSTS = {
     "hc": {"hc-si.com"},
     "pfi": {"pfi-am.com.eg"},
     "granite": {"granite.eg"},
+    "alpha_odin": {"alpha-odin.com"},
     "snduk": {"snduk.com"},
     "abk": {"w1.abkegypt.com"},
     "zaldi": {"zaldi-capital.com"},
@@ -85,7 +86,20 @@ def future_status(asof, today):
 
 def main():
     today = date.today().isoformat()
-    funds = get("funds", select="fund_id,canonical_name,price_update_url,source_id", active="eq.true", limit="1000")
+    funds = get(
+        "funds",
+        select="fund_id,canonical_name,price_update_url,source_id",
+        active="eq.true",
+        limit="1000",
+    )
+    sources = {
+        x["source_id"]: x
+        for x in get(
+            "sources",
+            select="source_id,source_url,source_kind,management_company_scope",
+            limit="1000",
+        )
+    }
     official = get("nav_official", select="fund_id,nav,as_of_date,source_id,source_url,verified_at,updated_at", limit="5000")
     staging = get(
         "nav_staging",
@@ -135,7 +149,9 @@ def main():
 
     for f in funds:
         fid = f["fund_id"]
-        host = host_of(f.get("price_update_url") or "")
+        preferred_source = sources.get(f.get("source_id")) or {}
+        manager_host = host_of(preferred_source.get("source_url") or "")
+        host = manager_host or host_of(f.get("price_update_url") or "")
         off = by_official.get(fid) or {}
         nav = off.get("nav")
         d = off.get("as_of_date")
@@ -194,6 +210,8 @@ def main():
 
         rows.append({
             "fund_id": fid, "name": f.get("canonical_name"), "host": host,
+            "manager_source_id": f.get("source_id"),
+            "manager_host": manager_host,
             "status": status, "nav": nav, "as_of_date": d,
             "future_date_status": off_future,
             "current_run_id": run_id, "current_run_candidate_date": candidate_date,
@@ -223,7 +241,8 @@ def main():
                 1
                 for f in funds
                 if (
-                    host_of(f.get("price_update_url") or "") in attempted_source_hosts
+                    (host_of((sources.get(f.get("source_id")) or {}).get("source_url") or "")
+                     or host_of(f.get("price_update_url") or "")) in attempted_source_hosts
                     or fallback_scan_attempted
                 )
             ),
@@ -231,7 +250,8 @@ def main():
                 1
                 for f in funds
                 if (
-                    host_of(f.get("price_update_url") or "") not in attempted_source_hosts
+                    (host_of((sources.get(f.get("source_id")) or {}).get("source_url") or "")
+                     or host_of(f.get("price_update_url") or "")) not in attempted_source_hosts
                     and not fallback_scan_attempted
                 )
             ),
