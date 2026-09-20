@@ -420,17 +420,81 @@ def _snduk_fallback_rows(funds, match=None, aliases=None):
     return out
 
 
-def _select_fallbacks(all_rows, snduk_rows):
-    """Use Snduk only where the current manager extraction is not usable."""
+def _latest_eima_fallback_rows(funds):
+    """Use the latest exact EIMA weekly NAV as an approved fallback."""
+    reports = legacy.sb_get(
+        "eima_reports",
+        select="report_date",
+        order="report_date.desc",
+        limit="1",
+    )
+    if not reports:
+        return []
+    report_date = reports[0].get("report_date")
+    if not report_date:
+        return []
+    rows = legacy.sb_get(
+        "fund_performance_history",
+        select="fund_id,report_date,nav_value,currency,source_id,raw",
+        report_date=f"eq.{report_date}",
+        horizon="eq.weekly",
+        source_id="eq.src_eima_weekly_tw",
+        nav_value="not.is.null",
+        limit="1000",
+    )
+    by_id = {f.get("fund_id"): f for f in funds}
+    out = []
+    for row in rows:
+        fund = by_id.get(row.get("fund_id"))
+        if not fund or row.get("nav_value") is None:
+            continue
+        raw_source = row.get("raw") if isinstance(row.get("raw"), dict) else {}
+        row_currency = _normalize_currency(row.get("currency"))
+        fund_currency = _normalize_currency(fund.get("currency"))
+        if not row_currency or row_currency != fund_currency:
+            continue
+        out.append(safe_row(
+            raw_source.get("pdf_name") or fund.get("canonical_name"),
+            row["nav_value"], report_date,
+            raw_source.get("source_url") or "https://eima.org.eg/?page_id=1886",
+            "src_eima_weekly_tw", fund, 1.0,
+            {
+                "fallback": True,
+                "fallback_reason": "manager_nav_unavailable_or_unusable",
+                "provenance": "eima_weekly_official_industry_report",
+                "date_provenance": "eima_report",
+                "frequency_provenance": "weekly",
+                "identity_match": "exact_fund_id",
+                "source_report_date": report_date,
+            },
+            currency=fund_currency,
+        ))
+    print(f"eima fallback: {len(out)} exact weekly rows report={report_date}")
+    return out
+
+def _select_fallbacks(all_rows, snduk_rows, eima_rows=None):
+    """Prefer Snduk, then exact EIMA weekly fallback, only when manager is unusable."""
     current = {}
     for row in all_rows:
         fid = row.get("fund_id")
-        if not fid or row.get("source_id") == "src_snduk":
+        if not fid or row.get("source_id") in {"src_snduk", "src_eima_weekly_tw"}:
             continue
         if _is_usable_current_candidate(row):
             current.setdefault(fid, []).append(row)
 
-    return [row for row in snduk_rows if row.get("fund_id") and not current.get(row["fund_id"])]
+    selected = []
+    used = set()
+    for row in snduk_rows:
+        fid = row.get("fund_id")
+        if fid and not current.get(fid):
+            selected.append(row)
+            used.add(fid)
+    for row in eima_rows or []:
+        fid = row.get("fund_id")
+        if fid and fid not in used and not current.get(fid):
+            selected.append(row)
+            used.add(fid)
+    return selected
 
 
 def _normalize_source_ids(rows):
