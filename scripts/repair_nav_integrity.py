@@ -92,7 +92,13 @@ def main():
         source_id = row.get("source_id") or ""
         raw = row.get("raw") if isinstance(row.get("raw"), dict) else {}
         if source_id == "src_snduk":
-            return raw.get("identity_match") == "explicit_alias"
+            return (
+                raw.get("identity_match") == "explicit_alias"
+                or (
+                    host(row.get("source_url")) == "snduk.com"
+                    and host(fund.get("price_update_url")) == "snduk.com"
+                )
+            )
         if source_id == "src_eima_weekly_tw":
             return raw.get("identity_match") == "exact_fund_id"
         meta = source_registry.get(source_id) or {}
