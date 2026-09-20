@@ -21,6 +21,24 @@ BASE = os.environ["SUPABASE_URL"].rstrip("/")
 KEY = os.environ["SUPABASE_SERVICE_KEY"]
 H = {"apikey": KEY, "Authorization": f"Bearer {KEY}"}
 FUTURE_MAX_DAYS = 7
+SOURCE_TO_HOSTS = {
+    "hermes": {"efgholding.com"},
+    "ci": {"cicapital.com"},
+    "prime": {"primeholdingco.com"},
+    "aaim": {"aaim.com.eg"},
+    "beltone": {"beltoneholding.com"},
+    "azimut": {"azimut.eg"},
+    "ni": {"nicapital.com.eg"},
+    "hc": {"hc-si.com"},
+    "pfi": {"pfi-am.com.eg"},
+    "granite": {"granite.eg"},
+    "snduk": {"snduk.com"},
+    "abk": {"w1.abkegypt.com"},
+    "zaldi": {"zaldi-capital.com"},
+    "afim": {"afim.com.eg"},
+}
+
+
 BELTONE_HOST = "beltoneholding.com"
 BELTONE_SOURCE = "src_beltone_funds"
 SUPPORTED = {
@@ -77,6 +95,26 @@ def main():
 
     run_id = latest_ingest_run(staging)
     current_rows = [r for r in staging if r.get("run_id") == run_id]
+
+    run_meta = {}
+    if run_id:
+        run_rows = get(
+            "ingest_runs",
+            select="run_id,status,sources_attempted,meta,finished_at",
+            run_id=f"eq.{run_id}",
+            limit="1",
+        )
+        if run_rows:
+            run_meta = run_rows[0].get("meta") or {}
+
+    attempted_sources = set(run_meta.get("attempted_sources") or [])
+    fallback_scan_attempted = bool(run_meta.get("fallback_scan_attempted"))
+    attempted_source_hosts = {
+        host
+        for source_name in attempted_sources
+        for host in SOURCE_TO_HOSTS.get(source_name, set())
+    }
+
     current_run_funds = {
         r["fund_id"] for r in current_rows
         if r.get("fund_id") and r.get("match_status") == "matched"
@@ -107,11 +145,15 @@ def main():
         off_future = future_status(d, today)
         candidate_future = future_status(candidate_date, today)
 
-        if not candidates:
+        manager_attempted = host in attempted_source_hosts
+        pipeline_attempted = manager_attempted or fallback_scan_attempted
+        if not pipeline_attempted:
             status = "FAIL_NOT_ATTEMPTED"
             hard_failures.append(
-                f"{f['canonical_name']} [{host or 'no-host'}] was not attempted in current run"
+                f"{f['canonical_name']} [{host or 'no-host'}] was not attempted by manager or fallback in current run"
             )
+        elif not candidates:
+            status = "ATTEMPTED_NO_CURRENT_ROW"
         elif host not in SUPPORTED:
             status = "UNSUPPORTED_HOST" if nav is None else "OK_UNSUPPORTED_HOST"
         elif nav is None:
@@ -169,9 +211,26 @@ def main():
         "current_run_unique_funds": len(current_run_funds),
         "funds": len(funds),
         "attempt_coverage": {
-            "attempted_unique_funds": len(current_run_funds),
+            "current_run_data_funds": len(current_run_funds),
             "funds": len(funds),
-            "not_attempted": len(funds) - len(current_run_funds),
+            "manager_source_attempted_hosts": sorted(attempted_source_hosts),
+            "fallback_scan_attempted": fallback_scan_attempted,
+            "pipeline_attempted_estimate": sum(
+                1
+                for f in funds
+                if (
+                    host_of(f.get("price_update_url") or "") in attempted_source_hosts
+                    or fallback_scan_attempted
+                )
+            ),
+            "not_attempted_estimate": sum(
+                1
+                for f in funds
+                if (
+                    host_of(f.get("price_update_url") or "") not in attempted_source_hosts
+                    and not fallback_scan_attempted
+                )
+            ),
         },
         "counts": counts,
         "rows": rows,
