@@ -133,6 +133,17 @@ def _quarantine_outlier(row, current, move_pct):
         )
 
 
+def _fund_currencies():
+    return {
+        x["fund_id"]: _normalize_currency(x.get("currency"))
+        for x in legacy.sb_get(
+            "funds",
+            select="fund_id,currency",
+            limit="1000",
+        )
+    }
+
+
 def _is_usable_current_candidate(row):
     asof = row.get("as_of_date")
     if not asof:
@@ -145,9 +156,11 @@ def safe_upsert_official(matched_rows):
     """Promote only dated candidates and never move official history backwards."""
     now = datetime.now(timezone.utc).isoformat()
     existing = _existing_official()
+    currencies = _fund_currencies()
     best = {}
     skipped_no_date = 0
     skipped_future = 0
+    skipped_currency = 0
 
     for row in matched_rows:
         fid = row.get("fund_id")
@@ -161,6 +174,18 @@ def safe_upsert_official(matched_rows):
         if not accepted:
             skipped_future += 1
             continue
+
+        expected_currency = currencies.get(fid)
+        incoming_currency = _normalize_currency(row.get("currency"))
+        if not expected_currency or not incoming_currency or expected_currency != incoming_currency:
+            skipped_currency += 1
+            _quarantine_outlier(
+                row,
+                {"nav": row.get("nav")},
+                0.0,
+            )
+            continue
+
         previous = best.get(fid)
         if not previous or asof >= (previous.get("as_of_date") or ""):
             best[fid] = row
@@ -227,8 +252,8 @@ def safe_upsert_official(matched_rows):
         "official promotion: "
         f"upserted={ok} candidates={len(payload)} "
         f"skipped_no_date={skipped_no_date} skipped_future={skipped_future} "
-        f"skipped_older={skipped_older} skipped_outliers={skipped_outliers} "
-        f"failed={failed}"
+        f"skipped_currency={skipped_currency} skipped_older={skipped_older} "
+        f"skipped_outliers={skipped_outliers} failed={failed}"
     )
     return ok, len(payload)
 
