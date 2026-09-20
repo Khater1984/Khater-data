@@ -29,7 +29,7 @@ def norm(value):
 def main() -> int:
     funds = sb_get(
         "funds",
-        select="fund_id,canonical_name,management_company,currency",
+        select="fund_id,canonical_name,management_company,currency,price_update_url",
         active="eq.true",
         limit="1000",
     )
@@ -40,11 +40,41 @@ def main() -> int:
     )
     sources = sb_get(
         "sources",
-        select="source_id,management_company_scope",
+        select="source_id,management_company_scope,source_url,source_kind",
         limit="1000",
     )
     fund_by_id = {x["fund_id"]: x for x in funds}
-    source_scope = {x["source_id"]: x.get("management_company_scope") for x in sources}
+    source_registry = {
+        x["source_id"]: {
+            "management_company_scope": x.get("management_company_scope"),
+            "source_url": x.get("source_url") or "",
+            "source_kind": x.get("source_kind") or "",
+        }
+        for x in sources
+    }
+
+    def host(value):
+        if not value or "://" not in str(value):
+            return ""
+        return str(value).split("/")[2].lower().replace("www.", "")
+
+    def source_allowed(row, fund):
+        source_id = row.get("source_id") or ""
+        raw = row.get("raw") if isinstance(row.get("raw"), dict) else {}
+        if source_id == "src_snduk":
+            return raw.get("identity_match") == "explicit_alias"
+        if source_id == "src_eima_weekly_tw":
+            return raw.get("identity_match") == "exact_fund_id"
+        meta = source_registry.get(source_id) or {}
+        scope = meta.get("management_company_scope")
+        if scope:
+            return norm(scope) == norm(fund.get("management_company"))
+        if meta.get("source_kind") == "management_company_page":
+            return bool(
+                host(meta.get("source_url"))
+                and host(meta.get("source_url")) == host(fund.get("price_update_url"))
+            )
+        return False
     official_by_id = {x["fund_id"]: x for x in officials}
 
     staging_ids = sorted({n["staging_id"] for n in officials if n.get("staging_id")})
@@ -90,12 +120,10 @@ def main() -> int:
                 f"currency mismatch: {fund['canonical_name']} "
                 f"expected={fund.get('currency')} incoming={n.get('currency')}"
             )
-        scope = source_scope.get(n.get("source_id"))
-        if scope and norm(scope) != norm(fund.get("management_company")):
+        if not source_allowed(n, fund):
             errors.append(
-                f"source-manager mismatch: {fund['canonical_name']} "
-                f"source={n.get('source_id')} expected={scope} "
-                f"actual={fund.get('management_company')}"
+                f"source identity not authorized: {fund['canonical_name']} "
+                f"source={n.get('source_id')}"
             )
         if not n.get("staging_id"):
             warnings.append(
