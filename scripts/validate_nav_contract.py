@@ -65,8 +65,8 @@ def main() -> int:
             return (
                 raw.get("identity_match") == "explicit_alias"
                 or (
-                    host(row.get("source_url")) == "snduk.com"
-                    and host(fund.get("price_update_url")) == "snduk.com"
+                    str(row.get("source_url") or "").rstrip("/") == str(fund.get("price_update_url") or "").rstrip("/")
+                    and host(row.get("source_url")) == "snduk.com"
                 )
             )
         if source_id == "src_eima_weekly_tw":
