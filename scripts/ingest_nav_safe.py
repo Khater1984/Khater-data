@@ -469,7 +469,7 @@ def _record_run_start(sources_count):
         print(f"ingest_run start ERROR {type(exc).__name__}: {exc}")
 
 
-def _record_run_finish(status, sources_attempted, rows_extracted, rows_matched, fallback_selected, source_errors, run_error=None):
+def _record_run_finish(status, sources_attempted, rows_extracted, rows_matched, fallback_selected, fallback_scan_attempted, source_errors, attempted_sources, run_error=None):
     """Persist run outcome and metrics without making observability a hard dependency."""
     payload = {
         "status": status,
@@ -482,6 +482,9 @@ def _record_run_finish(status, sources_attempted, rows_extracted, rows_matched, 
             "pipeline": "safe_nav",
             "contract": "nav_currency_source_as_of_date",
             "fallback_selected": fallback_selected,
+            "fallback_scan_attempted": fallback_scan_attempted,
+            "attempted_sources": attempted_sources,
+            "target_fund_count": 208,
             "source_errors": source_errors,
         },
     }
@@ -539,8 +542,11 @@ def main():
     fallback_selected = 0
     staging_error = False
     promotion_partial = False
+    fallback_scan_attempted = False
+    attempted_sources = []
     try:
         for name, scraper in scrapers:
+            attempted_sources.append(name)
             try:
                 rows = _normalize_source_ids(scraper())
                 matched_count = sum(1 for row in rows if row.get("fund_id"))
@@ -554,6 +560,7 @@ def main():
                 print(f"{name} ERROR {type(exc).__name__}: {exc}")
 
         snduk_fallback = _snduk_fallback_rows(funds, match, aliases)
+        fallback_scan_attempted = True
         selected = _select_fallbacks(all_rows, snduk_fallback)
         fallback_selected = len({row.get("fund_id") for row in selected if row.get("fund_id")})
         if selected:
@@ -599,7 +606,9 @@ def main():
             rows_extracted=len(all_rows),
             rows_matched=sum(1 for row in all_rows if row.get("fund_id")),
             fallback_selected=fallback_selected,
+            fallback_scan_attempted=fallback_scan_attempted,
             source_errors=source_errors,
+            attempted_sources=attempted_sources,
             run_error=run_error,
         )
 
