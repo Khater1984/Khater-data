@@ -71,17 +71,36 @@ class SndukFallbackIdentityTests(unittest.TestCase):
             rows = safe._snduk_fallback_rows(funds, match=boom)
         self.assertEqual(rows, [])
 
-    def test_misr_euro_alias_still_works(self):
+    def test_misr_euro_verified_alias_still_works(self):
+        funds = [{
+            "fund_id": "misr_money_market_euro__ci_asset_management",
+            "canonical_name": "Misr Money Market (Euro)",
+            "currency": "EUR",
+        }]
+        aliases = [{
+            "fund_id": "misr_money_market_euro__ci_asset_management",
+            "alias_name": "Banque Misr Mutual Fund in Euro",
+            "normalized_alias": "banque misr mutual fund in euro",
+            "alias_source": "snduk:verified_identity:2026-09-19",
+            "match_confidence": 1.0,
+        }]
+        fund, score = safe._explicit_snduk_alias(
+            "Banque Misr Mutual Fund in Euro", funds, aliases
+        )
+        self.assertIsNotNone(fund)
+        self.assertEqual(score, 1.0)
+
+    def test_unregistered_misr_euro_alias_does_not_work(self):
         funds = [{
             "fund_id": "misr_money_market_euro__ci_asset_management",
             "canonical_name": "Misr Money Market (Euro)",
             "currency": "EUR",
         }]
         fund, score = safe._explicit_snduk_alias(
-            "Banque Misr Mutual Fund in Euro ( day by day Euro )", funds
+            "Banque Misr Mutual Fund in Euro", funds, []
         )
-        self.assertIsNotNone(fund)
-        self.assertEqual(score, 1.0)
+        self.assertIsNone(fund)
+        self.assertEqual(score, 0.0)
 
 
 if __name__ == "__main__":
