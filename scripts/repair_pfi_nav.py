@@ -19,7 +19,19 @@ def post(path,payload,prefer='return=minimal'):
   raise requests.HTTPError(f"{r.status_code} {path}: {r.text[:500]}",response=r)
  return r
 def main():
- html=requests.get(URL,headers={'User-Agent':'Mozilla/5.0'},timeout=40).text
+ try:
+  response=requests.get(
+   URL,
+   headers={'User-Agent':'Mozilla/5.0'},
+   timeout=(10,20),
+  )
+  response.raise_for_status()
+ except requests.RequestException as exc:
+  # PFI is an optional manager-source repair. A source outage must not
+  # fail the whole NAV pipeline; safe ingest + fallback coverage remain authoritative.
+  print(f'PFI source unavailable: {type(exc).__name__}: {exc}')
+  return 0
+ html=response.text
  text=re.sub(r'\s+',' ',BeautifulSoup(html,'lxml').get_text(' ',strip=True))
  funds=get('funds',select='fund_id,canonical_name',active='eq.true',limit='1000'); by={f['canonical_name']:f for f in funds}
  existing={x['fund_id']:x for x in get('nav_official',select='fund_id,as_of_date',limit='5000')}; rows=[]
