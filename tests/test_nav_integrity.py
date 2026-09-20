@@ -73,6 +73,33 @@ class NavIntegrityTests(unittest.TestCase):
         sb_post.assert_called_once()
         self.assertEqual(sb_post.call_args.args[1][0]["as_of_date"], "2026-09-17")
 
+
+    @patch.object(safe.legacy.requests, "patch")
+    @patch.object(safe.legacy, "sb_post")
+    @patch.object(safe.legacy, "sb_get")
+    def test_unexplained_large_nav_move_is_quarantined(self, sb_get, sb_post, patch_request):
+        sb_get.return_value = [{
+            "fund_id": "fund-1",
+            "nav": 10.0,
+            "currency": "EGP",
+            "as_of_date": "2026-09-19",
+            "source_id": "src_test",
+        }]
+        safe.safe_upsert_official([{
+            "id": 123,
+            "fund_id": "fund-1",
+            "nav": 4.0,
+            "currency": "EGP",
+            "as_of_date": "2026-09-19",
+            "source_id": "src_test",
+            "source_url": "https://manager.example/fund",
+        }])
+        sb_post.assert_not_called()
+        patch_request.assert_called_once()
+        payload = patch_request.call_args.kwargs["json"]
+        self.assertEqual(payload["verification_status"], "needs_review")
+        self.assertIn("Automatic promotion blocked", payload["notes"])
+
     def test_zaldi_source_alias_is_normalized(self):
         rows = [{"source_id": "src_zaldi", "raw": {}}]
         safe._normalize_source_ids(rows)
