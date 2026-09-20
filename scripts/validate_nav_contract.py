@@ -43,16 +43,21 @@ def main() -> int:
         select="source_id,management_company_scope",
         limit="1000",
     )
-    staging = sb_get(
-        "nav_staging",
-        select="id,fund_id,nav,currency,as_of_date,source_id,verification_status",
-        verification_status="neq.rejected",
-        limit="10000",
-    )
-
     fund_by_id = {x["fund_id"]: x for x in funds}
     source_scope = {x["source_id"]: x.get("management_company_scope") for x in sources}
     official_by_id = {x["fund_id"]: x for x in officials}
+
+    staging_ids = sorted({n["staging_id"] for n in officials if n.get("staging_id")})
+    staging = []
+    if staging_ids:
+        id_list = ",".join(str(int(value)) for value in staging_ids)
+        staging = sb_get(
+            "nav_staging",
+            select="id,fund_id,nav,currency,as_of_date,source_id,verification_status",
+            id=f"in.({id_list})",
+            verification_status="neq.rejected",
+            limit=str(len(staging_ids)),
+        )
     staging_by_id = {x["id"]: x for x in staging}
     errors = []
     warnings = []
