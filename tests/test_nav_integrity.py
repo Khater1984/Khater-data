@@ -178,6 +178,39 @@ class NavIntegrityTests(unittest.TestCase):
         self.assertIn("incoming=EGP", payload["notes"])
 
 
+
+    def test_provider_alias_registry_is_exact_and_provider_scoped(self):
+        funds = [
+            {"fund_id": "prime-1", "canonical_name": "Ebank Fund III (Konooz)", "management_company": "Prime Investments"},
+            {"fund_id": "hc-1", "canonical_name": "QNB AlAHLI (Tadawol)", "management_company": "HC Securities & Investment"},
+        ]
+        aliases = [
+            {
+                "fund_id": "prime-1",
+                "alias_name": "Konooz",
+                "alias_source": "prime:verified_identity:2026-09-20",
+                "match_confidence": 1.0,
+            },
+            {
+                "fund_id": "hc-1",
+                "alias_name": "QNB (Tadawol)",
+                "alias_source": "hc:verified_identity:2026-09-20",
+                "match_confidence": 1.0,
+            },
+        ]
+        legacy_ingest = __import__("scripts.ingest_nav", fromlist=["set_provider_alias_registry"])
+        legacy_ingest.set_provider_alias_registry(aliases, funds)
+        fund, score = legacy_ingest.provider_alias_match("Konooz", "prime")
+        self.assertEqual(fund["fund_id"], "prime-1")
+        self.assertEqual(score, 1.0)
+        fund, score = legacy_ingest.provider_alias_match("QNB (Tadawol)", "hc")
+        self.assertEqual(fund["fund_id"], "hc-1")
+        self.assertEqual(score, 1.0)
+        fund, score = legacy_ingest.provider_alias_match("Konooz", "hc")
+        self.assertIsNone(fund)
+        self.assertEqual(score, 0.0)
+
+
     def test_aaim_alias_registry_targets_own_manager_funds(self):
         from scripts import ingest_nav as legacy_ingest
         expected = {
