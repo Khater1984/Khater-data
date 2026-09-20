@@ -35,7 +35,7 @@ def main() -> int:
     )
     officials = sb_get(
         "nav_official",
-        select="fund_id,nav,currency,as_of_date,source_id,staging_id",
+        select="fund_id,nav,currency,as_of_date,source_id,source_url,staging_id",
         limit="1000",
     )
     sources = sb_get(
