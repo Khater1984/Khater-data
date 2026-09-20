@@ -336,6 +336,58 @@ def _normalize_source_ids(rows):
     return rows
 
 
+
+def _record_run_start(sources_count):
+    """Best-effort run observability; never mask NAV ingestion failures."""
+    payload = [{
+        "run_id": legacy.RUN_ID,
+        "status": "running",
+        "sources_attempted": sources_count,
+        "rows_extracted": 0,
+        "rows_matched": 0,
+        "meta": {
+            "pipeline": "safe_nav",
+            "contract": "nav_currency_source_as_of_date",
+        },
+    }]
+    try:
+        response = legacy.sb_post(
+            "ingest_runs",
+            payload,
+            prefer="resolution=merge-duplicates,return=minimal",
+        )
+        print(f"ingest_run start: {response.status_code}")
+    except Exception as exc:
+        print(f"ingest_run start ERROR {type(exc).__name__}: {exc}")
+
+
+def _record_run_finish(status, sources_attempted, rows_extracted, rows_matched, fallback_selected, source_errors, run_error=None):
+    """Persist run outcome and metrics without making observability a hard dependency."""
+    payload = {
+        "status": status,
+        "finished_at": datetime.now(timezone.utc).isoformat(),
+        "sources_attempted": sources_attempted,
+        "rows_extracted": rows_extracted,
+        "rows_matched": rows_matched,
+        "notes": run_error,
+        "meta": {
+            "pipeline": "safe_nav",
+            "contract": "nav_currency_source_as_of_date",
+            "fallback_selected": fallback_selected,
+            "source_errors": source_errors,
+        },
+    }
+    try:
+        response = legacy.requests.patch(
+            f"{legacy.BASE}/rest/v1/ingest_runs?run_id=eq.{legacy.RUN_ID}",
+            headers={**legacy.H, "Prefer": "return=minimal"},
+            json=payload,
+            timeout=30,
+        )
+        print(f"ingest_run finish: {response.status_code} status={status}")
+    except Exception as exc:
+        print(f"ingest_run finish ERROR {type(exc).__name__}: {exc}")
+
 def main():
     legacy.row = safe_row
     legacy.upsert_official = safe_upsert_official
@@ -343,8 +395,6 @@ def main():
     if not legacy.BASE or not legacy.KEY:
         sys.exit("Missing SUPABASE_URL / SUPABASE_SERVICE_KEY")
 
-    # The fallback needs the canonical fund currency. The legacy loader
-    # intentionally omits it, so the safe Phase-2 entrypoint loads it here.
     funds = legacy.sb_get(
         "funds",
         select="fund_id,canonical_name,management_company,price_update_url,metadata,currency",
@@ -373,39 +423,73 @@ def main():
         ("afim", lambda: legacy.scrape_afim(by_name)),
     ]
 
+    _record_run_start(len(scrapers))
+
     all_rows = []
-    for name, scraper in scrapers:
-        try:
-            rows = _normalize_source_ids(scraper())
-            print(f"{name}: {len(rows)} extracted, {sum(1 for row in rows if row['fund_id'])} matched")
-            all_rows.extend(rows)
-        except Exception as exc:
-            print(f"{name} ERROR {type(exc).__name__}: {exc}")
-
-    snduk_fallback = _snduk_fallback_rows(funds, match, aliases)
-    selected_fallbacks = _select_fallbacks(all_rows, snduk_fallback)
-    if selected_fallbacks:
-        print(f"snduk fallback selected: {len(selected_fallbacks)} funds")
-        all_rows.extend(selected_fallbacks)
-
-    if all_rows:
-        response = legacy.sb_post("nav_staging", all_rows, prefer="return=representation")
-        if response.status_code in (200, 201):
+    source_errors = []
+    run_error = None
+    fallback_selected = 0
+    staging_error = False
+    try:
+        for name, scraper in scrapers:
             try:
-                staged_rows = response.json()
-                for row, staged in zip(all_rows, staged_rows):
-                    row["id"] = staged.get("id")
+                rows = _normalize_source_ids(scraper())
+                matched_count = sum(1 for row in rows if row.get("fund_id"))
+                print(f"{name}: {len(rows)} extracted, {matched_count} matched")
+                all_rows.extend(rows)
             except Exception as exc:
-                print(f"staging lineage response parse ERROR {type(exc).__name__}: {exc}")
-        print(
-            "staging", response.status_code, len(all_rows),
-            response.text[:200] if response.status_code not in (200, 201) else "OK",
-        )
+                source_errors.append({
+                    "source": name,
+                    "error": f"{type(exc).__name__}: {exc}",
+                })
+                print(f"{name} ERROR {type(exc).__name__}: {exc}")
 
-    matched = [row for row in all_rows if row.get("fund_id")]
-    ok, n = safe_upsert_official(matched)
-    print(f"official upserted {ok}/{n} run={legacy.RUN_ID}")
-    legacy.audit_coverage(funds, matched)
+        snduk_fallback = _snduk_fallback_rows(funds, match, aliases)
+        selected = _select_fallbacks(all_rows, snduk_fallback)
+        fallback_selected = len({row.get("fund_id") for row in selected if row.get("fund_id")})
+        if selected:
+            print(f"snduk fallback selected: {fallback_selected} funds")
+            all_rows.extend(selected)
+
+        if all_rows:
+            response = legacy.sb_post(
+                "nav_staging",
+                all_rows,
+                prefer="return=representation",
+            )
+            if response.status_code in (200, 201):
+                try:
+                    staged_rows = response.json()
+                    for row, staged in zip(all_rows, staged_rows):
+                        row["id"] = staged.get("id")
+                except Exception as exc:
+                    staging_error = True
+                    print(f"staging lineage response parse ERROR {type(exc).__name__}: {exc}")
+            else:
+                staging_error = True
+            print(
+                "staging", response.status_code, len(all_rows),
+                response.text[:200] if response.status_code not in (200, 201) else "OK",
+            )
+
+        matched = [row for row in all_rows if row.get("fund_id")]
+        ok, n = safe_upsert_official(matched)
+        print(f"official upserted {ok}/{n} run={legacy.RUN_ID}")
+        legacy.audit_coverage(funds, matched)
+    except Exception as exc:
+        run_error = f"{type(exc).__name__}: {exc}"
+        raise
+    finally:
+        status = "failed" if run_error else ("partial" if source_errors or staging_error else "success")
+        _record_run_finish(
+            status=status,
+            sources_attempted=len(scrapers),
+            rows_extracted=len(all_rows),
+            rows_matched=sum(1 for row in all_rows if row.get("fund_id")),
+            fallback_selected=fallback_selected,
+            source_errors=source_errors,
+            run_error=run_error,
+        )
 
 
 if __name__ == "__main__":
