@@ -14,6 +14,28 @@ class NavIntegrityTests(unittest.TestCase):
     def setUp(self):
         self.fund = {"fund_id": "fund-1", "canonical_name": "Test Fund"}
 
+    def _contract_context(self, fund_id="fund-1", currency="EGP",
+                          manager="Test Manager", source_id="src_test",
+                          source_url="https://manager.example/fund",
+                          scope=None, fund_url=None):
+        fund = {
+            "currency": currency,
+            "management_company": manager,
+            "price_update_url": fund_url or source_url,
+        }
+        source = {
+            "management_company_scope": scope or manager,
+            "source_url": source_url,
+            "source_kind": "management_company_page",
+        }
+        return patch.object(
+            safe, "_fund_registry",
+            return_value={fund_id: fund},
+        ), patch.object(
+            safe, "_source_registry",
+            return_value={source_id: source},
+        )
+
     def test_missing_source_date_stays_null(self):
         row = safe.safe_row("Test Fund", 10.5, None, "https://manager.example/fund", "src_test", self.fund, 1.0)
         self.assertIsNone(row["as_of_date"])
@@ -47,17 +69,19 @@ class NavIntegrityTests(unittest.TestCase):
     @patch.object(safe.legacy, "sb_get")
     def test_undated_candidate_is_never_promoted(self, sb_get, sb_post):
         sb_get.return_value = [{"fund_id": "fund-1", "as_of_date": "2026-09-16"}]
-        safe.safe_upsert_official([{"fund_id": "fund-1", "nav": 11.0, "as_of_date": None, "source_id": "src_test"}])
+        with self._contract_context()[0], self._contract_context()[1]:
+            safe.safe_upsert_official([{"fund_id": "fund-1", "nav": 11.0, "as_of_date": None, "source_id": "src_test"}])
         sb_post.assert_not_called()
 
     @patch.object(safe.legacy, "sb_post")
     @patch.object(safe.legacy, "sb_get")
     def test_older_candidate_cannot_overwrite_newer_official(self, sb_get, sb_post):
         sb_get.return_value = [{"fund_id": "fund-1", "as_of_date": "2026-09-17"}]
-        safe.safe_upsert_official([{
-            "fund_id": "fund-1", "nav": 10.0, "as_of_date": "2026-09-16",
-            "source_id": "src_test", "source_url": "https://manager.example/fund",
-        }])
+        with self._contract_context()[0], self._contract_context()[1]:
+            safe.safe_upsert_official([{
+                "fund_id": "fund-1", "nav": 10.0, "as_of_date": "2026-09-16",
+                "source_id": "src_test", "source_url": "https://manager.example/fund",
+            }])
         sb_post.assert_not_called()
 
     @patch.object(safe.legacy, "sb_post")
@@ -65,10 +89,11 @@ class NavIntegrityTests(unittest.TestCase):
     def test_same_date_candidate_is_promoted(self, sb_get, sb_post):
         sb_get.return_value = [{"fund_id": "fund-1", "as_of_date": "2026-09-17"}]
         sb_post.return_value = SimpleNamespace(status_code=201, text="")
-        safe.safe_upsert_official([{
-            "fund_id": "fund-1", "nav": 12.0, "as_of_date": "2026-09-17",
-            "source_id": "src_test", "source_url": "https://manager.example/fund",
-        }])
+        with self._contract_context()[0], self._contract_context()[1]:
+            safe.safe_upsert_official([{
+                "fund_id": "fund-1", "nav": 12.0, "as_of_date": "2026-09-17",
+                "source_id": "src_test", "source_url": "https://manager.example/fund",
+            }])
         sb_post.assert_called_once()
         self.assertEqual(sb_post.call_args.args[1][0]["as_of_date"], "2026-09-17")
 
@@ -77,10 +102,11 @@ class NavIntegrityTests(unittest.TestCase):
     def test_newer_candidate_is_promoted(self, sb_get, sb_post):
         sb_get.return_value = [{"fund_id": "fund-1", "as_of_date": "2026-09-16"}]
         sb_post.return_value = SimpleNamespace(status_code=201, text="")
-        safe.safe_upsert_official([{
-            "fund_id": "fund-1", "nav": 12.0, "as_of_date": "2026-09-17",
-            "source_id": "src_test", "source_url": "https://manager.example/fund",
-        }])
+        with self._contract_context()[0], self._contract_context()[1]:
+            safe.safe_upsert_official([{
+                "fund_id": "fund-1", "nav": 12.0, "as_of_date": "2026-09-17",
+                "source_id": "src_test", "source_url": "https://manager.example/fund",
+            }])
         sb_post.assert_called_once()
         self.assertEqual(sb_post.call_args.args[1][0]["as_of_date"], "2026-09-17")
 
@@ -96,15 +122,16 @@ class NavIntegrityTests(unittest.TestCase):
             "as_of_date": "2026-09-19",
             "source_id": "src_test",
         }]
-        safe.safe_upsert_official([{
-            "id": 123,
-            "fund_id": "fund-1",
-            "nav": 4.0,
-            "currency": "EGP",
-            "as_of_date": "2026-09-19",
-            "source_id": "src_test",
-            "source_url": "https://manager.example/fund",
-        }])
+        with self._contract_context()[0], self._contract_context()[1]:
+            safe.safe_upsert_official([{
+                "id": 123,
+                "fund_id": "fund-1",
+                "nav": 4.0,
+                "currency": "EGP",
+                "as_of_date": "2026-09-19",
+                "source_id": "src_test",
+                "source_url": "https://manager.example/fund",
+            }])
         sb_post.assert_not_called()
         patch_request.assert_called_once()
         payload = patch_request.call_args.kwargs["json"]
@@ -161,6 +188,7 @@ class NavIntegrityTests(unittest.TestCase):
                 "source_id": "src_test",
             }],
             [{"fund_id": "fund-1", "currency": "USD"}],
+            [{"source_id": "src_test", "management_company_scope": "Test Manager", "source_url": "https://manager.example/fund", "source_kind": "management_company_page"}],
         ]
         safe.safe_upsert_official([{
             "id": 124,
@@ -431,9 +459,17 @@ class NavIntegrityTests(unittest.TestCase):
             "https://www.granite.eg/", "src_granite_eg", fund, 1.0,
         )
         self.assertEqual(row["as_of_date"], "2026-09-17")
-        with patch.object(safe.legacy, "sb_get", return_value=[]):
-            with patch.object(safe.legacy, "sb_post", return_value=SimpleNamespace(status_code=201, text="")) as sb_post:
-                safe.safe_upsert_official([row])
+        fund_patch, source_patch = self._contract_context(
+            fund_id="granite_first_fund__granite_fund_management",
+            manager="Granite Fund Management",
+            source_id="src_granite_eg",
+            source_url="https://www.granite.eg/",
+            fund_url="https://www.granite.eg/",
+        )
+        with fund_patch, source_patch:
+            with patch.object(safe.legacy, "sb_get", return_value=[]):
+                with patch.object(safe.legacy, "sb_post", return_value=SimpleNamespace(status_code=201, text="")) as sb_post:
+                    safe.safe_upsert_official([row])
                 sb_post.assert_called_once()
                 self.assertEqual(sb_post.call_args.args[1][0]["source_id"], "src_granite_eg")
                 self.assertEqual(sb_post.call_args.args[1][0]["as_of_date"], "2026-09-17")
@@ -477,10 +513,18 @@ class NavIntegrityTests(unittest.TestCase):
         self.assertEqual(row["source_id"], "src_snduk")
         self.assertEqual(row["as_of_date"], "2026-09-17")
         self.assertTrue(row["raw"].get("fallback"))
-        with patch.object(safe.legacy, "sb_get", return_value=[]):
-            with patch.object(safe.legacy, "sb_post", return_value=SimpleNamespace(status_code=201, text="")) as sb_post:
-                safe.safe_upsert_official([row])
-                payload = sb_post.call_args.args[1][0]
+        fund_patch, source_patch = self._contract_context(
+            fund_id="granite_first_fund__granite_fund_management",
+            manager="Granite Fund Management",
+            source_id="src_snduk",
+            source_url="https://snduk.com/eg/page/mutual-funds-prices-today?lang=en",
+            fund_url="https://snduk.com/eg/page/mutual-funds-prices-today?lang=en",
+        )
+        with fund_patch, source_patch:
+            with patch.object(safe.legacy, "sb_get", return_value=[]):
+                with patch.object(safe.legacy, "sb_post", return_value=SimpleNamespace(status_code=201, text="")) as sb_post:
+                    safe.safe_upsert_official([row])
+                    payload = sb_post.call_args.args[1][0]
                 self.assertEqual(payload["source_id"], "src_snduk")
                 self.assertIn("snduk.com", payload["source_url"])
 
@@ -521,20 +565,28 @@ class NavIntegrityTests(unittest.TestCase):
 
     def test_existing_dated_official_not_replaced_by_undated_or_older_snduk(self):
         fund_id = "granite_first_fund__granite_fund_management"
-        with patch.object(safe.legacy, "sb_get", return_value=[{
-            "fund_id": fund_id, "as_of_date": "2026-09-17", "source_id": "src_granite_eg",
-        }]):
-            with patch.object(safe.legacy, "sb_post") as sb_post:
+        fund_patch, source_patch = self._contract_context(
+            fund_id=fund_id,
+            manager="Granite Fund Management",
+            source_id="src_snduk",
+            source_url="https://snduk.com/x",
+            fund_url="https://snduk.com/x",
+        )
+        with fund_patch, source_patch:
+            with patch.object(safe.legacy, "sb_get", return_value=[{
+                "fund_id": fund_id, "as_of_date": "2026-09-17", "source_id": "src_granite_eg",
+            }]):
+                with patch.object(safe.legacy, "sb_post") as sb_post:
                 safe.safe_upsert_official([{
                     "fund_id": fund_id, "nav": 1.66, "as_of_date": None,
                     "source_id": "src_snduk", "source_url": "https://snduk.com/x",
                 }])
-                sb_post.assert_not_called()
-                safe.safe_upsert_official([{
-                    "fund_id": fund_id, "nav": 1.66, "as_of_date": "2026-09-16",
-                    "source_id": "src_snduk", "source_url": "https://snduk.com/x",
-                }])
-                sb_post.assert_not_called()
+                    sb_post.assert_not_called()
+                    safe.safe_upsert_official([{
+                        "fund_id": fund_id, "nav": 1.66, "as_of_date": "2026-09-16",
+                        "source_id": "src_snduk", "source_url": "https://snduk.com/x",
+                    }])
+                    sb_post.assert_not_called()
 
     def test_today_label_is_never_used_as_as_of_date(self):
         row = safe.safe_row(
