@@ -534,7 +534,7 @@ def _record_run_start(sources_count, target_fund_count):
         print(f"ingest_run start ERROR {type(exc).__name__}: {exc}")
 
 
-def _record_run_finish(status, sources_attempted, rows_extracted, rows_matched, fallback_selected, fallback_scan_attempted, source_errors, attempted_sources, target_fund_count, run_error=None):
+def _record_run_finish(status, sources_attempted, rows_extracted, rows_matched, fallback_selected, fallback_sources, fallback_scan_attempted, source_errors, attempted_sources, target_fund_count, run_error=None):
     """Persist run outcome and metrics without making observability a hard dependency."""
     payload = {
         "status": status,
@@ -547,6 +547,7 @@ def _record_run_finish(status, sources_attempted, rows_extracted, rows_matched, 
             "pipeline": "safe_nav",
             "contract": "nav_currency_source_as_of_date",
             "fallback_selected": fallback_selected,
+            "fallback_sources": fallback_sources,
             "fallback_scan_attempted": fallback_scan_attempted,
             "attempted_sources": attempted_sources,
             "target_fund_count": target_fund_count,
@@ -605,6 +606,7 @@ def main():
     source_errors = []
     run_error = None
     fallback_selected = 0
+    fallback_sources = {}
     staging_error = False
     promotion_partial = False
     fallback_scan_attempted = False
@@ -625,9 +627,14 @@ def main():
                 print(f"{name} ERROR {type(exc).__name__}: {exc}")
 
         snduk_fallback = _snduk_fallback_rows(funds, match, aliases)
+        eima_fallback = _latest_eima_fallback_rows(funds)
         fallback_scan_attempted = True
-        selected = _select_fallbacks(all_rows, snduk_fallback)
+        selected = _select_fallbacks(all_rows, snduk_fallback, eima_fallback)
         fallback_selected = len({row.get("fund_id") for row in selected if row.get("fund_id")})
+        fallback_sources = {
+            "snduk": sum(1 for row in selected if row.get("source_id") == "src_snduk"),
+            "eima_weekly": sum(1 for row in selected if row.get("source_id") == "src_eima_weekly_tw"),
+        }
         if selected:
             print(f"snduk fallback selected: {fallback_selected} funds")
             all_rows.extend(selected)
@@ -671,6 +678,7 @@ def main():
             rows_extracted=len(all_rows),
             rows_matched=sum(1 for row in all_rows if row.get("fund_id")),
             fallback_selected=fallback_selected,
+            fallback_sources=fallback_sources,
             fallback_scan_attempted=fallback_scan_attempted,
             source_errors=source_errors,
             attempted_sources=attempted_sources,
