@@ -101,6 +101,8 @@ def main():
             )
         if source_id == "src_eima_weekly_tw":
             return raw.get("identity_match") == "exact_fund_id"
+        if source_id == "src_eima_performance_integrated":
+            return raw.get("identity_match") == "exact_fund_id"
         meta = source_registry.get(source_id) or {}
         scope = meta.get("management_company_scope")
         if scope:
