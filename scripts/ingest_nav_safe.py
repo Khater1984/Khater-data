@@ -215,8 +215,8 @@ def _source_allowed_for_fund(row, fund_meta, source_meta):
         return (
             raw.get("identity_match") == "explicit_alias"
             or (
-                _host(row.get("source_url")) == "snduk.com"
-                and _host(fund_meta.get("price_update_url")) == "snduk.com"
+                str(row.get("source_url") or "").rstrip("/") == str(fund_meta.get("price_update_url") or "").rstrip("/")
+                and _host(row.get("source_url")) == "snduk.com"
             )
         )
     if source_id == "src_eima_weekly_tw":
