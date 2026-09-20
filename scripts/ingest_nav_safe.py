@@ -221,22 +221,27 @@ def _currencies_compatible(fund_currency, row_currency):
     return fc == rc
 
 
-def _explicit_snduk_alias(name, funds):
-    """Resolve only identity matches that are verified outside fuzzy name matching.
+def _explicit_snduk_alias(name, funds, aliases=None):
+    """Resolve only identities registered as verified provider aliases.
 
-    No invented aliases. Only fund_id + published Snduk label pairs that were
-    verified against the registry and the source page may appear here.
-    Generic SequenceMatcher matching is intentionally NOT used for fallback.
+    No fuzzy matching is allowed in the fallback path. A fallback identity must
+    be represented in fund_name_aliases with the exact published provider label.
     """
     normalized = re.sub(r"[^a-z0-9]+", " ", str(name or "").lower()).strip()
-    for fund in funds:
-        if fund.get("fund_id") == "misr_money_market_euro__ci_asset_management":
-            if "banque misr mutual fund in euro" in normalized:
-                return fund, 1.0
+    by_id = {f.get("fund_id"): f for f in funds}
+    for alias in aliases or []:
+        if alias.get("alias_name") is None or alias.get("fund_id") not in by_id:
+            continue
+        alias_norm = alias.get("normalized_alias")
+        if alias_norm is None:
+            alias_norm = re.sub(r"s+", " ", str(alias.get("alias_name") or "").lower()).strip()
+        alias_norm = re.sub(r"[^a-z0-9]+", " ", alias_norm).strip()
+        if alias_norm == normalized and float(alias.get("match_confidence") or 0) >= 1.0:
+            return by_id[alias["fund_id"]], 1.0
     return None, 0.0
 
 
-def _snduk_fallback_rows(funds, match=None):
+def _snduk_fallback_rows(funds, match=None, aliases=None):
     """Read Snduk consolidated prices and return ONLY explicit-alias fallback rows.
 
     Identity: explicit verified aliases only (no generic fuzzy match).
@@ -270,7 +275,7 @@ def _snduk_fallback_rows(funds, match=None):
             if not name or nav is None or not asof:
                 continue
             # Explicit identity only — never fall back to generic fuzzy match.
-            fund, score = _explicit_snduk_alias(name, funds)
+            fund, score = _explicit_snduk_alias(name, funds, aliases)
             if not fund:
                 skipped_no_alias += 1
                 continue
@@ -343,6 +348,11 @@ def main():
         select="fund_id,canonical_name,management_company,price_update_url,metadata,currency",
         limit="1000",
     )
+    aliases = legacy.sb_get(
+        "fund_name_aliases",
+        select="fund_id,alias_name,alias_source,normalized_alias,match_confidence",
+        limit="5000",
+    )
     by_name, match = legacy.matcher(funds)
     scrapers = [
         ("hermes", lambda: legacy.scrape_hermes(match)),
@@ -370,14 +380,21 @@ def main():
         except Exception as exc:
             print(f"{name} ERROR {type(exc).__name__}: {exc}")
 
-    snduk_fallback = _snduk_fallback_rows(funds, match)
+    snduk_fallback = _snduk_fallback_rows(funds, match, aliases)
     selected_fallbacks = _select_fallbacks(all_rows, snduk_fallback)
     if selected_fallbacks:
         print(f"snduk fallback selected: {len(selected_fallbacks)} funds")
         all_rows.extend(selected_fallbacks)
 
     if all_rows:
-        response = legacy.sb_post("nav_staging", all_rows)
+        response = legacy.sb_post("nav_staging", all_rows, prefer="return=representation")
+        if response.status_code in (200, 201):
+            try:
+                staged_rows = response.json()
+                for row, staged in zip(all_rows, staged_rows):
+                    row["id"] = staged.get("id")
+            except Exception as exc:
+                print(f"staging lineage response parse ERROR {type(exc).__name__}: {exc}")
         print(
             "staging", response.status_code, len(all_rows),
             response.text[:200] if response.status_code not in (200, 201) else "OK",
