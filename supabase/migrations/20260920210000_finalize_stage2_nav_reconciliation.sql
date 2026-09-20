@@ -195,17 +195,19 @@ where s.run_id='repair_20260920_dated_eima_official'
 -- Repair the known AAIM identity contamination observed before strict matching.
 insert into public.nav_staging
 (run_id,fund_id,extracted_name,canonical_name,nav,currency,as_of_date,source_url,source_id,match_status,match_score,verification_status,raw)
-values
+select *
+from (values
 ('repair_20260920_aaim_identity','arab_african_international_bank_juman__arab_african_investment_management','Juman Money Market','Arab African International Bank (Juman)',804.3725,'EGP','2026-09-16','https://www.aaim.com.eg/en/what-we-offer/funds/juman','src_aaim_funds','matched',1.0,'accepted','{"repair":"strict_aaim_identity","identity_match":"exact_provider_alias"}'),
 ('repair_20260920_aaim_identity','arab_african_international_bank_shield__arab_african_investment_management','Shield Equity','Arab African International Bank (Shield)',870.89,'EGP','2026-09-12','https://www.aaim.com.eg/en/what-we-offer/funds','src_aaim_funds','matched',1.0,'accepted','{"repair":"strict_aaim_identity","identity_match":"exact_provider_alias"}'),
 ('repair_20260920_aaim_identity','fanar__arab_african_investment_management','El Fanar Money Market','Fanar',177.23143,'EGP','2026-09-16','https://www.aaim.com.eg/en/what-we-offer/funds/elfanar','src_aaim_funds','matched',1.0,'accepted','{"repair":"strict_aaim_identity","identity_match":"exact_provider_alias"}'),
 ('repair_20260920_aaim_identity','misr_takaful__arab_african_investment_management','Misr Takaful Sharia Compliant - Money Market','Misr Takaful',214.29813,'EGP','2026-09-16','https://www.aaim.com.eg/en/what-we-offer/funds/misr-takaful','src_aaim_funds','matched',1.0,'accepted','{"repair":"strict_aaim_identity","identity_match":"exact_provider_alias"}'),
 ('repair_20260920_aaim_identity','sarwaty__arab_african_investment_management','Sarwaty Money Market','Sarwaty*',224.72095,'EGP','2026-09-16','https://www.aaim.com.eg/en/what-we-offer/funds/sarwaty','src_aaim_funds','matched',1.0,'accepted','{"repair":"strict_aaim_identity","identity_match":"exact_provider_alias"}')
+) v(run_id,fund_id,extracted_name,canonical_name,nav,currency,as_of_date,source_url,source_id,match_status,match_score,verification_status,raw)
 where not exists (
   select 1 from public.nav_staging s
   where s.run_id='repair_20260920_aaim_identity'
-    and s.fund_id='sarwaty__arab_african_investment_management'
-);
+    and s.fund_id=v.fund_id
+)
 
 update public.nav_official n
 set nav=s.nav,currency=s.currency,as_of_date=s.as_of_date,
@@ -223,15 +225,17 @@ where (fund_id='siula_money_market__ni_capital' and source_id='src_aaim_funds')
 
 insert into public.nav_staging
 (run_id,fund_id,extracted_name,canonical_name,nav,currency,as_of_date,source_url,source_id,match_status,match_score,verification_status,raw)
-values
+select *
+from (values
 ('repair_20260920_identity_audit','siula_money_market__ni_capital','Siula Money Market','Siula Money Market',24.68231,'EGP','2026-09-03','https://eima.org.eg/wp-content/uploads/2026/09/performance-03-of-September-2026-Time-Weighted.pdf','src_eima_weekly_tw','matched',1.0,'accepted','{"repair":"cross_manager_contamination","provenance":"eima_weekly_official_industry_report","identity_match":"exact_fund_id","frequency_provenance":"weekly"}'),
 ('repair_20260920_identity_audit','national_bank_of_egypt_fund_iii__x','National Bank of Egypt Fund III','National Bank of Egypt Fund III',648.55,'EGP','2026-09-03','https://eima.org.eg/wp-content/uploads/2026/09/performance-03-of-September-2026-Time-Weighted.pdf','src_eima_weekly_tw','matched',1.0,'accepted','{"repair":"cross_manager_contamination","provenance":"eima_weekly_official_industry_report","identity_match":"exact_fund_id","frequency_provenance":"weekly"}'),
 ('repair_20260920_identity_audit','sarwaty__ci_asset_management','Sarwaty','Sarwaty',198.20591,'EGP','2025-12-31','https://eima.org.eg/?page_id=1886','src_eima_performance_integrated','matched',1.0,'accepted','{"repair":"lineage_cleanup","provenance":"eima_industry_association_historical_report","identity_match":"exact_fund_id","frequency_provenance":"historical_weekly"}')
+) v(run_id,fund_id,extracted_name,canonical_name,nav,currency,as_of_date,source_url,source_id,match_status,match_score,verification_status,raw)
 where not exists (
   select 1 from public.nav_staging s
   where s.run_id='repair_20260920_identity_audit'
-    and s.fund_id='sarwaty__ci_asset_management'
-);
+    and s.fund_id=v.fund_id
+)
 
 update public.nav_official n
 set nav=s.nav,currency=s.currency,as_of_date=s.as_of_date,
