@@ -64,21 +64,45 @@ def main():
         x["fund_id"]: x
         for x in get(
             "funds",
-            select="fund_id,currency,management_company",
+            select="fund_id,currency,management_company,price_update_url",
             active="eq.true",
             limit="1000",
         )
     }
-    source_scope = {
-        x["source_id"]: x.get("management_company_scope")
+    source_registry = {
+        x["source_id"]: {
+            "management_company_scope": x.get("management_company_scope"),
+            "source_url": x.get("source_url") or "",
+            "source_kind": x.get("source_kind") or "",
+        }
         for x in get(
             "sources",
-            select="source_id,management_company_scope",
+            select="source_id,management_company_scope,source_url,source_kind",
             limit="1000",
         )
     }
 
     latest = {}
+    def host(value):
+        if not value or "://" not in str(value):
+            return ""
+        return str(value).split("/")[2].lower().replace("www.", "")
+
+    def source_allowed(row, fund):
+        source_id = row.get("source_id") or ""
+        raw = row.get("raw") if isinstance(row.get("raw"), dict) else {}
+        if source_id == "src_snduk":
+            return raw.get("identity_match") == "explicit_alias"
+        if source_id == "src_eima_weekly_tw":
+            return raw.get("identity_match") == "exact_fund_id"
+        meta = source_registry.get(source_id) or {}
+        scope = meta.get("management_company_scope")
+        if scope:
+            return str(scope).strip().lower() == str(fund.get("management_company") or "").strip().lower()
+        if meta.get("source_kind") == "management_company_page":
+            return bool(host(meta.get("source_url")) and host(meta.get("source_url")) == host(fund.get("price_update_url")))
+        return False
+
     rejected_future = 0
     rejected_bad = 0
     for r in staging:
@@ -100,8 +124,7 @@ def main():
         if str(r.get("currency") or "").strip().upper() != str(fund.get("currency") or "").strip().upper():
             rejected_bad += 1
             continue
-        scope = source_scope.get(r.get("source_id"))
-        if scope and str(scope).strip().lower() != str(fund.get("management_company") or "").strip().lower():
+        if not source_allowed(r, fund):
             rejected_bad += 1
             continue
         if fid not in latest or d > latest[fid].get("as_of_date", ""):
