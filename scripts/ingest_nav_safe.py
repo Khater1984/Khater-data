@@ -667,6 +667,7 @@ def main():
         ("hc", lambda: legacy.scrape_hc(by_name)),
         ("pfi", lambda: legacy.scrape_pfi(by_name)),
         ("granite", lambda: legacy.scrape_granite(by_name)),
+        ("alpha_odin", lambda: legacy.scrape_alpha_odin(by_name)),
         ("snduk", lambda: legacy.scrape_snduk(funds)),
         ("abk", lambda: legacy.scrape_abk(funds)),
         ("zaldi", lambda: legacy.scrape_zaldi(funds)),
