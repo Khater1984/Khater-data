@@ -63,13 +63,20 @@ def _future_policy(asof: str, source_id: str):
     return False, "future_outside_window"
 
 
-def safe_row(extracted, nav, asof, url, sid, fund, score, extra=None, currency="EGP"):
+def safe_row(extracted, nav, asof, url, sid, fund, score, extra=None, currency=None):
     """Build a staging row without ever fabricating an as-of date."""
     raw = dict(extra or {}) if isinstance(extra, dict) else {"raw": extra}
     accepted, future_status = _future_policy(asof, sid)
     raw.setdefault("phase2_date_policy", future_status)
     if asof and not accepted:
         raw["date_rejected_reason"] = future_status
+
+    if currency is None:
+        currency = (fund or {}).get("currency") or "EGP"
+        raw.setdefault("currency_provenance", "fund_registry")
+    else:
+        raw.setdefault("currency_provenance", "source_published")
+
     return {
         "run_id": legacy.RUN_ID,
         "extracted_name": extracted,
