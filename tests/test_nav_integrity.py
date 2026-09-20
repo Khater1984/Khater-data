@@ -17,6 +17,16 @@ class NavIntegrityTests(unittest.TestCase):
         row = safe.safe_row("Test Fund", 10.5, None, "https://manager.example/fund", "src_test", self.fund, 1.0)
         self.assertIsNone(row["as_of_date"])
 
+
+    def test_missing_parser_currency_uses_verified_fund_currency(self):
+        fund = {"fund_id": "fund-usd", "canonical_name": "USD Fund", "currency": "USD"}
+        row = safe.safe_row(
+            "USD Fund", 10.5, "2026-09-19",
+            "https://manager.example/fund", "src_test", fund, 1.0,
+        )
+        self.assertEqual(row["currency"], "USD")
+        self.assertEqual(row["raw"]["currency_provenance"], "fund_registry")
+
     def test_dated_source_date_is_preserved_exactly(self):
         row = safe.safe_row("Test Fund", 10.5, "2026-09-17", "https://manager.example/fund", "src_test", self.fund, 1.0)
         self.assertEqual(row["as_of_date"], "2026-09-17")
