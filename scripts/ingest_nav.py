@@ -645,7 +645,7 @@ def upsert_official(matched_rows):
     for r in best.values():
         asof = r.get("as_of_date") or (existing.get(r["fund_id"]) or {}).get("as_of_date")
         if not asof:
-            asof = datetime.now(timezone.utc).date().isoformat()
+            continue
         payload.append(
             {
                 "fund_id": r["fund_id"],
