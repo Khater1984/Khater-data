@@ -445,7 +445,7 @@ def _normalize_source_ids(rows):
 
 
 
-def _record_run_start(sources_count):
+def _record_run_start(sources_count, target_fund_count):
     """Best-effort run observability; never mask NAV ingestion failures."""
     payload = [{
         "run_id": legacy.RUN_ID,
@@ -454,6 +454,7 @@ def _record_run_start(sources_count):
         "rows_extracted": 0,
         "rows_matched": 0,
         "meta": {
+            "target_fund_count": target_fund_count,
             "pipeline": "safe_nav",
             "contract": "nav_currency_source_as_of_date",
         },
@@ -469,7 +470,7 @@ def _record_run_start(sources_count):
         print(f"ingest_run start ERROR {type(exc).__name__}: {exc}")
 
 
-def _record_run_finish(status, sources_attempted, rows_extracted, rows_matched, fallback_selected, fallback_scan_attempted, source_errors, attempted_sources, run_error=None):
+def _record_run_finish(status, sources_attempted, rows_extracted, rows_matched, fallback_selected, fallback_scan_attempted, source_errors, attempted_sources, target_fund_count, run_error=None):
     """Persist run outcome and metrics without making observability a hard dependency."""
     payload = {
         "status": status,
@@ -484,7 +485,7 @@ def _record_run_finish(status, sources_attempted, rows_extracted, rows_matched, 
             "fallback_selected": fallback_selected,
             "fallback_scan_attempted": fallback_scan_attempted,
             "attempted_sources": attempted_sources,
-            "target_fund_count": 208,
+            "target_fund_count": target_fund_count,
             "source_errors": source_errors,
         },
     }
@@ -534,7 +535,7 @@ def main():
         ("afim", lambda: legacy.scrape_afim(by_name)),
     ]
 
-    _record_run_start(len(scrapers))
+    _record_run_start(len(scrapers), len(funds))
 
     all_rows = []
     source_errors = []
@@ -609,6 +610,7 @@ def main():
             fallback_scan_attempted=fallback_scan_attempted,
             source_errors=source_errors,
             attempted_sources=attempted_sources,
+            target_fund_count=len(funds),
             run_error=run_error,
         )
 
