@@ -5,7 +5,7 @@ import os,re
 from datetime import datetime, timezone
 import requests
 from bs4 import BeautifulSoup
-from scripts import ingest_nav_safe as safe_nav
+import ingest_nav_safe as safe_nav
 BASE=os.environ["SUPABASE_URL"].rstrip("/"); KEY=os.environ["SUPABASE_SERVICE_KEY"]
 RUN_ID=os.getenv("NAV_RUN_ID") or ("repair_pfi_" + datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S"))
 H={"apikey":KEY,"Authorization":f"Bearer {KEY}","Content-Type":"application/json"}
