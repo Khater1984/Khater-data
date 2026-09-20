@@ -177,25 +177,56 @@ def _fund_registry():
         x["fund_id"]: {
             "currency": _normalize_currency(x.get("currency")),
             "management_company": x.get("management_company"),
+            "price_update_url": x.get("price_update_url") or "",
         }
         for x in legacy.sb_get(
             "funds",
-            select="fund_id,currency,management_company",
+            select="fund_id,currency,management_company,price_update_url",
             limit="1000",
         )
     }
 
 
-def _source_manager_scope():
+def _source_registry():
     return {
-        x["source_id"]: x.get("management_company_scope")
+        x["source_id"]: {
+            "management_company_scope": x.get("management_company_scope"),
+            "source_url": x.get("source_url") or "",
+            "source_kind": x.get("source_kind") or "",
+        }
         for x in legacy.sb_get(
             "sources",
-            select="source_id,management_company_scope",
+            select="source_id,management_company_scope,source_url,source_kind",
             limit="1000",
         )
-        if x.get("management_company_scope")
     }
+
+
+def _host(value):
+    if not value or "://" not in str(value):
+        return ""
+    return str(value).split("/")[2].lower().replace("www.", "")
+
+
+def _source_allowed_for_fund(row, fund_meta, source_meta):
+    source_id = row.get("source_id") or ""
+    raw = row.get("raw") if isinstance(row.get("raw"), dict) else {}
+    if source_id == "src_snduk":
+        return raw.get("identity_match") == "explicit_alias"
+    if source_id == "src_eima_weekly_tw":
+        return raw.get("identity_match") == "exact_fund_id"
+
+    scope = source_meta.get("management_company_scope")
+    if scope:
+        return _normalize_manager(fund_meta.get("management_company")) == _normalize_manager(scope)
+
+    if source_meta.get("source_kind") == "management_company_page":
+        return bool(
+            _host(source_meta.get("source_url"))
+            and _host(source_meta.get("source_url")) == _host(fund_meta.get("price_update_url"))
+        )
+
+    return False
 
 
 def _is_usable_current_candidate(row):
@@ -211,7 +242,7 @@ def safe_upsert_official(matched_rows):
     now = datetime.now(timezone.utc).isoformat()
     existing = _existing_official()
     registry = _fund_registry()
-    source_manager_scope = _source_manager_scope()
+    source_registry = _source_registry()
     best = {}
     skipped_no_date = 0
     skipped_future = 0
@@ -244,14 +275,13 @@ def safe_upsert_official(matched_rows):
             continue
 
         source_id = row.get("source_id")
-        expected_manager = source_manager_scope.get(source_id)
-        actual_manager = fund_meta.get("management_company")
-        if expected_manager and _normalize_manager(actual_manager) != _normalize_manager(expected_manager):
+        source_meta = source_registry.get(source_id) or {}
+        if not _source_allowed_for_fund(row, fund_meta, source_meta):
             skipped_manager += 1
             _quarantine_review(
                 row,
-                f"Automatic promotion blocked: source-manager mismatch "
-                f"(source={source_id}, expected={expected_manager}, actual={actual_manager}).",
+                f"Automatic promotion blocked: source identity not authorized "
+                f"for fund (source={source_id}, fund={fid}).",
             )
             continue
 
