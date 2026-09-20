@@ -91,7 +91,7 @@ class NavIntegrityTests(unittest.TestCase):
         sb_post.return_value = SimpleNamespace(status_code=201, text="")
         with self._contract_context()[0], self._contract_context()[1]:
             safe.safe_upsert_official([{
-                "fund_id": "fund-1", "nav": 12.0, "as_of_date": "2026-09-17",
+                "fund_id": "fund-1", "nav": 12.0, "currency": "EGP", "as_of_date": "2026-09-17",
                 "source_id": "src_test", "source_url": "https://manager.example/fund",
             }])
         sb_post.assert_called_once()
@@ -104,7 +104,7 @@ class NavIntegrityTests(unittest.TestCase):
         sb_post.return_value = SimpleNamespace(status_code=201, text="")
         with self._contract_context()[0], self._contract_context()[1]:
             safe.safe_upsert_official([{
-                "fund_id": "fund-1", "nav": 12.0, "as_of_date": "2026-09-17",
+                "fund_id": "fund-1", "nav": 12.0, "currency": "EGP", "as_of_date": "2026-09-17",
                 "source_id": "src_test", "source_url": "https://manager.example/fund",
             }])
         sb_post.assert_called_once()
@@ -361,20 +361,56 @@ class NavIntegrityTests(unittest.TestCase):
 
 
     def test_aaim_alias_registry_targets_own_manager_funds(self):
-        from scripts import ingest_nav as legacy_ingest
-        expected = {
-            "shield equity": "Arab African International Bank (Shield)",
-            "juman money market": "Arab African International Bank (Juman)",
-            "iskan money market": "Iskan Insurance",
-            "diamond money market": "Diamond",
-            "misr takaful sharia compliant money market": "Misr Takaful",
-            "bareeq fixed income egp": "Bareeq",
-            "el fanar money market": "Fanar",
-            "sarwaty money market": "Sarwaty*",
-            "bond fixed income usd": "Bonds Fixed Income USD Fund",
-        }
-        for source_label, canonical in expected.items():
-            self.assertEqual(legacy_ingest.AAIM_ALIAS[source_label], canonical)
+        funds = [
+            {
+                "fund_id": f"aaim-{i}",
+                "canonical_name": canonical,
+                "management_company": "Arab African Investment Management",
+            }
+            for i, canonical in enumerate([
+                "Arab African International Bank (Shield)",
+                "Arab African International Bank (Juman)",
+                "Iskan Insurance",
+                "Diamond",
+                "Misr Takaful",
+                "Bareeq",
+                "Fanar",
+                "Sarwaty*",
+                "Bonds Fixed Income USD Fund",
+            ])
+        ]
+        aliases = [
+            {
+                "fund_id": fund["fund_id"],
+                "alias_name": alias,
+                "alias_source": "aaim:verified_identity:2026-09-20",
+                "match_confidence": 1.0,
+            }
+            for fund, alias in zip(
+                funds,
+                [
+                    "Shield Equity",
+                    "Juman Money Market",
+                    "Iskan Money Market",
+                    "Diamond Money Market",
+                    "Misr Takaful Sharia Compliant Money Market",
+                    "Bareeq Fixed Income EGP",
+                    "El Fanar Money Market",
+                    "Sarwaty Money Market",
+                    "Bond Fixed Income USD",
+                ],
+            )
+        ]
+        legacy_ingest.set_provider_alias_registry(aliases, funds)
+        for alias, expected_id in zip(
+            ["Shield Equity","Juman Money Market","Iskan Money Market","Diamond Money Market",
+             "Misr Takaful Sharia Compliant Money Market","Bareeq Fixed Income EGP",
+             "El Fanar Money Market","Sarwaty Money Market","Bond Fixed Income USD"],
+            [f["fund_id"] for f in funds],
+        ):
+            fund, score = legacy_ingest.provider_alias_match(alias, "aaim")
+            self.assertEqual(fund["fund_id"], expected_id)
+            self.assertEqual(score, 1.0)
 
     def test_zaldi_source_alias_is_normalized(self):
         rows = [{"source_id": "src_zaldi", "raw": {}}]
