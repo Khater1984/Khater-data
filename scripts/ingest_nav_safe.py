@@ -101,6 +101,34 @@ def _existing_official():
 OUTLIER_MAX_ABS_MOVE = 0.50
 
 
+def _quarantine_review(row, message):
+    """Mark a staging candidate for manual review without promoting it."""
+    staging_id = row.get("id")
+    if not staging_id:
+        print(f"quarantine review (no staging id): {row.get('fund_id')} {message}")
+        return
+
+    try:
+        response = legacy.requests.patch(
+            f"{legacy.BASE}/rest/v1/nav_staging?id=eq.{staging_id}",
+            headers={**legacy.H, "Prefer": "return=minimal"},
+            json={
+                "verification_status": "needs_review",
+                "notes": message,
+            },
+            timeout=20,
+        )
+        print(
+            f"quarantine review: staging_id={staging_id} "
+            f"status={response.status_code} {message}"
+        )
+    except Exception as exc:
+        print(
+            f"quarantine review ERROR staging_id={staging_id} "
+            f"{type(exc).__name__}: {exc}"
+        )
+
+
 def _quarantine_outlier(row, current, move_pct):
     """Keep a large unexplained NAV move in staging for manual/source review."""
     staging_id = row.get("id")
@@ -179,10 +207,10 @@ def safe_upsert_official(matched_rows):
         incoming_currency = _normalize_currency(row.get("currency"))
         if not expected_currency or not incoming_currency or expected_currency != incoming_currency:
             skipped_currency += 1
-            _quarantine_outlier(
+            _quarantine_review(
                 row,
-                {"nav": row.get("nav")},
-                0.0,
+                f"Automatic promotion blocked: currency mismatch "
+                f"(expected={expected_currency}, incoming={incoming_currency}).",
             )
             continue
 
