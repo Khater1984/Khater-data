@@ -10,17 +10,16 @@ from scripts import ingest_nav_safe as safe
 from scripts import ingest_nav as legacy_ingest
 
 
+class NavIntegrityTests(unittest.TestCase):
+    def setUp(self):
+        self.fund = {"fund_id": "fund-1", "canonical_name": "Test Fund"}
+
     @patch("scripts.repair_pfi_nav.requests.get", side_effect=__import__("requests").RequestException("PFI timeout"))
     def test_pfi_source_timeout_is_non_blocking(self, get_mock):
         from scripts import repair_pfi_nav
         result = repair_pfi_nav.main()
         self.assertEqual(result, 0)
         get_mock.assert_called_once()
-
-
-class NavIntegrityTests(unittest.TestCase):
-    def setUp(self):
-        self.fund = {"fund_id": "fund-1", "canonical_name": "Test Fund"}
 
     def _contract_context(self, fund_id="fund-1", currency="EGP",
                           manager="Test Manager", source_id="src_test",
