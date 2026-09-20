@@ -90,6 +90,29 @@ class SndukFallbackIdentityTests(unittest.TestCase):
         self.assertIsNotNone(fund)
         self.assertEqual(score, 1.0)
 
+
+    def test_new_verified_aliases_resolve_exactly(self):
+        funds = [
+            {"fund_id": "agricultural_bank_of_egypt_al_wefak__ci_asset_management", "canonical_name": "Agricultural Bank of Egypt (Al Wefak)", "currency": "EGP"},
+            {"fund_id": "mubasher_equity__mubasher_asset_management", "canonical_name": "Mubasher Equity", "currency": "EGP"},
+            {"fund_id": "siula_money_market__ni_capital", "canonical_name": "Siula Money Market", "currency": "EGP"},
+            {"fund_id": "housing_development_bank_mawared__pfi_asset_management", "canonical_name": "Housing & Development Bank (Mawared)", "currency": "EGP"},
+            {"fund_id": "pfi_cashi__pfi_asset_management", "canonical_name": "PFI Cashi", "currency": "EGP"},
+            {"fund_id": "odin_trend__x", "canonical_name": "Odin Trend", "currency": "EGP"},
+        ]
+        aliases = [
+            {"fund_id": "agricultural_bank_of_egypt_al_wefak__ci_asset_management", "alias_name": "Al Wefak Shariah Compliant Investment Fund", "alias_source": "snduk:verified_identity:2026-09-20", "match_confidence": 1.0},
+            {"fund_id": "mubasher_equity__mubasher_asset_management", "alias_name": "Mubasher Equity Fund", "alias_source": "snduk:verified_identity:2026-09-20", "match_confidence": 1.0},
+            {"fund_id": "siula_money_market__ni_capital", "alias_name": "Siula Money Market Fund - NI Capital", "alias_source": "snduk:verified_identity:2026-09-20", "match_confidence": 1.0},
+            {"fund_id": "housing_development_bank_mawared__pfi_asset_management", "alias_name": "Mawared Money Market Fund – HD BANK", "alias_source": "snduk:verified_identity:2026-09-20", "match_confidence": 1.0},
+            {"fund_id": "pfi_cashi__pfi_asset_management", "alias_name": "PFI Cashi Money Market Fund", "alias_source": "snduk:verified_identity:2026-09-20", "match_confidence": 1.0},
+            {"fund_id": "odin_trend__x", "alias_name": "Odin Equity Fund Trend", "alias_source": "snduk:verified_identity:2026-09-20", "match_confidence": 1.0},
+        ]
+        for alias in aliases:
+            fund, score = safe._explicit_snduk_alias(alias["alias_name"], funds, aliases)
+            self.assertEqual(fund["fund_id"], alias["fund_id"])
+            self.assertEqual(score, 1.0)
+
     def test_unregistered_misr_euro_alias_does_not_work(self):
         funds = [{
             "fund_id": "misr_money_market_euro__ci_asset_management",
