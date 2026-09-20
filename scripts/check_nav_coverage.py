@@ -152,10 +152,14 @@ def main():
             hard_failures.append(
                 f"{f['canonical_name']} [{host or 'no-host'}] was not attempted by manager or fallback in current run"
             )
+        elif host not in SUPPORTED and nav is None:
+            status = "UNSUPPORTED_HOST"
+        elif host not in SUPPORTED and nav is not None and not candidates:
+            status = "OK_UNSUPPORTED_HOST"
         elif not candidates:
             status = "ATTEMPTED_NO_CURRENT_ROW"
         elif host not in SUPPORTED:
-            status = "UNSUPPORTED_HOST" if nav is None else "OK_UNSUPPORTED_HOST"
+            status = "OK_UNSUPPORTED_HOST"
         elif nav is None:
             status = "FAIL_NO_NAV"
             hard_failures.append(f"{f['canonical_name']} [{host}] no official NAV")
