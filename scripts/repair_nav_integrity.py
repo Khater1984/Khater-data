@@ -50,16 +50,33 @@ def main():
     today = date.today()
     official = get(
         "nav_official",
-        select="fund_id,nav,as_of_date,source_id,source_url",
+        select="fund_id,nav,currency,as_of_date,source_id,source_url",
         limit="5000",
     )
     staging = get(
         "nav_staging",
-        select="id,fund_id,nav,as_of_date,source_id,source_url,verification_status,match_status,created_at",
+        select="id,fund_id,nav,currency,as_of_date,source_id,source_url,verification_status,match_status,created_at",
         fund_id="not.is.null",
         limit="20000",
         order="created_at.desc",
     )
+    funds = {
+        x["fund_id"]: x
+        for x in get(
+            "funds",
+            select="fund_id,currency,management_company",
+            active="eq.true",
+            limit="1000",
+        )
+    }
+    source_scope = {
+        x["source_id"]: x.get("management_company_scope")
+        for x in get(
+            "sources",
+            select="source_id,management_company_scope",
+            limit="1000",
+        )
+    }
 
     latest = {}
     rejected_future = 0
@@ -75,6 +92,17 @@ def main():
             continue
         fid = r.get("fund_id")
         if not fid:
+            continue
+        fund = funds.get(fid)
+        if not fund:
+            rejected_bad += 1
+            continue
+        if str(r.get("currency") or "").strip().upper() != str(fund.get("currency") or "").strip().upper():
+            rejected_bad += 1
+            continue
+        scope = source_scope.get(r.get("source_id"))
+        if scope and str(scope).strip().lower() != str(fund.get("management_company") or "").strip().lower():
+            rejected_bad += 1
             continue
         if fid not in latest or d > latest[fid].get("as_of_date", ""):
             latest[fid] = r
@@ -96,8 +124,16 @@ def main():
                 continue
         n = latest.get(o["fund_id"])
         if n and n.get("as_of_date") and (not d or n["as_of_date"] > d):
+            # This secondary repair path must not bypass the central outlier guard.
+            prior_nav = o.get("nav")
+            new_nav = n.get("nav")
+            if prior_nav is not None and new_nav is not None and prior_nav != 0:
+                if abs(float(new_nav) / float(prior_nav) - 1.0) >= 0.50:
+                    rejected_bad += 1
+                    continue
             patch(o["fund_id"], {
                 "nav": n["nav"],
+                "currency": n.get("currency"),
                 "as_of_date": n["as_of_date"],
                 "source_id": n.get("source_id"),
                 "source_url": n.get("source_url"),
