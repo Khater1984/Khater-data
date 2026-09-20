@@ -100,6 +100,34 @@ class NavIntegrityTests(unittest.TestCase):
         self.assertEqual(payload["verification_status"], "needs_review")
         self.assertIn("Automatic promotion blocked", payload["notes"])
 
+
+    @patch.object(safe.legacy.requests, "patch")
+    @patch.object(safe.legacy, "sb_post")
+    def test_run_observability_persists_shared_run_metrics(self, sb_post, patch_request):
+        sb_post.return_value = SimpleNamespace(status_code=201, text="")
+        safe._record_run_start(14)
+        sb_post.assert_called_once()
+        start_payload = sb_post.call_args.args[1][0]
+        self.assertEqual(start_payload["run_id"], safe.legacy.RUN_ID)
+        self.assertEqual(start_payload["status"], "running")
+        self.assertEqual(start_payload["sources_attempted"], 14)
+
+        patch_request.return_value = SimpleNamespace(status_code=204, text="")
+        safe._record_run_finish(
+            status="success",
+            sources_attempted=14,
+            rows_extracted=200,
+            rows_matched=190,
+            fallback_selected=2,
+            source_errors=[],
+        )
+        patch_request.assert_called_once()
+        finish_payload = patch_request.call_args.kwargs["json"]
+        self.assertEqual(finish_payload["status"], "success")
+        self.assertEqual(finish_payload["rows_extracted"], 200)
+        self.assertEqual(finish_payload["rows_matched"], 190)
+        self.assertEqual(finish_payload["meta"]["fallback_selected"], 2)
+
     def test_zaldi_source_alias_is_normalized(self):
         rows = [{"source_id": "src_zaldi", "raw": {}}]
         safe._normalize_source_ids(rows)
