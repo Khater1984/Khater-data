@@ -179,6 +179,37 @@ class NavIntegrityTests(unittest.TestCase):
 
 
 
+
+    @patch.object(safe.legacy.requests, "patch")
+    @patch.object(safe.legacy, "sb_post")
+    @patch.object(safe.legacy, "sb_get")
+    def test_source_manager_scope_mismatch_is_quarantined(self, sb_get, sb_post, patch_request):
+        sb_get.side_effect = [
+            [{
+                "fund_id": "fund-1",
+                "nav": 10.0,
+                "currency": "EGP",
+                "as_of_date": "2026-09-19",
+                "source_id": "src_hc_si",
+            }],
+            [{"fund_id": "fund-1", "currency": "EGP", "management_company": "Wrong Manager"}],
+            [{"source_id": "src_hc_si", "management_company_scope": "HC Securities & Investment"}],
+        ]
+        safe.safe_upsert_official([{
+            "id": 125,
+            "fund_id": "fund-1",
+            "nav": 10.1,
+            "currency": "EGP",
+            "as_of_date": "2026-09-19",
+            "source_id": "src_hc_si",
+            "source_url": "https://hc-si.com",
+        }])
+        sb_post.assert_not_called()
+        patch_request.assert_called_once()
+        payload = patch_request.call_args.kwargs["json"]
+        self.assertEqual(payload["verification_status"], "needs_review")
+        self.assertIn("source-manager mismatch", payload["notes"])
+
     def test_provider_alias_registry_is_exact_and_provider_scoped(self):
         funds = [
             {"fund_id": "prime-1", "canonical_name": "Ebank Fund III (Konooz)", "management_company": "Prime Investments"},
