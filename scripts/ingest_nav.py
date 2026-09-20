@@ -215,6 +215,52 @@ def load_funds():
     return sb_get("funds", select="fund_id,canonical_name,management_company,price_update_url,metadata", limit="1000")
 
 
+
+def exact_manager_match(extracted, by_name, manager):
+    """Match only exact canonical/provider labels within one manager."""
+    n = norm(extracted)
+    for f in by_name.values():
+        if f.get("management_company") != manager:
+            continue
+        candidates = [f.get("canonical_name")]
+        md = f.get("metadata") or {}
+        if isinstance(md, dict):
+            for key in ("info_label", "price_page_label"):
+                value = md.get(key)
+                if value and not str(value).startswith("http"):
+                    candidates.append(str(value))
+        if any(n == norm(candidate) for candidate in candidates if candidate):
+            return f, 1.0
+    return None, 0.0
+
+
+PRIME_ALIAS = {
+    "konooz": "Ebank Fund III (Konooz)",
+    "tharaa": "Egyptian Gulf Bank (Tharaa)",
+    "aman money market fund": "Aman Micro Finance",
+    "prime nmw": "Prime NMOW",
+}
+
+NI_ALIAS = {
+    "siula money market fund": "Siula Money Market",
+    "15 30 fixed income fund": "NI Capital 15/30",
+    "makaseb 1st tranche": "GIG Makaseb Fund First Tranche",
+    "makaseb 2nd tranche": "GIG Makaseb Fund Second Tranche",
+    "sahmy fund": "NI Capital (Sahmy Fund)",
+    "sahmy 70 fund": "NI Capital EGX 70",
+    "education for life": "The charitable education Fund",
+}
+
+HC_ALIAS = {
+    "suez canal bank fund no 1": "Suez Canal Bank Fund I",
+    "agricultural bank of egypt fund no 2 al hasad al yaumy": "Agricultural Bank of Egypt (Al Hasad Al Yaumy)",
+    "qnb tadawol": "QNB AlAHLI (Tadawol)",
+    "misr al mostakbal company investment fund": "Misr Al Mostakbal Fund",
+    "credit agricole bank egypt balanced fund no 4": "Credit Agricole Egypt Fund IV (Al Thiqa)",
+    "fab misr al awal daily cumulative return fund for liquidity": "Fab Misr (Al Awal)",
+    "fab misr etm nan capital preservation fund": "FAB Misr Fund (Etm'nan)",
+}
+
 def matcher(funds):
     by_name = {f["canonical_name"]: f for f in funds}
 
@@ -265,7 +311,7 @@ def row(extracted, nav, asof, url, sid, fund, score, extra=None, currency="EGP")
     }
 
 
-def scrape_hermes(match):
+def scrape_hermes(by_name):
     url = "https://efgholding.com/en/our-services/mutual-funds"
     soup = BeautifulSoup(fetch(url), "lxml")
     out = []
@@ -277,14 +323,12 @@ def scrape_hermes(match):
             name, nav = cells[0], parse_num(cells[1])
             asof = parse_date(cells[4] if len(cells) > 4 else "")
             if name and nav:
-                f, sc = match(name, "Hermes Portfolio and Fund Management")
-                if not f:
-                    f, sc = match(name)
+                f, sc = exact_manager_match(name, by_name, "Hermes Portfolio and Fund Management")
                 out.append(row(name, nav, asof, url, "src_efg_hermes_funds", f, sc, {"cells": cells}))
     return out
 
 
-def scrape_ci(by_name, match):
+def scrape_ci(by_name, match=None):
     url = "https://www.cicapital.com/fundprice/"
     soup = BeautifulSoup(fetch(url), "lxml")
     tables = soup.find_all("table")
@@ -315,16 +359,14 @@ def scrape_ci(by_name, match):
         f = by_name.get(alias) if alias else None
         sc = 1.0 if f else 0
         if not f:
-            f, sc = match(name, "CI Asset Management")
-        if not f:
-            f, sc = match(name)
+            f, sc = exact_manager_match(name, by_name, "CI Asset Management")
         if not f:
             continue
         out.append(row(name, nav, page_asof, url, "src_cicapital_fundprice", f, sc))
     return out
 
 
-def scrape_prime(match):
+def scrape_prime(by_name):
     url = "https://primeholdingco.com/asset-management/"
     soup = BeautifulSoup(fetch(url), "lxml")
     out = []
@@ -341,7 +383,18 @@ def scrape_prime(match):
                     nav = v
                     break
             if name and nav:
-                f, sc = match(name)
+                normalized_name = norm(name).lstrip("*").strip()
+                alias = next(
+                    (k for k in sorted(PRIME_ALIAS, key=len, reverse=True)
+                     if normalized_name.endswith(norm(k))),
+                    None,
+                )
+                f = by_name.get(PRIME_ALIAS[alias]) if alias else None
+                sc = 1.0 if f else 0.0
+                if not f:
+                    f, sc = exact_manager_match(name, by_name, "Prime Investments")
+                if not f:
+                    continue
                 out.append(row(name, nav, None, url, "src_prime_am", f, sc, {"cells": cells}))
     return out
 
@@ -490,7 +543,7 @@ def scrape_azimut(by_name):
     return out
 
 
-def scrape_ni(by_name, match):
+def scrape_ni(by_name, match=None):
     url = "https://nicapital.com.eg/lines-of-business/asset-management/"
     text = re.sub(r"\s+", " ", BeautifulSoup(fetch(url), "lxml").get_text(" ", strip=True))
     out = []
@@ -507,16 +560,33 @@ def scrape_ni(by_name, match):
     pat = re.compile(r"([A-Z][A-Za-z0-9 /&\-']{3,70}?)\s+(\d{1,2} \w+ 20\d{2})\s+Certificate Price\s+EGP\s*(\d+\.\d+)")
     for m in pat.finditer(text):
         name, dt, nav = m.group(1).strip(), parse_date(m.group(2)), float(m.group(3))
-        f = by_name.get(mapping.get(norm(name), ""))
+        normalized_name = norm(name)
+        alias_key = next(
+            (k for k in sorted(mapping, key=len, reverse=True)
+             if normalized_name.endswith(norm(k))),
+            None,
+        )
+        canonical = mapping.get(alias_key) if alias_key else None
+        f = by_name.get(canonical) if canonical else None
+        sc = 1.0 if f else 0.0
         if not f:
-            f, sc = match(name)
-        else:
-            sc = 1
-        out.append(row(name, nav, dt, url, "src_nicapital_am", f, sc or 0))
+            alias_key = next(
+                (k for k in sorted(NI_ALIAS, key=len, reverse=True)
+                 if normalized_name.endswith(norm(k))),
+                None,
+            )
+            canonical = NI_ALIAS.get(alias_key) if alias_key else None
+            f = by_name.get(canonical) if canonical else None
+            sc = 1.0 if f else 0.0
+        if not f:
+            f, sc = exact_manager_match(name, by_name, "NI Capital")
+        if not f:
+            continue
+        out.append(row(name, nav, dt, url, "src_nicapital_am", f, sc))
     return out
 
 
-def scrape_hc(match):
+def scrape_hc(by_name):
     url = "https://www.hc-si.com"
     text = re.sub(r"\s+", " ", BeautifulSoup(fetch(url), "lxml").get_text(" ", strip=True))
     pat = re.compile(r"([A-Za-z][A-Za-z0-9 «»'’\-(),./]+?)\s+\{(\d+\.\d+)\}\s+(\d{4}-\d{2}-\d{2})")
@@ -524,7 +594,13 @@ def scrape_hc(match):
     for name, nav, asof in pat.findall(text):
         if "YOUR TRUSTED" in name or len(name) > 80:
             continue
-        f, sc = match(name)
+        alias = HC_ALIAS.get(norm(name.strip()))
+        f = by_name.get(alias) if alias else None
+        sc = 1.0 if f else 0.0
+        if not f:
+            f, sc = exact_manager_match(name, by_name, "HC Securities & Investment")
+        if not f:
+            continue
         out.append(row(name.strip(), float(nav), asof, url, "src_hc_si", f, sc))
     return out
 
@@ -718,14 +794,14 @@ def main():
     funds = load_funds()
     by_name, match = matcher(funds)
     scrapers = [
-        ("hermes", lambda: scrape_hermes(match)),
-        ("ci", lambda: scrape_ci(by_name, match)),
-        ("prime", lambda: scrape_prime(match)),
+        ("hermes", lambda: scrape_hermes(by_name)),
+        ("ci", lambda: scrape_ci(by_name)),
+        ("prime", lambda: scrape_prime(by_name)),
         ("aaim", lambda: scrape_aaim(by_name, match)),
         ("beltone", lambda: scrape_beltone_en(by_name, match)),
         ("azimut", lambda: scrape_azimut(by_name)),
-        ("ni", lambda: scrape_ni(by_name, match)),
-        ("hc", lambda: scrape_hc(match)),
+        ("ni", lambda: scrape_ni(by_name)),
+        ("hc", lambda: scrape_hc(by_name)),
         ("pfi", lambda: scrape_pfi(by_name)),
         ("granite", lambda: scrape_granite(by_name)),
         ("snduk", lambda: scrape_snduk(funds)),
