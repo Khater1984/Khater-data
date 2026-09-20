@@ -286,11 +286,18 @@ def safe_upsert_official(matched_rows):
         source_meta = source_registry.get(source_id) or {}
         if not _source_allowed_for_fund(row, fund_meta, source_meta):
             skipped_manager += 1
-            _quarantine_review(
-                row,
-                f"Automatic promotion blocked: source identity not authorized "
-                f"for fund (source={source_id}, fund={fid}).",
-            )
+            if source_meta.get("management_company_scope"):
+                message = (
+                    "Automatic promotion blocked: source-manager mismatch "
+                    f"(source={source_id}, expected={source_meta['management_company_scope']}, "
+                    f"actual={fund_meta.get('management_company')})."
+                )
+            else:
+                message = (
+                    "Automatic promotion blocked: source identity not authorized "
+                    f"for fund (source={source_id}, fund={fid})."
+                )
+            _quarantine_review(row, message)
             continue
 
         previous = best.get(fid)
