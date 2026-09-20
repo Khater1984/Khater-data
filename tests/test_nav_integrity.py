@@ -114,6 +114,21 @@ class NavIntegrityTests(unittest.TestCase):
                 self.assertEqual(sb_post.call_args.args[1][0]["source_id"], "src_granite_eg")
                 self.assertEqual(sb_post.call_args.args[1][0]["as_of_date"], "2026-09-17")
 
+    def test_snduk_alias_registry_requires_exact_verified_alias(self):
+        fund = {"fund_id": "fund-1", "canonical_name": "Test Fund"}
+        aliases = [{
+            "fund_id": "fund-1",
+            "alias_name": "Test Fund Provider Label",
+            "normalized_alias": "test fund provider label",
+            "match_confidence": 1.0,
+        }]
+        resolved, score = safe._explicit_snduk_alias("Test Fund Provider Label", [fund], aliases)
+        self.assertEqual(resolved["fund_id"], "fund-1")
+        self.assertEqual(score, 1.0)
+        unresolved, unresolved_score = safe._explicit_snduk_alias("Test Fund", [fund], aliases)
+        self.assertIsNone(unresolved)
+        self.assertEqual(unresolved_score, 0.0)
+
     def test_snduk_fallback_preserves_snduk_provenance(self):
         fund = {"fund_id": "granite_first_fund__granite_fund_management", "canonical_name": "Granite First Fund"}
         row = safe.safe_row(
