@@ -570,6 +570,101 @@ def scrape_snduk(funds):
     return out
 
 
+def scrape_alpha_odin(by_name):
+    """Attempt manager-first extraction from the official Alpha/Odin funds page.
+
+    The page is currently JavaScript-driven in public rendering, so this parser
+    is deliberately conservative: it only promotes rows when an exact Alpha
+    registry label and a source-published date are both present.
+    """
+    url = "https://alpha-odin.com/ar/funds/"
+    soup = BeautifulSoup(fetch(url), "lxml")
+    out = []
+
+    def accept_candidate(name, nav, asof):
+        fund, score = provider_alias_match(name, "alpha")
+        if not fund:
+            fund, score = exact_manager_match(
+                name, by_name, "Alpha Financial Investments Management"
+            )
+        if not fund or nav is None or not asof:
+            return
+        out.append(
+            row(
+                name,
+                nav,
+                asof,
+                url,
+                "src_alpha_odin",
+                fund,
+                score,
+                {"provider": "alpha_odin", "identity_match": "exact"},
+                currency=fund.get("currency") or "EGP",
+            )
+        )
+
+    # Server-rendered tables, if the manager publishes them without JS.
+    for tr in soup.find_all("tr"):
+        cells = [x.get_text(" ", strip=True) for x in tr.find_all(["td", "th"])]
+        if len(cells) < 2:
+            continue
+        for i, cell in enumerate(cells):
+            nav = parse_num(cell)
+            if nav is None:
+                continue
+            name_candidates = cells[:i] or cells[i + 1:]
+            dates = [parse_date(x) for x in cells if parse_date(x)]
+            if dates:
+                for candidate in reversed(name_candidates):
+                    if provider_alias_match(candidate, "alpha")[0] or exact_manager_match(
+                        candidate, by_name, "Alpha Financial Investments Management"
+                    )[0]:
+                        accept_candidate(candidate, nav, dates[-1])
+                        break
+            break
+
+    # Conservative text fallback: only exact provider labels and a nearby
+    # source-published date are accepted; never infer a date from fetch time.
+    text = re.sub(r"\s+", " ", soup.get_text(" ", strip=True))
+    for alias_norm in sorted(PROVIDER_ALIAS_REGISTRY.get("alpha", {}), key=len, reverse=True):
+        if alias_norm not in text.lower():
+            continue
+        alias_fund = PROVIDER_ALIAS_REGISTRY["alpha"][alias_norm]
+        escaped = re.escape(alias_norm)
+        pattern = re.compile(
+            rf"{escaped}.{{0,180}}?(\d+(?:\.\d+)?)"
+            rf".{{0,120}}?(\d{{1,2}}[ /-][A-Za-z]{{3,9}}[ /-]\d{{4}}|\d{{4}}-\d{{2}}-\d{{2}})",
+            re.I,
+        )
+        for m in pattern.finditer(text):
+            nav = parse_num(m.group(1))
+            asof = parse_date(m.group(2))
+            if nav is not None and asof:
+                out.append(
+                    row(
+                        alias_fund["canonical_name"],
+                        nav,
+                        asof,
+                        url,
+                        "src_alpha_odin",
+                        alias_fund,
+                        1.0,
+                        {"provider": "alpha_odin", "identity_match": "exact"},
+                        currency=alias_fund.get("currency") or "EGP",
+                    )
+                )
+                break
+
+    # Keep one row per fund, preferring the newest source-published date.
+    best = {}
+    for rec in out:
+        fid = rec["fund_id"]
+        prev = best.get(fid)
+        if not prev or (rec.get("as_of_date") or "") > (prev.get("as_of_date") or ""):
+            best[fid] = rec
+    return list(best.values())
+
+
 def scrape_abk(funds):
     """ABK Egypt Equity Fund page: table Price / Last Update."""
     url = "https://w1.abkegypt.com/Business/Treasury/Investments/Equity-Fund"
