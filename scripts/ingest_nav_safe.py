@@ -582,6 +582,7 @@ def main():
         select="fund_id,alias_name,alias_source,normalized_alias,match_confidence",
         limit="5000",
     )
+    legacy.set_provider_alias_registry(aliases, funds)
     by_name, match = legacy.matcher(funds)
     scrapers = [
         ("hermes", lambda: legacy.scrape_hermes(by_name)),
