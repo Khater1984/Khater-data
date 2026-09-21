@@ -4,7 +4,7 @@
     "max_days": 7,
     "meaning": "source-published bounded future date"
   },
-  "current_run_id": "run_20260921_113015_35594382273",
+  "current_run_id": "run_20260921_130144_35602990164",
   "current_run_rows": 316,
   "current_run_unique_funds": 207,
   "funds": 208,
@@ -51,13 +51,13 @@
       "nav": 1.83401,
       "as_of_date": "2026-09-22",
       "future_date_status": "bounded_future",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-22",
       "current_run_candidate_future_status": "bounded_future",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:35.526071+00:00",
-      "updated_at": "2026-09-21T11:31:36.03363+00:00"
+      "verified_at": "2026-09-21T13:03:19.2489+00:00",
+      "updated_at": "2026-09-21T13:03:19.987766+00:00"
     },
     {
       "fund_id": "misr_money_market_egp__ci_asset_management",
@@ -69,13 +69,13 @@
       "nav": 115.681,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "ci_fixed_income_fund__ci_asset_management",
@@ -87,7 +87,7 @@
       "nav": 1.8647,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -105,13 +105,13 @@
       "nav": 2.24,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "agricultural_bank_of_egypt_fund_al_massy__hermes_portfolio_and_fund_management",
@@ -123,13 +123,13 @@
       "nav": 78.49,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "afaaq__arab_african_investment_management",
@@ -141,13 +141,13 @@
       "nav": 267.4989,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "misr_money_market_euro__ci_asset_management",
@@ -159,13 +159,13 @@
       "nav": 11.9541,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "maksab_second_tranche_euro__alpha_zaldi",
@@ -177,13 +177,13 @@
       "nav": 1.07948,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.711776+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.62872+00:00"
     },
     {
       "fund_id": "azimut_target_maturity_fund_target_2027_usd__azimut_egypt_asset_management",
@@ -195,13 +195,13 @@
       "nav": 10.55263,
       "as_of_date": "2026-09-15",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-15",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:39.281213+00:00",
-      "updated_at": "2026-09-21T11:31:39.797046+00:00"
+      "verified_at": "2026-09-21T13:03:24.546132+00:00",
+      "updated_at": "2026-09-21T13:03:25.28448+00:00"
     },
     {
       "fund_id": "cash_mubasher__mubasher_asset_management",
@@ -213,13 +213,13 @@
       "nav": 24.32,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-19",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "azimut_target_maturity_fund_target_2029_usd__azimut_egypt_asset_management",
@@ -231,13 +231,13 @@
       "nav": 10.36402,
       "as_of_date": "2026-09-15",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-15",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:33.991422+00:00",
-      "updated_at": "2026-09-21T11:31:34.486558+00:00"
+      "verified_at": "2026-09-21T13:03:17.140143+00:00",
+      "updated_at": "2026-09-21T13:03:17.8872+00:00"
     },
     {
       "fund_id": "naeem_misr_fund__naeem_for_financial_investments",
@@ -249,13 +249,13 @@
       "nav": 50.58,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "sarwaty__ci_asset_management",
@@ -267,7 +267,7 @@
       "nav": 198.20591,
       "as_of_date": "2025-12-31",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": null,
       "current_run_candidate_future_status": "no_date",
       "current_run_candidate_count": 0,
@@ -285,13 +285,13 @@
       "nav": 215.42476,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "zaldi_star__zaldi_investments",
@@ -303,13 +303,13 @@
       "nav": 111.6733,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "ciam_1st_issue_real_estate__ci_asset_management",
@@ -321,7 +321,7 @@
       "nav": 22.57,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -339,13 +339,13 @@
       "nav": 961.2309,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:44.584476+00:00",
-      "updated_at": "2026-09-21T11:31:45.05095+00:00"
+      "verified_at": "2026-09-21T13:03:31.686116+00:00",
+      "updated_at": "2026-09-21T13:03:32.424367+00:00"
     },
     {
       "fund_id": "zaldi_el_masry__zaldi_investments",
@@ -357,13 +357,13 @@
       "nav": 13.6,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "ciam_8th_issue_ipos__ci_asset_management",
@@ -375,13 +375,13 @@
       "nav": 11.3045,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.711776+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.62872+00:00"
     },
     {
       "fund_id": "diamond__arab_african_investment_management",
@@ -393,13 +393,13 @@
       "nav": 216.82029,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "bokra_shakmagia__bokra",
@@ -411,13 +411,13 @@
       "nav": 0.9272,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "b_alpha__beltone_asset_management",
@@ -429,13 +429,13 @@
       "nav": 1.55,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "ni_capital_15_30__ni_capital",
@@ -447,7 +447,7 @@
       "nav": 22.01132,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
@@ -465,13 +465,13 @@
       "nav": 648.55,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "mubasher_equity__mubasher_asset_management",
@@ -483,13 +483,13 @@
       "nav": 2.0718,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "odin_4__x",
@@ -501,13 +501,13 @@
       "nav": 1.2702,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_alpha_odin",
-      "verified_at": "2026-09-21T11:31:48.173397+00:00",
-      "updated_at": "2026-09-21T11:31:49.027973+00:00"
+      "verified_at": "2026-09-21T13:03:37.246358+00:00",
+      "updated_at": "2026-09-21T13:03:37.963184+00:00"
     },
     {
       "fund_id": "fab_misr_fund_ezdhar__acumen_asset_management",
@@ -519,13 +519,13 @@
       "nav": 477.5715,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "allianz__ci_asset_management",
@@ -537,7 +537,7 @@
       "nav": 20.89,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -555,7 +555,7 @@
       "nav": 612.45,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -573,7 +573,7 @@
       "nav": 20.58,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -591,13 +591,13 @@
       "nav": 13.3317,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.711776+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.62872+00:00"
     },
     {
       "fund_id": "kenz_foras_equity__arab_african_investment_management",
@@ -609,13 +609,13 @@
       "nav": 157.94,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "gosour_equity__arab_african_investment_management",
@@ -627,13 +627,13 @@
       "nav": 11.64,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "beltone_consumer_fund__beltone_asset_management",
@@ -645,13 +645,13 @@
       "nav": 1.84,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "national_bank_of_kuwait_fund_namaa__nbk_capital_asset_management_egypt",
@@ -663,13 +663,13 @@
       "nav": 83.3054,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "saib_yaumy_fund__beltone_asset_management",
@@ -681,13 +681,13 @@
       "nav": 49.17,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "national_bank_of_kuwait_hayat__nbk_capital_asset_management_egypt",
@@ -699,13 +699,13 @@
       "nav": 96.968,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "sarwa_life_insurance_fund__ci_asset_management",
@@ -717,7 +717,7 @@
       "nav": 2.3943,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -735,13 +735,13 @@
       "nav": 592.84,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "mubasher_gold__mubasher_asset_management",
@@ -753,13 +753,13 @@
       "nav": 12.42,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-19",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "suez_canal_bank_fund_i__hc_securities_investment",
@@ -771,13 +771,13 @@
       "nav": 2068.84,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "ciam_6th_issue_the_quant__ci_asset_management",
@@ -789,7 +789,7 @@
       "nav": 12.65,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -807,13 +807,13 @@
       "nav": 11.839,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "ni_capital_egx_70__ni_capital",
@@ -825,13 +825,13 @@
       "nav": 22.3145,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_nicapital_am",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "aman_micro_finance__prime_investments",
@@ -843,13 +843,13 @@
       "nav": 1.85991,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "national_bank_of_kuwait_fund_ishraq__nbk_capital_asset_management_egypt",
@@ -861,13 +861,13 @@
       "nav": 70.7764,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-19",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "zaldi_star_equity__zaldi_investments",
@@ -879,13 +879,13 @@
       "nav": 13.49,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "thndr_gold__x",
@@ -897,13 +897,13 @@
       "nav": 1.09,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.711776+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.62872+00:00"
     },
     {
       "fund_id": "mid_bank_fund_ii__beltone_asset_management",
@@ -915,13 +915,13 @@
       "nav": 1040.63,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "saib_fund_iii_al_rabeh__hermes_portfolio_and_fund_management",
@@ -933,13 +933,13 @@
       "nav": 459.51409,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "manasek__hermes_portfolio_and_fund_management",
@@ -951,13 +951,13 @@
       "nav": 110.24256,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "ciam_2nd_issue_technology__ci_asset_management",
@@ -969,7 +969,7 @@
       "nav": 18.94,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -987,13 +987,13 @@
       "nav": 47.77,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "al_baraka_bank_egypt_al_barakat__hermes_portfolio_and_fund_management",
@@ -1005,13 +1005,13 @@
       "nav": 264.62,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "housing_development_bank_al_tameer__arab_african_investment_management",
@@ -1023,13 +1023,13 @@
       "nav": 962.63,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-19",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "ciam_misr_shariah_equity__ci_asset_management",
@@ -1041,7 +1041,7 @@
       "nav": 23.07,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -1059,7 +1059,7 @@
       "nav": 24.62136,
       "as_of_date": "2026-08-31",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
@@ -1077,13 +1077,13 @@
       "nav": 75.59,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "attijariwafa_bankfund__beltone_asset_management",
@@ -1095,13 +1095,13 @@
       "nav": 4004.27,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "iskan_insurance__arab_african_investment_management",
@@ -1113,13 +1113,13 @@
       "nav": 20.0059,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:31:51.345992+00:00",
-      "updated_at": "2026-09-21T11:31:51.826862+00:00"
+      "verified_at": "2026-09-21T13:03:41.560588+00:00",
+      "updated_at": "2026-09-21T13:03:42.299083+00:00"
     },
     {
       "fund_id": "fab_misr_al_awal__hc_securities_investment",
@@ -1131,13 +1131,13 @@
       "nav": 548.20231,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-19",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_hc_si",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "ciam_misr_equity__ci_asset_management",
@@ -1149,13 +1149,13 @@
       "nav": 39.0224,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.711776+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.62872+00:00"
     },
     {
       "fund_id": "b_youmy__beltone_asset_management",
@@ -1167,7 +1167,7 @@
       "nav": 1.03,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
@@ -1185,7 +1185,7 @@
       "nav": 10.68,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -1203,13 +1203,13 @@
       "nav": 422.94,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "sabayek__beltone_asset_management",
@@ -1221,13 +1221,13 @@
       "nav": 1.69,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "delta_life_insurance__x",
@@ -1239,13 +1239,13 @@
       "nav": 205.52091,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "national_bank_of_egypt_fund_v__x",
@@ -1257,13 +1257,13 @@
       "nav": 57.02,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "cib_fund_takamol__ci_asset_management",
@@ -1275,7 +1275,7 @@
       "nav": 877.32,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -1293,7 +1293,7 @@
       "nav": 23.35,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -1311,13 +1311,13 @@
       "nav": 102.58131,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "alexbank_fund_iii__hermes_portfolio_and_fund_management",
@@ -1329,13 +1329,13 @@
       "nav": 61.80713,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "hermes_gold__hermes_portfolio_and_fund_management",
@@ -1347,13 +1347,13 @@
       "nav": 92.68491,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "cib_fund_i_osoul__ci_asset_management",
@@ -1365,7 +1365,7 @@
       "nav": 1113.81,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -1383,13 +1383,13 @@
       "nav": 1832.82,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "menthum_grow_egx_30_capped__beltone_asset_management",
@@ -1401,13 +1401,13 @@
       "nav": 1.71,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "hermes__hermes_portfolio_and_fund_management",
@@ -1419,13 +1419,13 @@
       "nav": 112.9373,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "bank_nxt_fund_ii_helal__hermes_portfolio_and_fund_management",
@@ -1437,13 +1437,13 @@
       "nav": 400.76267,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-19",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "aaib_gozoor__arab_african_investment_management",
@@ -1455,13 +1455,13 @@
       "nav": 56.60772,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "ciam_esg__ci_asset_management",
@@ -1473,7 +1473,7 @@
       "nav": 15.38,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -1491,13 +1491,13 @@
       "nav": 318.79,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "national_bank_of_kuwait_al_mizan__nbk_capital_asset_management_egypt",
@@ -1509,13 +1509,13 @@
       "nav": 12.9935,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "egx30_index_etf_egx30_index_etf__beltone_asset_management",
@@ -1527,13 +1527,13 @@
       "nav": 63.77,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "bank_nxt_fund_i__hermes_portfolio_and_fund_management",
@@ -1545,13 +1545,13 @@
       "nav": 26.93007,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "kenoz_egx33_shariah_index_tracker_shariah__arab_african_investment_management",
@@ -1563,13 +1563,13 @@
       "nav": 183.49,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "ciam_3rd_issue_export__ci_asset_management",
@@ -1581,7 +1581,7 @@
       "nav": 16.41,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -1599,13 +1599,13 @@
       "nav": 1.63,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "blom_bank_fund_ii__cfh_asset_management",
@@ -1617,13 +1617,13 @@
       "nav": 740.11,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "arab_african_international_bank_juman__arab_african_investment_management",
@@ -1635,13 +1635,13 @@
       "nav": 805.9909,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "ni_capital_sahmy_fund__ni_capital",
@@ -1653,13 +1653,13 @@
       "nav": 41.543,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_nicapital_am",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "misr_takaful__arab_african_investment_management",
@@ -1671,13 +1671,13 @@
       "nav": 214.70515,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "emirates_nbd_mazid__hermes_portfolio_and_fund_management",
@@ -1689,13 +1689,13 @@
       "nav": 1501.49,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "b_secure__beltone_asset_management",
@@ -1707,13 +1707,13 @@
       "nav": 2.0,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "menthum_usd__ci_asset_management",
@@ -1725,7 +1725,7 @@
       "nav": 1.1148,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -1743,13 +1743,13 @@
       "nav": 656.21,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "hermes_equity__hermes_portfolio_and_fund_management",
@@ -1761,13 +1761,13 @@
       "nav": 121.03,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "kfh_bank_alpha__hermes_portfolio_and_fund_management",
@@ -1779,13 +1779,13 @@
       "nav": 133.53104,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-19",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "nbe_al_baraka_bank_egypt_fund_bashayer__x",
@@ -1797,13 +1797,13 @@
       "nav": 403.45,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "cib_fund_ii_istthmar__ci_asset_management",
@@ -1815,7 +1815,7 @@
       "nav": 1101.38,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -1833,13 +1833,13 @@
       "nav": 1414.41,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "banque_misr_fund_iii__ci_asset_management",
@@ -1851,13 +1851,13 @@
       "nav": 35.12,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "qnb_alahli_tadawol__hc_securities_investment",
@@ -1869,13 +1869,13 @@
       "nav": 1067.16615,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-19",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_hc_si",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "gig_insurance_egypt_fund_i__pfi_asset_management",
@@ -1887,13 +1887,13 @@
       "nav": 1401.03,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "alexbank_fund_ii__hermes_portfolio_and_fund_management",
@@ -1905,13 +1905,13 @@
       "nav": 101.7803,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "credit_agricole_egypt_fund_iii__hermes_portfolio_and_fund_management",
@@ -1923,13 +1923,13 @@
       "nav": 1143.21,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "cib_fund_iv_hamaya__ci_asset_management",
@@ -1941,7 +1941,7 @@
       "nav": 820.74,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -1959,7 +1959,7 @@
       "nav": 149.5,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -1977,13 +1977,13 @@
       "nav": 2534.1843,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "tamayoz__x",
@@ -1995,13 +1995,13 @@
       "nav": 17.16565,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "pfi_cashi__pfi_asset_management",
@@ -2013,13 +2013,13 @@
       "nav": 11.7484,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "momentum__cfh_asset_management",
@@ -2031,13 +2031,13 @@
       "nav": 14.7495,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "beltone_fada__beltone_asset_management",
@@ -2049,13 +2049,13 @@
       "nav": 0.77,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "dahab__x",
@@ -2067,13 +2067,13 @@
       "nav": 181.41,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.711776+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.62872+00:00"
     },
     {
       "fund_id": "granite_first_fund__granite_fund_management",
@@ -2085,13 +2085,13 @@
       "nav": 1.17613,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "al_ahli_bank_of_kuwait_egypt_fund_i__sigma_asset_management",
@@ -2100,16 +2100,16 @@
       "manager_source_id": "src_eima_performance_integrated",
       "manager_host": "",
       "status": "CURRENT_RUN",
-      "nav": 416.8,
-      "as_of_date": "2026-09-20",
+      "nav": 413.66,
+      "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
-      "current_run_candidate_date": "2026-09-20",
+      "current_run_id": "run_20260921_130144_35602990164",
+      "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_abk_equity",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "fawry__ci_asset_management",
@@ -2121,7 +2121,7 @@
       "nav": 2.1657,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -2139,13 +2139,13 @@
       "nav": 225.17432,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "mubasher_silver__mubasher_asset_management",
@@ -2157,13 +2157,13 @@
       "nav": 9.1551,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "pharos_fund_i__pharos_asset_management",
@@ -2175,13 +2175,13 @@
       "nav": 851.24,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "misr_money_market__ci_asset_management",
@@ -2193,7 +2193,7 @@
       "nav": 14.8,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -2211,13 +2211,13 @@
       "nav": 853.54,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "gig_makaseb_fund_first_tranche__ni_capital",
@@ -2229,13 +2229,13 @@
       "nav": 20.87296,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_nicapital_am",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "aspire_rawajj__x",
@@ -2247,13 +2247,13 @@
       "nav": 111.3196,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "beltone_industrial_fund__beltone_asset_management",
@@ -2265,13 +2265,13 @@
       "nav": 1.92,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "al_baraka_bank_egypt_al_motawazen__x",
@@ -2283,13 +2283,13 @@
       "nav": 310.88,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "misr_capital_guaranteed_al_omr__ci_asset_management",
@@ -2301,7 +2301,7 @@
       "nav": 14.79,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -2319,13 +2319,13 @@
       "nav": 19.0573,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "sports_fund__beltone_asset_management",
@@ -2337,13 +2337,13 @@
       "nav": 199.45,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "fab_misr_modkharaty__hermes_portfolio_and_fund_management",
@@ -2355,13 +2355,13 @@
       "nav": 76.68034,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "banque_du_caire_fund_i__hermes_portfolio_and_fund_management",
@@ -2373,13 +2373,13 @@
       "nav": 47.88,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "banque_misr_fund_ii__ci_asset_management",
@@ -2391,13 +2391,13 @@
       "nav": 23.77,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "siula_money_market__ni_capital",
@@ -2409,13 +2409,13 @@
       "nav": 24.86614,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_nicapital_am",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "misr_insurance_istithmar_and_aman__arab_african_investment_management",
@@ -2427,13 +2427,13 @@
       "nav": 224.7549,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "pioneers_fund_i__x",
@@ -2445,13 +2445,13 @@
       "nav": 300.89,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "banque_du_caire_fund_ii__beltone_asset_management",
@@ -2463,13 +2463,13 @@
       "nav": 74.99,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "arope_insurance_misr_fund__cfh_asset_management",
@@ -2481,13 +2481,13 @@
       "nav": 455.4,
       "as_of_date": "2026-09-05",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-05",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "fanar__arab_african_investment_management",
@@ -2499,13 +2499,13 @@
       "nav": 177.58984,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "az_lv__azimut_egypt_asset_management",
@@ -2517,13 +2517,13 @@
       "nav": 1.50765,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:31.485324+00:00",
-      "updated_at": "2026-09-21T11:31:32.028611+00:00"
+      "verified_at": "2026-09-21T13:03:13.370334+00:00",
+      "updated_at": "2026-09-21T13:03:14.129358+00:00"
     },
     {
       "fund_id": "housing_development_bank_mawared__pfi_asset_management",
@@ -2535,13 +2535,13 @@
       "nav": 72.2721,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "ciam_5th_issue_electronic_payments__ci_asset_management",
@@ -2553,7 +2553,7 @@
       "nav": 21.67,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -2571,13 +2571,13 @@
       "nav": 1.18,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "beltone_egx_35_tracker__beltone_asset_management",
@@ -2589,13 +2589,13 @@
       "nav": 1.51,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "az_gold__azimut_egypt_asset_management",
@@ -2607,13 +2607,13 @@
       "nav": 24.5173,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:36.408775+00:00",
-      "updated_at": "2026-09-21T11:31:37.048193+00:00"
+      "verified_at": "2026-09-21T13:03:20.277514+00:00",
+      "updated_at": "2026-09-21T13:03:21.282284+00:00"
     },
     {
       "fund_id": "basata__ci_asset_management",
@@ -2625,7 +2625,7 @@
       "nav": 1.1694,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -2643,13 +2643,13 @@
       "nav": 15.64766,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:42.342631+00:00",
-      "updated_at": "2026-09-21T11:31:42.949991+00:00"
+      "verified_at": "2026-09-21T13:03:28.662085+00:00",
+      "updated_at": "2026-09-21T13:03:29.351467+00:00"
     },
     {
       "fund_id": "suez_canal_bank_fund_ii_al_agial__beltone_asset_management",
@@ -2661,13 +2661,13 @@
       "nav": 75.83,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "az_thndr__azimut_egypt_asset_management",
@@ -2679,13 +2679,13 @@
       "nav": 1.33003,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:33.11655+00:00",
-      "updated_at": "2026-09-21T11:31:33.811445+00:00"
+      "verified_at": "2026-09-21T13:03:15.660336+00:00",
+      "updated_at": "2026-09-21T13:03:16.857458+00:00"
     },
     {
       "fund_id": "suez_canal_bank_al_suez_al_youmi__ci_asset_management",
@@ -2697,7 +2697,7 @@
       "nav": 25.64,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -2715,7 +2715,7 @@
       "nav": 24.02,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -2733,13 +2733,13 @@
       "nav": 2.14,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "bonds_fixed_income_usd_fund__arab_african_investment_management",
@@ -2751,13 +2751,13 @@
       "nav": 10.3482,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "bank_abc_fund_i__azimut_egypt_asset_management",
@@ -2769,13 +2769,13 @@
       "nav": 702.03,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:43.773653+00:00",
-      "updated_at": "2026-09-21T11:31:44.405609+00:00"
+      "verified_at": "2026-09-21T13:03:30.626315+00:00",
+      "updated_at": "2026-09-21T13:03:31.408659+00:00"
     },
     {
       "fund_id": "al_ahli_bank_of_kuwait_egypt_fund_ii__sigma_asset_management",
@@ -2787,13 +2787,13 @@
       "nav": 73.1386,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "ebank_fund_el_khabeer__azimut_egypt_asset_management",
@@ -2805,13 +2805,13 @@
       "nav": 693.55,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:39.98646+00:00",
-      "updated_at": "2026-09-21T11:31:40.665489+00:00"
+      "verified_at": "2026-09-21T13:03:25.683355+00:00",
+      "updated_at": "2026-09-21T13:03:26.383345+00:00"
     },
     {
       "fund_id": "blom_bank_fund_i__cfh_asset_management",
@@ -2823,13 +2823,13 @@
       "nav": 601.34,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "ahli_united_bank_alpha__hermes_portfolio_and_fund_management",
@@ -2841,13 +2841,13 @@
       "nav": 133.531,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-19",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:31:59.250868+00:00",
-      "updated_at": "2026-09-21T11:32:00.060974+00:00"
+      "verified_at": "2026-09-21T13:03:52.390047+00:00",
+      "updated_at": "2026-09-21T13:03:53.108618+00:00"
     },
     {
       "fund_id": "national_bank_of_egypt_fund_i__x",
@@ -2859,13 +2859,13 @@
       "nav": 172.36,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "edkhar__azimut_egypt_asset_management",
@@ -2877,13 +2877,13 @@
       "nav": 21.32851,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:41.694275+00:00",
-      "updated_at": "2026-09-21T11:31:42.162488+00:00"
+      "verified_at": "2026-09-21T13:03:27.668731+00:00",
+      "updated_at": "2026-09-21T13:03:28.387337+00:00"
     },
     {
       "fund_id": "az_foras__azimut_egypt_asset_management",
@@ -2895,13 +2895,13 @@
       "nav": 53.18787,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:40.849275+00:00",
-      "updated_at": "2026-09-21T11:31:41.517694+00:00"
+      "verified_at": "2026-09-21T13:03:26.663462+00:00",
+      "updated_at": "2026-09-21T13:03:27.394883+00:00"
     },
     {
       "fund_id": "ebank_fund_iii_konooz__prime_investments",
@@ -2913,13 +2913,13 @@
       "nav": 897.247,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.711776+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.62872+00:00"
     },
     {
       "fund_id": "stream__cfh_asset_management",
@@ -2931,13 +2931,13 @@
       "nav": 1.2554,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "hermes_shariah__hermes_portfolio_and_fund_management",
@@ -2949,13 +2949,13 @@
       "nav": 133.39,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "credit_agricole_egypt_fund_iv_al_thiqa__hc_securities_investment",
@@ -2967,13 +2967,13 @@
       "nav": 905.09,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "azimut_target_maturity_fund_target_2030_usd__azimut_egypt_asset_management",
@@ -2985,13 +2985,13 @@
       "nav": 10.23058,
       "as_of_date": "2026-09-15",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-15",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:32.231581+00:00",
-      "updated_at": "2026-09-21T11:31:32.933653+00:00"
+      "verified_at": "2026-09-21T13:03:14.415263+00:00",
+      "updated_at": "2026-09-21T13:03:15.381084+00:00"
     },
     {
       "fund_id": "mid_bank_fund_i__beltone_asset_management",
@@ -3003,13 +3003,13 @@
       "nav": 235.24,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "saib_adib_fund_sanabel__ci_asset_management",
@@ -3021,7 +3021,7 @@
       "nav": 842.28,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -3039,13 +3039,13 @@
       "nav": 682.64871,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "fab_misr_fund_etm_nan__hc_securities_investment",
@@ -3057,13 +3057,13 @@
       "nav": 348.32703,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-19",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_hc_si",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "ciam_gold_fund__ci_asset_management",
@@ -3075,7 +3075,7 @@
       "nav": 1.0911,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -3093,13 +3093,13 @@
       "nav": 20.82766,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_nicapital_am",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "egyptian_arab_land_bank_fund_al_masry__x",
@@ -3111,13 +3111,13 @@
       "nav": 473.27398,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.711776+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.62872+00:00"
     },
     {
       "fund_id": "maksab_first_tranche_usd__x",
@@ -3129,13 +3129,13 @@
       "nav": 1.18135,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.711776+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.62872+00:00"
     },
     {
       "fund_id": "arab_bank_fund_yomaty__beltone_asset_management",
@@ -3147,13 +3147,13 @@
       "nav": 74.76,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "maashy__azimut_egypt_asset_management",
@@ -3165,13 +3165,13 @@
       "nav": 3176.9477,
       "as_of_date": "2026-09-16",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-16",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:43.126647+00:00",
-      "updated_at": "2026-09-21T11:31:43.592316+00:00"
+      "verified_at": "2026-09-21T13:03:29.628715+00:00",
+      "updated_at": "2026-09-21T13:03:30.358887+00:00"
     },
     {
       "fund_id": "az_value__azimut_egypt_asset_management",
@@ -3183,13 +3183,13 @@
       "nav": 1.80632,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:37.239705+00:00",
-      "updated_at": "2026-09-21T11:31:37.746081+00:00"
+      "verified_at": "2026-09-21T13:03:21.5582+00:00",
+      "updated_at": "2026-09-21T13:03:22.294718+00:00"
     },
     {
       "fund_id": "shefa_orman_charity_fund__ci_asset_management",
@@ -3201,7 +3201,7 @@
       "nav": 19.24,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -3219,13 +3219,13 @@
       "nav": 786.36731,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "fibe_cib_aman__ci_asset_management",
@@ -3237,7 +3237,7 @@
       "nav": 540.76,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -3255,7 +3255,7 @@
       "nav": 520.55,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -3273,13 +3273,13 @@
       "nav": 48.068,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "hourus__x",
@@ -3291,13 +3291,13 @@
       "nav": 21.0121,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "arab_african_international_bank_guard__arab_african_investment_management",
@@ -3309,13 +3309,13 @@
       "nav": 37.74811,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "aspire_waffrah_plus__x",
@@ -3327,13 +3327,13 @@
       "nav": 12.06,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "ahli_united_bank_tharwa__hermes_portfolio_and_fund_management",
@@ -3345,13 +3345,13 @@
       "nav": 634.925,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "ciam_4th_issue_consumption__ci_asset_management",
@@ -3363,7 +3363,7 @@
       "nav": 21.38,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -3381,13 +3381,13 @@
       "nav": 26.25831,
       "as_of_date": "2026-05-23",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-05-23",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:38.622249+00:00",
-      "updated_at": "2026-09-21T11:31:39.101633+00:00"
+      "verified_at": "2026-09-21T13:03:23.532473+00:00",
+      "updated_at": "2026-09-21T13:03:24.250867+00:00"
     },
     {
       "fund_id": "az_foras_shariah__azimut_egypt_asset_management",
@@ -3399,13 +3399,13 @@
       "nav": 2.05751,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:34.667082+00:00",
-      "updated_at": "2026-09-21T11:31:35.344513+00:00"
+      "verified_at": "2026-09-21T13:03:18.174558+00:00",
+      "updated_at": "2026-09-21T13:03:18.956913+00:00"
     },
     {
       "fund_id": "ciam_gold__ci_asset_management",
@@ -3417,13 +3417,13 @@
       "nav": 1.1084,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "ciam_7th_issue_hd_20__ci_asset_management",
@@ -3435,7 +3435,7 @@
       "nav": 12.38,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -3453,13 +3453,13 @@
       "nav": 1.2712,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_snduk",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "wethaq__x",
@@ -3471,13 +3471,13 @@
       "nav": 23.57616,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "national_bank_of_egypt_fund_iv__x",
@@ -3489,13 +3489,13 @@
       "nav": 301.483,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 3,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "beltone_egx100_index_tracker_meya_meya__beltone_asset_management",
@@ -3507,13 +3507,13 @@
       "nav": 2.58,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "credit_agricole_egypt_fund_i__hermes_portfolio_and_fund_management",
@@ -3525,13 +3525,13 @@
       "nav": 1985.39,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "target_first_fund__target_asset_management",
@@ -3543,13 +3543,13 @@
       "nav": 12.00557,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "qnb_alahli_themar__hermes_portfolio_and_fund_management",
@@ -3561,13 +3561,13 @@
       "nav": 984.957,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "arab_african_international_bank_shield__arab_african_investment_management",
@@ -3579,13 +3579,13 @@
       "nav": 871.57,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-19",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:00.957857+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.049722+00:00"
     },
     {
       "fund_id": "agricultural_bank_of_egypt_al_hasad_al_yaumy__hc_securities_investment",
@@ -3597,13 +3597,13 @@
       "nav": 74.26823,
       "as_of_date": "2026-09-19",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-19",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_hc_si",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "ci_misr_al_youmy__ci_asset_management",
@@ -3615,7 +3615,7 @@
       "nav": 19.56,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
@@ -3633,13 +3633,13 @@
       "nav": 364.01,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "beltone_financial_fund__beltone_asset_management",
@@ -3651,13 +3651,13 @@
       "nav": 1.86,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "egyptian_gulf_bank_tharaa__prime_investments",
@@ -3669,13 +3669,13 @@
       "nav": 46.0878,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.360601+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.149251+00:00"
     },
     {
       "fund_id": "az_naser__azimut_egypt_asset_management",
@@ -3687,13 +3687,13 @@
       "nav": 18.39905,
       "as_of_date": "2026-09-21",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-21",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:31:37.953269+00:00",
-      "updated_at": "2026-09-21T11:31:38.440366+00:00"
+      "verified_at": "2026-09-21T13:03:22.555167+00:00",
+      "updated_at": "2026-09-21T13:03:23.263927+00:00"
     },
     {
       "fund_id": "misr_al_mostakbal_fund__hc_securities_investment",
@@ -3705,13 +3705,13 @@
       "nav": 88.7,
       "as_of_date": "2026-09-17",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-17",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_hc_si",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "b_couponat__beltone_asset_management",
@@ -3723,13 +3723,13 @@
       "nav": 1.03,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     },
     {
       "fund_id": "national_bank_of_egypt_vii__x",
@@ -3741,13 +3741,13 @@
       "nav": 329.35,
       "as_of_date": "2026-09-03",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-03",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 2,
       "source_id": "src_eima_weekly_tw",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.711776+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:42.62872+00:00"
     },
     {
       "fund_id": "menthum__azimut_egypt_asset_management",
@@ -3759,13 +3759,13 @@
       "nav": 1.83754,
       "as_of_date": "2026-05-31",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-05-31",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:02.016323+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.899978+00:00"
     },
     {
       "fund_id": "qnb_al_ahli_tawazon__beltone_asset_management",
@@ -3777,13 +3777,13 @@
       "nav": 854.81,
       "as_of_date": "2026-09-20",
       "future_date_status": "current_or_past",
-      "current_run_id": "run_20260921_113015_35594382273",
+      "current_run_id": "run_20260921_130144_35602990164",
       "current_run_candidate_date": "2026-09-20",
       "current_run_candidate_future_status": "current_or_past",
       "current_run_candidate_count": 1,
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-21T11:30:59.702843+00:00",
-      "updated_at": "2026-09-21T11:31:01.86184+00:00"
+      "verified_at": "2026-09-21T13:02:39.187258+00:00",
+      "updated_at": "2026-09-21T13:02:41.650061+00:00"
     }
   ]
 }
