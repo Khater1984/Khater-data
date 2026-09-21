@@ -1,10 +1,18 @@
 {
-  "check_date": "2026-09-19",
+  "check_date": "2026-09-21",
+  "future_date_policy": {
+    "max_days": 7,
+    "accepted_status": "CURRENT_BOUNDED_FUTURE",
+    "meaning": "source-published bounded future date"
+  },
   "funds": 208,
-  "current": 16,
-  "stale": 172,
-  "no_nav": 4,
-  "no_date": 16,
+  "current": 14,
+  "current_bounded_future": 1,
+  "stale": 193,
+  "future_outside_window": 0,
+  "invalid_date": 0,
+  "no_nav": 0,
+  "no_date": 0,
   "rows": [
     {
       "fund_id": "az_halan__azimut_egypt_asset_management",
@@ -12,12 +20,15 @@
       "management_company": "Azimut Egypt Asset Management",
       "price_update_url": "https://azimut.eg/funds",
       "host": "azimut.eg",
-      "nav": 1.83056,
-      "as_of_date": "2026-09-20",
+      "nav": 1.83401,
+      "as_of_date": "2026-09-22",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:07.449727+00:00",
-      "updated_at": "2026-09-19T13:03:07.530866+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:35.526071+00:00",
+      "updated_at": "2026-09-21T11:31:36.03363+00:00",
+      "freshness_status": "CURRENT_BOUNDED_FUTURE",
+      "future_days": 1,
+      "age_days": -1
     },
     {
       "fund_id": "misr_money_market_egp__ci_asset_management",
@@ -25,12 +36,15 @@
       "management_company": "CI Asset Management",
       "price_update_url": null,
       "host": "",
-      "nav": 19.96574,
-      "as_of_date": "2026-09-16",
-      "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "nav": 115.681,
+      "as_of_date": "2026-09-21",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "ci_fixed_income_fund__ci_asset_management",
@@ -41,9 +55,12 @@
       "nav": 1.8647,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.631934+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "beltone_egx33_shariah_index_tracker_wafra__beltone_asset_management",
@@ -54,9 +71,12 @@
       "nav": 2.24,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "agricultural_bank_of_egypt_fund_al_massy__hermes_portfolio_and_fund_management",
@@ -67,9 +87,12 @@
       "nav": 78.49,
       "as_of_date": "2026-09-17",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "afaaq__arab_african_investment_management",
@@ -77,12 +100,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 267.0622,
-      "as_of_date": "2026-09-16",
+      "nav": 267.4989,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "misr_money_market_euro__ci_asset_management",
@@ -90,12 +116,15 @@
       "management_company": "CI Asset Management",
       "price_update_url": null,
       "host": "",
-      "nav": 11.9519,
-      "as_of_date": "2026-09-17",
+      "nav": 11.9541,
+      "as_of_date": "2026-09-21",
       "source_id": "src_snduk",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.453867+00:00",
-      "freshness_status": "STALE"
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "maksab_second_tranche_euro__alpha_zaldi",
@@ -103,25 +132,15 @@
       "management_company": "Alpha Financial Investments Management & Zaldi Investments",
       "price_update_url": null,
       "host": "",
-      "nav": null,
-      "as_of_date": null,
-      "source_id": null,
-      "verified_at": null,
-      "updated_at": null,
-      "freshness_status": "NO_NAV"
-    },
-    {
-      "fund_id": "cash_mubasher__mubasher_asset_management",
-      "canonical_name": "Cash Mubasher",
-      "management_company": "Mubasher Asset Management",
-      "price_update_url": "https://snduk.com/eg/funds/cash-mubasher-fund?lang=ar",
-      "host": "snduk.com",
-      "nav": 24.28,
-      "as_of_date": "2026-09-15",
-      "source_id": "src_eima_performance_integrated",
-      "verified_at": "2026-09-19T13:03:11.6391+00:00",
-      "updated_at": "2026-09-19T13:03:11.731588+00:00",
-      "freshness_status": "STALE"
+      "nav": 1.07948,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.711776+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "azimut_target_maturity_fund_target_2027_usd__azimut_egypt_asset_management",
@@ -132,48 +151,28 @@
       "nav": 10.55263,
       "as_of_date": "2026-09-15",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:09.08592+00:00",
-      "updated_at": "2026-09-19T13:03:09.169304+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:39.281213+00:00",
+      "updated_at": "2026-09-21T11:31:39.797046+00:00",
+      "freshness_status": "STALE",
+      "future_days": -6,
+      "age_days": 6
     },
     {
-      "fund_id": "naeem_misr_fund__naeem_for_financial_investments",
-      "canonical_name": "Naeem Misr Fund",
-      "management_company": "Naeem for Financial Investments",
-      "price_update_url": "https://snduk.com/eg/funds/naeem-misr-sharia-fund?lang=ar",
+      "fund_id": "cash_mubasher__mubasher_asset_management",
+      "canonical_name": "Cash Mubasher",
+      "management_company": "Mubasher Asset Management",
+      "price_update_url": "https://snduk.com/eg/funds/cash-mubasher-fund?lang=ar",
       "host": "snduk.com",
-      "nav": 50.15,
-      "as_of_date": "2026-09-17",
-      "source_id": "src_naeem_funds",
-      "verified_at": "2026-09-19T13:03:12.323849+00:00",
-      "updated_at": "2026-09-19T13:03:12.588896+00:00",
-      "freshness_status": "STALE"
-    },
-    {
-      "fund_id": "sarwaty__ci_asset_management",
-      "canonical_name": "Sarwaty",
-      "management_company": "CI Asset Management",
-      "price_update_url": "https://www.cicapital.com/fundprice/",
-      "host": "cicapital.com",
-      "nav": 224.72095,
-      "as_of_date": "2026-09-16",
-      "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
-    },
-    {
-      "fund_id": "bareeq__arab_african_investment_management",
-      "canonical_name": "Bareeq",
-      "management_company": "Arab African Investment Management",
-      "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
-      "host": "aaim.com.eg",
-      "nav": 215.04755,
-      "as_of_date": "2026-09-16",
-      "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "nav": 24.32,
+      "as_of_date": "2026-09-19",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "azimut_target_maturity_fund_target_2029_usd__azimut_egypt_asset_management",
@@ -184,9 +183,60 @@
       "nav": 10.36402,
       "as_of_date": "2026-09-15",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:06.934682+00:00",
-      "updated_at": "2026-09-19T13:03:07.021185+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:33.991422+00:00",
+      "updated_at": "2026-09-21T11:31:34.486558+00:00",
+      "freshness_status": "STALE",
+      "future_days": -6,
+      "age_days": 6
+    },
+    {
+      "fund_id": "naeem_misr_fund__naeem_for_financial_investments",
+      "canonical_name": "Naeem Misr Fund",
+      "management_company": "Naeem for Financial Investments",
+      "price_update_url": "https://snduk.com/eg/funds/naeem-misr-sharia-fund?lang=ar",
+      "host": "snduk.com",
+      "nav": 50.58,
+      "as_of_date": "2026-09-21",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
+    },
+    {
+      "fund_id": "sarwaty__ci_asset_management",
+      "canonical_name": "Sarwaty",
+      "management_company": "CI Asset Management",
+      "price_update_url": "https://www.cicapital.com/fundprice/",
+      "host": "cicapital.com",
+      "nav": 198.20591,
+      "as_of_date": "2025-12-31",
+      "source_id": "src_eima_performance_integrated",
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-20T15:06:35.801314+00:00",
+      "updated_at": "2026-09-20T15:06:35.801314+00:00",
+      "freshness_status": "STALE",
+      "future_days": -264,
+      "age_days": 264
+    },
+    {
+      "fund_id": "bareeq__arab_african_investment_management",
+      "canonical_name": "Bareeq",
+      "management_company": "Arab African Investment Management",
+      "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
+      "host": "aaim.com.eg",
+      "nav": 215.42476,
+      "as_of_date": "2026-09-20",
+      "source_id": "src_aaim_funds",
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "zaldi_star__zaldi_investments",
@@ -194,12 +244,15 @@
       "management_company": "Zaldi Investments",
       "price_update_url": "https://zaldi-capital.com/",
       "host": "zaldi-capital.com",
-      "nav": 112.2842,
-      "as_of_date": "2026-09-17",
-      "source_id": "src_snduk",
-      "verified_at": "2026-09-19T11:40:23.0294+00:00",
-      "updated_at": "2026-09-19T11:40:24.938906+00:00",
-      "freshness_status": "STALE"
+      "nav": 111.6733,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "ciam_1st_issue_real_estate__ci_asset_management",
@@ -210,9 +263,12 @@
       "nav": 22.57,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "ebank_fund_ii__azimut_egypt_asset_management",
@@ -223,9 +279,12 @@
       "nav": 961.2309,
       "as_of_date": "2026-09-20",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:11.117294+00:00",
-      "updated_at": "2026-09-19T13:03:11.202603+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:44.584476+00:00",
+      "updated_at": "2026-09-21T11:31:45.05095+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "zaldi_el_masry__zaldi_investments",
@@ -233,12 +292,15 @@
       "management_company": "Zaldi Investments",
       "price_update_url": "https://zaldi-capital.com/",
       "host": "zaldi-capital.com",
-      "nav": 13.77,
-      "as_of_date": "2026-09-12",
-      "source_id": "src_snduk",
-      "verified_at": "2026-09-19T11:40:23.0294+00:00",
-      "updated_at": "2026-09-19T11:40:25.171897+00:00",
-      "freshness_status": "STALE"
+      "nav": 13.6,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "ciam_8th_issue_ipos__ci_asset_management",
@@ -246,12 +308,15 @@
       "management_company": "CI Asset Management",
       "price_update_url": "https://www.cicapital.com/fundprice/",
       "host": "cicapital.com",
-      "nav": 11.5929,
-      "as_of_date": "2026-09-17",
-      "source_id": "src_snduk",
-      "verified_at": "2026-09-19T11:40:23.0294+00:00",
-      "updated_at": "2026-09-19T11:40:24.938906+00:00",
-      "freshness_status": "STALE"
+      "nav": 11.3045,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.711776+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "diamond__arab_african_investment_management",
@@ -259,12 +324,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 216.39455,
-      "as_of_date": "2026-09-16",
+      "nav": 216.82029,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "bokra_shakmagia__bokra",
@@ -272,12 +340,15 @@
       "management_company": "Bokra",
       "price_update_url": "https://snduk.com/eg/funds/el-shakmagya-bokra-gold-fund?lang=ar",
       "host": "snduk.com",
-      "nav": 0.9035,
-      "as_of_date": "2026-09-16",
-      "source_id": "src_eima_performance_integrated",
-      "verified_at": "2026-09-19T13:03:13.004713+00:00",
-      "updated_at": "2026-09-19T13:03:13.087759+00:00",
-      "freshness_status": "STALE"
+      "nav": 0.9272,
+      "as_of_date": "2026-09-20",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "b_alpha__beltone_asset_management",
@@ -288,9 +359,12 @@
       "nav": 1.55,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "ni_capital_15_30__ni_capital",
@@ -301,9 +375,12 @@
       "nav": 22.01132,
       "as_of_date": "2026-09-19",
       "source_id": "src_nicapital_am",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.453867+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-20T12:14:44.518342+00:00",
+      "updated_at": "2026-09-20T12:14:45.656717+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "national_bank_of_egypt_fund_iii__x",
@@ -311,12 +388,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 348.32703,
-      "as_of_date": "2026-09-19",
-      "source_id": "src_hc_si",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "CURRENT"
+      "nav": 648.55,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "mubasher_equity__mubasher_asset_management",
@@ -324,25 +404,31 @@
       "management_company": "Mubasher Asset Management",
       "price_update_url": "https://english.mubasher.info/countries/eg/funds/6145/",
       "host": "english.mubasher.info",
-      "nav": 2.053,
-      "as_of_date": "2026-09-15",
+      "nav": 2.0718,
+      "as_of_date": "2026-09-17",
       "source_id": "src_snduk",
-      "verified_at": "2026-09-19T11:40:23.0294+00:00",
-      "updated_at": "2026-09-19T11:40:24.938906+00:00",
-      "freshness_status": "STALE"
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "odin_4__x",
       "canonical_name": "Odin 4",
-      "management_company": null,
+      "management_company": "Alpha Financial Investments Management",
       "price_update_url": "https://snduk.com/eg/funds/odin-4-money-market-fund/history?lang=en",
       "host": "snduk.com",
-      "nav": 1.2681,
-      "as_of_date": "2026-09-17",
-      "source_id": "src_eima_performance_integrated",
-      "verified_at": "2026-09-19T13:03:13.435291+00:00",
-      "updated_at": "2026-09-19T13:03:13.689786+00:00",
-      "freshness_status": "STALE"
+      "nav": 1.2702,
+      "as_of_date": "2026-09-21",
+      "source_id": "src_alpha_odin",
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:48.173397+00:00",
+      "updated_at": "2026-09-21T11:31:49.027973+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "fab_misr_fund_ezdhar__acumen_asset_management",
@@ -350,12 +436,15 @@
       "management_company": "Acumen Asset Management",
       "price_update_url": "https://www.fabmisr.com.eg/en/personal-banking/investments-funds/ezdehar-fund",
       "host": "fabmisr.com.eg",
-      "nav": 472.699,
-      "as_of_date": "2026-08-22",
-      "source_id": "src_fabmisr_ezdehar",
-      "verified_at": "2026-09-01T15:14:37.989282+00:00",
-      "updated_at": "2026-09-01T15:14:38.563076+00:00",
-      "freshness_status": "STALE"
+      "nav": 477.5715,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "allianz__ci_asset_management",
@@ -366,9 +455,12 @@
       "nav": 20.89,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.631934+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "cib_thabat__ci_asset_management",
@@ -379,9 +471,12 @@
       "nav": 612.45,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.631934+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "banque_misr_fund_i__ci_asset_management",
@@ -392,9 +487,12 @@
       "nav": 20.58,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "prime_nmow__prime_investments",
@@ -402,12 +500,15 @@
       "management_company": "Prime Investments",
       "price_update_url": "https://primeholdingco.com/asset-management/",
       "host": "primeholdingco.com",
-      "nav": 13.0895,
-      "as_of_date": null,
-      "source_id": "src_prime_am",
-      "verified_at": "2026-09-17T13:57:44.859309+00:00",
-      "updated_at": "2026-09-19T13:02:45.001847+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 13.3317,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.711776+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "kenz_foras_equity__arab_african_investment_management",
@@ -415,12 +516,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 156.39,
-      "as_of_date": "2026-09-16",
+      "nav": 157.94,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "gosour_equity__arab_african_investment_management",
@@ -428,12 +532,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 11.51,
-      "as_of_date": "2026-09-16",
+      "nav": 11.64,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "beltone_consumer_fund__beltone_asset_management",
@@ -444,9 +551,12 @@
       "nav": 1.84,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "national_bank_of_kuwait_fund_namaa__nbk_capital_asset_management_egypt",
@@ -454,12 +564,15 @@
       "management_company": "NBK Capital Asset Management Egypt",
       "price_update_url": "https://www.nbk.com/egypt/financial-markets/investment/mutual-funds/namaa.html",
       "host": "nbk.com",
-      "nav": 82.66732,
-      "as_of_date": "2026-08-26",
-      "source_id": "src_nbk_egypt_funds",
-      "verified_at": "2026-09-01T15:04:17.847959+00:00",
-      "updated_at": "2026-09-01T15:04:20.736373+00:00",
-      "freshness_status": "STALE"
+      "nav": 83.3054,
+      "as_of_date": "2026-09-17",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "saib_yaumy_fund__beltone_asset_management",
@@ -470,9 +583,12 @@
       "nav": 49.17,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "national_bank_of_kuwait_hayat__nbk_capital_asset_management_egypt",
@@ -480,12 +596,15 @@
       "management_company": "NBK Capital Asset Management Egypt",
       "price_update_url": "https://www.nbk.com/egypt/financial-markets/investment/mutual-funds/al-hayah.html",
       "host": "nbk.com",
-      "nav": 95.13805,
-      "as_of_date": "2026-08-26",
-      "source_id": "src_nbk_egypt_funds",
-      "verified_at": "2026-09-01T15:04:17.847959+00:00",
-      "updated_at": "2026-09-01T15:04:21.448983+00:00",
-      "freshness_status": "STALE"
+      "nav": 96.968,
+      "as_of_date": "2026-09-17",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "sarwa_life_insurance_fund__ci_asset_management",
@@ -496,9 +615,12 @@
       "nav": 2.3943,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.631934+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "faisal_islamic_bank_of_egypt_fund__hermes_portfolio_and_fund_management",
@@ -506,12 +628,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 591.46,
-      "as_of_date": "2026-09-13",
+      "nav": 592.84,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "mubasher_gold__mubasher_asset_management",
@@ -519,12 +644,15 @@
       "management_company": "Mubasher Asset Management",
       "price_update_url": "https://snduk.com/eg/funds/dahab-mubasher-gold-fund?lang=ar",
       "host": "snduk.com",
-      "nav": 12.36,
-      "as_of_date": "2026-09-15",
-      "source_id": "src_eima_performance_integrated",
-      "verified_at": "2026-09-19T13:03:14.11505+00:00",
-      "updated_at": "2026-09-19T13:03:14.200635+00:00",
-      "freshness_status": "STALE"
+      "nav": 12.42,
+      "as_of_date": "2026-09-19",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "suez_canal_bank_fund_i__hc_securities_investment",
@@ -532,12 +660,15 @@
       "management_company": "HC Securities & Investment",
       "price_update_url": "https://www.hc-si.com",
       "host": "hc-si.com",
-      "nav": 2043.81,
-      "as_of_date": "2026-08-26",
-      "source_id": "src_hc_si",
-      "verified_at": "2026-09-01T14:42:41.273782+00:00",
-      "updated_at": "2026-09-01T14:42:43.36572+00:00",
-      "freshness_status": "STALE"
+      "nav": 2068.84,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "ciam_6th_issue_the_quant__ci_asset_management",
@@ -548,9 +679,12 @@
       "nav": 12.65,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "sigma_traded_fund__x",
@@ -558,12 +692,15 @@
       "management_company": null,
       "price_update_url": "https://startamarkets.com/Funds/2670-traded-equity-fund-insight",
       "host": "startamarkets.com",
-      "nav": 11.7349,
-      "as_of_date": "2026-08-26",
-      "source_id": "src_snduk",
-      "verified_at": "2026-09-08T19:55:08.807336+00:00",
-      "updated_at": "2026-09-08T19:55:08.807336+00:00",
-      "freshness_status": "STALE"
+      "nav": 11.839,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "ni_capital_egx_70__ni_capital",
@@ -571,12 +708,15 @@
       "management_company": "NI Capital",
       "price_update_url": "https://nicapital.com.eg/lines-of-business/asset-management/",
       "host": "nicapital.com.eg",
-      "nav": 22.3122,
-      "as_of_date": "2026-09-17",
+      "nav": 22.3145,
+      "as_of_date": "2026-09-20",
       "source_id": "src_nicapital_am",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.453867+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "aman_micro_finance__prime_investments",
@@ -584,12 +724,15 @@
       "management_company": "Prime Investments",
       "price_update_url": "https://primeholdingco.com/asset-management/",
       "host": "primeholdingco.com",
-      "nav": 1.85529,
-      "as_of_date": null,
-      "source_id": "src_prime_am",
-      "verified_at": "2026-09-17T13:57:44.859309+00:00",
-      "updated_at": "2026-09-19T13:02:46.28286+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 1.85991,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "national_bank_of_kuwait_fund_ishraq__nbk_capital_asset_management_egypt",
@@ -597,12 +740,15 @@
       "management_company": "NBK Capital Asset Management Egypt",
       "price_update_url": "https://www.nbk.com/egypt/financial-markets/investment/mutual-funds/ishraq.html",
       "host": "nbk.com",
-      "nav": 70.12553,
-      "as_of_date": "2026-08-31",
-      "source_id": "src_nbk_egypt_funds",
-      "verified_at": "2026-09-01T15:04:17.847959+00:00",
-      "updated_at": "2026-09-01T15:04:20.005101+00:00",
-      "freshness_status": "STALE"
+      "nav": 70.7764,
+      "as_of_date": "2026-09-19",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "zaldi_star_equity__zaldi_investments",
@@ -610,12 +756,15 @@
       "management_company": "Zaldi Investments",
       "price_update_url": "https://snduk.com/eg/funds/zaldi-elmasry-fund?lang=ar",
       "host": "snduk.com",
-      "nav": 13.77,
-      "as_of_date": "2026-09-12",
-      "source_id": "src_zaldi_capital",
-      "verified_at": "2026-09-19T13:03:14.625287+00:00",
-      "updated_at": "2026-09-19T13:03:14.703154+00:00",
-      "freshness_status": "STALE"
+      "nav": 13.49,
+      "as_of_date": "2026-09-20",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "thndr_gold__x",
@@ -623,12 +772,15 @@
       "management_company": null,
       "price_update_url": "https://thndr.app/blogpost/thndr-gold-the-easiest-way-to-buy-gold-in-egypt/",
       "host": "thndr.app",
-      "nav": null,
-      "as_of_date": null,
-      "source_id": null,
-      "verified_at": null,
-      "updated_at": null,
-      "freshness_status": "NO_NAV"
+      "nav": 1.09,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.711776+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "mid_bank_fund_ii__beltone_asset_management",
@@ -636,12 +788,15 @@
       "management_company": "Beltone Asset Management",
       "price_update_url": "https://www.beltoneholding.com/ar/business-line/bltwn-lidart-alaswl-1",
       "host": "beltoneholding.com",
-      "nav": 1040.62,
+      "nav": 1040.63,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "saib_fund_iii_al_rabeh__hermes_portfolio_and_fund_management",
@@ -649,12 +804,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 459.30781,
-      "as_of_date": "2026-09-19",
+      "nav": 459.51409,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "manasek__hermes_portfolio_and_fund_management",
@@ -662,12 +820,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 110.05778,
-      "as_of_date": "2026-09-16",
+      "nav": 110.24256,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "ciam_2nd_issue_technology__ci_asset_management",
@@ -678,9 +839,12 @@
       "nav": 18.94,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "misr_insurance_fund__beltone_asset_management",
@@ -691,9 +855,12 @@
       "nav": 47.77,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "al_baraka_bank_egypt_al_barakat__hermes_portfolio_and_fund_management",
@@ -701,12 +868,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 264.49,
-      "as_of_date": "2026-09-19",
+      "nav": 264.62,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "housing_development_bank_al_tameer__arab_african_investment_management",
@@ -714,12 +884,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 961.86,
-      "as_of_date": "2026-09-12",
+      "nav": 962.63,
+      "as_of_date": "2026-09-19",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "ciam_misr_shariah_equity__ci_asset_management",
@@ -730,9 +903,12 @@
       "nav": 23.07,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "the_charitable_education_fund__ni_capital",
@@ -743,9 +919,12 @@
       "nav": 24.62136,
       "as_of_date": "2026-08-31",
       "source_id": "src_nicapital_am",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-01T14:03:13.337142+00:00",
       "updated_at": "2026-09-01T14:03:13.712416+00:00",
-      "freshness_status": "STALE"
+      "freshness_status": "STALE",
+      "future_days": -21,
+      "age_days": 21
     },
     {
       "fund_id": "bank_abc_fund_mazaya__beltone_asset_management",
@@ -756,9 +935,12 @@
       "nav": 75.59,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "attijariwafa_bankfund__beltone_asset_management",
@@ -769,9 +951,12 @@
       "nav": 4004.27,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "iskan_insurance__arab_african_investment_management",
@@ -779,12 +964,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://snduk.com/eg/funds/iskan-money-market-fund?lang=ar",
       "host": "snduk.com",
-      "nav": 19.9657,
-      "as_of_date": "2026-09-16",
+      "nav": 20.0059,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:03:15.128535+00:00",
-      "updated_at": "2026-09-19T13:03:15.205113+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:51.345992+00:00",
+      "updated_at": "2026-09-21T11:31:51.826862+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "fab_misr_al_awal__hc_securities_investment",
@@ -792,12 +980,15 @@
       "management_company": "HC Securities & Investment",
       "price_update_url": "https://www.hc-si.com",
       "host": "hc-si.com",
-      "nav": 542.75187,
-      "as_of_date": "2026-08-29",
+      "nav": 548.20231,
+      "as_of_date": "2026-09-19",
       "source_id": "src_hc_si",
-      "verified_at": "2026-09-01T14:03:13.337142+00:00",
-      "updated_at": "2026-09-01T14:03:13.712416+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "ciam_misr_equity__ci_asset_management",
@@ -805,12 +996,15 @@
       "management_company": "CI Asset Management",
       "price_update_url": "https://www.cicapital.com/fundprice/",
       "host": "cicapital.com",
-      "nav": 38.4039,
-      "as_of_date": "2026-09-17",
-      "source_id": "src_snduk",
-      "verified_at": "2026-09-19T11:40:23.0294+00:00",
-      "updated_at": "2026-09-19T11:40:24.938906+00:00",
-      "freshness_status": "STALE"
+      "nav": 39.0224,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.711776+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "b_youmy__beltone_asset_management",
@@ -821,9 +1015,12 @@
       "nav": 1.03,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-20T12:14:44.518342+00:00",
+      "updated_at": "2026-09-20T12:14:45.404032+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "ciam__ci_asset_management",
@@ -834,9 +1031,12 @@
       "nav": 10.68,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "adib_egypt_shari_a_compliant_al_nahrda_fund__beltone_asset_management",
@@ -847,22 +1047,12 @@
       "nav": 422.94,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
-    },
-    {
-      "fund_id": "delta_life_insurance__x",
-      "canonical_name": "Delta Life Insurance",
-      "management_company": null,
-      "price_update_url": "https://english.mubasher.info/countries/eg/funds/5808/",
-      "host": "english.mubasher.info",
-      "nav": 204.98951,
-      "as_of_date": "2026-08-31",
-      "source_id": "src_alpha_odin",
-      "verified_at": "2026-09-01T15:42:36.846626+00:00",
-      "updated_at": "2026-09-01T15:42:39.631782+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "sabayek__beltone_asset_management",
@@ -873,9 +1063,28 @@
       "nav": 1.69,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
+    },
+    {
+      "fund_id": "delta_life_insurance__x",
+      "canonical_name": "Delta Life Insurance",
+      "management_company": "Alpha Financial Investments Management",
+      "price_update_url": "https://english.mubasher.info/countries/eg/funds/5808/",
+      "host": "english.mubasher.info",
+      "nav": 205.52091,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "national_bank_of_egypt_fund_v__x",
@@ -883,12 +1092,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 2546.7077,
-      "as_of_date": "2026-09-16",
-      "source_id": "src_snduk",
-      "verified_at": "2026-09-19T11:40:23.0294+00:00",
-      "updated_at": "2026-09-19T11:40:24.938906+00:00",
-      "freshness_status": "STALE"
+      "nav": 57.02,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "cib_fund_takamol__ci_asset_management",
@@ -899,9 +1111,12 @@
       "nav": 877.32,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "misr_life_insurance_fund__ci_asset_management",
@@ -912,9 +1127,12 @@
       "nav": 23.35,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.631934+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "hermes_fixed_income_usd_fund__hermes_portfolio_and_fund_management",
@@ -922,12 +1140,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 102.5308,
-      "as_of_date": "2026-09-16",
+      "nav": 102.58131,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "alexbank_fund_iii__hermes_portfolio_and_fund_management",
@@ -935,12 +1156,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 61.77917,
-      "as_of_date": "2026-09-19",
+      "nav": 61.80713,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "hermes_gold__hermes_portfolio_and_fund_management",
@@ -948,12 +1172,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 91.24236,
-      "as_of_date": "2026-09-17",
+      "nav": 92.68491,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "cib_fund_i_osoul__ci_asset_management",
@@ -964,9 +1191,12 @@
       "nav": 1113.81,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.631934+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "alexbank_fund_i__hermes_portfolio_and_fund_management",
@@ -977,9 +1207,12 @@
       "nav": 1832.82,
       "as_of_date": "2026-09-17",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "menthum_grow_egx_30_capped__beltone_asset_management",
@@ -990,9 +1223,12 @@
       "nav": 1.71,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "hermes__hermes_portfolio_and_fund_management",
@@ -1000,12 +1236,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 112.71761,
-      "as_of_date": "2026-09-16",
+      "nav": 112.9373,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "bank_nxt_fund_ii_helal__hermes_portfolio_and_fund_management",
@@ -1013,12 +1252,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 399.00433,
-      "as_of_date": "2026-09-12",
+      "nav": 400.76267,
+      "as_of_date": "2026-09-19",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "aaib_gozoor__arab_african_investment_management",
@@ -1026,12 +1268,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 56.50905,
-      "as_of_date": "2026-09-16",
+      "nav": 56.60772,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "ciam_esg__ci_asset_management",
@@ -1042,9 +1287,12 @@
       "nav": 15.38,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "national_bank_of_egypt_fund_ii__x",
@@ -1052,12 +1300,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 320.3,
-      "as_of_date": null,
-      "source_id": "src_afim_investment",
-      "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-19T13:02:49.492207+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 318.79,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "national_bank_of_kuwait_al_mizan__nbk_capital_asset_management_egypt",
@@ -1065,12 +1316,15 @@
       "management_company": "NBK Capital Asset Management Egypt",
       "price_update_url": "https://www.nbk.com/egypt/financial-markets/investment/mutual-funds/mizan.html",
       "host": "nbk.com",
-      "nav": 12.86743,
-      "as_of_date": "2026-08-26",
-      "source_id": "src_nbk_egypt_funds",
-      "verified_at": "2026-09-01T15:04:17.847959+00:00",
-      "updated_at": "2026-09-01T15:04:21.080563+00:00",
-      "freshness_status": "STALE"
+      "nav": 12.9935,
+      "as_of_date": "2026-09-17",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "egx30_index_etf_egx30_index_etf__beltone_asset_management",
@@ -1081,9 +1335,12 @@
       "nav": 63.77,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "bank_nxt_fund_i__hermes_portfolio_and_fund_management",
@@ -1091,12 +1348,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 26.91675,
-      "as_of_date": "2026-09-19",
+      "nav": 26.93007,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "kenoz_egx33_shariah_index_tracker_shariah__arab_african_investment_management",
@@ -1104,12 +1364,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 182.81,
-      "as_of_date": "2026-09-16",
+      "nav": 183.49,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "ciam_3rd_issue_export__ci_asset_management",
@@ -1120,9 +1383,12 @@
       "nav": 16.41,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "b70_egx_70_tracker__beltone_asset_management",
@@ -1133,9 +1399,12 @@
       "nav": 1.63,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "blom_bank_fund_ii__cfh_asset_management",
@@ -1143,12 +1412,15 @@
       "management_company": "CFH Asset Management",
       "price_update_url": "https://eima.org.eg/wp-content/uploads/2026/04/Amended-Performance-02-April-2026-Time-Weighted1.pdf",
       "host": "eima.org.eg",
-      "nav": null,
-      "as_of_date": null,
-      "source_id": null,
-      "verified_at": null,
-      "updated_at": null,
-      "freshness_status": "NO_NAV"
+      "nav": 740.11,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "arab_african_international_bank_juman__arab_african_investment_management",
@@ -1156,12 +1428,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 797.9446,
-      "as_of_date": "2026-08-31",
+      "nav": 805.9909,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-01T14:42:41.273782+00:00",
-      "updated_at": "2026-09-01T14:42:43.037256+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "ni_capital_sahmy_fund__ni_capital",
@@ -1169,12 +1444,15 @@
       "management_company": "NI Capital",
       "price_update_url": "https://nicapital.com.eg/lines-of-business/asset-management/",
       "host": "nicapital.com.eg",
-      "nav": 40.6605,
-      "as_of_date": "2026-08-31",
+      "nav": 41.543,
+      "as_of_date": "2026-09-20",
       "source_id": "src_nicapital_am",
-      "verified_at": "2026-09-01T14:03:13.337142+00:00",
-      "updated_at": "2026-09-01T14:03:13.712416+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "misr_takaful__arab_african_investment_management",
@@ -1182,12 +1460,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 212.66819,
-      "as_of_date": "2026-08-31",
+      "nav": 214.70515,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-01T14:03:13.337142+00:00",
-      "updated_at": "2026-09-01T14:03:13.712416+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "emirates_nbd_mazid__hermes_portfolio_and_fund_management",
@@ -1195,12 +1476,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 1500.76,
-      "as_of_date": "2026-09-19",
+      "nav": 1501.49,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "b_secure__beltone_asset_management",
@@ -1211,9 +1495,12 @@
       "nav": 2.0,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "menthum_usd__ci_asset_management",
@@ -1224,9 +1511,12 @@
       "nav": 1.1148,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "al_baraka_bank_egypt__hermes_portfolio_and_fund_management",
@@ -1237,9 +1527,12 @@
       "nav": 656.21,
       "as_of_date": "2026-09-17",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "hermes_equity__hermes_portfolio_and_fund_management",
@@ -1247,12 +1540,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 121.4,
-      "as_of_date": "2026-09-17",
+      "nav": 121.03,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "kfh_bank_alpha__hermes_portfolio_and_fund_management",
@@ -1260,12 +1556,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 133.42579,
-      "as_of_date": "2026-09-12",
+      "nav": 133.53104,
+      "as_of_date": "2026-09-19",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "nbe_al_baraka_bank_egypt_fund_bashayer__x",
@@ -1273,12 +1572,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 406.5,
-      "as_of_date": null,
-      "source_id": "src_afim_investment",
-      "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-19T13:02:50.628904+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 403.45,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "cib_fund_ii_istthmar__ci_asset_management",
@@ -1289,9 +1591,12 @@
       "nav": 1101.38,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "egyptian_gulf_bank_fund_i__hermes_portfolio_and_fund_management",
@@ -1302,9 +1607,12 @@
       "nav": 1414.41,
       "as_of_date": "2026-09-17",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "banque_misr_fund_iii__ci_asset_management",
@@ -1312,12 +1620,15 @@
       "management_company": "CI Asset Management",
       "price_update_url": "https://www.cicapital.com/fundprice/",
       "host": "cicapital.com",
-      "nav": 34.99,
-      "as_of_date": "2026-09-17",
-      "source_id": "src_snduk",
-      "verified_at": "2026-09-19T11:40:23.0294+00:00",
-      "updated_at": "2026-09-19T11:40:24.938906+00:00",
-      "freshness_status": "STALE"
+      "nav": 35.12,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "qnb_alahli_tadawol__hc_securities_investment",
@@ -1325,12 +1636,15 @@
       "management_company": "HC Securities & Investment",
       "price_update_url": "https://www.hc-si.com",
       "host": "hc-si.com",
-      "nav": 1058.7272,
-      "as_of_date": "2026-08-29",
+      "nav": 1067.16615,
+      "as_of_date": "2026-09-19",
       "source_id": "src_hc_si",
-      "verified_at": "2026-09-01T14:03:13.337142+00:00",
-      "updated_at": "2026-09-01T14:03:13.712416+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "gig_insurance_egypt_fund_i__pfi_asset_management",
@@ -1338,12 +1652,15 @@
       "management_company": "PFI Asset Management",
       "price_update_url": "https://pfi-am.com.eg/funds/",
       "host": "pfi-am.com.eg",
-      "nav": 1387.99,
-      "as_of_date": "2026-08-26",
-      "source_id": "src_pfi_funds",
-      "verified_at": "2026-09-01T14:08:22.783084+00:00",
-      "updated_at": "2026-09-01T14:08:27.339192+00:00",
-      "freshness_status": "STALE"
+      "nav": 1401.03,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "alexbank_fund_ii__hermes_portfolio_and_fund_management",
@@ -1351,12 +1668,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 101.7304,
-      "as_of_date": "2026-09-19",
+      "nav": 101.7803,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "credit_agricole_egypt_fund_iii__hermes_portfolio_and_fund_management",
@@ -1364,12 +1684,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 1142.64,
-      "as_of_date": "2026-09-19",
+      "nav": 1143.21,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "cib_fund_iv_hamaya__ci_asset_management",
@@ -1380,9 +1703,12 @@
       "nav": 820.74,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "the_united_bank_fund_rakhaa__ci_asset_management",
@@ -1393,9 +1719,12 @@
       "nav": 149.5,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.631934+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "national_bank_of_egypt_viii__x",
@@ -1403,12 +1732,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 2525.5,
-      "as_of_date": null,
-      "source_id": "src_afim_investment",
-      "verified_at": "2026-09-01T14:17:46.983152+00:00",
-      "updated_at": "2026-09-19T13:02:51.906569+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 2534.1843,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "tamayoz__x",
@@ -1416,12 +1748,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 17.3,
-      "as_of_date": null,
-      "source_id": "src_afim_investment",
-      "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-19T13:02:53.219284+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 17.16565,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "pfi_cashi__pfi_asset_management",
@@ -1429,12 +1764,15 @@
       "management_company": "PFI Asset Management",
       "price_update_url": "https://pfi-am.com.eg/funds/",
       "host": "pfi-am.com.eg",
-      "nav": 11.6358,
-      "as_of_date": "2026-08-31",
-      "source_id": "src_pfi_funds",
-      "verified_at": "2026-09-01T14:08:22.783084+00:00",
-      "updated_at": "2026-09-01T14:08:27.339192+00:00",
-      "freshness_status": "STALE"
+      "nav": 11.7484,
+      "as_of_date": "2026-09-20",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "momentum__cfh_asset_management",
@@ -1442,12 +1780,15 @@
       "management_company": "CFH Asset Management",
       "price_update_url": "https://snduk.com/eg/funds/momentum-cairo-capital-fund?lang=ar",
       "host": "snduk.com",
-      "nav": 14.6144,
-      "as_of_date": "2026-09-17",
-      "source_id": "src_eima_performance_integrated",
-      "verified_at": "2026-09-19T13:03:15.683498+00:00",
-      "updated_at": "2026-09-19T13:03:15.783212+00:00",
-      "freshness_status": "STALE"
+      "nav": 14.7495,
+      "as_of_date": "2026-09-21",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "beltone_fada__beltone_asset_management",
@@ -1458,9 +1799,12 @@
       "nav": 0.77,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "dahab__x",
@@ -1468,12 +1812,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 181.4,
-      "as_of_date": null,
-      "source_id": "src_afim_investment",
-      "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-19T13:02:54.197611+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 181.41,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.711776+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "granite_first_fund__granite_fund_management",
@@ -1481,12 +1828,15 @@
       "management_company": "Granite Fund Management",
       "price_update_url": "https://www.granite.eg/",
       "host": "granite.eg",
-      "nav": 1.65778,
-      "as_of_date": null,
-      "source_id": "src_granite_eg",
-      "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-19T13:02:55.127295+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 1.17613,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "al_ahli_bank_of_kuwait_egypt_fund_i__sigma_asset_management",
@@ -1494,12 +1844,15 @@
       "management_company": "Sigma Asset Management",
       "price_update_url": "https://w1.abkegypt.com/Business/Treasury/Investments/Equity-Fund",
       "host": "w1.abkegypt.com",
-      "nav": 419.95,
-      "as_of_date": "2026-09-17",
+      "nav": 416.8,
+      "as_of_date": "2026-09-20",
       "source_id": "src_abk_equity",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.453867+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "fawry__ci_asset_management",
@@ -1510,9 +1863,12 @@
       "nav": 2.1657,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.631934+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "sarwaty__arab_african_investment_management",
@@ -1520,12 +1876,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 222.99375,
-      "as_of_date": "2026-08-31",
+      "nav": 225.17432,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-01T14:03:13.337142+00:00",
-      "updated_at": "2026-09-01T14:03:13.712416+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "mubasher_silver__mubasher_asset_management",
@@ -1533,12 +1892,15 @@
       "management_company": "Mubasher Asset Management",
       "price_update_url": "https://snduk.com/eg/funds/fadda-mubasher-fund?lang=ar",
       "host": "snduk.com",
-      "nav": 9.0456,
-      "as_of_date": "2026-09-15",
-      "source_id": "src_eima_performance_integrated",
-      "verified_at": "2026-09-19T13:03:16.226633+00:00",
-      "updated_at": "2026-09-19T13:03:16.305349+00:00",
-      "freshness_status": "STALE"
+      "nav": 9.1551,
+      "as_of_date": "2026-09-17",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "pharos_fund_i__pharos_asset_management",
@@ -1546,12 +1908,15 @@
       "management_company": "Pharos Asset Management",
       "price_update_url": "https://snduk.com/eg/funds/pharos-fund-1?lang=ar",
       "host": "snduk.com",
-      "nav": 847.4,
-      "as_of_date": "2026-09-18",
-      "source_id": "src_snduk_pharos",
-      "verified_at": "2026-09-19T13:03:16.877132+00:00",
-      "updated_at": "2026-09-19T13:03:16.957257+00:00",
-      "freshness_status": "STALE"
+      "nav": 851.24,
+      "as_of_date": "2026-09-20",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "misr_money_market__ci_asset_management",
@@ -1562,9 +1927,12 @@
       "nav": 14.8,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.631934+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "credit_agricole_egypt_fund_ii__hermes_portfolio_and_fund_management",
@@ -1575,9 +1943,12 @@
       "nav": 853.54,
       "as_of_date": "2026-09-17",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "gig_makaseb_fund_first_tranche__ni_capital",
@@ -1585,12 +1956,15 @@
       "management_company": "NI Capital",
       "price_update_url": "https://nicapital.com.eg/lines-of-business/asset-management/",
       "host": "nicapital.com.eg",
-      "nav": 20.86258,
-      "as_of_date": "2026-09-19",
+      "nav": 20.87296,
+      "as_of_date": "2026-09-20",
       "source_id": "src_nicapital_am",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.453867+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "aspire_rawajj__x",
@@ -1598,12 +1972,15 @@
       "management_company": null,
       "price_update_url": "https://snduk.com/eg/funds/rawajj-money-market-fund?lang=ar",
       "host": "snduk.com",
-      "nav": 111.1118,
-      "as_of_date": "2026-09-17",
-      "source_id": "src_eima_performance_integrated",
-      "verified_at": "2026-09-19T13:03:17.35766+00:00",
-      "updated_at": "2026-09-19T13:03:17.437292+00:00",
-      "freshness_status": "STALE"
+      "nav": 111.3196,
+      "as_of_date": "2026-09-21",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "beltone_industrial_fund__beltone_asset_management",
@@ -1614,9 +1991,12 @@
       "nav": 1.92,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "al_baraka_bank_egypt_al_motawazen__x",
@@ -1626,10 +2006,13 @@
       "host": "snduk.com",
       "nav": 310.88,
       "as_of_date": "2026-09-03",
-      "source_id": "src_eima_performance_integrated",
-      "verified_at": "2026-09-19T13:03:17.86284+00:00",
-      "updated_at": "2026-09-19T13:03:17.941046+00:00",
-      "freshness_status": "STALE"
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "misr_capital_guaranteed_al_omr__ci_asset_management",
@@ -1640,9 +2023,12 @@
       "nav": 14.79,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "gig_insurance__pfi_asset_management",
@@ -1650,12 +2036,15 @@
       "management_company": "PFI Asset Management",
       "price_update_url": "https://pfi-am.com.eg/funds/",
       "host": "pfi-am.com.eg",
-      "nav": 19.0195,
-      "as_of_date": "2026-08-31",
-      "source_id": "src_pfi_funds",
-      "verified_at": "2026-09-01T14:08:22.783084+00:00",
-      "updated_at": "2026-09-01T14:08:27.339192+00:00",
-      "freshness_status": "STALE"
+      "nav": 19.0573,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "sports_fund__beltone_asset_management",
@@ -1666,9 +2055,12 @@
       "nav": 199.45,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "fab_misr_modkharaty__hermes_portfolio_and_fund_management",
@@ -1676,12 +2068,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 76.64373,
-      "as_of_date": "2026-09-19",
+      "nav": 76.68034,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "banque_du_caire_fund_i__hermes_portfolio_and_fund_management",
@@ -1692,9 +2087,12 @@
       "nav": 47.88,
       "as_of_date": "2026-09-17",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "banque_misr_fund_ii__ci_asset_management",
@@ -1702,12 +2100,15 @@
       "management_company": "CI Asset Management",
       "price_update_url": "https://www.cicapital.com/fundprice/",
       "host": "cicapital.com",
-      "nav": 23.68,
-      "as_of_date": "2026-09-17",
-      "source_id": "src_snduk",
-      "verified_at": "2026-09-19T11:40:23.0294+00:00",
-      "updated_at": "2026-09-19T11:40:25.171897+00:00",
-      "freshness_status": "STALE"
+      "nav": 23.77,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "siula_money_market__ni_capital",
@@ -1715,12 +2116,15 @@
       "management_company": "NI Capital",
       "price_update_url": "https://nicapital.com.eg/lines-of-business/asset-management/",
       "host": "nicapital.com.eg",
-      "nav": 797.9446,
-      "as_of_date": "2026-08-31",
-      "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-01T14:03:13.337142+00:00",
-      "updated_at": "2026-09-01T14:03:13.712416+00:00",
-      "freshness_status": "STALE"
+      "nav": 24.86614,
+      "as_of_date": "2026-09-20",
+      "source_id": "src_nicapital_am",
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "misr_insurance_istithmar_and_aman__arab_african_investment_management",
@@ -1728,12 +2132,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 224.305,
-      "as_of_date": "2026-09-16",
+      "nav": 224.7549,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "pioneers_fund_i__x",
@@ -1743,10 +2150,13 @@
       "host": "snduk.com",
       "nav": 300.89,
       "as_of_date": "2026-09-03",
-      "source_id": "src_eima_performance_integrated",
-      "verified_at": "2026-09-19T13:03:18.337791+00:00",
-      "updated_at": "2026-09-19T13:03:18.418624+00:00",
-      "freshness_status": "STALE"
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "banque_du_caire_fund_ii__beltone_asset_management",
@@ -1757,9 +2167,12 @@
       "nav": 74.99,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "arope_insurance_misr_fund__cfh_asset_management",
@@ -1769,10 +2182,13 @@
       "host": "snduk.com",
       "nav": 455.4,
       "as_of_date": "2026-09-05",
-      "source_id": "src_eima_performance_integrated",
-      "verified_at": "2026-09-19T13:03:18.906826+00:00",
-      "updated_at": "2026-09-19T13:03:18.994714+00:00",
-      "freshness_status": "STALE"
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -16,
+      "age_days": 16
     },
     {
       "fund_id": "fanar__arab_african_investment_management",
@@ -1780,12 +2196,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 175.82823,
-      "as_of_date": "2026-08-31",
+      "nav": 177.58984,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-01T14:03:13.337142+00:00",
-      "updated_at": "2026-09-01T14:03:13.712416+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "az_lv__azimut_egypt_asset_management",
@@ -1793,12 +2212,15 @@
       "management_company": "Azimut Egypt Asset Management",
       "price_update_url": "https://azimut.eg/funds",
       "host": "azimut.eg",
-      "nav": 1.50555,
-      "as_of_date": "2026-09-17",
+      "nav": 1.50765,
+      "as_of_date": "2026-09-20",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:05.580623+00:00",
-      "updated_at": "2026-09-19T13:03:05.83589+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:31.485324+00:00",
+      "updated_at": "2026-09-21T11:31:32.028611+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "housing_development_bank_mawared__pfi_asset_management",
@@ -1806,12 +2228,15 @@
       "management_company": "PFI Asset Management",
       "price_update_url": "https://pfi-am.com.eg/funds/",
       "host": "pfi-am.com.eg",
-      "nav": 71.5636,
-      "as_of_date": "2026-08-31",
-      "source_id": "src_pfi_funds",
-      "verified_at": "2026-09-01T14:08:22.783084+00:00",
-      "updated_at": "2026-09-01T14:08:27.339192+00:00",
-      "freshness_status": "STALE"
+      "nav": 72.2721,
+      "as_of_date": "2026-09-20",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "ciam_5th_issue_electronic_payments__ci_asset_management",
@@ -1822,9 +2247,12 @@
       "nav": 21.67,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "beltone_fixed_income_usd_fund__beltone_asset_management",
@@ -1835,9 +2263,12 @@
       "nav": 1.18,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "beltone_egx_35_tracker__beltone_asset_management",
@@ -1848,9 +2279,12 @@
       "nav": 1.51,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "az_gold__azimut_egypt_asset_management",
@@ -1858,12 +2292,15 @@
       "management_company": "Azimut Egypt Asset Management",
       "price_update_url": "https://azimut.eg/funds",
       "host": "azimut.eg",
-      "nav": 24.1079,
-      "as_of_date": "2026-09-17",
+      "nav": 24.5173,
+      "as_of_date": "2026-09-20",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:07.71093+00:00",
-      "updated_at": "2026-09-19T13:03:07.796368+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:36.408775+00:00",
+      "updated_at": "2026-09-21T11:31:37.048193+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "basata__ci_asset_management",
@@ -1874,9 +2311,12 @@
       "nav": 1.1694,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.631934+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "ataa__azimut_egypt_asset_management",
@@ -1884,12 +2324,15 @@
       "management_company": "Azimut Egypt Asset Management",
       "price_update_url": "https://azimut.eg/funds",
       "host": "azimut.eg",
-      "nav": 15.61173,
-      "as_of_date": "2026-09-13",
+      "nav": 15.64766,
+      "as_of_date": "2026-09-20",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:10.321363+00:00",
-      "updated_at": "2026-09-19T13:03:10.400165+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:42.342631+00:00",
+      "updated_at": "2026-09-21T11:31:42.949991+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "suez_canal_bank_fund_ii_al_agial__beltone_asset_management",
@@ -1900,9 +2343,12 @@
       "nav": 75.83,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "az_thndr__azimut_egypt_asset_management",
@@ -1910,12 +2356,15 @@
       "management_company": "Azimut Egypt Asset Management",
       "price_update_url": "https://azimut.eg/funds",
       "host": "azimut.eg",
-      "nav": 1.32945,
-      "as_of_date": "2026-09-20",
+      "nav": 1.33003,
+      "as_of_date": "2026-09-21",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:06.666821+00:00",
-      "updated_at": "2026-09-19T13:03:06.747251+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:33.11655+00:00",
+      "updated_at": "2026-09-21T11:31:33.811445+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "suez_canal_bank_al_suez_al_youmi__ci_asset_management",
@@ -1926,9 +2375,12 @@
       "nav": 25.64,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.631934+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "banque_misr_fund_iv__ci_asset_management",
@@ -1939,9 +2391,12 @@
       "nav": 24.02,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "beltone_real_estate_fund__beltone_asset_management",
@@ -1952,9 +2407,28 @@
       "nav": 2.14,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
+    },
+    {
+      "fund_id": "bonds_fixed_income_usd_fund__arab_african_investment_management",
+      "canonical_name": "Bonds Fixed Income USD Fund",
+      "management_company": "Arab African Investment Management",
+      "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
+      "host": "aaim.com.eg",
+      "nav": 10.3482,
+      "as_of_date": "2026-09-20",
+      "source_id": "src_aaim_funds",
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "bank_abc_fund_i__azimut_egypt_asset_management",
@@ -1965,9 +2439,12 @@
       "nav": 702.03,
       "as_of_date": "2026-09-17",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:10.855813+00:00",
-      "updated_at": "2026-09-19T13:03:10.937942+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:43.773653+00:00",
+      "updated_at": "2026-09-21T11:31:44.405609+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "al_ahli_bank_of_kuwait_egypt_fund_ii__sigma_asset_management",
@@ -1975,12 +2452,15 @@
       "management_company": "Sigma Asset Management",
       "price_update_url": "https://startamarkets.com/Funds/2733-abk-egypt-money-market-fund",
       "host": "startamarkets.com",
-      "nav": 73.0323,
-      "as_of_date": "2026-09-02",
-      "source_id": "src_snduk",
-      "verified_at": "2026-09-08T19:55:19.974767+00:00",
-      "updated_at": "2026-09-08T19:55:19.974767+00:00",
-      "freshness_status": "STALE"
+      "nav": 73.1386,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "ebank_fund_el_khabeer__azimut_egypt_asset_management",
@@ -1991,22 +2471,12 @@
       "nav": 693.55,
       "as_of_date": "2026-09-17",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:09.347869+00:00",
-      "updated_at": "2026-09-19T13:03:09.428448+00:00",
-      "freshness_status": "STALE"
-    },
-    {
-      "fund_id": "bonds_fixed_income_usd_fund__arab_african_investment_management",
-      "canonical_name": "Bonds Fixed Income USD Fund",
-      "management_company": "Arab African Investment Management",
-      "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
-      "host": "aaim.com.eg",
-      "nav": 10.3415,
-      "as_of_date": "2026-09-16",
-      "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:39.98646+00:00",
+      "updated_at": "2026-09-21T11:31:40.665489+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "blom_bank_fund_i__cfh_asset_management",
@@ -2014,12 +2484,15 @@
       "management_company": "CFH Asset Management",
       "price_update_url": "https://eima.org.eg/wp-content/uploads/2026/04/Amended-Performance-02-April-2026-Time-Weighted1.pdf",
       "host": "eima.org.eg",
-      "nav": null,
-      "as_of_date": null,
-      "source_id": null,
-      "verified_at": null,
-      "updated_at": null,
-      "freshness_status": "NO_NAV"
+      "nav": 601.34,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "ahli_united_bank_alpha__hermes_portfolio_and_fund_management",
@@ -2027,12 +2500,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://snduk.com/eg/funds/alpha-shariaa-fund-kfh-bank?lang=ar",
       "host": "snduk.com",
-      "nav": 133.4258,
-      "as_of_date": "2026-09-12",
+      "nav": 133.531,
+      "as_of_date": "2026-09-19",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:03:19.40524+00:00",
-      "updated_at": "2026-09-19T13:03:19.497336+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:59.250868+00:00",
+      "updated_at": "2026-09-21T11:32:00.060974+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "national_bank_of_egypt_fund_i__x",
@@ -2040,12 +2516,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 651.47,
-      "as_of_date": "2026-09-13",
-      "source_id": "src_snduk",
-      "verified_at": "2026-09-19T11:40:23.0294+00:00",
-      "updated_at": "2026-09-19T11:40:24.938906+00:00",
-      "freshness_status": "STALE"
+      "nav": 172.36,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "edkhar__azimut_egypt_asset_management",
@@ -2053,12 +2532,15 @@
       "management_company": "Azimut Egypt Asset Management",
       "price_update_url": "https://azimut.eg/funds",
       "host": "azimut.eg",
-      "nav": 21.32078,
-      "as_of_date": "2026-09-20",
+      "nav": 21.32851,
+      "as_of_date": "2026-09-21",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:09.866555+00:00",
-      "updated_at": "2026-09-19T13:03:09.96018+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:41.694275+00:00",
+      "updated_at": "2026-09-21T11:31:42.162488+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "az_foras__azimut_egypt_asset_management",
@@ -2066,12 +2548,15 @@
       "management_company": "Azimut Egypt Asset Management",
       "price_update_url": "https://azimut.eg/funds",
       "host": "azimut.eg",
-      "nav": 53.49442,
-      "as_of_date": "2026-09-17",
+      "nav": 53.18787,
+      "as_of_date": "2026-09-20",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:09.604859+00:00",
-      "updated_at": "2026-09-19T13:03:09.687883+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:40.849275+00:00",
+      "updated_at": "2026-09-21T11:31:41.517694+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "ebank_fund_iii_konooz__prime_investments",
@@ -2079,12 +2564,15 @@
       "management_company": "Prime Investments",
       "price_update_url": "https://primeholdingco.com/asset-management/",
       "host": "primeholdingco.com",
-      "nav": 877.9242,
-      "as_of_date": null,
-      "source_id": "src_prime_am",
-      "verified_at": "2026-09-17T13:57:44.859309+00:00",
-      "updated_at": "2026-09-19T13:02:57.049641+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 897.247,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.711776+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "stream__cfh_asset_management",
@@ -2092,12 +2580,15 @@
       "management_company": "CFH Asset Management",
       "price_update_url": "https://snduk.com/eg/funds/stream-fixed-income-fund?lang=ar",
       "host": "snduk.com",
-      "nav": 1.253,
-      "as_of_date": "2026-09-17",
-      "source_id": "src_eima_performance_integrated",
-      "verified_at": "2026-09-19T13:03:19.916945+00:00",
-      "updated_at": "2026-09-19T13:03:19.995961+00:00",
-      "freshness_status": "STALE"
+      "nav": 1.2554,
+      "as_of_date": "2026-09-21",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "hermes_shariah__hermes_portfolio_and_fund_management",
@@ -2105,12 +2596,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 134.94,
-      "as_of_date": "2026-09-17",
+      "nav": 133.39,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "credit_agricole_egypt_fund_iv_al_thiqa__hc_securities_investment",
@@ -2118,12 +2612,15 @@
       "management_company": "HC Securities & Investment",
       "price_update_url": "https://www.hc-si.com",
       "host": "hc-si.com",
-      "nav": 899.6,
-      "as_of_date": "2026-08-26",
-      "source_id": "src_hc_si",
-      "verified_at": "2026-09-01T14:03:13.337142+00:00",
-      "updated_at": "2026-09-01T14:03:13.712416+00:00",
-      "freshness_status": "STALE"
+      "nav": 905.09,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "azimut_target_maturity_fund_target_2030_usd__azimut_egypt_asset_management",
@@ -2134,9 +2631,12 @@
       "nav": 10.23058,
       "as_of_date": "2026-09-15",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:06.013222+00:00",
-      "updated_at": "2026-09-19T13:03:06.313477+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:32.231581+00:00",
+      "updated_at": "2026-09-21T11:31:32.933653+00:00",
+      "freshness_status": "STALE",
+      "future_days": -6,
+      "age_days": 6
     },
     {
       "fund_id": "mid_bank_fund_i__beltone_asset_management",
@@ -2147,9 +2647,12 @@
       "nav": 235.24,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "saib_adib_fund_sanabel__ci_asset_management",
@@ -2160,9 +2663,12 @@
       "nav": 842.28,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "saib_fund_ii__hermes_portfolio_and_fund_management",
@@ -2173,9 +2679,12 @@
       "nav": 682.64871,
       "as_of_date": "2026-09-17",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "fab_misr_fund_etm_nan__hc_securities_investment",
@@ -2183,12 +2692,15 @@
       "management_company": "HC Securities & Investment",
       "price_update_url": "https://www.hc-si.com",
       "host": "hc-si.com",
-      "nav": 345.49207,
-      "as_of_date": "2026-08-29",
+      "nav": 348.32703,
+      "as_of_date": "2026-09-19",
       "source_id": "src_hc_si",
-      "verified_at": "2026-09-01T14:03:13.337142+00:00",
-      "updated_at": "2026-09-01T14:03:13.712416+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "ciam_gold_fund__ci_asset_management",
@@ -2199,9 +2711,12 @@
       "nav": 1.0911,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "gig_makaseb_fund_second_tranche__ni_capital",
@@ -2209,12 +2724,15 @@
       "management_company": "NI Capital",
       "price_update_url": "https://nicapital.com.eg/lines-of-business/asset-management/",
       "host": "nicapital.com.eg",
-      "nav": 20.81733,
-      "as_of_date": "2026-09-19",
+      "nav": 20.82766,
+      "as_of_date": "2026-09-20",
       "source_id": "src_nicapital_am",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.453867+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "egyptian_arab_land_bank_fund_al_masry__x",
@@ -2222,12 +2740,15 @@
       "management_company": null,
       "price_update_url": "https://startamarkets.com/Funds/4087-egyptian-arab-land-bank-fund-al-masry",
       "host": "startamarkets.com",
-      "nav": 471.836,
-      "as_of_date": "2026-08-26",
-      "source_id": "src_snduk",
-      "verified_at": "2026-09-08T19:55:20.149492+00:00",
-      "updated_at": "2026-09-08T19:55:20.149492+00:00",
-      "freshness_status": "STALE"
+      "nav": 473.27398,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.711776+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "maksab_first_tranche_usd__x",
@@ -2236,11 +2757,14 @@
       "price_update_url": "https://zaldi-capital.com/",
       "host": "zaldi-capital.com",
       "nav": 1.18135,
-      "as_of_date": null,
-      "source_id": "src_zaldi_capital",
-      "verified_at": "2026-09-17T13:57:44.859309+00:00",
-      "updated_at": "2026-09-19T13:02:58.316009+00:00",
-      "freshness_status": "NO_DATE"
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.711776+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "arab_bank_fund_yomaty__beltone_asset_management",
@@ -2251,9 +2775,12 @@
       "nav": 74.76,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "maashy__azimut_egypt_asset_management",
@@ -2264,9 +2791,12 @@
       "nav": 3176.9477,
       "as_of_date": "2026-09-16",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:10.582497+00:00",
-      "updated_at": "2026-09-19T13:03:10.659259+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:43.126647+00:00",
+      "updated_at": "2026-09-21T11:31:43.592316+00:00",
+      "freshness_status": "STALE",
+      "future_days": -5,
+      "age_days": 5
     },
     {
       "fund_id": "az_value__azimut_egypt_asset_management",
@@ -2274,12 +2804,15 @@
       "management_company": "Azimut Egypt Asset Management",
       "price_update_url": "https://azimut.eg/funds",
       "host": "azimut.eg",
-      "nav": 1.80553,
-      "as_of_date": "2026-09-20",
+      "nav": 1.80632,
+      "as_of_date": "2026-09-21",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:07.970959+00:00",
-      "updated_at": "2026-09-19T13:03:08.048097+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:37.239705+00:00",
+      "updated_at": "2026-09-21T11:31:37.746081+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "shefa_orman_charity_fund__ci_asset_management",
@@ -2290,9 +2823,12 @@
       "nav": 19.24,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "hsbc_egypt_bank_fund__hermes_portfolio_and_fund_management",
@@ -2300,12 +2836,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 785.98177,
-      "as_of_date": "2026-09-19",
+      "nav": 786.36731,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "fibe_cib_aman__ci_asset_management",
@@ -2316,9 +2855,12 @@
       "nav": 540.76,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "banque_du_caire_al_thabet__ci_asset_management",
@@ -2329,9 +2871,12 @@
       "nav": 520.55,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "agricultural_bank_of_egypt_al_wefak__ci_asset_management",
@@ -2339,12 +2884,15 @@
       "management_company": "CI Asset Management",
       "price_update_url": "https://www.cicapital.com/fundprice/",
       "host": "cicapital.com",
-      "nav": 46.2,
-      "as_of_date": "2026-09-06",
-      "source_id": "src_cicapital_fundprice",
-      "verified_at": "2026-09-01T14:42:41.273782+00:00",
-      "updated_at": "2026-09-08T19:42:47.285642+00:00",
-      "freshness_status": "STALE"
+      "nav": 48.068,
+      "as_of_date": "2026-09-20",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "hourus__x",
@@ -2352,12 +2900,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 21.1,
-      "as_of_date": null,
-      "source_id": "src_afim_investment",
-      "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-19T13:02:59.199955+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 21.0121,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "arab_african_international_bank_guard__arab_african_investment_management",
@@ -2365,12 +2916,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 37.64396,
-      "as_of_date": "2026-09-16",
+      "nav": 37.74811,
+      "as_of_date": "2026-09-20",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "aspire_waffrah_plus__x",
@@ -2378,12 +2932,15 @@
       "management_company": null,
       "price_update_url": "https://snduk.com/eg/funds/waffrah-plus-fund-aspire?lang=ar",
       "host": "snduk.com",
-      "nav": 11.99,
-      "as_of_date": "2026-09-17",
-      "source_id": "src_eima_performance_integrated",
-      "verified_at": "2026-09-19T13:03:20.39536+00:00",
-      "updated_at": "2026-09-19T13:03:20.472767+00:00",
-      "freshness_status": "STALE"
+      "nav": 12.06,
+      "as_of_date": "2026-09-21",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "ahli_united_bank_tharwa__hermes_portfolio_and_fund_management",
@@ -2391,12 +2948,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 634.6089,
-      "as_of_date": "2026-09-19",
+      "nav": 634.925,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "ciam_4th_issue_consumption__ci_asset_management",
@@ -2407,9 +2967,12 @@
       "nav": 21.38,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "bank_nxt_fund_iii_sanady__azimut_egypt_asset_management",
@@ -2420,9 +2983,12 @@
       "nav": 26.25831,
       "as_of_date": "2026-05-23",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:08.786006+00:00",
-      "updated_at": "2026-09-19T13:03:08.873808+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:38.622249+00:00",
+      "updated_at": "2026-09-21T11:31:39.101633+00:00",
+      "freshness_status": "STALE",
+      "future_days": -121,
+      "age_days": 121
     },
     {
       "fund_id": "az_foras_shariah__azimut_egypt_asset_management",
@@ -2430,12 +2996,15 @@
       "management_company": "Azimut Egypt Asset Management",
       "price_update_url": "https://azimut.eg/funds",
       "host": "azimut.eg",
-      "nav": 2.08277,
-      "as_of_date": "2026-09-17",
+      "nav": 2.05751,
+      "as_of_date": "2026-09-20",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:07.201462+00:00",
-      "updated_at": "2026-09-19T13:03:07.279141+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:34.667082+00:00",
+      "updated_at": "2026-09-21T11:31:35.344513+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "ciam_gold__ci_asset_management",
@@ -2443,12 +3012,15 @@
       "management_company": "CI Asset Management",
       "price_update_url": "https://www.cicapital.com/fundprice/",
       "host": "cicapital.com",
-      "nav": 1.1314,
-      "as_of_date": "2026-09-06",
-      "source_id": "src_cicapital_fundprice",
-      "verified_at": "2026-09-01T15:14:30.234803+00:00",
-      "updated_at": "2026-09-08T19:42:47.648819+00:00",
-      "freshness_status": "STALE"
+      "nav": 1.1084,
+      "as_of_date": "2026-09-21",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "ciam_7th_issue_hd_20__ci_asset_management",
@@ -2459,22 +3031,28 @@
       "nav": 12.38,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.93798+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "odin_trend__x",
       "canonical_name": "Odin Trend",
-      "management_company": null,
+      "management_company": "Alpha Financial Investments Management",
       "price_update_url": "https://www.odin-investments.com/%D8%B5%D9%86%D8%AF%D9%88%D9%82-%D8%A5%D8%B3%D8%AA%D8%AB%D9%85%D8%A7%D8%B1-%D8%A3%D9%88%D8%AF%D9%86-%D9%84%D9%84%D8%A5%D8%B3%D8%AA%D8%AB%D9%85%D8%A7%D8%B1-%D9%81%D9%8A-%D8%A7%D9%84%D8%A3%D8%B3%D9%87/",
       "host": "odin-investments.com",
-      "nav": 1.23911,
-      "as_of_date": "2026-08-26",
-      "source_id": "src_alpha_odin",
-      "verified_at": "2026-09-01T15:42:36.846626+00:00",
-      "updated_at": "2026-09-01T15:42:39.962311+00:00",
-      "freshness_status": "STALE"
+      "nav": 1.2712,
+      "as_of_date": "2026-09-21",
+      "source_id": "src_snduk",
+      "source_role": "third_party_snduk",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "wethaq__x",
@@ -2482,12 +3060,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 23.7,
-      "as_of_date": null,
-      "source_id": "src_afim_investment",
-      "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-19T13:03:00.306795+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 23.57616,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "national_bank_of_egypt_fund_iv__x",
@@ -2495,12 +3076,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 303.2,
-      "as_of_date": null,
-      "source_id": "src_afim_investment",
-      "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-19T13:03:01.27202+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 301.483,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "beltone_egx100_index_tracker_meya_meya__beltone_asset_management",
@@ -2511,9 +3095,12 @@
       "nav": 2.58,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "credit_agricole_egypt_fund_i__hermes_portfolio_and_fund_management",
@@ -2524,9 +3111,12 @@
       "nav": 1985.39,
       "as_of_date": "2026-09-17",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "target_first_fund__target_asset_management",
@@ -2534,12 +3124,15 @@
       "management_company": "Target Asset Management",
       "price_update_url": "https://tig.com.eg/",
       "host": "tig.com.eg",
-      "nav": 11.98344,
-      "as_of_date": "2026-09-01",
-      "source_id": "src_target_tig",
-      "verified_at": "2026-09-01T15:11:43.459817+00:00",
-      "updated_at": "2026-09-01T15:11:43.649423+00:00",
-      "freshness_status": "STALE"
+      "nav": 12.00557,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "qnb_alahli_themar__hermes_portfolio_and_fund_management",
@@ -2547,12 +3140,15 @@
       "management_company": "Hermes Portfolio and Fund Management",
       "price_update_url": "https://efgholding.com/en/our-services/mutual-funds",
       "host": "efgholding.com",
-      "nav": 984.462,
-      "as_of_date": "2026-09-19",
+      "nav": 984.957,
+      "as_of_date": "2026-09-20",
       "source_id": "src_efg_hermes_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:37.723823+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "arab_african_international_bank_shield__arab_african_investment_management",
@@ -2560,12 +3156,15 @@
       "management_company": "Arab African Investment Management",
       "price_update_url": "https://aaim.com.eg/ar/what-we-offer/funds",
       "host": "aaim.com.eg",
-      "nav": 850.68,
-      "as_of_date": "2026-08-29",
+      "nav": 871.57,
+      "as_of_date": "2026-09-19",
       "source_id": "src_aaim_funds",
-      "verified_at": "2026-09-01T14:42:41.273782+00:00",
-      "updated_at": "2026-09-01T14:42:42.305073+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:00.957857+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "agricultural_bank_of_egypt_al_hasad_al_yaumy__hc_securities_investment",
@@ -2576,9 +3175,12 @@
       "nav": 74.26823,
       "as_of_date": "2026-09-19",
       "source_id": "src_hc_si",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.453867+00:00",
-      "freshness_status": "CURRENT"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -2,
+      "age_days": 2
     },
     {
       "fund_id": "ci_misr_al_youmy__ci_asset_management",
@@ -2589,9 +3191,12 @@
       "nav": 19.56,
       "as_of_date": "2026-09-17",
       "source_id": "src_cicapital_fundprice",
+      "source_role": "manager_or_registered_source",
       "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-17T13:17:32.631934+00:00",
-      "freshness_status": "STALE"
+      "updated_at": "2026-09-20T15:43:44.492836+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "al_ahly_hayat__x",
@@ -2599,12 +3204,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 365.6,
-      "as_of_date": null,
-      "source_id": "src_afim_investment",
-      "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-19T13:03:02.175438+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 364.01,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "beltone_financial_fund__beltone_asset_management",
@@ -2615,9 +3223,12 @@
       "nav": 1.86,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "egyptian_gulf_bank_tharaa__prime_investments",
@@ -2625,12 +3236,15 @@
       "management_company": "Prime Investments",
       "price_update_url": "https://primeholdingco.com/asset-management/",
       "host": "primeholdingco.com",
-      "nav": 45.9714,
-      "as_of_date": null,
-      "source_id": "src_prime_am",
-      "verified_at": "2026-09-17T13:57:44.859309+00:00",
-      "updated_at": "2026-09-19T13:03:03.088119+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 46.0878,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.360601+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "az_naser__azimut_egypt_asset_management",
@@ -2638,12 +3252,15 @@
       "management_company": "Azimut Egypt Asset Management",
       "price_update_url": "https://azimut.eg/funds",
       "host": "azimut.eg",
-      "nav": 18.39073,
-      "as_of_date": "2026-09-20",
+      "nav": 18.39905,
+      "as_of_date": "2026-09-21",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:03:08.222543+00:00",
-      "updated_at": "2026-09-19T13:03:08.302326+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:31:37.953269+00:00",
+      "updated_at": "2026-09-21T11:31:38.440366+00:00",
+      "freshness_status": "CURRENT",
+      "future_days": 0,
+      "age_days": 0
     },
     {
       "fund_id": "misr_al_mostakbal_fund__hc_securities_investment",
@@ -2651,12 +3268,15 @@
       "management_company": "HC Securities & Investment",
       "price_update_url": "https://www.hc-si.com",
       "host": "hc-si.com",
-      "nav": 89.78,
-      "as_of_date": "2026-09-13",
-      "source_id": "src_snduk",
-      "verified_at": "2026-09-19T11:40:23.0294+00:00",
-      "updated_at": "2026-09-19T11:40:25.171897+00:00",
-      "freshness_status": "STALE"
+      "nav": 88.7,
+      "as_of_date": "2026-09-17",
+      "source_id": "src_hc_si",
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -4,
+      "age_days": 4
     },
     {
       "fund_id": "b_couponat__beltone_asset_management",
@@ -2667,9 +3287,12 @@
       "nav": 1.03,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     },
     {
       "fund_id": "national_bank_of_egypt_vii__x",
@@ -2677,12 +3300,15 @@
       "management_company": "Al Ahly Financial Investments Management",
       "price_update_url": "https://www.afim.com.eg/public/index.php/investment",
       "host": "afim.com.eg",
-      "nav": 331.5,
-      "as_of_date": null,
-      "source_id": "src_afim_investment",
-      "verified_at": "2026-09-17T13:17:31.978427+00:00",
-      "updated_at": "2026-09-19T13:03:03.988832+00:00",
-      "freshness_status": "NO_DATE"
+      "nav": 329.35,
+      "as_of_date": "2026-09-03",
+      "source_id": "src_eima_weekly_tw",
+      "source_role": "official_industry_weekly",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.711776+00:00",
+      "freshness_status": "STALE",
+      "future_days": -18,
+      "age_days": 18
     },
     {
       "fund_id": "menthum__azimut_egypt_asset_management",
@@ -2693,9 +3319,12 @@
       "nav": 1.83754,
       "as_of_date": "2026-05-31",
       "source_id": "src_azimut_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.453867+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:02.016323+00:00",
+      "freshness_status": "STALE",
+      "future_days": -113,
+      "age_days": 113
     },
     {
       "fund_id": "qnb_al_ahli_tawazon__beltone_asset_management",
@@ -2706,9 +3335,12 @@
       "nav": 854.81,
       "as_of_date": "2026-09-20",
       "source_id": "src_beltone_funds",
-      "verified_at": "2026-09-19T13:02:37.311091+00:00",
-      "updated_at": "2026-09-19T13:02:38.136198+00:00",
-      "freshness_status": "STALE"
+      "source_role": "manager_or_registered_source",
+      "verified_at": "2026-09-21T11:30:59.702843+00:00",
+      "updated_at": "2026-09-21T11:31:01.86184+00:00",
+      "freshness_status": "STALE",
+      "future_days": -1,
+      "age_days": 1
     }
   ]
 }
