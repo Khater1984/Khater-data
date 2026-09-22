@@ -55,7 +55,7 @@ def main():
     )
     staging = get(
         "nav_staging",
-        select="id,fund_id,nav,currency,as_of_date,source_id,source_url,verification_status,match_status,created_at",
+        select="id,run_id,fund_id,nav,currency,as_of_date,source_id,source_url,verification_status,match_status,created_at,frequency,frequency_provenance,provenance,contract_version",
         fund_id="not.is.null",
         limit="20000",
         order="created_at.desc",
@@ -122,6 +122,15 @@ def main():
         if r.get("match_status") != "matched":
             rejected_bad += 1
             continue
+        # Anti-reinforcement: historical staging is eligible for repair only
+        # after it has been explicitly accepted by the NAV contract.
+        if r.get("verification_status") != "accepted" or r.get("contract_version") != "nav-contract-v2":
+            rejected_bad += 1
+            continue
+        provenance = r.get("provenance")
+        if not isinstance(provenance, dict) or provenance.get("contract_version") != "nav-contract-v2":
+            rejected_bad += 1
+            continue
         fid = r.get("fund_id")
         if not fid:
             continue
@@ -170,6 +179,10 @@ def main():
                 "source_url": n.get("source_url"),
                 "staging_id": n.get("id"),
                 "verified_at": datetime.now(timezone.utc).isoformat(),
+                "frequency": n.get("frequency"),
+                "frequency_provenance": n.get("frequency_provenance"),
+                "provenance": n.get("provenance") or {},
+                "contract_version": "nav-contract-v2",
             })
             repaired += 1
 
