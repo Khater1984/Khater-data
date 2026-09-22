@@ -41,3 +41,6 @@ SET
   contract_version = 'nav-contract-v2'
 FROM public.nav_staging s
 WHERE o.staging_id = s.id;
+
+UPDATE public.nav_official SET frequency_provenance=COALESCE(frequency_provenance,'unknown_not_declared') WHERE frequency IS NULL;
+UPDATE public.nav_staging SET frequency_provenance=COALESCE(frequency_provenance,'unknown_not_declared') WHERE frequency IS NULL;
