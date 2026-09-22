@@ -1,5 +1,5 @@
 {
-  "run_id": "run_20260922_121606_35726157629",
+  "run_id": "run_20260922_130307_35730887466",
   "funds": 208,
   "ok": 208,
   "fail": 0,
@@ -1152,8 +1152,8 @@
       "rule": "abk",
       "status": "OK",
       "this_run": true,
-      "nav": 413.66,
-      "as_of_date": "2026-09-21"
+      "nav": 415.86,
+      "as_of_date": "2026-09-22"
     },
     {
       "fund_id": "fawry__ci_asset_management",
