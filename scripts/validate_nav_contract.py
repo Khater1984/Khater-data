@@ -91,7 +91,7 @@ def main() -> int:
         id_list = ",".join(str(int(value)) for value in staging_ids)
         staging = sb_get(
             "nav_staging",
-            select="id,fund_id,nav,currency,as_of_date,source_id,verification_status,raw",
+            select="id,fund_id,nav,currency,as_of_date,source_id,verification_status,raw,frequency,frequency_provenance,provenance,contract_version",
             id=f"in.({id_list})",
             verification_status="neq.rejected",
             limit=str(len(staging_ids)),
@@ -136,6 +136,13 @@ def main() -> int:
                 f"source identity not authorized: {fund['canonical_name']} "
                 f"source={n.get('source_id')}"
             )
+        if n.get("contract_version") != "nav-contract-v2":
+            errors.append(f"missing/old NAV contract version: {fund['canonical_name']}")
+        provenance = n.get("provenance")
+        if not isinstance(provenance, dict) or provenance.get("contract_version") != "nav-contract-v2":
+            errors.append(f"missing provenance contract: {fund['canonical_name']}")
+        if not n.get("frequency") and not n.get("frequency_provenance"):
+            warnings.append(f"frequency unknown: {fund['canonical_name']}")
         if not n.get("staging_id"):
             warnings.append(
                 f"official row without staging lineage: {fund['canonical_name']}"
@@ -155,7 +162,7 @@ def main() -> int:
                     f"broken staging lineage: {fund['canonical_name']} staging_id={sid}"
                 )
             else:
-                for key in ("fund_id", "nav", "currency", "as_of_date", "source_id"):
+                for key in ("fund_id", "nav", "currency", "as_of_date", "source_id", "frequency", "frequency_provenance", "contract_version"):
                     if s.get(key) != n.get(key):
                         errors.append(
                             f"lineage mismatch: {fund['canonical_name']} "
