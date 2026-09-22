@@ -581,6 +581,10 @@ class NavIntegrityTests(unittest.TestCase):
             ratio = SequenceMatcher(None, first, norm(other)).ratio()
             self.assertLess(ratio, 0.84, msg=f"{other!r} must not fuzzy-match Granite First Fund (ratio={ratio})")
 
+    def test_snduk_fallback_api_has_no_obsolete_match_parameter(self):
+        import inspect
+        self.assertNotIn("match", inspect.signature(safe._snduk_fallback_rows).parameters)
+
     def test_no_snduk_match_keeps_granite_undated(self):
         manager = [safe.safe_row(
             "EGP Money Market Fund", 1.65778, None,
