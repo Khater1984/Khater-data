@@ -68,7 +68,7 @@ class SndukFallbackIdentityTests(unittest.TestCase):
                 return None
 
         with patch("requests.get", return_value=Resp()):
-            rows = safe._snduk_fallback_rows(funds, match=boom)
+            rows = safe._snduk_fallback_rows(funds)
         self.assertEqual(rows, [])
 
     def test_misr_euro_verified_alias_still_works(self):
