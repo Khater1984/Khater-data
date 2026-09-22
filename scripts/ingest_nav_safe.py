@@ -430,13 +430,13 @@ def _explicit_snduk_alias(name, funds, aliases=None):
     return None, 0.0
 
 
-def _snduk_fallback_rows(funds, match=None, aliases=None):
+def _snduk_fallback_rows(funds, aliases=None):
     """Read Snduk consolidated prices and return ONLY explicit-alias fallback rows.
 
     Identity: explicit verified aliases only (no generic fuzzy match).
     Currency: row currency must match fund.currency before acceptance.
     Provenance: source_id=src_snduk with date_provenance=snduk.
-    The unused `match` argument is retained for call-site compatibility.
+    Only the verified alias registry is accepted; no fuzzy matcher is consulted.
     """
     import requests
 
@@ -707,7 +707,7 @@ def main():
                 })
                 print(f"{name} ERROR {type(exc).__name__}: {exc}")
 
-        snduk_fallback = _snduk_fallback_rows(funds, None, aliases)
+        snduk_fallback = _snduk_fallback_rows(funds, aliases)
         eima_fallback = _latest_eima_fallback_rows(funds)
         fallback_scan_attempted = True
         selected = _select_fallbacks(all_rows, snduk_fallback, eima_fallback)
