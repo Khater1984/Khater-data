@@ -67,6 +67,28 @@ def safe_row(extracted, nav, asof, url, sid, fund, score, extra=None, currency=N
     """Build a staging row without ever fabricating an as-of date."""
     raw = dict(extra or {}) if isinstance(extra, dict) else {"raw": extra}
     accepted, future_status = _future_policy(asof, sid)
+
+    # Institutional contract fields: frequency is recorded only when the
+    # publisher explicitly declares it; unknown is represented as NULL, never inferred.
+    declared_frequency = raw.get("frequency")
+    frequency_provenance = raw.get("frequency_provenance")
+    if declared_frequency is not None:
+        declared_frequency = str(declared_frequency).strip().lower() or None
+    if frequency_provenance is not None:
+        frequency_provenance = str(frequency_provenance).strip() or None
+    provenance = {
+        "contract_version": "nav-contract-v2",
+        "run_id": legacy.RUN_ID,
+        "source_id": sid,
+        "source_url": url,
+        "as_of_date": asof,
+        "date_provenance": raw.get("date_provenance")
+            or raw.get("phase2_date_policy")
+            or "unknown",
+        "identity_provenance": raw.get("identity_match") or "unknown",
+        "frequency": declared_frequency,
+        "frequency_provenance": frequency_provenance,
+    }
     raw.setdefault("phase2_date_policy", future_status)
     if asof and not accepted:
         raw["date_rejected_reason"] = future_status
@@ -91,6 +113,10 @@ def safe_row(extracted, nav, asof, url, sid, fund, score, extra=None, currency=N
         "match_score": round(score or 0, 3),
         "verification_status": "pending",
         "raw": raw,
+        "frequency": declared_frequency,
+        "frequency_provenance": frequency_provenance,
+        "provenance": provenance,
+        "contract_version": "nav-contract-v2",
     }
 
 
@@ -334,6 +360,10 @@ def safe_upsert_official(matched_rows):
             "source_url": row.get("source_url"),
             "staging_id": row.get("id"),
             "verified_at": now,
+            "frequency": row.get("frequency"),
+            "frequency_provenance": row.get("frequency_provenance"),
+            "provenance": row.get("provenance") or {},
+            "contract_version": row.get("contract_version") or "nav-contract-v2",
         })
 
     ok = 0
@@ -346,6 +376,20 @@ def safe_upsert_official(matched_rows):
         )
         if response.status_code in (200, 201):
             ok += len(batch)
+            # Mark exactly the rows that were promoted as accepted evidence.
+            for item in batch:
+                sid = item.get("staging_id")
+                if sid:
+                    legacy.requests.patch(
+                        f"{legacy.BASE}/rest/v1/nav_staging?id=eq.{sid}",
+                        headers={**legacy.H, "Prefer": "return=minimal"},
+                        json={
+                            "verification_status": "accepted",
+                            "contract_version": "nav-contract-v2",
+                            "provenance": item.get("provenance") or {},
+                        },
+                        timeout=20,
+                    )
             continue
 
         print("official batch fail", response.status_code, response.text[:300])
@@ -358,6 +402,18 @@ def safe_upsert_official(matched_rows):
             )
             if patch.status_code in (200, 204):
                 ok += 1
+                sid = item.get("staging_id")
+                if sid:
+                    legacy.requests.patch(
+                        f"{legacy.BASE}/rest/v1/nav_staging?id=eq.{sid}",
+                        headers={**legacy.H, "Prefer": "return=minimal"},
+                        json={
+                            "verification_status": "accepted",
+                            "contract_version": "nav-contract-v2",
+                            "provenance": item.get("provenance") or {},
+                        },
+                        timeout=20,
+                    )
             else:
                 failed += 1
                 print("official item fail", patch.status_code, patch.text[:300])
