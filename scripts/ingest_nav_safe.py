@@ -76,6 +76,8 @@ def safe_row(extracted, nav, asof, url, sid, fund, score, extra=None, currency=N
         declared_frequency = str(declared_frequency).strip().lower() or None
     if frequency_provenance is not None:
         frequency_provenance = str(frequency_provenance).strip() or None
+    if not frequency_provenance:
+        frequency_provenance = "unknown_not_declared"
     provenance = {
         "contract_version": "nav-contract-v2",
         "run_id": legacy.RUN_ID,
